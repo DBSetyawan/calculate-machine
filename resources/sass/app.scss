@@ -1,0 +1,21 @@
+@import "~sweetalert2/src/sweetalert2";
+@import '~jquery-ui/themes/base/all.css';
+@import "~bootstrap/scss/bootstrap";
+
+/*
+* https://icons.getbootstrap.com/icons/file-excel/
+*/
+@import "~@fontsource/quicksand/scss/mixins";
+
+@include fontFace(
+  $weight: 500,
+  $display: fallback,
+  $fontDir: "~@fontsource/quicksand/files"
+);
+
+@include fontFaceCustom(
+  $weight: 600,
+  $display: optional,
+  $woff2Path: "#{$fontDir}/quicksand-vietnamese-400-normal.woff2",
+  $unicodeRange: false
+);
