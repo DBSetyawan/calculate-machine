@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\KOP;
 
 use Exception;
-use App\Company;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
@@ -14,51 +13,10 @@ use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
-use App\Http\Controllers\KOP\Helpers\RumusLapBagPenjualan;
-use App\Http\Controllers\KOP\Service\LBagianPenjualanInterface;
-use App\LaporanBagianPenjualan;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
-class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController Implements LBagianPenjualanInterface
+class VoyagerHIstoryLogCalculateController extends BaseVoyagerBaseController
 {
-
-    public function RumusLapBagianPenjualanPerbulan($t1, $t2, $t3, $nama_biayacheck)
-    {
-        return RumusLapBagPenjualan::TotalLPenjualanBagianPenjualan($t1, $t2, $t3, $nama_biayacheck);
-    }
-
-    public function HitungAkumulasiLBagianPenjualan(Request $r){
-        /**
-         * Total biaya laporan bag. penjualan
-         */
-        $total_biaya_upah_lpperbulan = $this->RumusLapBagianPenjualanPerbulan($r->tahun1, $r->tahun2, $r->tahun3, $r->nama_biaya);
-
-        $result_lbpnjualan = [
-            'company_parent_id' => $r->company_parent_id,
-            'code_laporan_penjualan' => RumusLapBagPenjualan::generateIDBLPenjualan(),
-            'nama_biaya' => $r->nama_biaya,
-            'tahun1' => $r->tahun1,
-            'tahun2' => $r->tahun2,
-            'tahun3' => $r->tahun3,
-            'biaya_perbulan_bag_penjualan' => $total_biaya_upah_lpperbulan,
-        ];
-
-        $simpanDataLaporanLapBagPenjualan = LaporanBagianPenjualan::create($result_lbpnjualan);
-
-        return response()->json(
-            [
-                'total_biaya_perbulan_lbpenjualan' => $simpanDataLaporanLapBagPenjualan->biaya_perbulan_bag_penjualan,
-            ]
-        );
-
-    }
-
-    public function formLBagPenjualanAction(Request $request)
-    {
-        $company = Company::all();
-
-        return view('vendor.voyager.laporan-bagian-penjualan.forms_lppenj', compact('company'));
-    }
  
     public function index(Request $request)
     {

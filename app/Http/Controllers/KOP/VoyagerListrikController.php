@@ -438,6 +438,13 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             ->where('listrik', $data->ncost_bulan_plus_adm)
             ->update(array('listrik' => $request->ncost_bulan_plus_adm));  
 
+            $logs = \App\HistoryLogRecalculate::firstOrCreate([
+                'changed_by' => Auth::user()->name,
+                'coloumn_after' => $request->ncost_bulan_plus_adm,
+                'coloumn_before' => $data->ncost_bulan_plus_adm,
+                'recalculate_status' => "active"
+              ]);
+
         }
 
        

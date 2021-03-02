@@ -365,6 +365,7 @@ class VoyagerMTcController extends BaseVoyagerBaseController Implements MTcInter
             $data = $model->withTrashed()->findOrFail($id);
         } else {
             $data = $model->findOrFail($id);
+         
         }
 
         // Check permission

@@ -5,10 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 
-class AccountMtc extends Model
+class HistoryLogRecalculate extends Model
 {
-    protected $table ="account_mtc";
+    protected $table= "history_log_recalculate";
 
     protected $guarded = [''];
     
+
 }

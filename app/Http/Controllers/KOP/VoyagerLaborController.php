@@ -378,7 +378,6 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
     public function update(Request $request, $id)
     {
 
-        dd($request->all());
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -395,8 +394,8 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
         } else {
             $data = $model->findOrFail($id);
             DB::table('total_kalkulasi_tanpa_penyusutan')
-            ->where('labor', $data->penyusutan_perbulan)
-            ->update(array('labor' => $request->penyusutan_perbulan)); 
+            ->where('labor', $data->total_biaya)
+            ->update(array('labor' => $request->total_biaya)); 
         }
 
         // Check permission

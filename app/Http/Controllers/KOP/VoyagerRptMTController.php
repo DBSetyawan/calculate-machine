@@ -414,6 +414,13 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
             $data = $model->withTrashed()->findOrFail($id);
         } else {
             $data = $model->findOrFail($id);
+            DB::table('total_kalkulasi_tanpa_penyusutan')
+            ->where('mtc', $data->total_biaya_perbulan)
+            ->update(array('mtc' => $request->total_biaya_perbulan)); 
+
+            DB::table('total_kalkulasi_tanpa_penyusutan')
+            ->where('b_prod_lain', $data->biaya_produksi_lain)
+            ->update(array('b_prod_lain' => $request->biaya_produksi_lain)); 
         }
 
         // Check permission
