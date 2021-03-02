@@ -377,6 +377,8 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
     // POST BR(E)AD
     public function update(Request $request, $id)
     {
+
+        dd($request->all());
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -392,6 +394,9 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
             $data = $model->withTrashed()->findOrFail($id);
         } else {
             $data = $model->findOrFail($id);
+            DB::table('total_kalkulasi_tanpa_penyusutan')
+            ->where('labor', $data->penyusutan_perbulan)
+            ->update(array('labor' => $request->penyusutan_perbulan)); 
         }
 
         // Check permission

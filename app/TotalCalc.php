@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TotalCalc extends Model
 {
-    protected $table= "total_kalkulasi";
+    protected $table= "total_kalkulasi_tanpa_penyusutan";
     protected $guarded = [''];
     
     public function Company()

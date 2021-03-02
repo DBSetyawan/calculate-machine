@@ -346,6 +346,9 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
             $data = $model->withTrashed()->findOrFail($id);
         } else {
             $data = $model->findOrFail($id);
+            DB::table('total_kalkulasi_tanpa_penyusutan')
+            ->where('penyusutan', $data->penyusutan_perbulan)
+            ->update(array('penyusutan' => $request->penyusutan_perbulan)); 
         }
 
         // Check permission

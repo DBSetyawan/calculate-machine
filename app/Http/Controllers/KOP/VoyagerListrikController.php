@@ -7,6 +7,7 @@ use Exception;
 use App\Company;
 use App\Listrik;
 use RumusListrik;
+use App\TotalCalc;
 use App\KategoriBagian;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
@@ -433,8 +434,13 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             $data = $model->withTrashed()->findOrFail($id);
         } else {
             $data = $model->findOrFail($id);
+            DB::table('total_kalkulasi_tanpa_penyusutan')
+            ->where('listrik', $data->ncost_bulan_plus_adm)
+            ->update(array('listrik' => $request->ncost_bulan_plus_adm));  
+
         }
 
+       
         // Check permission
         $this->authorize('edit', $data);
 
@@ -443,7 +449,9 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
         event(new BreadDataUpdated($dataType, $data));
-
+        //ambil angka dari master listrik, kemudian recalculate ke history dan ditampilkan ke view kalkulasi.
+        // $s = TotalCalc::whereIn('listrik', [(float)$data->ncost_bulan_plus_adm])->first();
+        // dd($s);
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");
         } else {
