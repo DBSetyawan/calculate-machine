@@ -307,6 +307,12 @@
                                                     @if ($row->display_name == 'TOTAL_LABOR')
                                                         <span>{{ "Rp " . number_format($data->total_biaya_labor,2,',','.') }}</span>
                                                     @endif
+                                                    @if ($row->display_name == 'PERIODE')
+                                                    @php
+                                                        $dateprd =  Carbon\Carbon::parse($data->tgl_periode)->locale('id')->monthName;
+                                                    @endphp
+                                                        <span>{{ isset($data->tgl_periode) ? $dateprd : '' }}</span>
+                                                    @endif
                                                 @endif
                                             </td>
                                         @endforeach

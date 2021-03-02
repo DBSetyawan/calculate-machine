@@ -15,6 +15,7 @@ class NumberFormat extends Supervisor
 
     const FORMAT_NUMBER = '0';
     const FORMAT_NUMBER_00 = '0.00';
+    const FORMAT_CURRENCY_IDR_SIMPLE = '"Rp."#,##0.00_-';
     const FORMAT_NUMBER_COMMA_SEPARATED1 = '#,##0.00';
     const FORMAT_NUMBER_COMMA_SEPARATED2 = '#,##0.00_-';
 

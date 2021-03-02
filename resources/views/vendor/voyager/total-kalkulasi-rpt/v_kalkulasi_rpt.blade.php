@@ -207,7 +207,7 @@ $(document).ready(function(){
             $("#alltruepnytmtc").hide();
             $(".CustomFilter").focus();
             
-        }, 700);
+        }, 1000);
 
     } else {
 
@@ -229,7 +229,7 @@ $(document).ready(function(){
               $("#alltruepnytmtc").hide();
               $(".CustomFilter").focus();
           
-          }, 700);
+          }, 1000);
 
         }
 
@@ -249,7 +249,7 @@ $(document).ready(function(){
             $("#alltruepnytmtc").hide();
             $(".CustomFilter").focus();
         
-        }, 700);
+        }, 1000);
 
     } else {
 
@@ -266,12 +266,12 @@ $(document).ready(function(){
               
                 $(".calctp").hide(); //tanpa penyusutan
                 $(".csbe").hide(); //smua biaya
-                $(".calcmtc").hide(); //tanpa mtc
+                $(".calcmtc").show(); //tanpa mtc
                 $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
                 $("#alltruepnytmtc").hide();
                 $(".CustomFilter").focus();
             
-            }, 700);
+            }, 1000);
 
         }
 
@@ -306,12 +306,12 @@ $(document).ready(function(){
             $("#setall").hide();
             $(".CustomFilter").focus();
         
-        }, 700);
+        }, 1000);
 
         setTimeout(() => {
-            document.querySelector('#cal_semua_biaya').setAttribute('href', download_all_cost);
+            document.getElementById('#cal_semua_biaya').setAttribute('href', download_all_cost);
             
-          }, 1800);
+          }, 1000);
 
     } 
       else {
@@ -354,30 +354,42 @@ $(document).ready(function(){
                     $("#alltruepnytmtc").hide();
                     $(".CustomFilter").focus();
                 
-                }, 700);
+                }, 1000);
 
                 setTimeout(() => {
-                      document.querySelector('#cal_semua_biaya').setAttribute('href', download_all_cost);
+                      document.getElementById('#cal_semua_biaya').setAttribute('href', download_all_cost);
                       
-                    }, 1800);
+                    }, 1000);
           }
 
-          if(thisLocalStorageEventCheckedMTCOnly[0] == "6" && thisLocalStorageEventCheckedPenyusutanOnly[0] == "4"){
+          if(thisLocalStorageEventCheckedMTCOnly[0] == "7" && thisLocalStorageEventCheckedPenyusutanOnly[0] == "5"){
 
             setTimeout(function(){ 
 
               $(".calctp").hide(); //tanpa penyusutan
               $(".csbe").hide(); //smua biaya
               $(".calcmtc").hide(); //tanpa mtc
-              $(".calctnpmtctp").show(); //tanpa mtc + penyusutan
+              // $(".calctnpmtctp").show(); //tanpa mtc + penyusutan
+
+              ButtonexportCalcTanpaMTCnTanpaPenyusutan()
+                  .then(finalResult => finalResult)
+                  .then(sd => 
+                        
+                      $(".calctnpmtctp").html(sd.button_ButtonexportCalcTanpaMTCnTanpaPenyusutan)
+                  
+                  )  
+
+              $(".calctnpmtctp").show();
+              $('#main-logo a').attr('href', "asdasdasd");
+
               $("#alltruepnytmtc").show();
               $(".CustomFilter").focus();
 
-            }, 700);
+            }, 1000);
 
           } else {
 
-                  if(thisLocalStorageEventCheckedMTCOnly[0] == "6"){
+                  if(thisLocalStorageEventCheckedMTCOnly[0] == "7"){
 
                     setTimeout(function(){ 
 
@@ -398,15 +410,15 @@ $(document).ready(function(){
                       $("#alltruepnytmtc").hide();
                       $(".CustomFilter").focus();
 
-                    }, 700);
+                    }, 1000);
 
                     setTimeout(() => {
-                      document.querySelector('#caltanpa_mtc').setAttribute('href', download_tanpa_mtc);
+                      document.getElementById('#caltanpa_mtc').setAttribute('href', download_tanpa_mtc);
                       
-                    }, 1800);
+                    }, 1000);
 
                   }
-                    else if(thisLocalStorageEventCheckedPenyusutanOnly[0] == "4"){
+                    else if(thisLocalStorageEventCheckedPenyusutanOnly[0] == "5"){
 
                         setTimeout(function(){ 
 
@@ -426,13 +438,13 @@ $(document).ready(function(){
                           $("#alltruepnytmtc").hide();
                           $(".CustomFilter").focus();
 
-                        }, 700);
+                        }, 1000);
 
                         setTimeout(() => {
                           
-                          document.querySelector('#caltanpa_penyusutan').setAttribute('href', download_tanpa_penyusutan);
+                          document.getElementById('#caltanpa_penyusutan').setAttribute('href', download_tanpa_penyusutan);
                           
-                      }, 1800);
+                      }, 1000);
 
                   } 
                     else {
@@ -456,12 +468,12 @@ $(document).ready(function(){
                       $("#alltruepnytmtc").hide();
                       $(".CustomFilter").focus();
 
-                }, 700);
+                }, 1000);
 
                 setTimeout(() => {
-                      document.querySelector('#cal_semua_biaya').setAttribute('href', download_all_cost);
+                      document.getElementById('#cal_semua_biaya').setAttribute('href', download_all_cost);
                       
-                    }, 1800);
+                    }, 1000);
 
             }
       
@@ -524,12 +536,12 @@ $(document).ready(function(){
 
                     $(".csbe").show(); //smua biaya
       
-      }, 700);
+      }, 1000);
 
       setTimeout(() => {
-          document.querySelector('#cal_semua_biaya').setAttribute('href', download_all_cost);
+          document.getElementById('#cal_semua_biaya').setAttribute('href', download_all_cost);
           
-        }, 1800);
+        }, 1000);
 
   });
 
@@ -565,9 +577,9 @@ $(document).ready(function(){
         }, 500);
 
         setTimeout(() => {
-            document.querySelector('#cal_semua_biaya').setAttribute('href', download_all_cost);
+            document.getElementById('#cal_semua_biaya').setAttribute('href', download_all_cost);
             
-          }, 1800);
+          }, 1000);
 
       } else {
 
@@ -796,10 +808,25 @@ $(document).ready(function(){
                           $(".calctp").hide(); //tanpa penyusutan
                           $(".csbe").hide(); //smua biaya
                           $(".calcmtc").hide(); //tanpa mtc
-                          $(".calctnpmtctp").show(); //tanpa mtc + penyusutan
+                          // $(".calctnpmtctp").show(); //tanpa mtc + penyusutan
+                          ButtonexportCalcTanpaMTCnTanpaPenyusutan()
+                            .then(finalResult => finalResult)
+                            .then(sd => 
+                                  
+                                $(".calctnpmtctp").html(sd.button_ButtonexportCalcTanpaMTCnTanpaPenyusutan)
+                            
+                            )  
+                            $(".calctnpmtctp").show(); //tanpa mtc
+
                           $(".CustomFilter").focus();
 
-                      }, 700);
+                      }, 1000);
+
+                      setTimeout(() => {
+              
+                        document.getElementById('#caltpmtctpc').setAttribute('href', download_tanpa_penyusutan_dan_tanpa_mtc);
+                        
+                      }, 1000);
 
                   } 
                     else {
@@ -810,13 +837,12 @@ $(document).ready(function(){
 
                               let rf1 = $('#dataTablePenyusutan').DataTable().draw();
 
-                                rf1.column([11]).visible(false);
+                              rf1.column([11]).visible(false);
                                 rf1.column([12]).visible(false);
                                 rf1.column([13]).visible(false);
                                 rf1.column([14]).visible(false);
                                 rf1.column([17]).visible(false);
                                 rf1.column([18]).visible(false);
-
                             } 
 
                             if(x == 7){
@@ -885,13 +911,13 @@ $(document).ready(function(){
                     $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
                     $(".CustomFilter").focus();
                 
-                }, 100);
+                }, 1000);
 
                 setTimeout(() => {
                           
-                    document.querySelector('#caltanpa_penyusutan').setAttribute('href', download_tanpa_penyusutan);
+                    document.getElementById('#caltanpa_penyusutan').setAttribute('href', download_tanpa_penyusutan);
                     
-                  }, 1800);
+                  }, 1000);
 
                 if(!$(this).is(':checked')){
                   
@@ -927,12 +953,12 @@ $(document).ready(function(){
                               $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
                               $(".CustomFilter").focus();
                           
-                          }, 700);
+                          }, 1000);
 
                           setTimeout(() => {
-                      document.querySelector('#caltanpa_mtc').setAttribute('href', download_tanpa_mtc);
+                      document.getElementById('#caltanpa_mtc').setAttribute('href', download_tanpa_mtc);
                       
-                    }, 1800);
+                    }, 1000);
 
                     } else {
                         let db_temp = $('#dataTablePenyusutan').DataTable().draw();
@@ -944,7 +970,7 @@ $(document).ready(function(){
                             db_temp.column([18]).visible(false);
                             db_temp.column([15]).visible(false);
                             db_temp.column([16]).visible(false);
-                            db_temp.column(4).visible(true);
+                            db_temp.column(5).visible(true);
                       }
 
                     localStorage.removeItem("EventPenyusutanTrue");
@@ -968,12 +994,12 @@ $(document).ready(function(){
                         $("#alltruepnytmtc").hide();
                         $(".CustomFilter").focus();
                         
-                    }, 100);
+                    }, 1000);
 
                     setTimeout(() => {
-                      document.querySelector('#cal_semua_biaya').setAttribute('href', download_all_cost);
+                      document.getElementById('#cal_semua_biaya').setAttribute('href', download_all_cost);
                       
-                    }, 1800);
+                    }, 1000);
                     
                 }
 
@@ -988,7 +1014,6 @@ $(document).ready(function(){
 
                   localStorage.setItem("EventMTCtrue", JSON.stringify( mtcs ) );
 
-                    // mapping penambahan kolom group mesin #dev this fix column for tanpa maintenance.
                       dataTable.column(mtcs).visible(false);
                       dataTable.column([13]).visible(false);
                       dataTable.column([14]).visible(false);
@@ -1019,13 +1044,13 @@ $(document).ready(function(){
                     $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
                     $(".CustomFilter").focus();
                   
-                }, 100);
+                }, 1000);
 
                 setTimeout(() => {
                   
-                      document.querySelector('#caltanpa_mtc').setAttribute('href', download_tanpa_mtc);
+                  $('#caltanpa_mtc').attr('href', download_tanpa_mtc);
                       
-                    }, 1800);
+                    }, 1000);
 
                 if(!$(this).is(':checked')){
                   var checkedmtc = $('#pnyt:checkbox:checked').length;
@@ -1034,13 +1059,16 @@ $(document).ready(function(){
                       
                           dataTable.column([13]).visible(false);
                           dataTable.column([14]).visible(false);
-                          dataTable.column([15]).visible(true);
+                          dataTable.column([15]).visible(false);
                           dataTable.column([16]).visible(true);
-                          dataTable.column([17]).visible(false);
+                          dataTable.column([17]).visible(true);
                           dataTable.column([18]).visible(false);
-                          dataTable.column([11]).visible(false);
+                          dataTable.column([19]).visible(false);
+                          dataTable.column([11]).visible(true);
                           dataTable.column([12]).visible(false);
-                          dataTable.column([5]).visible(true);
+                          dataTable.column([7]).visible(true);
+                          dataTable.column([5]).visible(false);
+                          
 
                           setTimeout(function(){ 
           
@@ -1059,16 +1087,16 @@ $(document).ready(function(){
                               $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
                               $(".CustomFilter").focus();
                           
-                          }, 100);
+                          }, 10000);
 
                           setTimeout(() => {
                           
-                          document.querySelector('#caltanpa_penyusutan').setAttribute('href', download_tanpa_penyusutan);
+                            document.getElementById('caltanpa_penyusutan').setAttribute('href', download_tanpa_penyusutan);
                           
-                        }, 1800);
+                        }, 1000);
 
                     } else {
-                          dataTable.column([5]).visible(true);
+                          dataTable.column([7]).visible(true);
                           dataTable.column([13]).visible(true);
                           dataTable.column([14]).visible(false);
                           dataTable.column([15]).visible(false);
@@ -1101,12 +1129,12 @@ $(document).ready(function(){
                         $("#alltruepnytmtc").hide();
                         $(".CustomFilter").focus();
                     
-                    }, 100);
+                    }, 1000);
 
                     setTimeout(() => {
-                      document.querySelector('#cal_semua_biaya').setAttribute('href', download_tanpa_mtc);
+                      document.getElementById('cal_semua_biaya').setAttribute('href', download_tanpa_mtc);
                       
-                    }, 1800);
+                    }, 1000);
 
                   }
               
@@ -1210,7 +1238,7 @@ $(document).ready(function(){
                   method: 'GET',
                   cache: 'no-cache',
                   credentials: 'same-origin',
-                  redirect: 'follow',;yt
+                  redirect: 'follow',
                   referrer: 'no-referrer',
                   headers: {
                               'X-CSRF-TOKEN': "{{ csrf_token() }}",

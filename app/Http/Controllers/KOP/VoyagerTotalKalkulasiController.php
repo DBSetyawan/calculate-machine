@@ -22,10 +22,10 @@ use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseControl
 class VoyagerTotalKalkulasiController extends BaseVoyagerBaseController Implements ListrikInstanceOfCalc
 {
 
-    const ButtonexportCalcTanpaPenyusutan = "<a href='' id='caltanpa_penyusutan' class='btn btn-warning calctp'><i class='voyager-news'></i> Download Tanpa Penyusutan</a>";
-    const ButtonCalcSmuaBiayaExports = "<a href='' id='cal_semua_biaya' class='btn btn-secondary csbe' style='background-color: brown;color:white'><i class='voyager-news'></i> Download Semua Biaya</a>";
-    const ButtonexportCalcTanpaMTC = '<a href="" id="caltanpa_mtc" class="btn btn-info calcmtc"><i class="voyager-news"></i> Download Tanpa MTC</a>';
-    const exportCalcTanpaMTCnTanpaPenyusutan = '<a href="" id="caltnpmtc" class="btn btn-success calctnpmtctp"><i class="voyager-news"></i>Download Tanpa MTC & tanpa Penyusutan</a>';
+    const ButtonexportCalcTanpaPenyusutan = "<a href='https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/export/all-calculate-machine-xlsx-tanpa-penyusutan' id='caltanpa_penyusutan' class='btn btn-warning calctp'><i class='voyager-news'></i> Download Tanpa Penyusutan</a>";
+    const ButtonCalcSmuaBiayaExports = "<a href='https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/export/all-calculate-machine-xlsx-tanpa-penyusutan' id='cal_semua_biaya' class='btn btn-secondary csbe' style='background-color: brown;color:white'><i class='voyager-news'></i> Download Semua Biaya</a>";
+    const ButtonexportCalcTanpaMTC = "<a href='https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/export/all-calculate-machine-xlsx-semua-total-biaya' id='caltanpa_mtc' class='btn btn-info calcmtc'><i class='voyager-news'></i> Download Tanpa MTC</a>";
+    const exportCalcTanpaMTCnTanpaPenyusutan = "<a href='https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/export/all-calculate-machine-xlsx-tanpa-maintenance-dan-tanpa-penyusutan' id='caltpmtctpc' class='btn btn-success calctnpmtctp'><i class='voyager-news'></i> Download Tanpa MTC & tanpa Penyusutan</a>";
     
     use ListrikTraits;
  

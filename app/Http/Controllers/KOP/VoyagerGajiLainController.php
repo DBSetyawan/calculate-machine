@@ -49,6 +49,7 @@ class VoyagerGajiLainController extends BaseVoyagerBaseController Implements Gaj
             'code_gaji_lain' => RumusGajiLain::generateIDGajiLain(),
             'company_parent_id' => $r->company_parent_id,
             'category_bagian' => $r->category_bagian,
+            'tgl_periode' => $r->tgl_periode,
             'gaji' => $r->gaji,
             'tunjangan_tetap' => $r->tunjangan_tetap,
             'tunjangan_tidak_tetap' => $r->tunjangan_tidak_tetap,
@@ -61,7 +62,7 @@ class VoyagerGajiLainController extends BaseVoyagerBaseController Implements Gaj
 
         return response()->json(
             [
-                't_gaji_labor' => $simpanDataLaporanGajiLain->total_biaya_labor,
+                't_gaji_labor' => $simpanDataLaporanGajiLain->total_biaya_labor
             ]
         );
 

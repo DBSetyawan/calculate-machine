@@ -44,6 +44,22 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    <div class="container">
+                                        
+                                        <div class="row">
+                                            <div class='col-sm-6'>
+                                               <label for="program_id">Setting Periode</label>
+                                              <div class="form-group">
+                                                 <div class='input-group date' id='tgl_periode' required>
+                                                    <input type='text' class="form-control" name='tgl_periode'/>
+                                                    <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                    </span>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                        </div>
+                                     </div>
 
                                     {{-- <div class="form-group">
                                         <label for="url_instagram">Gaji & Upah</label>
@@ -168,6 +184,9 @@
 
         $(document).ready(function() {
 
+            $('#tgl_periode').datetimepicker({ viewMode: 'years',
+              format: 'YYYY-MM-DD'});
+
             $('form').submit(function(event) {
 
                 var formData = {
@@ -175,6 +194,7 @@
                     'company_parent_id'     : $('select[name=company_parent_id]').val(),
                     'category_bagian'       : $('select[name=category_bagian]').val(),
                     'gaji'                  : $('input[name=gaji]').val(),
+                    'tgl_periode'           : $('input[name=tgl_periode]').val(),
                     'tunjangan_tetap'       : $('input[name=tunjangan_tetap]').val(),
                     'tunjangan_tidak_tetap' : $('input[name=tunjangan_tidak_tetap]').val(),
                     'tunjangan_asuransi'    : $('input[name=tunjangan_asuransi]').val(),
