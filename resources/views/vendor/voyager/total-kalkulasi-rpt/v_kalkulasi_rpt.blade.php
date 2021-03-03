@@ -616,6 +616,10 @@ $(document).ready(function(){
                                   Data excell ini, menyesuaikan table dibawah<i class="bi bi-file-spreadsheet"></i>  <i class="voyager-book-download"></i>
                                 </label>
                               </div>
+                              <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                             <a onclick="window.open(this.href,'_blank');return false;" href="{!! url('/admin/history-log-recalculate') !!}" class="badge badge-secondary">history log recalculate</a>
+                             <i class="voyager-file-text"> </i>
+                              </div>
                               <br/>
                                 <a class="calctp"></a>
                                 <a class="csbe"</a>

@@ -25,7 +25,7 @@ class VoyagerHIstoryLogCalculateController extends BaseVoyagerBaseController
 
         // GET THE DataType based on the slug
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
-
+        
         // Check permission
         $this->authorize('browse', app($dataType->model_name));
 

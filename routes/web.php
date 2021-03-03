@@ -77,6 +77,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('calc-rpts/form-transaction-machine-calc','KOP\VoyagerTotalKalkulasiController@form_tr_kakulasi')->name('tr.mch.store.tr.sc.edp');
     Route::get('calc-rpts/form-test/','KOP\VoyagerTotalKalkulasiController@ListrikInstanceOfPenyusutan')->name('tr.test');
     Route::get('calc-rpts/rpts/','KOP\VoyagerListrikController@rpts')->name('rpts');
+    // Route::get('/history-log-recalculate','KOP\VoyagerHIstoryLogCalculateController@index')->name('h.index');
     Route::post('calc-rpts/open-transaction-calc-edp','KOP\VoyagerTotalKalkulasiController@OpenTransactionPenyusutan')->name('tr.open.penyusutan');
     Route::get('total-kalkulasi-rpts/penyusutan','KOP\VoyagerTotalKalkulasiController@detailTransactionPenyusutan')->name('tr.total.kalkulasi.all.ready.view.p');
     Route::get('total-kalkulasi-rpts/tanpa-penyusutan','KOP\VoyagerTotalKalkulasiController@detailTransactionTanpaPenyusutan')->name('tr.total.kalkulasi.all.ready.view.tp');
@@ -88,10 +89,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('button-load-ButtonCalcSmuaBiayaExports','KOP\VoyagerTotalKalkulasiController@ButtonCalcSmuaBiayaExports')->name('voyager.ButtonCalcSmuaBiayaExports');
     Route::get('button-load-ButtonexportCalcTanpaMTC','KOP\VoyagerTotalKalkulasiController@ButtonexportCalcTanpaMTC')->name('voyager.ButtonexportCalcTanpaMTC');
     Route::get('button-load-ButtonexportCalcTanpaMTCnTanpaPenyusutan','KOP\VoyagerTotalKalkulasiController@ButtonexportCalcTanpaMTCnTanpaPenyusutan')->name('voyager.exportCalcTanpaMTCnTanpaPenyusutan');
-});
-
-Route::get('/debug-sentry', function () {
-    throw new Exception('My first Sentry error!');
 });
 
 Route::get('/helper-user', function () {
