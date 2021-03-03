@@ -77,11 +77,11 @@
                                        value="{{ old('tahun3', $dataTypeContent->tahun3 ?? '') }}">
                             </div>
 
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="tunjangan_tetap">X</label>
                                 <input type="text" class="form-control" id="tahun3" name="tahun3" placeholder=""
                                        value="{{ old('tahun3', $dataTypeContent->total_biaya_laporan_periode ?? '') }}">
-                            </div>
+                            </div> --}}
 
                             <div class="form-group">
                                 <label for="kelurahan_id">Listrik Output</label>

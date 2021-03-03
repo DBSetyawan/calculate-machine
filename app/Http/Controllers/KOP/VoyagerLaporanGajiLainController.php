@@ -495,9 +495,10 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
 
              $synccalcmachine = RptCalcMachine::InstanceOfCalcGajiLainSSR($this->saldoAkhir_REPRO(), $this->saldoAkhir_MTC(), $this->saldoAkhir_UMUM(), $this->saldoAkhir_QC(), $request->lsoutput);
              
-             DB::table('total_kalkulasi_tanpa_penyusutan')
-             ->where('listrik', $data->ncost_bulan_plus_adm)
-             ->update(array('listrik' => $request->ncost_bulan_plus_adm)); 
+            // progress deploy pencarian data, dengan ID
+            DB::table('total_kalkulasi_tanpa_penyusutan')
+             ->where('gaji_lainnya', $synccalcmachine)
+             ->update(array('gaji_lainnya' => $synccalcmachine)); 
 
             return response()->json(
                 [
