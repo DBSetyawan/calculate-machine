@@ -8,6 +8,7 @@ use App\Company;
 use App\TotalCalc;
 use RptCalcMachine;
 use App\KategoriBagian;
+use App\LaporanGajiLain;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Exports\CalcsMachineExport;
@@ -17,6 +18,7 @@ use App\Exports\CalcsMachineMtCExport;
 use App\TotalKalkulasiTanpaPenyusutan;
 use App\Exports\CalcMachineTanpaMTCnTanpaPenyusutanExports;
 use App\Http\Controllers\KOP\Helpers\RumusListrikOutputPerjam;
+use App\Http\Controllers\KOP\VoyagerLaporanGajiLainController;
 
 trait ListrikTraits {
 
@@ -30,6 +32,230 @@ trait ListrikTraits {
         // dd($sss);
         return view('vendor.voyager.total-kalkulasi-rpt.v_kalkulasi_rpt', compact('label','sss'));
 
+    }
+
+    public function exportCalcTanpaPenyusutan(){
+        
+        return Excel::download(new CalcsMachineExport, 'Calculate-Machine-Tanpa-Penyusutan.xlsx');
+
+    }
+
+    public function exportCalcTanpaMTC(){
+        
+        return Excel::download(new CalcsMachineMtCExport, 'Calculate-Machine-Tanpa-MTC.xlsx');
+
+    }
+
+    public function exportCalcTanpaMTCnTanpaPenyusutan(){
+        
+        return Excel::download(new CalcMachineTanpaMTCnTanpaPenyusutanExports, 'Calculate-Machine-Tanpa-MTC.xlsx');
+
+    }
+
+    public function CalcSmuaBiayaExports(){
+        
+        return Excel::download(new CalcSmuaBiayaExports, 'Calculate-Machine-Semua-Biaya.xlsx');
+
+    }
+
+    public function ListrikInstanceOfPenyusutan(){
+
+        return RptCalcMachine::InstanceOfListrik();
+
+    }
+
+    public function IPenyusutanInstanceOfPenyusutan(){
+
+        return RptCalcMachine::InstanceOfPenyusutan();
+
+    }
+
+    public function IPenyusutanInstanceOfMaintenance(){
+
+        return RptCalcMachine::InstanceOfMaintenance();
+
+    }
+
+    public function IPenyusutanInstanceOfMtcRpt(){
+
+        return RptCalcMachine::InstanceOfMtcRpt();
+
+    }
+
+
+    public function IPenyusutanInstanceOfGajiLainLaborMTC(){
+
+        return RptCalcMachine::InstanceOfLaborMTC();
+
+    }
+
+    public function IPenyusutanInstanceOfGajiLainLaborRptMtc(){
+
+        return RptCalcMachine::InstanceOfLaborRptMtc();
+
+    }
+
+    public function IPenyusutanInstanceOfGajiLainLaborUMUM(){
+
+        return RptCalcMachine::InstanceOfLaborUMUM();
+
+    }
+
+    public function IPenyusutanInstanceOfGajiLainLaborMTCtPyt(){
+
+        return RptCalcMachine::InstanceOfLaborMtcPyt();
+
+    }
+
+
+    public function IPenyusutanInstanceOfGajiLainLaborQC(){
+
+        return RptCalcMachine::InstanceOfLaborQC();
+
+    }
+
+    public function IPenyusutanInstanceOfGajiLainLaborUmPyt(){
+
+        return RptCalcMachine::InstanceOfLaborUmmPyts();
+
+    }
+
+    public function IPenyusutanInstanceOfGajiLainLaborPREPRESS(){
+
+        return RptCalcMachine::InstanceOfLaborPREPRESS();
+
+    }
+
+    public function IPenyusutanInstanceOfGajiLainLaborQCPyts(){
+
+        return RptCalcMachine::InstanceOfLaborQcPyts();
+
+    }
+
+    public function BpnjInstanceOfBagianPenjualan(){
+
+        return RptCalcMachine::InstanceOfBagPenjualanToTls();
+
+    }
+
+    public function BpnjInstanceOfBagianPenjualanPyts(){
+
+        return RptCalcMachine::InstanceOfLBagPenjualanToTls();
+
+    }
+    
+    public function BagianAdministrasiUmumToTls(){
+
+        return RptCalcMachine::InstanceOfBagianAdministrasiUmumToTls();
+
+    }
+
+    public function BagianAdministrasiUmumPytsToTls(){
+
+        return RptCalcMachine::InstanceOfBagianAdministrasiUmumToTlsPyts();
+
+    }
+
+    public function LoadProsentaseListrik(){
+
+        return RptCalcMachine::InsteadOfListrikNsheet();
+
+    }
+
+    public function LoadProsentaseListriktPyts(){
+
+        return RptCalcMachine::InsteadOfListrikAFsheet();
+
+    }
+
+    public function LoadLabor(){
+
+        return RptCalcMachine::InstanceOfLaborToTls();
+
+    }
+
+    public function LoadBiayaProduksiLain(){
+
+        return RptCalcMachine::InstanceOfBiayaProdLainToTls();
+
+    }
+
+    public function CalcBiayaGajiLainInstaceOfKalkulasi($gaji_lainlabor_MTC, $gaji_lainlabor_UMUM, $gaji_lainlabor_QC, $gaji_lainlabor_PREPRESS, $listrikN5){
+
+        return RptCalcMachine::InstanceOfCalcGajiLainSSR($gaji_lainlabor_MTC, $gaji_lainlabor_UMUM, $gaji_lainlabor_QC, $gaji_lainlabor_PREPRESS, $listrikN5);
+
+    }
+
+    public function CalcBiayaBagPenjualanInstaceOfKalkulasi($bpenjualan, $prosentaselistrik){
+
+        return RptCalcMachine::InstanceOfCalcBagianPenjualanSSR($bpenjualan, $prosentaselistrik);
+
+    }
+
+    public function CalcBiayaAdministrasiUmumInstaceOfKalkulasi($bpenjualan, $prosentaselistrik){
+
+        return RptCalcMachine::InstanceOfCalcBiayaAdministrasiUmumSSR($bpenjualan, $prosentaselistrik);
+
+    }
+
+    public function CalcToTlsInstaceOfKalkulasi($listrik, $penyusutan, $labor, $mtc, $gjlainnya, $pnjualan, $bau){
+
+        return RptCalcMachine::InstanceOfCalcTotalPenyusutanPerbulan($listrik, $penyusutan, $labor, $mtc, $gjlainnya, $pnjualan, $bau);
+
+    }
+
+    public function CalcPersenListrikPerbulan($totallistrikperbulan, $totalcostmesinperbulan){
+
+        return RptCalcMachine::tlspersenListrik($totallistrikperbulan, $totalcostmesinperbulan);
+
+    }
+
+    public function CalcTotalPerjamCalcMesin($shift, $totalcalcmesinperbulan){
+
+        return RptCalcMachine::tlsperjamcalclistrik($shift, $totalcalcmesinperbulan);
+
+    }
+
+    public function CalcPersenPenyusutanPerbulan($penyusutanperbulan, $totalcostmesinperbulan){
+
+        return RptCalcMachine::tlspersenPenyusutan($penyusutanperbulan, $totalcostmesinperbulan);
+        
+    }
+    
+    public function CalcPersenLaborPerbulan($laborperbulan, $totalcostmesinperbulan){
+
+        return RptCalcMachine::tlspersenLabor($laborperbulan, $totalcostmesinperbulan);
+        
+    }
+
+    public function CalcPersenMaintenancePerbulan($mtcperbulan, $totalcostmesinperbulan){
+
+        return RptCalcMachine::tlspersenMTC($mtcperbulan, $totalcostmesinperbulan);
+        
+    }
+
+    public function CalcPersenGajiLainnyaPerbulan($gajilainnyaperbulan, $totalcostmesinperbulan){
+
+        return RptCalcMachine::tlspersenGajiLainnya($gajilainnyaperbulan, $totalcostmesinperbulan);
+        
+    }
+
+    public function CalcPersenBagianPenjualanPerbulan($Bagianpenjualanperbulan, $totalcostmesinperbulan){
+
+        return RptCalcMachine::tlspersenBagianPenjualan($Bagianpenjualanperbulan, $totalcostmesinperbulan);
+        
+    }
+
+    public function CalcPersenBiayaAdministrasiUmum($BauPerbulan, $totalcostmesinperbulan){
+
+        return RptCalcMachine::tlspersenBiayaAdministrasiUmum($BauPerbulan, $totalcostmesinperbulan);
+        
+    }
+
+    public function CalcPersenTotSallpersenMaster($listrik, $penyusutan, $labor, $mtc, $gjlainnya, $pnjualan, $bau){
+
+        return RptCalcMachine::CalcAllPercentMasterPenyusutanPerbulan($listrik, $penyusutan, $labor, $mtc, $gjlainnya, $pnjualan, $bau);
+        
     }
     
     public function ButtonexportCalcTanpaPenyusutan(){
@@ -438,30 +664,6 @@ trait ListrikTraits {
 
     }
 
-    public function exportCalcTanpaPenyusutan(){
-        
-        return Excel::download(new CalcsMachineExport, 'Calculate-Machine-Tanpa-Penyusutan.xlsx');
-
-    }
-
-    public function exportCalcTanpaMTC(){
-        
-        return Excel::download(new CalcsMachineMtCExport, 'Calculate-Machine-Tanpa-MTC.xlsx');
-
-    }
-
-    public function exportCalcTanpaMTCnTanpaPenyusutan(){
-        
-        return Excel::download(new CalcMachineTanpaMTCnTanpaPenyusutanExports, 'Calculate-Machine-Tanpa-MTC.xlsx');
-
-    }
-
-    public function CalcSmuaBiayaExports(){
-        
-        return Excel::download(new CalcSmuaBiayaExports, 'Calculate-Machine-Semua-Biaya.xlsx');
-
-    }
-
     public function form_tr_kakulasi(){
 
         $company = Company::all();
@@ -482,204 +684,15 @@ trait ListrikTraits {
         return view('vendor.voyager.total-kalkulasi-rpt.form_kalkulasirpts', compact('LoadLabor','loadProsentaseListrik','b_bag_administrasi_umum','b_bag_penjualan','b_labor_umum','b_labor_qc','b_labor_prepress','b_labor_mtc','b_mtc','b_penyusutan','b_listrik','company','mesin','cbagian'));
     }
 
-    public function ListrikInstanceOfPenyusutan(){
-
-        return RptCalcMachine::InstanceOfListrik();
-
-    }
-
-    public function IPenyusutanInstanceOfPenyusutan(){
-
-        return RptCalcMachine::InstanceOfPenyusutan();
-
-    }
-
-    public function IPenyusutanInstanceOfMaintenance(){
-
-        return RptCalcMachine::InstanceOfMaintenance();
-
-    }
-
-    public function IPenyusutanInstanceOfMtcRpt(){
-
-        return RptCalcMachine::InstanceOfMtcRpt();
-
-    }
-
-
-    public function IPenyusutanInstanceOfGajiLainLaborMTC(){
-
-        return RptCalcMachine::InstanceOfLaborMTC();
-
-    }
-
-    public function IPenyusutanInstanceOfGajiLainLaborRptMtc(){
-
-        return RptCalcMachine::InstanceOfLaborRptMtc();
-
-    }
-
-    public function IPenyusutanInstanceOfGajiLainLaborUMUM(){
-
-        return RptCalcMachine::InstanceOfLaborUMUM();
-
-    }
-
-    public function IPenyusutanInstanceOfGajiLainLaborMTCtPyt(){
-
-        return RptCalcMachine::InstanceOfLaborMtcPyt();
-
-    }
-
-
-    public function IPenyusutanInstanceOfGajiLainLaborQC(){
-
-        return RptCalcMachine::InstanceOfLaborQC();
-
-    }
-
-    public function IPenyusutanInstanceOfGajiLainLaborUmPyt(){
-
-        return RptCalcMachine::InstanceOfLaborUmmPyts();
-
-    }
-
-    public function IPenyusutanInstanceOfGajiLainLaborPREPRESS(){
-
-        return RptCalcMachine::InstanceOfLaborPREPRESS();
-
-    }
-
-    public function IPenyusutanInstanceOfGajiLainLaborQCPyts(){
-
-        return RptCalcMachine::InstanceOfLaborQcPyts();
-
-    }
-
-    public function BpnjInstanceOfBagianPenjualan(){
-
-        return RptCalcMachine::InstanceOfBagPenjualanToTls();
-
-    }
-
-    public function BpnjInstanceOfBagianPenjualanPyts(){
-
-        return RptCalcMachine::InstanceOfLBagPenjualanToTls();
-
-    }
-    
-    public function BagianAdministrasiUmumToTls(){
-
-        return RptCalcMachine::InstanceOfBagianAdministrasiUmumToTls();
-
-    }
-
-    public function BagianAdministrasiUmumPytsToTls(){
-
-        return RptCalcMachine::InstanceOfBagianAdministrasiUmumToTlsPyts();
-
-    }
-
-    public function LoadProsentaseListrik(){
-
-        return RptCalcMachine::InsteadOfListrikNsheet();
-
-    }
-
-    public function LoadProsentaseListriktPyts(){
-
-        return RptCalcMachine::InsteadOfListrikAFsheet();
-
-    }
-
-    public function LoadLabor(){
-
-        return RptCalcMachine::InstanceOfLaborToTls();
-
-    }
-
-    public function LoadBiayaProduksiLain(){
-
-        return RptCalcMachine::InstanceOfBiayaProdLainToTls();
-
-    }
-
-    public function CalcBiayaGajiLainInstaceOfKalkulasi($gaji_lainlabor_MTC, $gaji_lainlabor_UMUM, $gaji_lainlabor_QC, $gaji_lainlabor_PREPRESS, $listrikN5){
-
-        return RptCalcMachine::InstanceOfCalcGajiLainSSR($gaji_lainlabor_MTC, $gaji_lainlabor_UMUM, $gaji_lainlabor_QC, $gaji_lainlabor_PREPRESS, $listrikN5);
-
-    }
-
-    public function CalcBiayaBagPenjualanInstaceOfKalkulasi($bpenjualan, $prosentaselistrik){
-
-        return RptCalcMachine::InstanceOfCalcBagianPenjualanSSR($bpenjualan, $prosentaselistrik);
-
-    }
-
-    public function CalcBiayaAdministrasiUmumInstaceOfKalkulasi($bpenjualan, $prosentaselistrik){
-
-        return RptCalcMachine::InstanceOfCalcBiayaAdministrasiUmumSSR($bpenjualan, $prosentaselistrik);
-
-    }
-
-    public function CalcToTlsInstaceOfKalkulasi($listrik, $penyusutan, $labor, $mtc, $gjlainnya, $pnjualan, $bau){
-
-        return RptCalcMachine::InstanceOfCalcTotalPenyusutanPerbulan($listrik, $penyusutan, $labor, $mtc, $gjlainnya, $pnjualan, $bau);
-
-    }
-
-    public function CalcPersenListrikPerbulan($totallistrikperbulan, $totalcostmesinperbulan){
-
-        return RptCalcMachine::tlspersenListrik($totallistrikperbulan, $totalcostmesinperbulan);
-
-    }
-
-    public function CalcTotalPerjamCalcMesin($shift, $totalcalcmesinperbulan){
-
-        return RptCalcMachine::tlsperjamcalclistrik($shift, $totalcalcmesinperbulan);
-
-    }
-
-    public function CalcPersenPenyusutanPerbulan($penyusutanperbulan, $totalcostmesinperbulan){
-
-        return RptCalcMachine::tlspersenPenyusutan($penyusutanperbulan, $totalcostmesinperbulan);
+    public function recall_calculation(){
         
-    }
-    
-    public function CalcPersenLaborPerbulan($laborperbulan, $totalcostmesinperbulan){
+        // progress deploy gaji lainnya..
+        // $first = TotalKalkulasiTanpaPenyu    sutan::whereIn('category_bagian', [$request->input('category_bagian')])->get();
 
-        return RptCalcMachine::tlspersenLabor($laborperbulan, $totalcostmesinperbulan);
-        
-    }
+        // $a = app(VoyagerLaporanGajiLainController::class)->jumlahAkhirGajiLain($first);
 
-    public function CalcPersenMaintenancePerbulan($mtcperbulan, $totalcostmesinperbulan){
+        // return response()->json(['data' => $a]);
 
-        return RptCalcMachine::tlspersenMTC($mtcperbulan, $totalcostmesinperbulan);
-        
     }
 
-    public function CalcPersenGajiLainnyaPerbulan($gajilainnyaperbulan, $totalcostmesinperbulan){
-
-        return RptCalcMachine::tlspersenGajiLainnya($gajilainnyaperbulan, $totalcostmesinperbulan);
-        
-    }
-
-    public function CalcPersenBagianPenjualanPerbulan($Bagianpenjualanperbulan, $totalcostmesinperbulan){
-
-        return RptCalcMachine::tlspersenBagianPenjualan($Bagianpenjualanperbulan, $totalcostmesinperbulan);
-        
-    }
-
-    public function CalcPersenBiayaAdministrasiUmum($BauPerbulan, $totalcostmesinperbulan){
-
-        return RptCalcMachine::tlspersenBiayaAdministrasiUmum($BauPerbulan, $totalcostmesinperbulan);
-        
-    }
-
-    public function CalcPersenTotSallpersenMaster($listrik, $penyusutan, $labor, $mtc, $gjlainnya, $pnjualan, $bau){
-
-        return RptCalcMachine::CalcAllPercentMasterPenyusutanPerbulan($listrik, $penyusutan, $labor, $mtc, $gjlainnya, $pnjualan, $bau);
-        
-    }
-    
 }

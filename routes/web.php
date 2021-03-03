@@ -48,6 +48,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('laporan-gaji-lains/store-laporan-gaji-lain','KOP\VoyagerLaporanGajiLainController@HitungAkumulasiLaporanGajiLain')->name('laporan.g.lains.store.master');
     Route::get('laporan-gaji-lains/form-laporan-gaji-lain','KOP\VoyagerLaporanGajiLainController@formLaporanGajiLainAction')->name('laporan.g.lains.form.master');
     Route::post('laporan-gaji-lains/change-master-gaji-lain','KOP\VoyagerLaporanGajiLainController@EventChangeGajiLain')->name('change.gajilain.form.master');
+    Route::post('laporan-gaji-lains/recalculate-gl','KOP\VoyagerLaporanGajiLainController@EventChangeLpGajiLain')->name('change.gajilain.form.EventChangeLpGajiLain');
+    Route::get('laporan-gaji-lains/change-master-gaji-QueryCompany','KOP\VoyagerLaporanGajiLainController@QueryCompany')->name('change.gajilain.form.QueryCompany');
 
     Route::post('gaji-lains/store-gaji-lain','KOP\VoyagerGajiLainController@HitungAkumulasiGajiLain')->name('g.lains.store.master');
     Route::get('gaji-lains/form-gaji-lain','KOP\VoyagerGajiLainController@formGajiLainAction')->name('g.lains.form.master');

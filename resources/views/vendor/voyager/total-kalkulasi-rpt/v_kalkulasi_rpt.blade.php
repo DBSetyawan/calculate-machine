@@ -595,6 +595,8 @@ $(document).ready(function(){
 
   });
 
+
+
     function mesin_calc_table(penyusutan)
         {
           var ert = `<div class="col-md-10">
@@ -616,10 +618,14 @@ $(document).ready(function(){
                                   Data excell ini, menyesuaikan table dibawah<i class="bi bi-file-spreadsheet"></i>  <i class="voyager-book-download"></i>
                                 </label>
                               </div>
-                              <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
                              <a onclick="window.open(this.href,'_blank');return false;" href="{!! url('/admin/history-log-recalculate') !!}" class="badge badge-secondary">history log recalculate</a>
                              <i class="voyager-file-text"> </i>
-                              </div>
+                            </div>
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <span id="resyncalc" style="cursor:pointer"> Siknronkan kalkulasi</span>
+                             <i class="voyager-refresh"> </i>
+                            </div>
                               <br/>
                                 <a class="calctp"></a>
                                 <a class="csbe"</a>
@@ -1146,6 +1152,11 @@ $(document).ready(function(){
           );
           
         }
+
+        // sinkronkan data master ke kalkulasi tbl. <Test>:[<Gaji_Lain>]
+        $("body").on('click', "#resyncalc", function(e) {
+          alert("asdasd")
+        })
 
           $('#penyusutan').click(function(){
 

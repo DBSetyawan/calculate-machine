@@ -16,6 +16,12 @@ class LaporanGajiLain extends Model
         return $this->belongsTo('App\Company', 'id');
     }
 
+    public function cs()
+    {
+        return $this->belongsTo('App\Company', 'company_parent_id');
+    }
+
+
     public function Bagiankategori()
     {
         return $this->belongsTo('App\KategoriBagian', 'id');
