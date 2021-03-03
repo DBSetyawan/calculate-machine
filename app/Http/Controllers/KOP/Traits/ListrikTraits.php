@@ -254,7 +254,7 @@ trait ListrikTraits {
             }
           
         
-            // $listrik = TotalCalc::with(['mesin','kategori_bagian'])->select('total_kalkulasi.*','mesin.*');
+            // $listrik = TotalKalkulasiTanpaPenyusutan::with(['mesin','kategori_bagian'])->select('total_kalkulasi.*','mesin.*');
           
             // ->leftjoin('kategori_bagian', 'kategori_bagian.id', '=', 'total_kalkulasi.category_bagian')
             // ->join('mesin as msn', function($join){
@@ -408,7 +408,7 @@ trait ListrikTraits {
 
         ];
 
-        $strdatacalcpenyusutan = TotalCalc::create($result_calc);
+        $strdatacalcpenyusutan = TotalKalkulasiTanpaPenyusutan::create($result_calc);
 
         return response()->json(
             [
