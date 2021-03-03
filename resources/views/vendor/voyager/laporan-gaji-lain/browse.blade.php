@@ -157,6 +157,24 @@
         return $UM->sum('total_biaya_laporan_periode');
     });
 
+    $QCs = $laporangajilain->whereIn('category_bagian', [13])->get();
+
+    $qc_ = collect([$QCs])->sum(function ($qxc){
+        return $qxc->sum('tahun1');
+    });
+
+    $qc__ = collect([$QCs])->sum(function ($qxc){
+        return $qxc->sum('tahun2');
+    });
+
+    $qc___ = collect([$QCs])->sum(function ($qxc){
+        return $qxc->sum('tahun3');
+    });
+
+    $Laporanum_qc = collect([$QCs])->sum(function ($qxc){
+        return $qxc->sum('total_biaya_laporan_periode');
+    });
+
 @endphp
 @section('page_header')
     <div class="container-fluid">
@@ -542,6 +560,21 @@
                                             <label for="total PPJ" class="badge badge-success">Total UMUM 2019:</label> <span class="">Rp {{number_format($um_, 0, ".", ".")}}</span>
                                             <label for="total PPJ" class="badge badge-success">Total UMUM 2020:</label> <span class="">Rp {{number_format($um__, 0, ".", ".")}}</span>
                                             <label for="total PPJ" class="badge badge-success">Total biaya / bulanan UMUM:</label> <span class="">Rp {{number_format($Laporanum_, 0, ".", ".")}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="panel panel-bordered">
+                                <div class="panel-body">
+                                    <div class="pull-left">
+                                        <div class="col-2">
+                                            <label for="total PPJ" class="badge badge-success">Total QC 2018:</label> <span class="">Rp {{number_format($qc_, 0, ".", ".")}}</span>
+                                            <label for="total PPJ" class="badge badge-success">Total QC 2019:</label> <span class="">Rp {{number_format($qc__, 0, ".", ".")}}</span>
+                                            <label for="total PPJ" class="badge badge-success">Total QC 2020:</label> <span class="">Rp {{number_format($qc___, 0, ".", ".")}}</span>
+                                            <label for="total PPJ" class="badge badge-success">Total biaya / bulanan QC:</label> <span class="">Rp {{number_format($Laporanum_qc, 0, ".", ".")}}</span>
                                         </div>
                                     </div>
                                 </div>
