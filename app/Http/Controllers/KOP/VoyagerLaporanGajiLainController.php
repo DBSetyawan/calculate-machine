@@ -6,10 +6,12 @@ use App\Mesin;
 use Exception;
 use App\Company;
 use App\GajiLain;
+use App\ListrikOutput;
 use App\KategoriBagian;
 use App\LaporanGajiLain;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use TCG\Voyager\Events\BreadDataAdded;
@@ -18,6 +20,7 @@ use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
+use App\Http\Controllers\KOP\Helpers\RptCalcMachine;
 use App\Http\Controllers\KOP\Service\RumusLaporanGajiLain;
 use App\Http\Controllers\KOP\Helpers\RumusLaporanGajiLain as HelpersLaporanGajiLain;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
@@ -265,6 +268,8 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
             $view = "voyager::$slug.read";
         }
 
+        $companies = Company::all();
+
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'isSoftDeleted'));
     }
 
@@ -279,6 +284,15 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
     //  Edit an item of our Data Type BR(E)AD
     //
     //****************************************
+
+    public function QueryCompany(Request $request) :JsonResponse
+    {
+        $cari = $request->q;
+
+        $data = Company::where('company_name', 'LIKE', "%$cari%")->get();
+                    
+        return response()->json($data);
+    }
 
     public function edit(Request $request, $id)
     {
@@ -323,13 +337,20 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
         if (view()->exists("voyager::$slug.edit-add")) {
             $view = "voyager::$slug.edit-add";
         }
+        $show_company = LaporanGajiLain::with('cs')->first();
+        $companies = Company::all();
+        $ktbg = KategoriBagian::all();
+        $lsoutput = ListrikOutput::all();
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
+        return Voyager::view($view, compact('lsoutput','ktbg','show_company','companies','dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     // POST BR(E)AD
     public function update(Request $request, $id)
     {
+
+        // 'code_rpt_gaji_lain' => HelpersLaporanGajiLain::generateIDLaporanGajiLain(),
+
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -377,6 +398,119 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
                 GajiLain::findOrFail($updateData["id"])->update($updateData);
             
             return response()->json(['success' => __('voyager::generic.successfully_updated'), 'data' => $updateData]);
+            
+         
+        } catch (Exception $e) {
+
+            return response()->json(['errors' => $e]);
+
+        }
+
+    }
+
+    //untuk filtler insert history calc.
+    protected function jumlahAkhirGajiLain($first){
+        
+            $hasil_akhir_gj_lain = collect([$first])->sum(function ($t){
+                return $t->sum('total_biaya_laporan_periode');
+            });
+
+        return $hasil_akhir_gj_lain;
+    }
+
+    protected function saldoAkhir_REPRO(){
+
+        $srepro = LaporanGajiLain::whereIn('category_bagian', [9])->get();
+        
+            $hasil_akhir_gj_lain = collect([$srepro])->sum(function ($t){
+                return $t->sum('total_biaya_laporan_periode');
+            });
+
+        return $hasil_akhir_gj_lain;
+    }
+
+    protected function saldoAkhir_MTC(){
+        
+        $smtcs = LaporanGajiLain::whereIn('category_bagian', [11])->get();
+
+            $hasil_akhir_gj_lain = collect([$smtcs])->sum(function ($t){
+                return $t->sum('total_biaya_laporan_periode');
+            });
+
+        return $hasil_akhir_gj_lain;
+    }
+
+    protected function saldoAkhir_UMUM(){
+
+        $sumum = LaporanGajiLain::whereIn('category_bagian', [12])->get();
+        
+            $hasil_akhir_gj_lain = collect([$sumum])->sum(function ($t){
+                return $t->sum('total_biaya_laporan_periode');
+            });
+
+        return $hasil_akhir_gj_lain;
+    }
+
+    protected function saldoAkhir_QC(){
+
+        $sqcs = LaporanGajiLain::whereIn('category_bagian', [13])->get();
+
+            $hasil_akhir_gj_lain = collect([$sqcs])->sum(function ($t){
+                return $t->sum('total_biaya_laporan_periode');
+            });
+
+        return $hasil_akhir_gj_lain;
+    }
+
+    public function EventChangeLpGajiLain(Request $request)
+    {
+        try {
+            
+            $string = $request->except(["lsoutput"]);
+
+            $updateData = str_replace(".", "",  $string);
+
+            $jumlah_total = $this->RumusTotalLaporanGajiLain($request->input('tahun1'), $request->input('tahun2'), $request->input('tahun3'));
+
+                $update_data_lp_gaji_lain = tap(DB::table('laporan_gaji_lain')->where('id', $request->input('id')))
+                ->update( [
+                    'tahun1' => $request->input('tahun1'),
+                    'tahun2' => $request->input('tahun2'),
+                    'tahun3' => $request->input('tahun3'),
+                    'total_biaya_laporan_periode' => $jumlah_total
+                ])
+                ->first();
+
+            $first = LaporanGajiLain::whereIn('category_bagian', [$request->input('category_bagian')])->get();
+
+                $hasil_akhir_gj_lain = $this->jumlahAkhirGajiLain($first);
+           
+
+               $logs = \App\HistoryLogRecalculate::create([
+                'changed_by' => Auth::user()->name,
+                'coloumn_after' => $hasil_akhir_gj_lain,
+                'coloumn_before' => $update_data_lp_gaji_lain->total_biaya_laporan_periode,
+                'recalculate_status' => "active"
+              ]);
+
+             $synccalcmachine = RptCalcMachine::InstanceOfCalcGajiLainSSR($this->saldoAkhir_REPRO(), $this->saldoAkhir_MTC(), $this->saldoAkhir_UMUM(), $this->saldoAkhir_QC(), $request->lsoutput);
+             
+             DB::table('total_kalkulasi_tanpa_penyusutan')
+             ->where('listrik', $data->ncost_bulan_plus_adm)
+             ->update(array('listrik' => $request->ncost_bulan_plus_adm)); 
+
+            return response()->json(
+                [
+                    'success' => __('voyager::generic.successfully_updated'), 
+                    'data' => $update_data_lp_gaji_lain,
+                    's' => $jumlah_total,
+                    'results' => $synccalcmachine,
+                    'repro' => $this->saldoAkhir_REPRO(),
+                    'umum' => $this->saldoAkhir_UMUM(),
+                    'qc' => $this->saldoAkhir_QC(),
+                    'mtc' => $this->saldoAkhir_MTC(),
+                ]
+            );
             
          
         } catch (Exception $e) {
