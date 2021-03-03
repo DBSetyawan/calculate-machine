@@ -622,10 +622,7 @@ $(document).ready(function(){
                              <a onclick="window.open(this.href,'_blank');return false;" href="{!! url('/admin/history-log-recalculate') !!}" class="badge badge-secondary">history log recalculate</a>
                              <i class="voyager-file-text"> </i>
                             </div>
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <span id="resyncalc" style="cursor:pointer"> Siknronkan kalkulasi</span>
-                             <i class="voyager-refresh"> </i>
-                            </div>
+                          
                               <br/>
                                 <a class="calctp"></a>
                                 <a class="csbe"</a>
@@ -636,6 +633,10 @@ $(document).ready(function(){
                       </div>
                     </div>`;
 
+                    // <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    //         <span id="resyncalc" style="cursor:pointer"> Siknronkan kalkulasi</span>
+                    //          <i class="voyager-refresh"> </i>
+                    //         </div>
             var dataTable = $('#dataTablePenyusutan').DataTable({
                 //settingan render pada sisi server, jika data sudah lebih dari 1 jt / 1 m, ini akan membantu meringankan pada sisi server, karna pada akhir data disimpan ke localStorage, kemudian data di render pada sisi client 
                 deferRender: true,
