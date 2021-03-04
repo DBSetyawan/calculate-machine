@@ -84,7 +84,7 @@
                                 <span>Total perjam </span>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" id="totaloutputperjam" name="totaloutputperjam" placeholder="">
+                                <input type="text" readonly="true" class="form-control" id="totaloutputperjam" name="totaloutputperjam" placeholder="">
                             </div>
                         </div>
 

@@ -68,7 +68,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <input type="text" class="form-control" id="total_b_administrasi_umumlp" name="total_b_administrasi_umumlp" placeholder="">
+                                <input type="text" readonly="true" class="form-control" id="total_b_administrasi_umumlp" name="total_b_administrasi_umumlp" placeholder="">
                             </div>
                         </div>
                     </div>

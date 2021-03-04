@@ -14,6 +14,7 @@ use TCG\Voyager\Facades\Voyager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\TotalKalkulasiTanpaPenyusutan;
 use TCG\Voyager\Events\BreadDataAdded;
 use TCG\Voyager\Events\BreadDataDeleted;
 use TCG\Voyager\Events\BreadDataUpdated;
@@ -495,10 +496,11 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
 
              $synccalcmachine = RptCalcMachine::InstanceOfCalcGajiLainSSR($this->saldoAkhir_REPRO(), $this->saldoAkhir_MTC(), $this->saldoAkhir_UMUM(), $this->saldoAkhir_QC(), $request->lsoutput);
              
+            $firsts = TotalKalkulasiTanpaPenyusutan::where('gaji_lainnya', $synccalcmachine)->first();
             // progress deploy pencarian data, dengan ID
-            DB::table('total_kalkulasi_tanpa_penyusutan')
-             ->where('gaji_lainnya', $synccalcmachine)
-             ->update(array('gaji_lainnya' => $synccalcmachine)); 
+            // $da = DB::table('total_kalkulasi_tanpa_penyusutan')
+            //  ->where('gaji_lainnya', '=',$synccalcmachine)->first();
+            //  ->update(array('gaji_lainnya' => $synccalcmachine)); 
 
             return response()->json(
                 [
@@ -510,6 +512,7 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
                     'umum' => $this->saldoAkhir_UMUM(),
                     'qc' => $this->saldoAkhir_QC(),
                     'mtc' => $this->saldoAkhir_MTC(),
+                    'da' => $firsts
                 ]
             );
             

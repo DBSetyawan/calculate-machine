@@ -15,7 +15,7 @@
             </a> --}}
         @endcan
         <a href="{{ route('listrik-outputs.form.master') }}" class="btn btn-success btn-add-new">
-            <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} </span>
+            <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Listrik Output</span>
         </a>
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')

@@ -81,7 +81,7 @@
                                 <span>Total Biaya Perbulan</span>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" id="total_biaya_account_perbulan" name="total_biaya_account_perbulan" placeholder="">
+                                <input type="text" readonly="true" class="form-control" id="total_biaya_account_perbulan" name="total_biaya_account_perbulan" placeholder="">
                             </div>
                         </div>
                     </div>

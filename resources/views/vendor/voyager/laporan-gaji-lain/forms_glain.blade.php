@@ -113,7 +113,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <input type="text" class="form-control" id="total_gj_lainnya_periode" name="total_gj_lainnya_periode" placeholder="">
+                                <input type="text" readonly="true" class="form-control" id="total_gj_lainnya_periode" name="total_gj_lainnya_periode" placeholder="">
 
                             </div>
                             <div class="container">

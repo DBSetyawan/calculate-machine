@@ -102,7 +102,7 @@
                                 <span>Gaji Supervisor :</span>
                             </div>
                             <div class="container">
-                                    <input type="text" class="form-control" id="gaji_supervisor" name="gaji_supervisor" placeholder="">
+                                    <input type="text" readonly="true" class="form-control" id="gaji_supervisor" name="gaji_supervisor" placeholder="">
                             </div>
                         </div>
 
@@ -111,7 +111,7 @@
                                 <span>Gaji Operator :</span>
                             </div>
                             <div class="container">
-                                    <input type="text" class="form-control" id="gaji_operator" name="gaji_operator" placeholder="">
+                                    <input type="text" readonly="true" class="form-control" id="gaji_operator" name="gaji_operator" placeholder="">
                             </div>
                         </div>
 
@@ -120,7 +120,7 @@
                                 <span>Gaji Helper :</span>
                             </div>
                             <div class="container">
-                                    <input type="text" class="form-control" id="gaji_helper" name="gaji_helper" placeholder="">
+                                    <input type="text" readonly="true" class="form-control" id="gaji_helper" name="gaji_helper" placeholder="">
                             </div>
                         </div>
 
@@ -129,7 +129,7 @@
                                 <span>Total biaya gaji upah karyawan :</span>
                             </div>
                             <div class="container">
-                                    <input type="text" class="form-control" id="total_perbulan_p" name="total_perbulan_p" placeholder="">
+                                    <input type="text" readonly="true" class="form-control" id="total_perbulan_p" name="total_perbulan_p" placeholder="">
                             </div>
                         </div>
 
@@ -138,7 +138,7 @@
                                 <span>Jumlah Mesin yang ditanggani :</span>
                             </div>
                             <div class="container">
-                                    <input type="text" class="form-control" id="jumlah_mesin_yangditangani" name="jumlah_mesin_yangditangani" placeholder="">
+                                    <input type="text" readonly="true" class="form-control" id="jumlah_mesin_yangditangani" name="jumlah_mesin_yangditangani" placeholder="">
                             </div>
                         </div>
 

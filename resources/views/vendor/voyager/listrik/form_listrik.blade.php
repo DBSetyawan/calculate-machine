@@ -94,7 +94,7 @@
                                 <span>LWBP Perminggu</span>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" id="lwbp_" name="lwbp_" placeholder="">
+                                <input type="text" readonly="true" class="form-control" id="lwbp_" name="lwbp_" placeholder="">
                             </div>
                         </div>
 
@@ -103,7 +103,7 @@
                                 <span>WBP Perminggu</span>
                             </div>
                             <div class="col-md-8">
-                                <span> <input type="text" class="form-control" id="wbp_" name="wbp_" placeholder=""></span>
+                                <span> <input type="text" readonly="true" class="form-control" id="wbp_" name="wbp_" placeholder=""></span>
                             </div>
                         </div>
 
@@ -112,7 +112,7 @@
                                 <span>Total biaya listrik</span>
                             </div>
                             <div class="col-md-8">
-                                <span> <input type="text" class="form-control" id="totalbiayalstrk_" name="totalbiayalstrk_" placeholder=""></span>
+                                <span> <input type="text" readonly="true" class="form-control" id="totalbiayalstrk_" name="totalbiayalstrk_" placeholder=""></span>
                             </div>
                         </div>
 
@@ -121,7 +121,7 @@
                                 <span>Total Cost Perbulan</span>
                             </div>
                             <div class="col-md-8">
-                                <span> <input type="text" class="form-control" id="totalcostperbulan" name="totalcostperbulan" placeholder=""></span>
+                                <span> <input type="text" readonly="true" class="form-control" id="totalcostperbulan" name="totalcostperbulan" placeholder=""></span>
                             </div>
                         </div>
 

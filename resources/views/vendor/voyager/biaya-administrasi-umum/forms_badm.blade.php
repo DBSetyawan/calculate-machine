@@ -96,7 +96,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <input type="text" class="form-control" id="total_bag_penjualan" name="total_bag_penjualan" placeholder="">
+                                <input type="text" readonly="true" class="form-control" id="total_bag_penjualan" name="total_bag_penjualan" placeholder="">
                             </div>
                         </div>
                     </div>

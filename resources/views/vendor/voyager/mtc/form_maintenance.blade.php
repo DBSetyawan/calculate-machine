@@ -100,7 +100,7 @@
                                 <span>Total biaya maintenance bulanan :</span>
                             </div>
                             <div class="container">
-                                    <input type="text" class="form-control" id="total_perbulan_p" name="total_perbulan_p" placeholder="">
+                                    <input type="text" readonly="true" class="form-control" id="total_perbulan_p" name="total_perbulan_p" placeholder="">
                             </div>
                         </div><br/>
 
@@ -109,7 +109,7 @@
                                 <span>Perbaikan perbulan</span>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" id="perbaikanperbulan" name="perbaikanperbulan" placeholder="">
+                                <input type="text" readonly="true" class="form-control" id="perbaikanperbulan" name="perbaikanperbulan" placeholder="">
                             </div>
                         </div>
 
@@ -118,7 +118,7 @@
                                 <span>Sparepart perbulan</span>
                             </div>
                             <div class="col-md-8">
-                              <input type="text" class="form-control" id="sparepartperbulan" name="sparepartperbulan" placeholder="">
+                              <input type="text" readonly="true" class="form-control" id="sparepartperbulan" name="sparepartperbulan" placeholder="">
 
                             </div>
                         </div>

@@ -81,7 +81,7 @@
                                 <span>Penyusutan. Perbulannya :</span>
                             </div>
                             <div class="container">
-                                    <input type="text" class="form-control" id="total_perbulan_p" name="total_perbulan_p" placeholder="">
+                                    <input type="text" readonly="true" class="form-control" id="total_perbulan_p" name="total_perbulan_p" placeholder="">
                             </div>
                         </div>
 

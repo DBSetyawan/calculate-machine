@@ -309,7 +309,7 @@ $(document).ready(function(){
         }, 1000);
 
         setTimeout(() => {
-            document.getElementById('#cal_semua_biaya').setAttribute('href', download_all_cost);
+              document.querySelector('cal_semua_biaya').setAttribute('href', download_all_cost);
             
           }, 1000);
 
@@ -357,7 +357,7 @@ $(document).ready(function(){
                 }, 1000);
 
                 setTimeout(() => {
-                      document.getElementById('#cal_semua_biaya').setAttribute('href', download_all_cost);
+                        document.querySelector('cal_semua_biaya').setAttribute('href', download_all_cost);
                       
                     }, 1000);
           }
@@ -413,7 +413,7 @@ $(document).ready(function(){
                     }, 1000);
 
                     setTimeout(() => {
-                      document.getElementById('#caltanpa_mtc').setAttribute('href', download_tanpa_mtc);
+                        document.querySelector('caltanpa_mtc').setAttribute('href', download_tanpa_mtc);
                       
                     }, 1000);
 
@@ -442,7 +442,7 @@ $(document).ready(function(){
 
                         setTimeout(() => {
                           
-                          document.getElementById('#caltanpa_penyusutan').setAttribute('href', download_tanpa_penyusutan);
+                            document.querySelector('caltanpa_penyusutan').setAttribute('href', download_tanpa_penyusutan);
                           
                       }, 1000);
 
@@ -471,7 +471,7 @@ $(document).ready(function(){
                 }, 1000);
 
                 setTimeout(() => {
-                      document.getElementById('#cal_semua_biaya').setAttribute('href', download_all_cost);
+                        document.querySelector('cal_semua_biaya').setAttribute('href', download_all_cost);
                       
                     }, 1000);
 
@@ -539,7 +539,7 @@ $(document).ready(function(){
       }, 1000);
 
       setTimeout(() => {
-          document.getElementById('#cal_semua_biaya').setAttribute('href', download_all_cost);
+            document.querySelector('cal_semua_biaya').setAttribute('href', download_all_cost);
           
         }, 1000);
 
@@ -577,13 +577,14 @@ $(document).ready(function(){
         }, 500);
 
         setTimeout(() => {
-            document.getElementById('#cal_semua_biaya').setAttribute('href', download_all_cost);
+              document.querySelector('cal_semua_biaya').setAttribute('href', download_all_cost);
             
           }, 1000);
 
       } else {
 
           $("#penyesuaian").hide();
+          $("#cal_semua_biaya").hide();
 
           $(".calctp").hide(); //tanpa penyusutan
           $(".csbe").hide(); //smua biaya
@@ -818,6 +819,7 @@ $(document).ready(function(){
           
                           $(".calctp").hide(); //tanpa penyusutan
                           $(".csbe").hide(); //smua biaya
+                          $("#cal_semua_biaya").hide(); //smua biaya
                           $(".calcmtc").hide(); //tanpa mtc
                           // $(".calctnpmtctp").show(); //tanpa mtc + penyusutan
                           ButtonexportCalcTanpaMTCnTanpaPenyusutan()
@@ -835,7 +837,7 @@ $(document).ready(function(){
 
                       setTimeout(() => {
               
-                        document.getElementById('#caltpmtctpc').setAttribute('href', download_tanpa_penyusutan_dan_tanpa_mtc);
+                          document.querySelector('caltpmtctpc').setAttribute('href', download_tanpa_penyusutan_dan_tanpa_mtc);
                         
                       }, 1000);
 
@@ -906,18 +908,19 @@ $(document).ready(function(){
                     
                     )     
 
-                    ButtonexportCalcTanpaPenyusutan()
-                    .then(finalResult => finalResult)
-                    .then(sd => 
+                    // ButtonexportCalcTanpaPenyusutan()
+                    // .then(finalResult => finalResult)
+                    // .then(sd => 
                           
-                        $(".calctp").html(sd.button_ButtonexportCalcTanpaPenyusutan)
+                    //     $(".calctp").html(sd.button_ButtonexportCalcTanpaPenyusutan)
                     
-                    )     
+                    // )     
 
                     $(".calctp").show();
 
                     $('.TransactionTr').focus();
                     $(".csbe").hide(); //smua biaya
+                    $("#cal_semua_biaya").hide(); //smua biaya
                     $(".calcmtc").hide(); //tanpa mtc
                     $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
                     $(".CustomFilter").focus();
@@ -926,7 +929,7 @@ $(document).ready(function(){
 
                 setTimeout(() => {
                           
-                    document.getElementById('#caltanpa_penyusutan').setAttribute('href', download_tanpa_penyusutan);
+                      document.querySelector('caltanpa_penyusutan').setAttribute('href', download_tanpa_penyusutan);
                     
                   }, 1000);
 
@@ -935,6 +938,9 @@ $(document).ready(function(){
                 var mtcs = $('#mtcs:checkbox:checked').length;
 
                     if(mtcs){
+
+                      $("#cal_semua_biaya").hide(); //smua biaya
+                              $(".csbe").hide(); //smua biaya
 
                       let db_temp = $('#dataTablePenyusutan').DataTable().draw();
                           db_temp.column([11]).visible(false);
@@ -950,7 +956,7 @@ $(document).ready(function(){
                           setTimeout(function(){ 
           
                               $(".calctp").hide(); //tanpa penyusutan
-                              $(".csbe").hide(); //smua biaya
+                  
 
                               ButtonexportCalcTanpaMTC()
                                 .then(finalResult => finalResult)
@@ -959,15 +965,17 @@ $(document).ready(function(){
                                         $(".calcmtc").html(sd.button_ButtonexportCalcTanpaMTC)
                                       
                                     )
-                                $(".calcmtc").show(); //smua biaya
+                                // $(".calcmtc").show(); //smua biayacaltanpa_mtc
+                                $(".calcmtc").show(); //smua biayacaltanpa_mtc
 
                               $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
                               $(".CustomFilter").focus();
-                          
+                       
+                              
                           }, 1000);
 
                           setTimeout(() => {
-                      document.getElementById('#caltanpa_mtc').setAttribute('href', download_tanpa_mtc);
+                        document.querySelector('caltanpa_mtc').setAttribute('href', download_tanpa_mtc);
                       
                     }, 1000);
 
@@ -982,41 +990,43 @@ $(document).ready(function(){
                             db_temp.column([15]).visible(false);
                             db_temp.column([16]).visible(false);
                             db_temp.column(5).visible(true);
+
+                          setTimeout(function(){ 
+          
+                                $(".calctp").hide(); //tanpa penyusutan
+                                
+                            ButtonCalcSmuaBiayaExports()
+                            .then(finalResult => finalResult)
+                            .then(sd => 
+                                  
+                                    $(".csbe").html(sd.button_ButtonCalcSmuaBiayaExports)
+                                  
+                                )
+
+                            $(".csbe").show(); //smua biaya
+
+                                $(".calcmtc").hide(); //tanpa mtc
+                                $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
+                                $("#alltruepnytmtc").hide();
+                                $(".CustomFilter").focus();
+                                
+                            }, 1000);
+
+                            setTimeout(() => {
+                                document.querySelector('cal_semua_biaya').setAttribute('href', download_all_cost);
+                              
+                            }, 1000);
+      
                       }
 
                     localStorage.removeItem("EventPenyusutanTrue");
-
-                    setTimeout(function(){ 
-          
-                        $(".calctp").hide(); //tanpa penyusutan
-                        
-                    ButtonCalcSmuaBiayaExports()
-                    .then(finalResult => finalResult)
-                    .then(sd => 
-                          
-                            $(".csbe").html(sd.button_ButtonCalcSmuaBiayaExports)
-                          
-                        )
-
-                    $(".csbe").show(); //smua biaya
-
-                        $(".calcmtc").hide(); //tanpa mtc
-                        $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
-                        $("#alltruepnytmtc").hide();
-                        $(".CustomFilter").focus();
-                        
-                    }, 1000);
-
-                    setTimeout(() => {
-                      document.getElementById('#cal_semua_biaya').setAttribute('href', download_all_cost);
-                      
-                    }, 1000);
                     
                 }
 
           });
 
           $('#mtcs').click(function(){
+
                   $.each($('input[type="checkbox"]:checked'), function (key, value) {
 
                   var mtcs = $('.Maintenance:checkbox:checked').map(function() {
@@ -1042,6 +1052,7 @@ $(document).ready(function(){
           
                     $(".calctp").hide(); //tanpa penyusutan
                     $(".csbe").hide(); //smua biaya
+                    $("#cal_semua_biaya").hide(); //smua biaya
 
                     ButtonexportCalcTanpaMTC()
                     .then(finalResult => finalResult)
@@ -1079,7 +1090,6 @@ $(document).ready(function(){
                           dataTable.column([12]).visible(false);
                           dataTable.column([7]).visible(true);
                           dataTable.column([5]).visible(false);
-                          
 
                           setTimeout(function(){ 
           
@@ -1094,6 +1104,7 @@ $(document).ready(function(){
                               $(".calctp").show();
 
                               $(".csbe").hide(); //smua biaya
+                              $("#cal_semua_biaya").hide(); //smua biaya
                               $(".calcmtc").hide(); //tanpa mtc
                               $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
                               $(".CustomFilter").focus();
@@ -1102,11 +1113,12 @@ $(document).ready(function(){
 
                           setTimeout(() => {
                           
-                            document.getElementById('caltanpa_penyusutan').setAttribute('href', download_tanpa_penyusutan);
+                              document.querySelector('caltanpa_penyusutan').setAttribute('href', download_tanpa_penyusutan);
                           
                         }, 1000);
 
                     } else {
+
                           dataTable.column([7]).visible(true);
                           dataTable.column([13]).visible(true);
                           dataTable.column([14]).visible(false);
@@ -1117,39 +1129,41 @@ $(document).ready(function(){
                           dataTable.column([19]).visible(false);
                           dataTable.column([11]).visible(true);
                           dataTable.column([12]).visible(true);
-                    }
 
-                    localStorage.removeItem("EventMTCtrue");
+                              setTimeout(function(){ 
 
-                    setTimeout(function(){ 
-          
-                        $(".calctp").hide(); //tanpa penyusutan
-                        
-                    ButtonCalcSmuaBiayaExports()
-                    .then(finalResult => finalResult)
-                    .then(sd => 
-                          
-                            $(".csbe").html(sd.button_ButtonCalcSmuaBiayaExports)
-                          
-                        )
+                                  $(".calctp").hide(); //tanpa penyusutan
+                                  
+                              ButtonCalcSmuaBiayaExports()
+                              .then(finalResult => finalResult)
+                              .then(sd => 
+                                    
+                                      $(".csbe").html(sd.button_ButtonCalcSmuaBiayaExports)
+                                    
+                                  )
 
-                    $(".csbe").show(); //smua biaya
+                              $(".csbe").show(); //smua biaya
 
-                        $(".calcmtc").hide(); //tanpa mtc
-                        $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
-                        $("#alltruepnytmtc").hide();
-                        $(".CustomFilter").focus();
-                    
-                    }, 1000);
+                                  $(".calcmtc").hide(); //tanpa mtc
+                                  $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
+                                  $("#alltruepnytmtc").hide();
+                                  $(".CustomFilter").focus();
 
-                    setTimeout(() => {
-                      document.getElementById('cal_semua_biaya').setAttribute('href', download_tanpa_mtc);
-                      
-                    }, 1000);
+                              }, 1000);
+
+                              setTimeout(() => {
+                                  document.querySelector('cal_semua_biaya').setAttribute('href', download_tanpa_mtc);
+                                
+                              }, 1000);
+
+                        localStorage.removeItem("EventMTCtrue");
+
+                     }
 
                   }
               
               }
+
           );
           
         }

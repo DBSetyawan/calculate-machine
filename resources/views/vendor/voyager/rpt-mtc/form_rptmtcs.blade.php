@@ -116,7 +116,7 @@
                                 <span>Rata rata perbaikan perbulan</span>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" id="rtrtperbaikanperbulan" name="rtrtperbaikanperbulan" placeholder="">
+                                <input type="text" readonly="true" class="form-control" id="rtrtperbaikanperbulan" name="rtrtperbaikanperbulan" placeholder="">
                             </div>
                         </div>
 
@@ -125,7 +125,7 @@
                                 <span>Rata rata sparepart perbulan</span>
                             </div>
                             <div class="col-md-8">
-                              <input type="text" class="form-control" id="sparepart_perbulan" name="sparepart_perbulan" placeholder="">
+                              <input type="text" readonly="true" class="form-control" id="sparepart_perbulan" name="sparepart_perbulan" placeholder="">
 
                             </div>
                         </div>
@@ -135,7 +135,7 @@
                                 <span>Biaya Produksi lain</span>
                             </div>
                             <div class="col-md-8">
-                              <input type="text" class="form-control" id="biaya_produksi_lain" name="biaya_produksi_lain" placeholder="">
+                              <input type="text" readonly="true" class="form-control" id="biaya_produksi_lain" name="biaya_produksi_lain" placeholder="">
 
                             </div>
                         </div>
@@ -145,7 +145,7 @@
                                 <span>Total biaya perbulan</span>
                             </div>
                             <div class="col-md-8">
-                              <input type="text" class="form-control" id="total_biaya_perbulan" name="total_biaya_perbulan" placeholder="">
+                              <input type="text" readonly="true" class="form-control" id="total_biaya_perbulan" name="total_biaya_perbulan" placeholder="">
 
                             </div>
                         </div>
