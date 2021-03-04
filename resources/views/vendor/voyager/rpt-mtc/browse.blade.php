@@ -255,7 +255,37 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     <span>{{ $data->{$row->field} }}</span>
-                                                @endif
+                                                    @if ($row->display_name == 'perbaikan tahun 2018')
+                                                        <span>{{ "Rp " . number_format($data->perbaikan_tahun1,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'perbaikan tahun 2019')
+                                                        <span>{{ "Rp " . number_format($data->perbaikan_tahun2,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'perbaikan tahun 2020')
+                                                        <span>{{ "Rp " . number_format($data->perbaikan_tahun3,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'Rata2 perbaikan Perbulan')
+                                                        <span>{{ "Rp " . number_format($data->rata_rata_perbaikan_perbulan,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'sparepart tahun 2018')
+                                                        <span>{{ "Rp " . number_format($data->sparepart_tahun1,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'sparepart tahun 2019')
+                                                        <span>{{ "Rp " . number_format($data->sparepart_tahun2,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'sparepart tahun 2020')
+                                                        <span>{{ "Rp " . number_format($data->sparepart_tahun3,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'Rata2 sparepart Perbulan')
+                                                        <span>{{ "Rp " . number_format($data->rata_rata_sparepart_perbulan,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'Biaya produksi lain')
+                                                        <span>{{ "Rp " . number_format($data->biaya_produksi_lain,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'Total per Bulan')
+                                                        <span>{{ "Rp " . number_format($data->total_biaya_perbulan,0,',','.') }}</span>
+                                                    @endif
+                                            @endif
                                             </td>
                                         @endforeach
                                         <td class="no-sort no-click bread-actions">

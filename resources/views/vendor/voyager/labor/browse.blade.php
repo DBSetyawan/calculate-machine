@@ -249,7 +249,22 @@
                                                     @endif
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
-                                                    <span>{{ $data->{$row->field} }}</span>
+                                                    {{-- <span>{{ $data->{$row->field} }}</span> --}}
+                                                    @if ($row->display_name == 'Supervisor (lvl 3)')
+                                                        <span>{{ "Rp " . number_format($data->supervisor_level3,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'Operator (lvl 2)')
+                                                    <span>{{ "Rp " . number_format($data->operator_level2,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'Helper (lvl 0)')
+                                                        <span>{{ "Rp " . number_format($data->helper_level0,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'Supporting (lvl 0)')
+                                                        <span>{{ "Rp " . number_format($data->support_level0,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'Total')
+                                                    <span>{{ "Rp " . number_format($data->total_biaya,0,',','.') }}</span>
+                                                @endif
                                                 @endif
                                             </td>
                                         @endforeach

@@ -250,6 +250,12 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     <span>{{ $data->{$row->field} }}</span>
+                                                    @if ($row->display_name == 'Purchase Value')
+                                                        <span>{{ "Rp " . number_format($data->purchaseorder_value,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'Peny. PerBulan')
+                                                    <span>{{ "Rp " . number_format($data->penyusutan_perbulan,0,',','.') }}</span>
+                                                @endif
                                                 @endif
                                             </td>
                                         @endforeach

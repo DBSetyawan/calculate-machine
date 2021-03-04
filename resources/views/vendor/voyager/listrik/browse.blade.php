@@ -250,6 +250,18 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     <span>{{ $data->{$row->field} }}</span>
+                                                    @if ($row->display_name == 'TOTAL LISTRIK')
+                                                        <span>{{ "Rp " . number_format($data->total_biaya_listrik,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'NILAI COST/BLN + BIAYA ADM')
+                                                        <span>{{ "Rp " . number_format($data->ncost_bulan_plus_adm,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'NILAI COST/BLN')
+                                                        <span>{{ "Rp " . number_format($data->nilai_cost_bulan,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == '%')
+                                                        <span>{{ RumusListrikOutputPerjam::percent($data->persen_cost_perbulan) }}</span>
+                                                    @endif
                                                 @endif
                                             </td>
                                         @endforeach

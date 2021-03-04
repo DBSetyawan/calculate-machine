@@ -365,6 +365,9 @@ class VoyagerMTcController extends BaseVoyagerBaseController Implements MTcInter
             $data = $model->withTrashed()->findOrFail($id);
         } else {
             $data = $model->findOrFail($id);
+            // DB::table('total_kalkulasi_tanpa_penyusutan')
+            // ->where('mtc', $data->total_biaya)
+            // ->update(array('mtc' => $request->total_biaya)); 
          
         }
 
