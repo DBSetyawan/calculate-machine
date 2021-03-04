@@ -306,12 +306,12 @@
                         <div class="panel panel-bordered">
                             <div class="panel-body">
                                 <div class="pull-left">
-                                    <div class="col-2">
+                                    {{-- <div class="col-2">
                                         <label for="total PPJ">Total penjualan perbulan  :</label> <span class="badge badge-success">Rp {{number_format($tpnjualan, 0, ".", ".")}}</span>
                                     </div>
                                     <div class="col-2">
                                         <label for="total PPJ">Total penjualan pertahun  :</label> <span class="badge badge-success">Rp {{number_format($tpnjualanprthn, 0, ".", ".")}}</span>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>

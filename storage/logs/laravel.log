@@ -4954,3 +4954,20 @@ Stack trace:
 #65 /var/www/html/kalkulasimesin2/public/index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle()
 #66 {main}
 "} 
+[2021-03-04 02:52:33] local.ERROR: Command "config" is not defined.
+
+Did you mean one of these?
+    config:cache
+    config:clear {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"config\" is not defined.
+
+Did you mean one of these?
+    config:cache
+    config:clear at /var/www/html/kalkulasimesin2/vendor/symfony/console/Application.php:675)
+[stacktrace]
+#0 /var/www/html/kalkulasimesin2/vendor/symfony/console/Application.php(254): Symfony\\Component\\Console\\Application->find()
+#1 /var/www/html/kalkulasimesin2/vendor/symfony/console/Application.php(166): Symfony\\Component\\Console\\Application->doRun()
+#2 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Console/Application.php(93): Symfony\\Component\\Console\\Application->run()
+#3 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#4 /var/www/html/kalkulasimesin2/artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle()
+#5 {main}
+"} 

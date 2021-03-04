@@ -84,12 +84,13 @@
                                                 </a>
                                               </div>
                                             </li>
-                                            <li class="list-group-item">More feature..</li>
+                                            <li class="list-group-item">   
+                                              <span class="badge badge-success" style="cursor: pointer" id="setall"><i class="voyager-refresh"></i> Reset Ulang</span>
+                                            </li>
                                           </ul>
                                         </div>
                                       
                                        {{-- <span class="badge badge-success" style="cursor: pointer" id="reset_filters_calc"><i class="voyager-refresh"></i> Reset </span> --}}
-                                       <span class="badge badge-success" style="cursor: pointer" id="setall"><i class="voyager-refresh"></i> Reset Ulang</span>
                                       </div>
                                     </div>
                                   </div>
@@ -600,31 +601,27 @@ $(document).ready(function(){
 
     function mesin_calc_table(penyusutan)
         {
-          var ert = `<div class="col-md-10">
-                      <div class="panel panel-bordered col-md-12">
-                        <div class="panel-body">
-                          <div class="row">
-                            <h4>
-                                <span class="label label-info">Open Transaction (Total semua data( 
+
+          let total_rows = `<span class="label label-info">Open Transaction (Total semua data( 
                                   <span class="badge badge-success">
                                         {{ count($TotalKalkulasiTanpaPenyusutan->get()) }}
                                     </span>
                                     ))
-                                </span>
-                            </h4>
-                          </div>
+                                </span>`;
+
+          var ert = `<div class="col-md-10">
+                      <div class="panel panel-bordered col-md-12">
+                        <div class="panel-body">
+                          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                             <a onclick="window.open(this.href,'_blank');return false;" href="{!! url('/admin/history-log-recalculate') !!}" class="badge badge-info">History log recalculate</a>
+                             <i class="voyager-file-text"> </i>
+                            </div>
                             <div class="col-8">
                                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-secondary active">
-                                  Data excell ini, menyesuaikan table dibawah<i class="bi bi-file-spreadsheet"></i>  <i class="voyager-book-download"></i>
+                                  Data excell sudah disesuaikan, dengan tabel yang tampil dibawah. <i class="bi bi-file-spreadsheet"></i>  <i class="voyager-book-download"></i>
                                 </label>
                               </div>
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                             <a onclick="window.open(this.href,'_blank');return false;" href="{!! url('/admin/history-log-recalculate') !!}" class="badge badge-secondary">history log recalculate</a>
-                             <i class="voyager-file-text"> </i>
-                            </div>
-                          
-                              <br/>
                                 <a class="calctp"></a>
                                 <a class="csbe"</a>
                                 <a class="calcmtc"></a>
@@ -681,7 +678,8 @@ $(document).ready(function(){
                   processing: '<span class="text-info">Sedang memproses..</span>',
                   search: "Cari",
                   infoEmpty: "Tidak ada data apapun disini..",
-                  info: "menampilkan baris data halaman _PAGE_ dari _PAGES_",
+                  info: `${total_rows}`,
+                  // info: "menampilkan baris data halaman _PAGE_ dari _PAGES_",
                   zeroRecords: "Pencarian dalam keyword inputan anda tidak dapat kami temukan..",
                 },
                   initComplete: function()

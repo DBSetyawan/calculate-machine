@@ -385,7 +385,7 @@
       array (
         'driver' => 'local',
         'root' => '/var/www/html/kalkulasimesin2/storage/app/public',
-        'url' => 'https://vpn.krisanthium.com:7070/kalkulasimesin2/public/storage',
+        'url' => 'https://vpn.krisanthium.com:7070/kalkulasimesin2/public/public/storage',
         'visibility' => 'public',
       ),
       's3' => 

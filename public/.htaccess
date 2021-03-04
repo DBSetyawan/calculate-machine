@@ -18,4 +18,9 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+
+    RewriteEngine on
+    RewriteCond %{HTTP_HOST} ^vpn.krisanthium.com:7070\.com$
+    RewriteRule ^(.*)$ HTTPS://vpn.krisanthium.com:7070/kalkulasimesin2/public/$1
+    
 </IfModule>
