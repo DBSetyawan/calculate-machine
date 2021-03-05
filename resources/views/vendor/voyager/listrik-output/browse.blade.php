@@ -252,6 +252,12 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     <span>{{ $data->{$row->field} }}</span>
+                                                    @if ($row->display_name == 'Total /Jam')
+                                                        <span>{{ number_format($data->output_perjam,0,',',',') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == '%')
+                                                        <span>{{ RumusListrikOutputPerjam::percent($data->persen) }}</span>
+                                                    @endif
                                                 @endif
                                             </td>
                                         @endforeach

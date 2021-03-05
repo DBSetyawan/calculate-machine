@@ -250,6 +250,18 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     <span>{{ $data->{$row->field} }}</span>
+                                                    @if ($row->display_name == 'Biaya per Bulan')
+                                                        <span>{{ "Rp " . number_format($data->total_biaya_lp_adm,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == '2018')
+                                                        <span>{{ "Rp " . number_format($data->tahun1,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == '2019')
+                                                        <span>{{ "Rp " . number_format($data->tahun2,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == '2020')
+                                                        <span>{{ "Rp " . number_format($data->tahun3,0,',','.') }}</span>
+                                                    @endif
                                                 @endif
                                             </td>
                                         @endforeach

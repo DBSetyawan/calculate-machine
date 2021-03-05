@@ -1,7 +1,6 @@
 @extends('voyager::master')
 
 @section('page_title', __('voyager::generic.viewing').' '.$dataType->getTranslatedAttribute('display_name_plural'))
-
 @section('page_header')
     <div class="container-fluid">
         <h1 class="page-title">
@@ -12,8 +11,8 @@
                 <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }}</span>
             </a> --}}
         @endcan
-        <a href="{{ route('lp.bg.pnjualan.form.master') }}" class="btn btn-success btn-add-new">
-            <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Lp bg. penjualan</span>
+        <a href="{{ route('g.lains.form.master') }}" class="btn btn-success btn-add-new">
+            <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Level Jabatan</span>
         </a>
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
@@ -49,7 +48,7 @@
                         @if ($isServerSide)
                             <form method="get" class="form-search">
                                 <div id="search-input">
-                                    <div class="col-2">
+                                    <div class="col-2">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
                                         <select id="search_key" name="key">
                                             @foreach($searchNames as $key => $name)
                                                 <option value="{{ $key }}" @if($search->key == $key || (empty($search->key) && $key == $defaultSearchKey)) selected @endif>{{ $name }}</option>
@@ -231,7 +230,9 @@
                                                             @foreach (array_slice($files, 0, 3) as $file)
                                                                 <li>{{ $file }}</li>
                                                             @endforeach
-                                                            </ul>
+                                                            </ul>  @if ($row->display_name == 'ROLE')
+                                                            <span>{{ __("donatur") }}</span>
+                                                        @endif
                                                         @endif
                                                         @if (count($files) > 3)
                                                             {{ __('voyager::media.files_more', ['count' => (count($files) - 3)]) }}
@@ -249,18 +250,15 @@
                                                     @endif
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
-                                                    <span>{{ $data->{$row->field} }}</span>
-                                                    @if ($row->display_name == '2018')
-                                                        <span>{{ "Rp " . number_format($data->tahun1,0,',','.') }}</span>
+                                                    {{-- <span>{{ $data->{$row->field} }}</span> --}}
+                                                    @if ($row->display_name == 'Upah Atas (Rp)')
+                                                        <span>{{ "Rp " . number_format($data->upah_atas,0,',','.') }}</span>
                                                     @endif
-                                                    @if ($row->display_name == '2019')
-                                                        <span>{{ "Rp " . number_format($data->tahun2,0,',','.') }}</span>
+                                                    @if ($row->display_name == 'Upah Tengah (Rp)')
+                                                        <span>{{ "Rp " . number_format($data->upah_tengah,0,',','.') }}</span>
                                                     @endif
-                                                    @if ($row->display_name == '2020')
-                                                        <span>{{ "Rp " . number_format($data->tahun3,0,',','.') }}</span>
-                                                    @endif
-                                                    @if ($row->display_name == 'Biaya per Bulan')
-                                                        <span>{{ "Rp " . number_format($data->biaya_perbulan_bag_penjualan,0,',','.') }}</span>
+                                                        @if ($row->display_name == 'Upah Terkecil (Rp)')
+                                                        <span>{{ "Rp " . number_format($data->upah_terkecil,0,',','.') }}</span>
                                                     @endif
                                                 @endif
                                             </td>
@@ -298,32 +296,6 @@
                             </div>
                         </div>
                         @endif
-                        @inject('bpnjualan','App\BagianPenjualan')
-                        @php
-                            $tpnjualan = $bpnjualan->whereIn('company_parent_id', [3])->get();
-
-                            $tpnjualan = collect([$tpnjualan])->sum(function ($region){
-                                    return $region->sum('biaya_perbulan');
-                                });
-                                $tpnjualanprthn = $bpnjualan->whereIn('company_parent_id', [3])->get();
-
-                                $tpnjualanprthn = collect([$tpnjualanprthn])->sum(function ($region){
-                                    return $region->sum('biaya_pertahun');
-                                });
-                        @endphp
-                        <br/>
-                        <div class="panel panel-bordered">
-                            <div class="panel-body">
-                                <div class="pull-left">
-                                    <div class="col-2">
-                                        <label for="total PPJ">Total penjualan perbulan  :</label> <span class="badge badge-success">Rp {{number_format($tpnjualan, 0, ".", ".")}}</span>
-                                    </div>
-                                    <div class="col-2">
-                                        <label for="total PPJ">Total penjualan pertahun  :</label> <span class="badge badge-success">Rp {{number_format($tpnjualanprthn, 0, ".", ".")}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
