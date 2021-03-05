@@ -5,6 +5,7 @@ namespace App\Http\Controllers\KOP\Traits;
 use App\Mesin;
 use DataTables;
 use App\Company;
+use App\Listrik;
 use App\TotalCalc;
 use RptCalcMachine;
 use App\KategoriBagian;
@@ -457,17 +458,19 @@ trait ListrikTraits {
 
     public function detailTransactionPenyusutan(Request $request)
     {
-     
+       
         if ($request->ajax()) {
 
             if(!empty($request->penyusutan))
             {
+
                 $listrik = DB::table('total_kalkulasi_tanpa_penyusutan')
                 ->leftJoin('mesin', 'total_kalkulasi_tanpa_penyusutan.code_mesin', '=', 'mesin.id')
                 ->rightJoin('lb8_kategori_mesin', 'total_kalkulasi_tanpa_penyusutan.group_mesin', '=', 'lb8_kategori_mesin.id')
                 ->join('kategori_bagian', 'total_kalkulasi_tanpa_penyusutan.category_bagian', '=', 'kategori_bagian.id')
                 ->join('company', 'total_kalkulasi_tanpa_penyusutan.company_parent_id', '=', 'company.id')
                 ->get();
+                
                 if($request->penyusutan == static::NULLABLE_PENYUSUTAN)
                 {
                     $listrik = [];

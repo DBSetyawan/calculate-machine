@@ -250,7 +250,7 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     <span>{{ $data->{$row->field} }}</span>
-                                                    @if ($row->display_name == 'Biaya per Bulan')
+                                                    @if ($row->display_name == 'Total Biaya per Bulan')
                                                         <span>{{ "Rp " . number_format($data->total_biaya_lp_adm,0,',','.') }}</span>
                                                     @endif
                                                     @if ($row->display_name == '2018')
