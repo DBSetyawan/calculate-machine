@@ -6,10 +6,10 @@
     'debug' => true,
     'url' => 'https://vpn.krisanthium.com:7070/kalkulasimesin2',
     'asset_url' => 'https://vpn.krisanthium.com:7070/kalkulasimesin2',
-    'timezone' => 'UTC',
-    'locale' => 'en',
-    'fallback_locale' => 'en',
-    'faker_locale' => 'en_US',
+    'timezone' => 'Asia/Jakarta',
+    'locale' => 'id',
+    'fallback_locale' => 'en_US',
+    'faker_locale' => 'id',
     'key' => 'base64:Qq3J2NL+KNhDoVjKttD+M/hpp8GCNNUDdGLzNu61m3E=',
     'cipher' => 'AES-256-CBC',
     'providers' => 
@@ -725,11 +725,11 @@
     ),
     'multilingual' => 
     array (
-      'enabled' => false,
-      'default' => 'en',
+      'enabled' => true,
+      'default' => 'id',
       'locales' => 
       array (
-        0 => 'en',
+        0 => 'id',
       ),
     ),
     'dashboard' => 
@@ -744,7 +744,7 @@
         ),
         'voyager::generic.home' => 
         array (
-          'route' => '/',
+          'route' => 'voyager.dashboard.m.i',
           'icon_class' => 'voyager-home',
           'target_blank' => true,
         ),

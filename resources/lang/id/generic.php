@@ -5,6 +5,7 @@ return [
     'action'                 => 'Aksi',
     'home'                 => 'Dashboard',
     'logout'                 => 'Keluar',
+    'remember_me'                 => 'Keluar',
     'actions'                => 'Aksi',
     'add'                    => 'Tambah',
     'add_folder'             => 'Buat Folder',

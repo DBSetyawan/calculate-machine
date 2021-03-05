@@ -99,18 +99,18 @@ return [
         /*
          * Set whether or not the multilingual is supported by the BREAD input.
          */
-        'enabled' => false,
+        'enabled' => true,
 
         /*
          * Select default language
          */
-        'default' => 'en',
+        'default' => 'id',
 
         /*
          * Select languages that are supported.
          */
         'locales' => [
-            'en',
+            'id',
             //'pt',
         ],
     ],
@@ -133,7 +133,7 @@ return [
                 'icon_class' => 'voyager-person',
             ],
             'voyager::generic.home' => [
-                'route'        => '/',
+                'route'        => 'voyager.dashboard.m.i',
                 'icon_class'   => 'voyager-home',
                 'target_blank' => true,
             ],

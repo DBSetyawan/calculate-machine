@@ -87,8 +87,7 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::get('total-kalkulasi-rpts/totals-view-tanpa-penyusutan','KOP\VoyagerTotalKalkulasiController@view_totalkalkulasi_tnp_penyusutan')->name('tr.tnp.total.kalkulasi');
     Route::post('calc-rpts/open-transaction-calc-tanpa-penyusutan','KOP\VoyagerTotalKalkulasiController@OpenTransactionTanpaPenyusutan')->name('tr.open.tanpa.penyusutan');
-    Route::get('dashboard-internal-server-error','KOP\VoyagerController@index')->name('voyager.dashboard.index');
-    Route::get('/dashboard','KOP\VoyagerController@index')->name('voyager.dashboard.m.i');
+    Route::get('dashboard','KOP\VoyagerController@index')->name('voyager.dashboard.index');
     Route::get('button-load-ButtonexportCalcTanpaPenyusutan','KOP\VoyagerTotalKalkulasiController@ButtonexportCalcTanpaPenyusutan')->name('voyager.ButtonexportCalcTanpaPenyusutan');
     Route::get('button-load-ButtonCalcSmuaBiayaExports','KOP\VoyagerTotalKalkulasiController@ButtonCalcSmuaBiayaExports')->name('voyager.ButtonCalcSmuaBiayaExports');
     Route::get('button-load-ButtonexportCalcTanpaMTC','KOP\VoyagerTotalKalkulasiController@ButtonexportCalcTanpaMTC')->name('voyager.ButtonexportCalcTanpaMTC');

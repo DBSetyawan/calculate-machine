@@ -27,10 +27,16 @@
                 {{-- Google Analytics Embed --}}
                 <div id="embed-api-auth-container"></div>
             @else
-                <p style="border-radius:4px; padding:20px; background:#fff; margin:0; color:#999; text-align:center;">
+
+            <p class="container">
+                <div class="span1">
+                    <label for=""><span class="badge badge-success">Connected</span> {{ auth()->user()->name }}, last login: {{ Carbon\Carbon::now() }}</label>
+                </div>
+            </p>
+                {{-- <p style="border-radius:4px; padding:20px; background:#fff; margin:0; color:#999; text-align:center;">
                     {!! __('voyager::analytics.no_client_id') !!}
                     <a href="https://console.developers.google.com" target="_blank">https://console.developers.google.com</a>
-                </p>
+                </p> --}}
             @endif
 
             <div class="Dashboard Dashboard--full" id="analytics-dashboard">
