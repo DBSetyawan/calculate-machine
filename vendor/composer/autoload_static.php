@@ -716,7 +716,7 @@ class ComposerStaticInitbf9caa84afbd10586b93936e6de03628
         ),
         'Database\\Seeders\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/database/seeders',
+            0 => __DIR__ . '/../..' . '/database/seeds',
         ),
         'Database\\Factories\\' => 
         array (
@@ -899,6 +899,7 @@ class ComposerStaticInitbf9caa84afbd10586b93936e6de03628
         'App\\Listrik' => __DIR__ . '/../..' . '/app/Listrik.php',
         'App\\ListrikOutput' => __DIR__ . '/../..' . '/app/ListrikOutput.php',
         'App\\Mesin' => __DIR__ . '/../..' . '/app/Mesin.php',
+        'App\\Models\\Admin' => __DIR__ . '/../..' . '/app/Models/Admin.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Mtc' => __DIR__ . '/../..' . '/app/Mtc.php',
         'App\\Penyusutan' => __DIR__ . '/../..' . '/app/Penyusutan.php',
@@ -1323,7 +1324,9 @@ class ComposerStaticInitbf9caa84afbd10586b93936e6de03628
         'Cron\\MinutesField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MinutesField.php',
         'Cron\\MonthField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MonthField.php',
         'Database\\Factories\\UserFactory' => __DIR__ . '/../..' . '/database/factories/UserFactory.php',
-        'Database\\Seeders\\DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DatabaseSeeder.php',
+        'Database\\Seeders\\AdminTableSeeder' => __DIR__ . '/../..' . '/database/seeds/AdminTableSeeder.php',
+        'Database\\Seeders\\Cs' => __DIR__ . '/../..' . '/database/seeds/Cs.php',
+        'Database\\Seeders\\DatabaseSderrCs' => __DIR__ . '/../..' . '/database/seeds/DatabaseSderrCs.php',
         'DeepCopy\\DeepCopy' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/DeepCopy.php',
         'DeepCopy\\Exception\\CloneException' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Exception/CloneException.php',
         'DeepCopy\\Exception\\PropertyException' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Exception/PropertyException.php',

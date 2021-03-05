@@ -253,6 +253,13 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     <span>{{ $data->{$row->field} }}</span>
+                                                    @if ($row->display_name == 'Nama Alias Access')
+                                                    @foreach ($data->roles as $item)
+                                                        
+                                                        <span>{{ $item->display_name }}</span>
+
+                                                    @endforeach
+                                                @endif
                                                 @endif
                                             </td>
                                         @endforeach

@@ -14,6 +14,13 @@ use League\Flysystem\Util;
 use TCG\Voyager\Facades\Voyager;
 class VoyagerController extends BaseVoyagerController
 {
+
+    public function __construct()
+    {
+        // $this->middleware(['web','admin']);
+        $this->middleware('auth:web');
+    }
+    
     public function index()
     {
         return Voyager::view('voyager::index');

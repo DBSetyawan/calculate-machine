@@ -103,6 +103,7 @@ class Handler extends ExceptionHandler
         //         'error'           => 'Laravel Error Handler',
         //     ]);
         // }
+        dd($exception);
 
             if ($exception instanceof CustomException) {
                 return response()->view('errors.500', [], 500);
@@ -114,7 +115,6 @@ class Handler extends ExceptionHandler
                 'code_error' => $this->KOPAPIResponse($exception)->getStatusCode(),
                 'pesan_error' => $this->KOPAPIResponse($exception)->getData('+')["message"],
            ];
-
 
            if(isset($exception->validator)){
 

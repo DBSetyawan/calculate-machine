@@ -20,6 +20,7 @@ class SentryUserAssigned
    {
        if(Auth::check() && app()->bound('sentry'))
        {
+        //    dd( Auth::user());
            \Sentry\configureScope(function (Scope $scope): void {
                $scope->setUser([
                    'id'    => Auth::user()->id,
