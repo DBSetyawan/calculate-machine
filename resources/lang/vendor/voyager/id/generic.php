@@ -6,6 +6,8 @@ return [
     'home'                 => 'Dashboard',
     'logout'                 => 'Keluar',
     'remember_me'            => 'simpan otomatis',
+    'locale'                => 'local',
+    'bread'                 => 'Core Schema Development',
     'actions'                => 'Aksi',
     'add'                    => 'Tambah',
     'add_folder'             => 'Buat Folder',

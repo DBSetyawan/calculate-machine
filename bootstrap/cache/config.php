@@ -738,7 +738,7 @@
       array (
         'voyager::generic.profile' => 
         array (
-          'route' => 'voyager.profile',
+          'route' => '/kalkulasimesin2/public/admin/profile',
           'classes' => 'class-full-of-rum',
           'icon_class' => 'voyager-person',
         ),

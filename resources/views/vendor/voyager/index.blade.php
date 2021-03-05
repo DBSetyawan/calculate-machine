@@ -14,8 +14,8 @@
             @if (Session::has('code_error'))
                 <div class="alert alert-error" role="alert">
                     <strong style="color: rgb(94, 5, 83)"> {{ Session::get('pesan_error') }} CODE: <span class="badge badge-danger"> {{ Session::get('code_error') }} </span></strong>
-                    {{-- <strong style="color: red"><p class="text-danger">  {{Session::get('errors')}}</p></strong>
-                    <strong style="color: red">Terjadi kesahalan diline <p class="text-danger"> :{{Session::get('code_line')}}</p></strong> --}}
+                    <strong style="color: red"><p class="text-danger"> Pesan permasalahan : {{Session::get('errors')}}</p></strong>
+                    <strong style="color: red">Terjadi kesahalan diline <p class="text-danger"> :{{Session::get('code_line')}}</p></strong>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
