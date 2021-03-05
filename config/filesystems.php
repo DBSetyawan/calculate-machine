@@ -38,7 +38,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => 'https://vpn.krisanthium.com:7070/kalkulasimesin2/public/public/storage',
+            'url' => env('APP_URL').'/public/storage',
             'visibility' => 'public',
         ],
 

@@ -103,7 +103,7 @@ class Handler extends ExceptionHandler
         //         'error'           => 'Laravel Error Handler',
         //     ]);
         // }
-        dd($exception);
+        // dd($exception);
 
             if ($exception instanceof CustomException) {
                 return response()->view('errors.500', [], 500);
