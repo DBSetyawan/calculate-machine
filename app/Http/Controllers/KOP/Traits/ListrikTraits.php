@@ -138,6 +138,34 @@ trait ListrikTraits {
             $tanpa_mtc_total_perjam = $this->TotalPenyusutanTanpaMTCPerjamnya($recRow->Listrik->shift, $tanpa_mtc_total);
 
             // return RptCalcMachine::InstanceOfCalcTotalTanpaPenyusutanPerbulan();
+            $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
+            
+            if($recall != []){
+
+                AllRecalculate::whereIn('id', [$recall->id])->update(
+                    [
+                        'id_labor' => $totallbr,
+                        'id_penyusutan' => $totalpeny,
+                        'id_mtc' => $totalmtmct,
+                        'id_bprodlain_insteadof_mtc' => $calc->id_bprodlain_insteadof_mtc,
+                        'id_gajilain' => $gaji_lainnya,
+                        'id_bgoenjualan' => $b_penjualan,
+                        'id_bau' => $bau,
+                        'total_semua_biaya' => $total,
+                        'total_semua_biaya_perjam' => $semua_total_biaya_perjam,
+
+                        'total_tanpa_penyusutan_n_mtc' => $tanpa_penyusutan_plus_mtc_total,
+                        'total_tanpa_penyusutan_n_mtc_perjam' => $tanpa_penyusutan_plus_mtc_perjam,
+
+                        'total_tanpa_penyusutan' => $tanpa_penyusutan_total,
+                        'total_tanpa_penyusutan_perjam' => $tanpa_penyusutan_total_perjam,
+
+                        'total_tanpa_mtc' => $tanpa_penyusutan_plus_mtc_total,
+                        'total_tanpa_mtc_perjam' => $total,
+                    ]
+                );
+
+            }
 
     }
 
@@ -564,13 +592,13 @@ trait ListrikTraits {
 
     public function detailTransactionPenyusutan(Request $request)
     {
-        $new = AllRecalculate::with(['listrik','KategoriBagian','Mesin','GroupMesin','Company'])->get()->dd();
-       
+        
         if ($request->ajax()) {
-
+            
             if(!empty($request->penyusutan))
             {
-
+                
+                $new = AllRecalculate::with(['listrik','KategoriBagian','Mesin','GroupMesin','Company'])->get();
                 $listrik = DB::table('total_kalkulasi_tanpa_penyusutan')
                 ->leftJoin('mesin', 'total_kalkulasi_tanpa_penyusutan.code_mesin', '=', 'mesin.id')
                 ->rightJoin('lb8_kategori_mesin', 'total_kalkulasi_tanpa_penyusutan.group_mesin', '=', 'lb8_kategori_mesin.id')
@@ -603,14 +631,24 @@ trait ListrikTraits {
 
             // dd($listrik);
 
-            return DataTables::of($listrik)
+            return DataTables::of($new)
                         // ->addColumn('title', function ($squery) {
                         //     return $squery->map(function($post) {
                         //         return str_limit($post, 30, '...');
                         //     })->implode('<br>');
                         // })
+                        ->editColumn('fungsi_mesin', function($fungsimesin) {
+                            return $fungsimesin->mesin->fungsi_mesin;
+                        })
+                        ->editColumn('company_name', function($company) {
+                            // dd($company->Company);
+                            return $company->Company->company_name;
+                        })
+                        ->editColumn('code_mesin', function($codemesin) {
+                            return $codemesin->mesin->code_mesin;
+                        })
                         ->editColumn('group_mesin', function($lb8_kategori_mesin) {
-                            return $lb8_kategori_mesin->nama_kategori_mesin;
+                            return $lb8_kategori_mesin->GroupMesin->nama_kategori_mesin;
                         })
                     // ->addIndexColumn()
                     // ->addColumn('kategori_bagian',function($query){
@@ -624,52 +662,52 @@ trait ListrikTraits {
                     //     }
                     // })
                     ->editColumn('listrik', function($listrik) {
-                        return RptCalcMachine::frm_rph($listrik->listrik);
+                        return RptCalcMachine::frm_rph($listrik->id_listrik);
                     }) 
                     ->editColumn('penyusutan', function($penyusutan) {
-                        return RptCalcMachine::frm_rph($penyusutan->penyusutan);
+                        return RptCalcMachine::frm_rph($penyusutan->id_penyusutan);
                     })   
                     ->editColumn('labor', function($labor) {
-                        return RptCalcMachine::frm_rph($labor->labor);
+                        return RptCalcMachine::frm_rph($labor->id_labor);
                     })
                     ->editColumn('mtc', function($mtc) {
-                        return RptCalcMachine::frm_rph($mtc->mtc);
+                        return RptCalcMachine::frm_rph($mtc->id_mtc);
                     })
                     ->editColumn('b_prod_lain', function($b_prod_lain) {
-                        return RptCalcMachine::frm_rph($b_prod_lain->b_prod_lain);
+                        return RptCalcMachine::frm_rph($b_prod_lain->id_bprodlain_insteadof_mtc);
                     })  
                     ->editColumn('gaji_lainnya', function($gaji_lainnya) {
-                        return RptCalcMachine::frm_rph($gaji_lainnya->gaji_lainnya);
+                        return RptCalcMachine::frm_rph($gaji_lainnya->id_gajilain);
                     })
                     ->editColumn('bagian_penjualan', function($bagian_penjualan) {
-                        return RptCalcMachine::frm_rph($bagian_penjualan->bagian_penjualan);
+                        return RptCalcMachine::frm_rph($bagian_penjualan->id_bgoenjualan);
                     })
                     ->editColumn('bau', function($bau) {
-                        return RptCalcMachine::frm_rph($bau->bau);
+                        return RptCalcMachine::frm_rph($bau->id_bau);
                     }) 
                     ->editColumn('semua_total_biaya', function($semua_total_biaya) {
-                        return RptCalcMachine::frm_rph($semua_total_biaya->semua_total_biaya);
+                        return RptCalcMachine::frm_rph($semua_total_biaya->total_semua_biaya);
                     }) 
                     ->editColumn('semua_total_biaya_perjam', function($semua_total_biaya_perjam) {
-                        return RptCalcMachine::frm_rph($semua_total_biaya_perjam->semua_total_biaya_perjam);
+                        return RptCalcMachine::frm_rph($semua_total_biaya_perjam->total_semua_biaya_perjam);
                     }) 
                     ->editColumn('tanpa_penyusutan_plus_mtc_total', function($tanpa_penyusutan_plus_mtc_total) {
-                        return RptCalcMachine::frm_rph($tanpa_penyusutan_plus_mtc_total->tanpa_penyusutan_plus_mtc_total);
+                        return RptCalcMachine::frm_rph($tanpa_penyusutan_plus_mtc_total->total_tanpa_penyusutan_n_mtc);
                     }) 
                     ->editColumn('tanpa_penyusutan_plus_mtc_perjam', function($tanpa_penyusutan_plus_mtc_perjam) {
-                        return RptCalcMachine::frm_rph($tanpa_penyusutan_plus_mtc_perjam->tanpa_penyusutan_plus_mtc_perjam);
+                        return RptCalcMachine::frm_rph($tanpa_penyusutan_plus_mtc_perjam->total_tanpa_penyusutan_n_mtc_perjam);
                     }) 
                     ->editColumn('tanpa_penyusutan_total', function($tanpa_penyusutan_total) {
-                        return RptCalcMachine::frm_rph($tanpa_penyusutan_total->tanpa_penyusutan_total);
+                        return RptCalcMachine::frm_rph($tanpa_penyusutan_total->total_tanpa_penyusutan);
                     }) 
                     ->editColumn('tanpa_penyusutan_total_perjam', function($tanpa_penyusutan_total_perjam) {
-                        return RptCalcMachine::frm_rph($tanpa_penyusutan_total_perjam->tanpa_penyusutan_total_perjam);
+                        return RptCalcMachine::frm_rph($tanpa_penyusutan_total_perjam->total_tanpa_penyusutan_perjam);
                     }) 
                     ->editColumn('tanpa_mtc_total', function($tanpa_mtc_total) {
-                        return RptCalcMachine::frm_rph($tanpa_mtc_total->tanpa_mtc_total);
+                        return RptCalcMachine::frm_rph($tanpa_mtc_total->total_tanpa_mtc);
                     }) 
                     ->editColumn('tanpa_mtc_total_perjam', function($tanpa_mtc_total_perjam) {
-                        return RptCalcMachine::frm_rph($tanpa_mtc_total_perjam->tanpa_mtc_total_perjam);
+                        return RptCalcMachine::frm_rph($tanpa_mtc_total_perjam->total_tanpa_mtc_perjam);
                     }) 
                     ->addColumn('action', function($row) use($request){
                         // dd($request->all());
