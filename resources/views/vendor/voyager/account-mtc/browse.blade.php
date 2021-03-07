@@ -298,12 +298,12 @@
                             </div>
                         </div>
                         @endif
-                        @inject('mtc','App\Mtc')
+                        @inject('mtc','App\AccountMtc')
                         @php
-                            $total_listrik = $mtc->whereNotIn('company_parent_id', [2])->get();
+                            $t = $mtc->whereIn('company_parent_id', [3])->get();
 
-                            $x = collect([$total_listrik])->sum(function ($region){
-                                    return $region->sum('total_perbulan');
+                            $x = collect([$t])->sum(function ($am){
+                                    return $am->sum('biaya_perbulan');
                                 });
                         @endphp
                         <br/>

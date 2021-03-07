@@ -6,6 +6,7 @@ use App\Mesin;
 use Exception;
 use App\Company;
 use App\GajiLain;
+use App\GjiLainTotal;
 use App\ListrikOutput;
 use App\KategoriBagian;
 use App\LaporanGajiLain;
@@ -62,6 +63,30 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
         ];
 
         $simpanDataLaporanGajiLain = LaporanGajiLain::create($result_gaji_labor);
+
+        if(!empty($simpanDataLaporanGajiLain) && $simpanDataLaporanGajiLain != [] && $simpanDataLaporanGajiLain != null){
+
+            // $id = Listrik::findOrFail($simpanBiayaListrik->id);
+
+            $x = LaporanGajiLain::whereIn('company_parent_id', [3])->get();
+
+            $t = collect([$x])->sum(function ($biaya){
+                return sprintf("%.5f", $biaya->sum('total_biaya_laporan_periode'));
+            });
+            
+            $totaltracks = [
+
+                'id_lp_gaji_lain' => $simpanDataLaporanGajiLain->id,
+                'total_gj_lain' => $t,
+                'status' => 1,
+                'changed_by' => Auth::user()->name
+
+            ];
+
+            GjiLainTotal::create($totaltracks);
+
+        }
+
 
         return response()->json(
             [

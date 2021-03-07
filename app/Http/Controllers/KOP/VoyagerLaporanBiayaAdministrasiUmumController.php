@@ -4,6 +4,7 @@ namespace App\Http\Controllers\KOP;
 
 use Exception;
 use App\Company;
+use App\BauTotal;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
@@ -52,6 +53,29 @@ class VoyagerLaporanBiayaAdministrasiUmumController extends BaseVoyagerBaseContr
         ];
 
         $simpanDataLaporanLBAU = LaporanBiayaAdministrasiUmum::create($result_badm);
+
+        if(!empty($simpanDataLaporanLBAU) && $simpanDataLaporanLBAU != [] && $simpanDataLaporanLBAU != null){
+
+            // $id = Listrik::findOrFail($simpanBiayaListrik->id);
+
+            $t = LaporanBiayaAdministrasiUmum::whereIn('company_parent_id', [3])->get();
+
+            $t = collect([$t])->sum(function ($biaya){
+                return sprintf("%.5f", $biaya->sum('total_biaya_lp_adm'));
+            });
+            
+            $totaltracks = [
+
+                'id_bau' => $simpanDataLaporanLBAU->id,
+                'total_bau' => $t,
+                'status' => 1,
+                'changed_by' => Auth::user()->name
+
+            ];
+
+            BauTotal::create($totaltracks);
+
+        }
 
         return response()->json(
             [

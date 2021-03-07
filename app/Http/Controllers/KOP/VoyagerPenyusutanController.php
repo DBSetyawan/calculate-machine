@@ -5,9 +5,11 @@ namespace App\Http\Controllers\KOP;
 use App\Mesin;
 use Exception;
 use App\Company;
+use App\Listrik;
 use App\Penyusutan;
 use RumusPenyusutan;
 use App\KategoriBagian;
+use App\PenyusutanTotal;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +28,7 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
 
     public function RmsPenyusutan($purchase, $umurbln)
     {
-        return RumusPenyusutan::HitungTotalPenyusutanPerbulan($purchase, $umurbln);
+        return RumusPenyusutan::HitungTotalPenyusutanPerbulan($umurbln, $purchase);
     } 
 
     public function formPenyusutanAction(Request $request)
@@ -59,6 +61,29 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
         ];
 
         $simpanBiayaListrik = Penyusutan::create($TotalakumulasibiayaPenyusutan);
+
+        if(!empty($simpanBiayaListrik) && $simpanBiayaListrik != [] && $simpanBiayaListrik != null){
+
+            // $id = Listrik::findOrFail($simpanBiayaListrik->id);
+
+            $total_listrik = Penyusutan::whereIn('company_parent_id', [3])->get();
+
+            $total_penyusutan_perbulan = collect([$total_listrik])->sum(function ($biaya){
+                return sprintf("%.5f", $biaya->sum('penyusutan_perbulan'));
+            });
+            
+            $totaltracks = [
+
+                'id_penyusutan' => $simpanBiayaListrik->id,
+                'total_penyusutan' => $total_penyusutan_perbulan,
+                'status' => 1,
+                'changed_by' => Auth::user()->name
+
+            ];
+
+            PenyusutanTotal::create($totaltracks);
+
+        }
 
         return response()->json(
             [

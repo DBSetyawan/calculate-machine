@@ -4,7 +4,9 @@ namespace App\Http\Controllers\KOP;
 
 use Exception;
 use App\Company;
+use App\BPenjualanTotal;
 use Illuminate\Http\Request;
+use App\LaporanBagianPenjualan;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +18,6 @@ use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
 use App\Http\Controllers\KOP\Helpers\RumusLapBagPenjualan;
 use App\Http\Controllers\KOP\Service\LBagianPenjualanInterface;
-use App\LaporanBagianPenjualan;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
 class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController Implements LBagianPenjualanInterface
@@ -44,6 +45,29 @@ class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController 
         ];
 
         $simpanDataLaporanLapBagPenjualan = LaporanBagianPenjualan::create($result_lbpnjualan);
+
+        if(!empty($simpanDataLaporanLapBagPenjualan) && $simpanDataLaporanLapBagPenjualan != [] && $simpanDataLaporanLapBagPenjualan != null){
+
+            // $id = Listrik::findOrFail($simpanBiayaListrik->id);
+
+            $x = LaporanBagianPenjualan::whereIn('company_parent_id', [3])->get();
+
+            $t = collect([$x])->sum(function ($biaya){
+                return sprintf("%.5f", $biaya->sum('biaya_perbulan_bag_penjualan'));
+            });
+            
+            $totaltracks = [
+
+                'id_bgpenj' => $simpanDataLaporanLapBagPenjualan->id,
+                'total_bgpenjualan' => $t,
+                'status' => 1,
+                'changed_by' => Auth::user()->name
+
+            ];
+
+            BPenjualanTotal::create($totaltracks);
+
+        }
 
         return response()->json(
             [

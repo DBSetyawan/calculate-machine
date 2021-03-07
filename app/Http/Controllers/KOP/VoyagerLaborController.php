@@ -7,6 +7,7 @@ use App\Mesin;
 use Exception;
 use App\Company;
 use App\Listrik;
+use App\LaborTotal;
 use App\KategoriBagian;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
@@ -91,6 +92,29 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
         ];
 
         $simpanDataBiayaListrik = Labor::create($result_gaji_labor);
+
+        if(!empty($simpanDataBiayaListrik) && $simpanDataBiayaListrik != [] && $simpanDataBiayaListrik != null){
+
+            // $id = Listrik::findOrFail($simpanBiayaListrik->id);
+
+            $x = Labor::whereIn('company_parent_id', [3])->get();
+
+            $t = collect([$x])->sum(function ($biaya){
+                return sprintf("%.5f", $biaya->sum('total_biaya'));
+            });
+            
+            $totaltracks = [
+
+                'id_labor' => $simpanDataBiayaListrik->id,
+                'total_labor' => $t,
+                'status' => 1,
+                'changed_by' => Auth::user()->name
+
+            ];
+
+            LaborTotal::create($totaltracks);
+
+        }
 
         return response()->json(
             [

@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\KOP;
 
+use App\BiayaAdministrasiUmum;
 use App\Mesin;
 use Exception;
 use App\Company;
-use App\AccountMtc;
-use App\RPTMtcTotal;
 use App\KategoriBagian;
-use App\AccountMtcTotal;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
@@ -19,74 +17,47 @@ use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
-use App\Http\Controllers\KOP\Helpers\RumusAccountMTC;
-use App\Http\Controllers\KOP\Service\AccountMaintenanceInterface;
+use App\Http\Controllers\KOP\Service\BiayaAdministrasiUmumInterface;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
+use App\Http\Controllers\KOP\Helpers\RumusBiayaAdministrasiUmum as HelpersRumusBiayaAdministrasiUmum;
 
-class VoyagerAccountMtcController extends BaseVoyagerBaseController Implements AccountMaintenanceInterface
+class VoyagerbgpenjTotalController extends BaseVoyagerBaseController
 {
 
-    public function HitungTotalBiayaLuarMesinProduksi($perbaikanprod1, $perbaikanprod2, $perbaikanprod3, $nama_account){
-
-        return RumusAccountMTC::HitungBiayaLainMesinProduksiMaintenance($perbaikanprod1, $perbaikanprod2, $perbaikanprod3, $nama_account);
-
+    public function RumusTotalBiayaAdministrasiUmum($biaya_pertahun)
+    {
+        return HelpersRumusBiayaAdministrasiUmum::TotalBiayaAdministrasiUmum($biaya_pertahun);
     }
-    public function formAccountMTCActions(Request $request)
+
+    public function formBiayaAdministrasiUmumAction(Request $request)
     {
         $company = Company::all();
         $mesin = Mesin::all();
         $cbagian = KategoriBagian::all();
 
-        return view('vendor.voyager.account-mtc.forms_accountmtcss', compact('company','mesin','cbagian'));
+        return view('vendor.voyager.biaya-administrasi-umum.forms_badm', compact('company','mesin','cbagian'));
     }
 
-    public function HitungAkumulasiAccountMaintenance(Request $r){
-            
+    public function HitungAkumulasiBiayaAdministrasiUmum(Request $r){
+
         /**
-         * Hitung Total Perbaikan Biaya Pertahun
-         * @param $perbaikanpertahunn.
+         * Total biaya bag. penjualan
          */
-        $HitungTotalBiayaLuarMesinProduksi = $this->HitungTotalBiayaLuarMesinProduksi($r->tahun1, $r->tahun2, $r->tahun3, $r->nama_account);
-        
-        $data_response_accountmtc = [
+        $total_biaya_upah_perbulan = $this->RumusTotalBiayaAdministrasiUmum($r->biaya_pertahun);
+
+        $result_badm = [
             'company_parent_id' => $r->company_parent_id,
-            'code_account_mtc' => RumusAccountMTC::generateIDAccountACMTC(), 
-            'nama_account' => $r->nama_account,
-            // 'reason' => $r->reason,
-            'tahun1' => $r->tahun1,
-            'tahun2' => $r->tahun2,
-            'tahun3' => $r->tahun3,
-            'biaya_perbulan' => $HitungTotalBiayaLuarMesinProduksi
+            'nama_biaya' => $r->nama_biaya,
+            'biaya_pertahun' => $r->biaya_pertahun,
+            'biaya_perbulan' => $total_biaya_upah_perbulan,
+            'code_biaya_adm_umum' => HelpersRumusBiayaAdministrasiUmum::generateIDBAU(),
         ];
 
-        $simpanBiayaTotalAccountMTC = AccountMtc::create($data_response_accountmtc);
-
-        if(!empty($simpanBiayaTotalAccountMTC) && $simpanBiayaTotalAccountMTC != [] && $simpanBiayaTotalAccountMTC != null){
-
-            // $id = Listrik::findOrFail($simpanBiayaListrik->id);
-
-            $t = AccountMtc::whereIn('company_parent_id', [3])->get();
-
-            $t = collect([$t])->sum(function ($biaya){
-                return sprintf("%.5f", $biaya->sum('biaya_perbulan'));
-            });
-            
-            $totaltracks = [
-
-                'id_acc_mtc' => $simpanBiayaTotalAccountMTC->id,
-                'acc_mtc_total' => $simpanBiayaTotalAccountMTC->biaya_perbulan,
-                'status' => 1,
-                'changed_by' => Auth::user()->name
-
-            ];
-
-            AccountMtcTotal::create($totaltracks);
-
-        }
+        $simpanDataLaporanBAU = BiayaAdministrasiUmum::create($result_badm);
 
         return response()->json(
             [
-                'total_perbulan' => $simpanBiayaTotalAccountMTC->biaya_perbulan
+                'biaya_perbulan' => $simpanDataLaporanBAU->biaya_perbulan,
             ]
         );
 
@@ -96,6 +67,7 @@ class VoyagerAccountMtcController extends BaseVoyagerBaseController Implements A
     {
         // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);
+
         // GET THE DataType based on the slug
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 

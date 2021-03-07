@@ -61,7 +61,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="url_instagram">Purchase</label>
-                                        <input type="text" class="form-control removeLater" id="purchaseorder_value" name="purchaseorder_value" placeholder="Purchase order">
+                                        <input type="text" class="form-control removeLater" id="purchaseorder_value" name="purchaseorder_value" placeholder="Purchase value">
                                     </div>
                                     <div class="form-group">
                                         <label for="url_instagram">Umur(bulan)</label>

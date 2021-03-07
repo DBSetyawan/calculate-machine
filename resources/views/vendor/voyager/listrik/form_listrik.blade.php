@@ -125,6 +125,15 @@
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-md-4">
+                                <span>Total Cost Perbulan + ADM</span>
+                            </div>
+                            <div class="col-md-8">
+                                <span> <input type="text" readonly="true" class="form-control" id="totalcostperbulanadm" name="totalcostperbulanadm" placeholder=""></span>
+                            </div>
+                        </div>
+
                         {{-- <div class="row">
                             <div class="col-md-4">
                                 <span>%</span>
@@ -205,7 +214,7 @@
                     $("#wbp_").val(data.wbp_perminggu); 
                     $("#totalbiayalstrk_").val(data.total_biaya_listrik_perminggu);
                     $("#totalcostperbulan").val(data.totalbiaya_cost_perbulan);
-                    $("#totalcostperbulan").val(data.totalbiaya_cost_perbulan);
+                    $("#totalcostperbulanadm").val(data.ncost_bulan_plus_adm);
                     $("#persenlistriks").val(data.persen_listrik);
                     console.log("selesai memproses :",data);
                     

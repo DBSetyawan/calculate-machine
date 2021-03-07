@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\KOP;
 
-use App\AccountMtc;
 use App\Mtc;
 use App\Mesin;
 use Exception;
+use App\RptMtc;
 use App\Company;
 use Carbon\Carbon;
+use App\AccountMtc;
 use RumusMaintenance;
+use App\ListrikOutput;
 use App\KategoriBagian;
+use App\TransaksiMtcTotal;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
@@ -23,8 +26,6 @@ use TCG\Voyager\Database\Schema\SchemaManager;
 use App\Http\Controllers\KOP\Service\MTcInterface;
 use App\Http\Controllers\KOP\Service\RptMTcInterface;
 use App\Http\Controllers\KOP\Helpers\RumusRptMaintenance;
-use App\ListrikOutput;
-use App\RptMtc;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
 class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTcInterface
@@ -112,6 +113,29 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
         ];
 
         $simpanDataRpTMTC = RptMtc::create($data_response_rptmtc);
+
+        if(!empty($simpanDataRpTMTC) && $simpanDataRpTMTC != [] && $simpanDataRpTMTC != null){
+
+            // $id = Listrik::findOrFail($simpanBiayaListrik->id);
+
+            $t = RptMtc::whereIn('company_parent_id', [3])->get();
+
+            $total_penyusutan_perbulan = collect([$t])->sum(function ($biaya){
+                return sprintf("%.5f", $biaya->sum('total_biaya_perbulan'));
+            });
+            
+            $totaltracks = [
+
+                'id_tr_mtc' => $simpanDataRpTMTC->id,
+                'total_tr_mtc_total' => $total_penyusutan_perbulan,
+                'status' => 1,
+                'changed_by' => Auth::user()->name
+
+            ];
+
+            TransaksiMtcTotal::create($totaltracks);
+
+        }
 
         return response()->json(
             [

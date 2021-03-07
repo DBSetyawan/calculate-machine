@@ -8,6 +8,7 @@ use App\Company;
 use App\Listrik;
 use RumusListrik;
 use App\TotalCalc;
+use App\ListrikTotal;
 use App\KategoriBagian;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
@@ -131,6 +132,24 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         ];
 
         $simpanBiayaListrik = Listrik::create($Totalakumulasibiayalistrik);
+
+        if(!empty($simpanBiayaListrik) && $simpanBiayaListrik != [] && $simpanBiayaListrik != null){
+
+            // $id = Listrik::findOrFail($simpanBiayaListrik->id);
+
+            $totaltracks = [
+
+                'id_listrik' => $simpanBiayaListrik->id,
+                'before_total_listrik' => 0,
+                'total_listrik' => $costADM,
+                'status' => 1,
+                'changed_by' => Auth::user()->name
+
+            ];
+
+            ListrikTotal::create($totaltracks);
+
+        }
         
         return response()->json(
             [
@@ -199,6 +218,8 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             } else {
                 $query = $model::select('*');
             }
+
+            // dd($query->get());
 
             // Use withTrashed() if model uses SoftDeletes and if toggle is selected
             if ($model && in_array(SoftDeletes::class, class_uses_recursive($model)) && Auth::user()->can('delete', app($dataType->model_name))) {

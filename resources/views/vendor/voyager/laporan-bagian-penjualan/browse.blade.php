@@ -298,29 +298,29 @@
                             </div>
                         </div>
                         @endif
-                        @inject('bpnjualan','App\BagianPenjualan')
+                        @inject('bpnjualan','App\LaporanBagianPenjualan')
                         @php
                             $tpnjualan = $bpnjualan->whereIn('company_parent_id', [3])->get();
 
                             $tpnjualan = collect([$tpnjualan])->sum(function ($region){
-                                    return $region->sum('biaya_perbulan');
+                                    return $region->sum('biaya_perbulan_bag_penjualan');
                                 });
-                                $tpnjualanprthn = $bpnjualan->whereIn('company_parent_id', [3])->get();
+                                // $tpnjualanprthn = $bpnjualan->whereIn('company_parent_id', [3])->get();
 
-                                $tpnjualanprthn = collect([$tpnjualanprthn])->sum(function ($region){
-                                    return $region->sum('biaya_pertahun');
-                                });
+                                // $tpnjualanprthn = collect([$tpnjualanprthn])->sum(function ($region){
+                                //     return $region->sum('biaya_pertahun');
+                                // });
                         @endphp
                         <br/>
                         <div class="panel panel-bordered">
                             <div class="panel-body">
                                 <div class="pull-left">
                                     <div class="col-2">
-                                        <label for="total PPJ">Total penjualan perbulan  :</label> <span class="badge badge-success">Rp {{number_format($tpnjualan, 0, ".", ".")}}</span>
+                                        <label for="total PPJ">Total bagian penjualan perbulan :</label> <span class="badge badge-success">Rp {{number_format($tpnjualan, 0, ".", ".")}}</span>
                                     </div>
-                                    <div class="col-2">
+                                    {{-- <div class="col-2">
                                         <label for="total PPJ">Total penjualan pertahun  :</label> <span class="badge badge-success">Rp {{number_format($tpnjualanprthn, 0, ".", ".")}}</span>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>
