@@ -37,6 +37,15 @@
                                             @endforeach
                                         </select>
                                     </div>
+
+                                    <div class="form-group">
+                                        <label for="program_id">Group mesin</label>
+                                        <select class="form-control select2" id="group_mesin" name="group_mesin" required>
+                                            @foreach ($group_mesin as $c)
+                                        <option value="{{$c->id}}">{{$c->nama_kategori_mesin}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                             
                                     <div class="form-group">
                                         <label for="program_id">Mesin</label>
@@ -196,6 +205,7 @@
                     'faktor_kali_wbp'    : $('input[name=faktor_kali_wbp]').val(),
                     'faktor_kali_lwbp'   : $('input[name=faktor_kali_lwbp]').val(),
                     'persenlistriks'     : $('input[name=persenlistriks]').val(),
+                    'group_mesin'        : $('select[name=group_mesin]').val(),
                     'company_parent_id'  : $('select[name=company_parent_id]').val(),
                     'category_bagian'    : $('select[name=category_bagian]').val(),
                     'code_mesin'         : $('select[name=code_mesin]').val(),

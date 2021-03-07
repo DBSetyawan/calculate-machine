@@ -8,6 +8,7 @@ use App\Company;
 use App\GajiLain;
 use App\GjiLainTotal;
 use App\ListrikOutput;
+use App\AllRecalculate;
 use App\KategoriBagian;
 use App\LaporanGajiLain;
 use Illuminate\Http\Request;
@@ -83,7 +84,19 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
 
             ];
 
-            GjiLainTotal::create($totaltracks);
+            $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
+            
+            if($recall != []){
+
+                $total = GjiLainTotal::create($totaltracks);
+
+                AllRecalculate::whereIn('id', [$recall->id])->update(
+                    [
+                        'id_gajilain' => $total->total_gj_lain
+                    ]
+                );
+
+            }
 
         }
 

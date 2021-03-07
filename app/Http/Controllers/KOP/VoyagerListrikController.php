@@ -9,6 +9,7 @@ use App\Listrik;
 use RumusListrik;
 use App\TotalCalc;
 use App\ListrikTotal;
+use App\AllRecalculate;
 use App\KategoriBagian;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
@@ -135,19 +136,52 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
         if(!empty($simpanBiayaListrik) && $simpanBiayaListrik != [] && $simpanBiayaListrik != null){
 
-            // $id = Listrik::findOrFail($simpanBiayaListrik->id);
+            $checkRow = AllRecalculate::whereNull('total')->orderBy('created_at', 'desc')->get();
+            
+            if($checkRow != []){
 
-            $totaltracks = [
+                $total_listrik = Listrik::whereIn('company_parent_id', [3])->get();
 
-                'id_listrik' => $simpanBiayaListrik->id,
-                'before_total_listrik' => 0,
-                'total_listrik' => $costADM,
-                'status' => 1,
-                'changed_by' => Auth::user()->name
+                $t = collect([$total_listrik])->sum(function ($biaya){
+                    return sprintf("%.5f", $biaya->sum('ncost_bulan_plus_adm'));
+                });
 
-            ];
+                $totaltracks = [
 
-            ListrikTotal::create($totaltracks);
+                    'id_listrik' => $simpanBiayaListrik->id,
+                    'before_total_listrik' => 0,
+                    'total_listrik' => $t,
+                    'status' => 1,
+                    'changed_by' => Auth::user()->name
+    
+                ];
+    
+                $total = ListrikTotal::create($totaltracks);
+
+                // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
+
+                // if($recall != []){
+
+                    /**
+                    * @parent recalculate machine logic.
+                    */
+                    AllRecalculate::create(
+                        [
+                            'company' => $simpanBiayaListrik->company_parent_id,
+                            'code_mesin' => $simpanBiayaListrik->code_mesin,
+                            'category_bagian' => $simpanBiayaListrik->category_bagian,
+                            'group_mesin' => $r->group_mesin,
+                            'id_listrik' => $total->total_listrik,
+                        
+                        ]
+                    );
+                // }
+            }
+                else {
+                    
+                    return response()->json(['error' => "u can't"]);
+            
+            }
 
         }
         
@@ -169,10 +203,11 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
     public function formListrikAction(Request $request)
     {
         $company = Company::all();
+        $group_mesin = Lb8KategoriMesin::all();
         $mesin = Mesin::all();
         $cbagian = KategoriBagian::all();
 
-        return view('vendor.voyager.listrik.form_listrik', compact('company','mesin','cbagian'));
+        return view('vendor.voyager.listrik.form_listrik', compact('group_mesin','company','mesin','cbagian'));
     }
  
     public function index(Request $request)

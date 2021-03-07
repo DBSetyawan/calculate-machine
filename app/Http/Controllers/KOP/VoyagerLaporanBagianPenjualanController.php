@@ -4,6 +4,7 @@ namespace App\Http\Controllers\KOP;
 
 use Exception;
 use App\Company;
+use App\AllRecalculate;
 use App\BPenjualanTotal;
 use Illuminate\Http\Request;
 use App\LaporanBagianPenjualan;
@@ -48,11 +49,9 @@ class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController 
 
         if(!empty($simpanDataLaporanLapBagPenjualan) && $simpanDataLaporanLapBagPenjualan != [] && $simpanDataLaporanLapBagPenjualan != null){
 
-            // $id = Listrik::findOrFail($simpanBiayaListrik->id);
+            $xbgpenj = LaporanBagianPenjualan::whereIn('company_parent_id', [3])->get();
 
-            $x = LaporanBagianPenjualan::whereIn('company_parent_id', [3])->get();
-
-            $t = collect([$x])->sum(function ($biaya){
+            $t = collect([$xbgpenj])->sum(function ($biaya){
                 return sprintf("%.5f", $biaya->sum('biaya_perbulan_bag_penjualan'));
             });
             
@@ -65,7 +64,19 @@ class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController 
 
             ];
 
-            BPenjualanTotal::create($totaltracks);
+            $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
+            
+            if($recall != []){
+
+                $total = BPenjualanTotal::create($totaltracks);
+
+                AllRecalculate::whereIn('id', [$recall->id])->update(
+                    [
+                        'id_bgoenjualan' => $total->total_bgpenjualan
+                    ]
+                );
+
+            }
 
         }
 

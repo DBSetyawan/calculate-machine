@@ -5,6 +5,7 @@ namespace App\Http\Controllers\KOP;
 use Exception;
 use App\Company;
 use App\BauTotal;
+use App\AllRecalculate;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
@@ -58,9 +59,9 @@ class VoyagerLaporanBiayaAdministrasiUmumController extends BaseVoyagerBaseContr
 
             // $id = Listrik::findOrFail($simpanBiayaListrik->id);
 
-            $t = LaporanBiayaAdministrasiUmum::whereIn('company_parent_id', [3])->get();
+            $tbau = LaporanBiayaAdministrasiUmum::whereIn('company_parent_id', [3])->get();
 
-            $t = collect([$t])->sum(function ($biaya){
+            $t = collect([$tbau])->sum(function ($biaya){
                 return sprintf("%.5f", $biaya->sum('total_biaya_lp_adm'));
             });
             
@@ -73,7 +74,19 @@ class VoyagerLaporanBiayaAdministrasiUmumController extends BaseVoyagerBaseContr
 
             ];
 
-            BauTotal::create($totaltracks);
+            $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
+            
+            if($recall != []){
+
+                $total = BauTotal::create($totaltracks);
+
+                AllRecalculate::whereIn('id', [$recall->id])->update(
+                    [
+                        'id_bau' => $total->total_bau
+                    ]
+                );
+
+            }
 
         }
 

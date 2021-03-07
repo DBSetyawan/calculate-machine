@@ -8,6 +8,7 @@ use App\Company;
 use App\Listrik;
 use App\TotalCalc;
 use RptCalcMachine;
+use App\AllRecalculate;
 use App\KategoriBagian;
 use App\LaporanGajiLain;
 use Illuminate\Http\Request;
@@ -458,6 +459,7 @@ trait ListrikTraits {
 
     public function detailTransactionPenyusutan(Request $request)
     {
+        $new = AllRecalculate::with(['listrik','KategoriBagian','Mesin','GroupMesin','Company'])->get()->dd();
        
         if ($request->ajax()) {
 

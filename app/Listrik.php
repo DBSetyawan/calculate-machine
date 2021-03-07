@@ -23,6 +23,11 @@ class Listrik extends Model
         return $this->belongsTo('App\Mesin', 'id');
     }
 
+    public function __callMesin()
+    {
+        return $this->belongsTo('App\Mesin', 'id','code_mesin');
+    }
+
     public function KategoriBagian()
     {
         return $this->belongsTo('App\KategoriBagian', 'id');

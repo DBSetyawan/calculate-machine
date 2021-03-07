@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers\KOP;
 
-use App\Labor;
+use App\BiayaAdministrasiUmum;
 use App\Mesin;
 use Exception;
 use App\Company;
-use App\Listrik;
-use App\LaborTotal;
-use App\AllRecalculate;
 use App\KategoriBagian;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
@@ -20,133 +17,50 @@ use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
-use App\Http\Controllers\KOP\Helpers\RumusLabor;
-use App\Http\Controllers\KOP\Service\LaborInterface;
+use App\Http\Controllers\KOP\Service\BiayaAdministrasiUmumInterface;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
+use App\Http\Controllers\KOP\Helpers\RumusBiayaAdministrasiUmum as HelpersRumusBiayaAdministrasiUmum;
 
-class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborInterface
+class VoyagerRecalController extends BaseVoyagerBaseController
 {
 
-    public function RumusBiayaGajiUpahSupervisor($shift, $mesin_yang_ditangai_spv, $code_mesin){
-
-        return RumusLabor::SpvLevels($shift, $mesin_yang_ditangai_spv, $code_mesin);
-
+    public function RumusTotalBiayaAdministrasiUmum($biaya_pertahun)
+    {
+        return HelpersRumusBiayaAdministrasiUmum::TotalBiayaAdministrasiUmum($biaya_pertahun);
     }
 
-    public function RumusBiayaGajiUpahOperator($shift, $operator){
-
-        return RumusLabor::OptLevels($shift, $operator);
-
-    }
-
-    public function RumusBiayaGajiUpahHelper($shift, $helper){
-
-        return RumusLabor::Helplevels($shift, $helper);
-        
-    }
-
-    public function RumusTotalBiayaLabor($spv, $operator, $helper){
-
-        return RumusLabor::SumLevels($spv, $operator, $helper);
-
-    }
-
-    public function HitungAkumulasiLabor(Request $r){
-
-        /**
-         * Hitung Biaya Level
-         * @method RumusBiayaGajiUpahSupervisor, RumusBiayaGajiUpahOperator, RumusBiayaGajiUpahHelper
-         *
-         * Total biaya level Supervisor
-         */
-        $biayasupervisor = $this->RumusBiayaGajiUpahSupervisor($r->shift, $r->jumlah_penangganan_mesin, $r->code_mesin);
-        
-        /**
-         * Total biaya level Operator
-         */
-        $biayaoperator = $this->RumusBiayaGajiUpahOperator($r->shift, $r->operator);
-         
-        /**
-         * Total biaya level helper
-         */
-        $biayahelper = $this->RumusBiayaGajiUpahHelper($r->shift, $r->helper);
-
-        /**
-         * Total biaya labor
-         */
-        $total_biaya_upah_perbulan = $this->RumusTotalBiayaLabor($biayasupervisor, $biayaoperator, $biayahelper);
-
-        $result_gaji_labor = [
-            'company_parent_id' => $r->company_parent_id,
-            'category_bagian' => $r->category_bagian,
-            'code_mesin' => $r->code_mesin,
-            'shift' => $r->shift,
-            'supervisor' => $r->supervisor,
-            'operator' => $r->operator,
-            'helper' => $r->helper,
-            'supporting' => $r->supporting,
-            'supervisor_level3' => $biayasupervisor,
-            'operator_level2' => $biayaoperator,
-            'helper_level0' => $biayahelper,
-            'support_level0' => 0,
-            'total_biaya' => $total_biaya_upah_perbulan,
-        ];
-
-        $simpanDataBiayaListrik = Labor::create($result_gaji_labor);
-
-        if(!empty($simpanDataBiayaListrik) && $simpanDataBiayaListrik != [] && $simpanDataBiayaListrik != null){
-
-            $c_lbr = Labor::whereIn('company_parent_id', [3])->get();
-
-            $t = collect([$c_lbr])->sum(function ($biaya){
-                return sprintf("%.5f", $biaya->sum('total_biaya'));
-            });
-            
-            $totaltracks = [
-
-                'id_labor' => $simpanDataBiayaListrik->id,
-                'total_labor' => $t,
-                'status' => 1,
-                'changed_by' => Auth::user()->name
-
-            ];
-
-            $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
-            
-            if($recall != []){
-
-                $total = LaborTotal::create($totaltracks);
-
-                AllRecalculate::whereIn('id', [$recall->id])->update(
-                    [
-                        'id_labor' => $total->total_labor
-                    ]
-                );
-
-            }
-
-        }
-
-        return response()->json(
-            [
-                'set_default_mesin' => $r->jumlah_penangganan_mesin,
-                'spv' => $simpanDataBiayaListrik->supervisor_level3,
-                'opt' => $simpanDataBiayaListrik->operator_level2,
-                'help' => $biayahelper,
-                'total_biaya_levels' => $total_biaya_upah_perbulan,
-            ]
-        );
-
-    }
-    
-    public function formLaborAction(Request $request)
+    public function formBiayaAdministrasiUmumAction(Request $request)
     {
         $company = Company::all();
         $mesin = Mesin::all();
         $cbagian = KategoriBagian::all();
-        $listrikShift = Listrik::with('Mesin')->get();
 
-        return view('vendor.voyager.labor.form_labor', compact('company','mesin','cbagian','listrikShift'));
+        return view('vendor.voyager.biaya-administrasi-umum.forms_badm', compact('company','mesin','cbagian'));
+    }
+
+    public function HitungAkumulasiBiayaAdministrasiUmum(Request $r){
+
+        /**
+         * Total biaya bag. penjualan
+         */
+        $total_biaya_upah_perbulan = $this->RumusTotalBiayaAdministrasiUmum($r->biaya_pertahun);
+
+        $result_badm = [
+            'company_parent_id' => $r->company_parent_id,
+            'nama_biaya' => $r->nama_biaya,
+            'biaya_pertahun' => $r->biaya_pertahun,
+            'biaya_perbulan' => $total_biaya_upah_perbulan,
+            'code_biaya_adm_umum' => HelpersRumusBiayaAdministrasiUmum::generateIDBAU(),
+        ];
+
+        $simpanDataLaporanBAU = BiayaAdministrasiUmum::create($result_badm);
+
+        return response()->json(
+            [
+                'biaya_perbulan' => $simpanDataLaporanBAU->biaya_perbulan,
+            ]
+        );
+
     }
  
     public function index(Request $request)
@@ -412,7 +326,6 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
     // POST BR(E)AD
     public function update(Request $request, $id)
     {
-
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -428,9 +341,6 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
             $data = $model->withTrashed()->findOrFail($id);
         } else {
             $data = $model->findOrFail($id);
-            DB::table('total_kalkulasi_tanpa_penyusutan')
-            ->where('labor', $data->total_biaya)
-            ->update(array('labor' => $request->total_biaya)); 
         }
 
         // Check permission

@@ -8,6 +8,7 @@ use App\Company;
 use App\Listrik;
 use App\Penyusutan;
 use RumusPenyusutan;
+use App\AllRecalculate;
 use App\KategoriBagian;
 use App\PenyusutanTotal;
 use Illuminate\Http\Request;
@@ -81,7 +82,19 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
 
             ];
 
-            PenyusutanTotal::create($totaltracks);
+            $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
+
+            if($recall != []){
+
+                $total = PenyusutanTotal::create($totaltracks);
+
+                AllRecalculate::whereIn('id', [$recall->id])->update(
+                    [
+                        'id_penyusutan' => $total->total_penyusutan
+                    ]
+                );
+
+            }
 
         }
 

@@ -7,6 +7,7 @@ use Exception;
 use App\Company;
 use App\AccountMtc;
 use App\RPTMtcTotal;
+use App\AllRecalculate;
 use App\KategoriBagian;
 use App\AccountMtcTotal;
 use Illuminate\Http\Request;
@@ -65,22 +66,34 @@ class VoyagerAccountMtcController extends BaseVoyagerBaseController Implements A
 
             // $id = Listrik::findOrFail($simpanBiayaListrik->id);
 
-            $t = AccountMtc::whereIn('company_parent_id', [3])->get();
+            $tx = AccountMtc::whereIn('company_parent_id', [3])->get();
 
-            $t = collect([$t])->sum(function ($biaya){
+            $t = collect([$tx])->sum(function ($biaya){
                 return sprintf("%.5f", $biaya->sum('biaya_perbulan'));
             });
             
             $totaltracks = [
 
                 'id_acc_mtc' => $simpanBiayaTotalAccountMTC->id,
-                'acc_mtc_total' => $simpanBiayaTotalAccountMTC->biaya_perbulan,
+                'acc_mtc_total' => $t,
                 'status' => 1,
                 'changed_by' => Auth::user()->name
 
             ];
 
-            AccountMtcTotal::create($totaltracks);
+            $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
+            
+            if($recall != []){
+
+                $total = AccountMtcTotal::create($totaltracks);
+
+                AllRecalculate::whereIn('id', [$recall->id])->update(
+                    [
+                        'id_bprodlain_insteadof_mtc' => $total->acc_mtc_total
+                    ]
+                );
+
+            }
 
         }
 

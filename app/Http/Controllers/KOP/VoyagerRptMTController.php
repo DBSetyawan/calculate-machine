@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use App\AccountMtc;
 use RumusMaintenance;
 use App\ListrikOutput;
+use App\AllRecalculate;
 use App\KategoriBagian;
 use App\TransaksiMtcTotal;
 use Illuminate\Http\Request;
@@ -132,8 +133,20 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
                 'changed_by' => Auth::user()->name
 
             ];
+            
+            $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
+            
+            if($recall != []){
 
-            TransaksiMtcTotal::create($totaltracks);
+                $total = TransaksiMtcTotal::create($totaltracks);
+
+                AllRecalculate::whereIn('id', [$recall->id])->update(
+                    [
+                        'id_mtc' => $total->total_tr_mtc_total
+                    ]
+                );
+
+            }
 
         }
 
