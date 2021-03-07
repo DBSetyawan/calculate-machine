@@ -9,8 +9,10 @@ use App\Listrik;
 use RumusListrik;
 use App\TotalCalc;
 use App\ListrikTotal;
+use App\ListrikOutput;
 use App\AllRecalculate;
 use App\KategoriBagian;
+use App\Lb8KategoriMesin;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
@@ -116,6 +118,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
         $Totalakumulasibiayalistrik = [
             'shift' => $r->shift,
+            'listrikperjam' => $r->perjam,
             'ampere' => $r->ampere,
             'voltase' =>  $r->voltase,
             'company_parent_id' => $r->company_parent_id,
@@ -172,6 +175,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                             'category_bagian' => $simpanBiayaListrik->category_bagian,
                             'group_mesin' => $r->group_mesin,
                             'id_listrik' => $total->total_listrik,
+                            'listrik_fk' => $r->perjam,
                         
                         ]
                     );
@@ -206,8 +210,10 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         $group_mesin = Lb8KategoriMesin::all();
         $mesin = Mesin::all();
         $cbagian = KategoriBagian::all();
+        $LsOutputPerjam = ListrikOutput::all();
 
-        return view('vendor.voyager.listrik.form_listrik', compact('group_mesin','company','mesin','cbagian'));
+
+        return view('vendor.voyager.listrik.form_listrik', compact('LsOutputPerjam','group_mesin','company','mesin','cbagian'));
     }
  
     public function index(Request $request)

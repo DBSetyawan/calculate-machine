@@ -142,7 +142,7 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
 
                 AllRecalculate::whereIn('id', [$recall->id])->update(
                     [
-                        'id_mtc' => $total->total_tr_mtc_total
+                        'id_bprodlain_insteadof_mtc' => $simpanDataRpTMTC->biaya_produksi_lain
                     ]
                 );
 

@@ -28,14 +28,14 @@ class RumusLapBagPenjualan {
     public static function TotalSeluruhLPenjualanBagianPenjualan() {
 
         $totaljumlahtotalterkait = [
-                    '3',
-                    '4',
-                    '5',
-                    '6',
-                    '7',
-                    '8',
-                    '9',
-                    '10',
+                    '30',
+                    '28',
+                    '31',
+                    '32',
+                    '33',
+                    '34',
+                    '35',
+                    '36',
         ];
 
         /**

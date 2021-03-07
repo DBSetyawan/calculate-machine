@@ -17,6 +17,11 @@ class AllRecalculate extends Model
         return $this->belongsTo('App\Company', 'company');
     } 
 
+    public function Listrikperjam()
+    {
+        return $this->belongsTo('App\ListrikOutput', 'id');
+    }
+
     public function GroupMesin()
     {
         return $this->belongsTo('App\Lb8KategoriMesin', 'group_mesin');
@@ -29,7 +34,7 @@ class AllRecalculate extends Model
 
     public function Listrik()
     {
-        return $this->belongsTo('App\Listrik', 'id_listrik');
+        return $this->belongsTo('App\Listrik', 'listrik_fk');
     }
 
     public function KategoriBagian()

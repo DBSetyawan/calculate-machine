@@ -12,8 +12,8 @@
                 <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }}</span>
             </a> --}}
         @endcan
-        <a href="{{ route('lp.bg.pnjualan.form.master') }}" class="btn btn-success btn-add-new">
-            <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Lp bg. penjualan</span>
+        <a href="{{ route('voyager.recalculate') }}" class="btn btn-success btn-add-new">
+            <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Test Recalculate</span>
         </a>
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
@@ -250,18 +250,6 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     <span>{{ $data->{$row->field} }}</span>
-                                                    @if ($row->display_name == '2018')
-                                                        <span>{{ "Rp " . number_format($data->tahun1,0,',','.') }}</span>
-                                                    @endif
-                                                    @if ($row->display_name == '2019')
-                                                        <span>{{ "Rp " . number_format($data->tahun2,0,',','.') }}</span>
-                                                    @endif
-                                                    @if ($row->display_name == '2020')
-                                                        <span>{{ "Rp " . number_format($data->tahun3,0,',','.') }}</span>
-                                                    @endif
-                                                    @if ($row->display_name == 'Biaya per Bulan')
-                                                        <span>{{ "Rp " . number_format($data->biaya_perbulan_bag_penjualan,0,',','.') }}</span>
-                                                    @endif
                                                 @endif
                                             </td>
                                         @endforeach
@@ -298,29 +286,29 @@
                             </div>
                         </div>
                         @endif
-                        @inject('bpnjualan','App\LaporanBagianPenjualan')
+                        @inject('bpnjualan','App\BagianPenjualan')
                         @php
                             $tpnjualan = $bpnjualan->whereIn('company_parent_id', [3])->get();
 
                             $tpnjualan = collect([$tpnjualan])->sum(function ($region){
-                                    return $region->sum('biaya_perbulan_bag_penjualan');
+                                    return $region->sum('biaya_perbulan');
                                 });
-                                // $tpnjualanprthn = $bpnjualan->whereIn('company_parent_id', [3])->get();
+                                $tpnjualanprthn = $bpnjualan->whereIn('company_parent_id', [3])->get();
 
-                                // $tpnjualanprthn = collect([$tpnjualanprthn])->sum(function ($region){
-                                //     return $region->sum('biaya_pertahun');
-                                // });
+                                $tpnjualanprthn = collect([$tpnjualanprthn])->sum(function ($region){
+                                    return $region->sum('biaya_pertahun');
+                                });
                         @endphp
                         <br/>
                         <div class="panel panel-bordered">
                             <div class="panel-body">
                                 <div class="pull-left">
                                     <div class="col-2">
-                                        <label for="total PPJ">Total bagian penjualan perbulan :</label> <span class="badge badge-success">Rp {{number_format(RumusLapBagPenjualan::TotalSeluruhLPenjualanBagianPenjualan(), 0, ".", ".")}}</span>
+                                        <label for="total PPJ">Total penjualan perbulan  :</label> <span class="badge badge-success">Rp {{number_format($tpnjualan, 0, ".", ".")}}</span>
                                     </div>
-                                    {{-- <div class="col-2">
+                                    <div class="col-2">
                                         <label for="total PPJ">Total penjualan pertahun  :</label> <span class="badge badge-success">Rp {{number_format($tpnjualanprthn, 0, ".", ".")}}</span>
-                                    </div> --}}
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -89,6 +89,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('calc-rpts/open-transaction-calc-tanpa-penyusutan','KOP\VoyagerTotalKalkulasiController@OpenTransactionTanpaPenyusutan')->name('tr.open.tanpa.penyusutan');
     Route::get('dashboard','KOP\VoyagerController@index')->name('voyager.dashboard.index');
     Route::get('button-load-ButtonexportCalcTanpaPenyusutan','KOP\VoyagerTotalKalkulasiController@ButtonexportCalcTanpaPenyusutan')->name('voyager.ButtonexportCalcTanpaPenyusutan');
+    Route::get('button-load-relcalculate','KOP\VoyagerTotalKalkulasiController@recalculate')->name('voyager.recalculate');
     Route::get('button-load-ButtonCalcSmuaBiayaExports','KOP\VoyagerTotalKalkulasiController@ButtonCalcSmuaBiayaExports')->name('voyager.ButtonCalcSmuaBiayaExports');
     Route::get('button-load-ButtonexportCalcTanpaMTC','KOP\VoyagerTotalKalkulasiController@ButtonexportCalcTanpaMTC')->name('voyager.ButtonexportCalcTanpaMTC');
     Route::get('button-load-ButtonexportCalcTanpaMTCnTanpaPenyusutan','KOP\VoyagerTotalKalkulasiController@ButtonexportCalcTanpaMTCnTanpaPenyusutan')->name('voyager.exportCalcTanpaMTCnTanpaPenyusutan');

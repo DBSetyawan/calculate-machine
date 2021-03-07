@@ -29,7 +29,7 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
 
     public function RmsPenyusutan($purchase, $umurbln)
     {
-        return RumusPenyusutan::HitungTotalPenyusutanPerbulan($umurbln, $purchase);
+        return RumusPenyusutan::HitungTotalPenyusutanPerbulan($purchase, $umurbln);
     } 
 
     public function formPenyusutanAction(Request $request)

@@ -90,11 +90,11 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
 
                 $total = GjiLainTotal::create($totaltracks);
 
-                AllRecalculate::whereIn('id', [$recall->id])->update(
-                    [
-                        'id_gajilain' => $total->total_gj_lain
-                    ]
-                );
+                // AllRecalculate::whereIn('id', [$recall->id])->update(
+                //     [
+                //         'id_gajilain' => $total->total_gj_lain
+                //     ]
+                // );
 
             }
 

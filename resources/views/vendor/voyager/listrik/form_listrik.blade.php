@@ -46,6 +46,15 @@
                                             @endforeach
                                         </select>
                                     </div>
+
+                                    <div class="form-group">
+                                        <label for="program_id">Listrik /Jam</label>
+                                        <select class="form-control select2" id="perjam" name="perjam" required>
+                                            @foreach ($LsOutputPerjam as $c)
+                                        <option value="{{$c->persen}}">{{$c->persen}} - {{ $c->output_perjam }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                             
                                     <div class="form-group">
                                         <label for="program_id">Mesin</label>
@@ -207,6 +216,7 @@
                     'persenlistriks'     : $('input[name=persenlistriks]').val(),
                     'group_mesin'        : $('select[name=group_mesin]').val(),
                     'company_parent_id'  : $('select[name=company_parent_id]').val(),
+                    'perjam'             : $('select[name=perjam]').val(),
                     'category_bagian'    : $('select[name=category_bagian]').val(),
                     'code_mesin'         : $('select[name=code_mesin]').val(),
 

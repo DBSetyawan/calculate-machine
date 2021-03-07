@@ -82,7 +82,7 @@ class RumusHitungBIayaListrik {
         } 
             else {
                 
-                if($shift >= 1){
+                if($shift > 1){
 
                     $wbp = (($ampere * $voltase) / 1000) * (static::WBP*static::IntvalMinggu);
 

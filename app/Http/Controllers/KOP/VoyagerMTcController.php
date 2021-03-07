@@ -8,6 +8,7 @@ use Exception;
 use App\Company;
 use Carbon\Carbon;
 use RumusMaintenance;
+use App\ListrikOutput;
 use App\KategoriBagian;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
@@ -42,6 +43,11 @@ class VoyagerMTcController extends BaseVoyagerBaseController Implements MTcInter
         return RumusMaintenance::HitungTotalPerbulan($perbaikan_perbulan, $spare_part_perbulan);
     }
 
+    public function RmsMTCTotalBiayaProduksiLain($totalsemuaaccount, $listrikperjam){
+
+        return RumusMaintenance::HitungTotalPerbulan($totalsemuaaccount, $listrikperjam);
+    }
+
     public function HitungAkumulasiMaintenance(Request $r){
             
         /**
@@ -51,6 +57,7 @@ class VoyagerMTcController extends BaseVoyagerBaseController Implements MTcInter
         $rmsperbaikanpertahun = $this->RmsMTCperbaikanperbulan($r->perbaikan_pertahun, $r->code_mesin);
         $rmssparepartperbulan = $this->RmsMTCSparePartPerbulan($r->sparepart_pertahun);
         $rumusTotalMaintenancebulanan = $this->RmsMTCTotalPerbulan($rmsperbaikanpertahun, $rmssparepartperbulan);
+        $RmsMTCTotalBiayaProduksiLain = $this->RmsMTCTotalBiayaProduksiLain($rmsperbaikanpertahun, $rmssparepartperbulan);
 
         $data_response_mtc = [
             'code_mesin' => $r->code_mesin,
@@ -83,8 +90,9 @@ class VoyagerMTcController extends BaseVoyagerBaseController Implements MTcInter
         $company = Company::all();
         $mesin = Mesin::all();
         $cbagian = KategoriBagian::all();
+        $$LsOutputPerjam = ListrikOutput::all();
 
-        return view('vendor.voyager.mtc.form_maintenance', compact('company','mesin','cbagian'));
+        return view('vendor.voyager.mtc.form_maintenance', compact('LsOutputPerjam','company','mesin','cbagian'));
     }
  
     public function index(Request $request)

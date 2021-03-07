@@ -18,6 +18,11 @@ class Listrik extends Model
         return $this->belongsTo('App\Company', 'id');
     }
 
+    public function Listrikperjam()
+    {
+        return $this->belongsTo('App\ListrikOutput', 'listrikperjam');
+    }
+
     public function Mesin()
     {
         return $this->belongsTo('App\Mesin', 'id');

@@ -17,5 +17,11 @@ interface MTcInterface
                         $prthn,
                         $prbln
                     );
+
+    public function RmsMTCTotalBiayaProduksiLain(
+                        $totalSemuaBiayaAccount,
+                        $listrikPerjam
+                    );
+                    
               
 }
