@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 //use Illuminate\Support\ServiceProvider;
+use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
@@ -31,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Voyager::addAction(\App\Actions\ActionRecalculate::class);
+
         Schema::defaultStringLength(191);
         
         Blade::directive('rupiahs', function ($frm) {
@@ -45,5 +48,7 @@ class AppServiceProvider extends ServiceProvider
   
             return $view->with('messages', $messages);
         });
+
+        // Voyager::replaceAction(ViewAction::class,\App\Actions\class::class);
     }
 }

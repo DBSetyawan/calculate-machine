@@ -260,7 +260,7 @@
                                                         <span>{{ "Rp " . number_format($data->nilai_cost_bulan,0,',','.') }}</span>
                                                     @endif
                                                     @if ($row->display_name == '%')
-                                                        <span>{{ RumusListrikOutputPerjam::percent($data->persen_cost_perbulan) }}</span>
+                                                        <span>{{ ceil((float)$data->persen_cost_perbulan ) / 100 . '%' }}</span>
                                                     @endif
                                                 @endif
                                             </td>

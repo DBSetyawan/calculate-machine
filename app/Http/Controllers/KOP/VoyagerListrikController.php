@@ -250,6 +250,18 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
     }
 
+    protected function total_cost_perbulan(){
+
+        $total_listrik = Listrik::whereIn('company_parent_id', [3])->get();
+
+            $tcostmonth = collect([$total_listrik])->sum(function ($biaya){
+                return sprintf("%.5f", $biaya->sum('nilai_cost_bulan'));
+            });
+
+        return $tcostmonth;
+
+    }
+
     
     public function formListrikAction(Request $request)
     {
@@ -414,6 +426,45 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             'showSoftDeleted',
             'showCheckboxColumn'
         ));
+    }
+
+    public function recalculate(Request $r, $id){
+
+        $saldo_akhir_cost_perbulan = $this->total_cost_perbulan();
+
+        $costperbulan = Listrik::findOrFail($id);
+
+        $persen_costperbulan = $this->RumusPersenListrik($costperbulan->nilai_cost_bulan, $saldo_akhir_cost_perbulan);
+
+        $PPJ = RumusListrik::HitungPPJ($saldo_akhir_cost_perbulan);
+
+        $costADM = $this->RumusBiayaCostADM($PPJ, $persen_costperbulan);
+
+        $costperbulan->persen_cost_perbulan = $saldo_akhir_cost_perbulan;
+        $costperbulan->ncost_bulan_plus_adm = $costADM;
+        $costperbulan->save();
+
+        if($costperbulan){
+
+            $redirect = redirect()->back();
+            
+            return $redirect->with([
+                'message'    => __('berhasil mengkalkulasi persen listrik & cost + adm.'),
+                'alert-type' => 'success',
+            ]);
+        
+        } else {
+
+            $redirect = redirect()->back();
+            
+            return $redirect->with([
+                'message'    => __('gagal mengakumulasi.'),
+                'alert-type' => 'error',
+            ]);
+
+        }
+
+
     }
 
     public function show(Request $request, $id)

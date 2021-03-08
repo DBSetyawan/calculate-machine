@@ -24,6 +24,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('export/all-calculate-machine-xlsx-semua-total-biaya','KOP\VoyagerTotalKalkulasiController@CalcSmuaBiayaExports')->name('voyager.excell.export.calc.CalcSmuaBiayaExports');
     Route::get('export/all-calculate-machine-xlsx-tanpa-maintenance-dan-tanpa-penyusutan','KOP\VoyagerTotalKalkulasiController@exportCalcTanpaMTCnTanpaPenyusutan')->name('voyager.excell.export.calc.exportCalcTanpaMTCnTanpaPenyusutan');
   
+    Route::get('listrik/recalculate-machine/{id}','KOP\VoyagerListrikController@recalculate')->name('voyager.listrik.recalculate.persen.cost.adm');
     Route::get('users/relation','KOP\VoyagerUserController@relations')->name('voyager.users.relation');
     Route::get('users/{id}/detail-users','KOP\VoyagerUserController@show')->name('voyager.users.show');
     Route::get('users','KOP\VoyagerUserController@index')->name('voyager.users.index');

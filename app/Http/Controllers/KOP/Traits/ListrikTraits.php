@@ -97,7 +97,6 @@ trait ListrikTraits {
              */
             $b_penjualan = $this->CalcBiayaBagPenjualanInstaceOfKalkulasi(RumusLapBagPenjualan::TotalSeluruhLPenjualanBagianPenjualan(), $recRow->Listrik->Listrikperjam->persen);
 
-
             /**
              * @menghitung total BAU. fix.
              */
