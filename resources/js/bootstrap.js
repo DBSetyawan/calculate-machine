@@ -26,9 +26,8 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
-
 const Swal = window.Swal = require('sweetalert2');
-
+window.validate = require('jquery-validation');
 window.JSZip = require('jszip');
 require('bootstrap');
 require('datatables.net-bs4');

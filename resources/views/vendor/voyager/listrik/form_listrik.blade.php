@@ -17,12 +17,10 @@
 @section('content')
     <div class="page-content container-fluid">
 
-
-        <form class="form-edit-add" role="form"
+        <form id="formlistriks" class="form-edit-add" role="form"
             method="POST" enctype="multipart/form-data" autocomplete="off">
 
             {{ csrf_field() }}
-
             <div class="row">
                     <div class="col-md-8">
                         <div class="panel panel-bordered">
@@ -121,11 +119,11 @@
 
                                     <div class="form-group">
                                         <label for="url_instagram">Ampere</label>
-                                        <input type="text" class="form-control" id="ampere" name="ampere" placeholder="Ampere">
+                                        <input type="text" class="form-control" data-validate-length-range="6" data-validate-words="2" id="ampere" name="ampere" placeholder="Ampere" required="required" >
                                     </div>
                                     <div class="form-group">
                                         <label for="url_instagram">Voltase</label>
-                                        <input type="text" class="form-control" id="voltase" name="voltase" placeholder="Voltase">
+                                        <input type="text" class="form-control" id="voltase" data-validate-length-range="6" data-validate-words="2" name="voltase" placeholder="Voltase" required="required" >
                                     </div>
                                 <div class="contanier">
                                     <div class="panel-body">
@@ -249,6 +247,12 @@
         document.getElementById("sht_3lwbp").style.display = "none";
         document.getElementById("wbp").style.display = "inline";
         document.getElementById("intervalnumeric").style.display = "inline";
+
+        $('#sht_1lwbp').attr('disabled', true);
+        $('#wbp').attr('disabled', true);
+        $('#sht_2lwbp').attr('disabled', true);
+        $('#sht_3lwbp').attr('disabled', true);
+        $('#intervalnumeric').attr('disabled', true);
     }
 
     function shift3() {
@@ -257,6 +261,12 @@
         document.getElementById("sht_1lwbp").style.display = "none";
         document.getElementById("wbp").style.display = "inline";
         document.getElementById("intervalnumeric").style.display = "inline";
+
+        $('#sht_1lwbp').attr('disabled', true);
+        $('#wbp').attr('disabled', true);
+        $('#sht_2lwbp').attr('disabled', true);
+        $('#sht_3lwbp').attr('disabled', true);
+        $('#intervalnumeric').attr('disabled', true);
     }
 
     function reset() {
@@ -274,6 +284,7 @@
     }
 
     $(document).ready(function(){
+
         $('.slect2').on('change', function() {
             if(this.value == "0") {
                reset();
@@ -313,6 +324,7 @@
         $(document).ready(function() {
 
             $('form').submit(function(event) {
+
 
                 var formData = {
 

@@ -18,6 +18,7 @@
     
     <!-- App CSS -->
     <link rel="stylesheet" href="{{ voyager_asset('css/app.css') }}"/>
+    {{-- <link rel="stylesheet" href="{{ asset('public/css/fv.css') }}"/> --}}
     
     @yield('css')
     @if(__('voyager::generic.is_rtl') == 'true')

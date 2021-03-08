@@ -85,7 +85,7 @@ class RumusHitungBIayaListrik {
         } 
             else {
                 
-                if($shift > 0){
+                if($shift > 1){
 
                     $wbp = (($ampere * $voltase) / 1000) * ($sttwbp*$angkaperminggu);
                     // $wbp = (($ampere * $voltase) / 1000) * (static::WBP*static::IntvalMinggu);
@@ -93,7 +93,6 @@ class RumusHitungBIayaListrik {
                 }
     
         }
-
         return isset($wbp) ? $wbp : 0;
 
     }
@@ -102,7 +101,7 @@ class RumusHitungBIayaListrik {
         //=+(H10*J10)+(I10*K10)
         // dd(['shift'=> $shift, 'lwbp'=>$mgmLWBP, 'wbp'=> $mgmWBP, 'fktor kali lwbp'=>$fklLWB, 'fktor kali lwbp'=> $fklWBP]);die;
       
-            if($shift > 0){
+            if($shift > 1 || $shift >= 1){
                 $total = ($mgmLWBP * $fklLWB) + ($mgmWBP * $fklWBP);
             }
 

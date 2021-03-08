@@ -125,7 +125,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
          * Hitung WBP perminggu
          * @store append field WBP perminggu.
          */
-        $rumusWBPerminggu = $this->RumusPemakaianWBP($r->shift, $r->ampere, $r->voltase, $r->code_mesin, $static_lwbshift, $r->intervalnumeric);
+        $rumusWBPerminggu = $this->RumusPemakaianWBP($r->shift, $r->ampere, $r->voltase, $r->code_mesin, $r->wbp, $r->intervalnumeric);
 
         /**
          * Hitung Total Biaya Listrik perminggu.
@@ -138,6 +138,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
          * @store append field Cost Biaya Listrik perminggu.
          */
         $totalbiayacostperbulan = $this->RumusCostPerbulan($totalbiayaListrikperminggu);
+        // dd($totalbiayacostperbulan);
 
         /**
          * Cari prosentase Biaya Cost Perbulan.
@@ -178,15 +179,15 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             'LWBP_faktorkali' => $r->faktor_kali_lwbp,
             'WBP_faktorkali' => $r->faktor_kali_wbp,
             'total_biaya_listrik' => $totalbiayaListrikperminggu,
-            'persen_cost_perbulan' => $total_seluruh_biaya_listrik_cost_perbulan,
-            'ncost_bulan_plus_adm' => $costADM,
+            // 'persen_cost_perbulan' => $total_seluruh_biaya_listrik_cost_perbulan,
+            // 'ncost_bulan_plus_adm' => $costADM,
         ];
 
         $simpanBiayaListrik = Listrik::create($Totalakumulasibiayalistrik);
 
         if(!empty($simpanBiayaListrik) && $simpanBiayaListrik != [] && $simpanBiayaListrik != null){
 
-            $checkRow = AllRecalculate::whereNull('total')->orderBy('created_at', 'desc')->get();
+            $checkRow = AllRecalculate::whereNull('total_semua_biaya')->orderBy('created_at', 'desc')->get();
             
             if($checkRow != []){
 
@@ -221,8 +222,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                             'code_mesin' => $simpanBiayaListrik->code_mesin,
                             'category_bagian' => $simpanBiayaListrik->category_bagian,
                             'group_mesin' => $r->group_mesin,
-                            'id_listrik' => $total->total_listrik,
-                            'listrik_fk' => $r->perjam,
+                            'listrik_fk' => $total->id_listrik,
                         
                         ]
                     );
