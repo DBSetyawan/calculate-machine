@@ -142,7 +142,7 @@ trait ListrikTraits {
             
             if($recall != []){
 
-                AllRecalculate::whereIn('id', [$recall->id])->update(
+                $cr = AllRecalculate::whereIn('id', [$recall->id])->update(
                     [
                         'id_labor' => $totallbr,
                         'id_penyusutan' => $totalpeny,
@@ -164,6 +164,17 @@ trait ListrikTraits {
                         'total_tanpa_mtc_perjam' => $total,
                     ]
                 );
+
+                if($cr > 0){
+
+                    $redirect = redirect()->back();
+                    
+                    return $redirect->with([
+                        'message'    => __('berhasil mengakumulasi mesin.'),
+                        'alert-type' => 'success',
+                    ]);
+                
+                }
 
             }
 

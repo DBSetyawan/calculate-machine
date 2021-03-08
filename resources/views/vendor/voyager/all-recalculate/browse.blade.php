@@ -13,10 +13,10 @@
             </a> --}}
         @endcan
         <a href="{{ route('voyager.recalculate') }}" class="btn btn-success btn-add-new">
-            <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Test Recalculate</span>
+            <i class="voyager-double-right"></i> <span>{{ __('Recalculate Machine') }} </span>
         </a>
         @can('delete', app($dataType->model_name))
-            @include('voyager::partials.bulk-delete')
+            {{-- @include('voyager::partials.bulk-delete') --}}
         @endcan
         @can('edit', app($dataType->model_name))
             @if(isset($dataType->order_column) && isset($dataType->order_display_column))
@@ -304,10 +304,10 @@
                             <div class="panel-body">
                                 <div class="pull-left">
                                     <div class="col-2">
-                                        <label for="total PPJ">Total penjualan perbulan  :</label> <span class="badge badge-success">Rp {{number_format($tpnjualan, 0, ".", ".")}}</span>
+                                        {{-- <label for="total PPJ">Total penjualan perbulan  :</label> <span class="badge badge-success">Rp {{number_format($tpnjualan, 0, ".", ".")}}</span> --}}
                                     </div>
                                     <div class="col-2">
-                                        <label for="total PPJ">Total penjualan pertahun  :</label> <span class="badge badge-success">Rp {{number_format($tpnjualanprthn, 0, ".", ".")}}</span>
+                                        {{-- <label for="total PPJ">Total penjualan pertahun  :</label> <span class="badge badge-success">Rp {{number_format($tpnjualanprthn, 0, ".", ".")}}</span> --}}
                                     </div>
                                 </div>
                             </div>

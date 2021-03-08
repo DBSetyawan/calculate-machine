@@ -37,5 +37,10 @@ class Listrik extends Model
     {
         return $this->belongsTo('App\KategoriBagian', 'id');
     }
+
+    public function LWBMaster()
+    {
+        return $this->belongsTo('App\LwbpMaster', 'id');
+    }
     
 }

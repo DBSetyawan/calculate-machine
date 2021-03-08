@@ -51,7 +51,7 @@
                                         <label for="program_id">Listrik /Jam</label>
                                         <select class="form-control select2" id="perjam" name="perjam" required>
                                             @foreach ($LsOutputPerjam as $c)
-                                        <option value="{{$c->persen}}">{{$c->persen}} - {{ $c->output_perjam }}</option>
+                                        <option value="{{$c->persen}}">{{ RumusListrikOutputPerjam::percent($c->persen)}} - {{ $c->output_perjam }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -74,10 +74,51 @@
                                         </select>
                                     </div>
 
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label for="url_instagram">Shift</label>
                                         <input type="text" class="form-control" id="shift" name="shift" placeholder="Shift">
+                                    </div> --}}
+
+                                    <div class="form-group">
+                                        <label for="program_id">Shift</label>
+                                        <select class="form-control select2 slect2" id="shift" name="shift" required>
+                                            <option value="0">None</option>
+                                            <option value="1">Shift 1</option>
+                                            <option value="2">Shift 2</option>
+                                            <option value="3">Shift 3</option>
+                                        </select>
                                     </div>
+                                    {{-- 
+                                         const LWBP = 17;
+                                            const WBP = 4;
+                                            const IntvalMinggu = 6;
+                                        --}}
+
+                                    <div class="form-group">
+                                        <label for="url_instagram">LWBP (shift1)</label>
+                                        <input type="text" class="form-control" style="display: none" id="sht_1lwbp" value="{{ $LwbpMaster[2]->lwbp }}" name="sht_1lwbp" placeholder="">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="url_instagram">WBP (shift 1,2,3)</label>
+                                        <input type="text" style="display: none;" class="form-control" id="wbp" value="{{ $LwbpMaster[0]->wbp }}" name="wbp" placeholder="">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="shift2">LWBP (shift 2)</label>
+                                        <input type="text" style="display: none;" class="form-control" id="sht_2lwbp" value="{{ $LwbpMaster[1]->lwbp }}" name="sht_2lwbp" placeholder="">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="shift3">LWBP (shift 3)</label>
+                                        <input type="text" class="form-control" style="display: none;" id="sht_3lwbp" value="{{ $LwbpMaster[0]->lwbp }}" name="sht_3lwbp" placeholder="">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="url_instagram">Hitungan minggu dalam angka</label>
+                                        <input type="text" class="form-control" style="display: none;" id="intervalnumeric" value="{{ $LwbpMaster[0]->Intervalmingguan }}" name="intervalnumeric" placeholder="Ampere">
+                                    </div>
+
                                     <div class="form-group">
                                         <label for="url_instagram">Ampere</label>
                                         <input type="text" class="form-control" id="ampere" name="ampere" placeholder="Ampere">
@@ -186,6 +227,73 @@
 
 @section('javascript')
     <script>
+
+    function shift1() {
+        document.getElementById("sht_1lwbp").style.display = "inline";
+        document.getElementById("wbp").style.display = "inline";
+        document.getElementById("sht_2lwbp").style.display = "none";
+        document.getElementById("sht_3lwbp").style.display = "none";
+        document.getElementById("intervalnumeric").style.display = "inline";
+
+        $('#sht_1lwbp').attr('disabled', true);
+        $('#wbp').attr('disabled', true);
+        $('#sht_2lwbp').attr('disabled', true);
+        $('#sht_3lwbp').attr('disabled', true);
+        $('#intervalnumeric').attr('disabled', true);
+
+    }
+
+    function shift2() {
+        document.getElementById("sht_1lwbp").style.display = "none";
+        document.getElementById("sht_2lwbp").style.display = "inline";
+        document.getElementById("sht_3lwbp").style.display = "none";
+        document.getElementById("wbp").style.display = "inline";
+        document.getElementById("intervalnumeric").style.display = "inline";
+    }
+
+    function shift3() {
+        document.getElementById("sht_2lwbp").style.display = "none";
+        document.getElementById("sht_3lwbp").style.display = "inline";
+        document.getElementById("sht_1lwbp").style.display = "none";
+        document.getElementById("wbp").style.display = "inline";
+        document.getElementById("intervalnumeric").style.display = "inline";
+    }
+
+    function reset() {
+        // document.getElementById("wbp").style.display = "none";
+        // document.getElementById("lwbp").style.display = "none";
+        // document.getElementById("sht_2lwbp").style.display = "none";
+        // document.getElementById("sht_3lwbp").style.display = "none";
+        // document.getElementById("intervalnumeric").style.display = "none";
+
+        $("#sht_3lwbp").hide();
+        $("#sht_2lwbp").hide();
+        $("#sht_1lwbp").hide();
+        $("#wbp").hide();
+        $("#intervalnumeric").hide();
+    }
+
+    $(document).ready(function(){
+        $('.slect2').on('change', function() {
+            if(this.value == "0") {
+               reset();
+            }
+
+            if( this.value == "1"){
+            shift1()
+            } 
+            if( this.value == "2"){
+                shift2()
+
+            } 
+            if( this.value == "3"){
+                shift3()
+
+            }
+            
+        });
+    });
+
         const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -208,7 +316,6 @@
 
                 var formData = {
 
-                    'shift'              : $('input[name=shift]').val(),
                     'ampere'             : $('input[name=ampere]').val(),
                     'voltase'            : $('input[name=voltase]').val(),
                     'faktor_kali_wbp'    : $('input[name=faktor_kali_wbp]').val(),
@@ -219,6 +326,14 @@
                     'perjam'             : $('select[name=perjam]').val(),
                     'category_bagian'    : $('select[name=category_bagian]').val(),
                     'code_mesin'         : $('select[name=code_mesin]').val(),
+
+                    'shift'              : $('select[name=shift]').val(),
+                    'sht_1lwbp'          : $('input[name=sht_1lwbp]').val(),
+                    'sht_2lwbp'          : $('input[name=sht_2lwbp]').val(),
+                    'sht_3lwbp'          : $('input[name=sht_3lwbp]').val(),
+                    'wbp'                : $('input[name=wbp]').val(),
+                    'intervalnumeric'    : $('input[name=intervalnumeric]').val(),
+
 
                 };
 

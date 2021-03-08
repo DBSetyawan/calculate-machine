@@ -20,12 +20,12 @@
                     <input type="password" name="password" placeholder="{{ __('voyager::generic.password') }}" class="form-control" required>
                 </div>
             </div>
-
+{{-- 
             <div class="form-group" id="rememberMeGroup">
                 <div class="controls">
                     <input type="checkbox" name="remember" id="remember" value="1"><label for="remember" class="remember-me-text">{{ __('voyager::generic.remember_me') }}</label>
                 </div>
-            </div>
+            </div> --}}
 
             <button type="submit" class="btn btn-block login-button">
                 <span class="signingin hidden"><span class="voyager-refresh"></span> {{ __('voyager::login.loggingin') }}...</span>

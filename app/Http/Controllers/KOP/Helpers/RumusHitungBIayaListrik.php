@@ -33,34 +33,37 @@ class RumusHitungBIayaListrik {
     /**
      * @fix function untuk perhitungan LWBP perminggu.
      */
-    public static function HitungLWBP($shift, $ampere, $voltase, $mesin) {
+    public static function HitungLWBP($shift, $ampere, $voltase, $mesin, $lwbp, $angkaperminggu) {
         // =IF(E7=3;((F7*G7)/1000)*($S$7*$S$8);IF(E7=2;((F7*G7)/1000)*(10*$S$8);IF(E7=1;((F7*G7)/1000)*(7*$S$8);0)))
-    
-        if($shift == 3){
-           
-            $result_calcs = (($ampere * $voltase) / 1000 * (static::LWBP*6));
+            if($shift == 3){
+            
+                $result_calcs = (($ampere * $voltase) / 1000 * ($lwbp*$angkaperminggu));
+                // $result_calcs = (($ampere * $voltase) / 1000 * (static::LWBP*6));
 
-        }
+            }
 
-        if($shift == 2){
-           
-            $result_calcs = (($ampere * $voltase) / 1000) * (10*6);
+            if($shift == 2){
+            
+                $result_calcs = (($ampere * $voltase) / 1000) * ($lwbp*$angkaperminggu);
+                // $result_calcs = (($ampere * $voltase) / 1000) * (10*6);
 
-        }
+            }
 
-        if($shift == 1){
-           
-            $result_calcs = (($ampere * $voltase) / 1000) * (7*6);
+            if($shift == 1){
+            
+                // $result_calcs = (($ampere * $voltase) / 1000) * (7*6);
+                $result_calcs = (($ampere * $voltase) / 1000) * ($lwbp*$angkaperminggu);
 
-        }
+            }
 
         return isset($result_calcs) ? $result_calcs : 0;
+
     }
 
     /**
      * @fix function untuk perhitungan WBP perminggu.
      */
-    public static function HitungWBP($shift, $ampere, $voltase,$mesin) {
+    public static function HitungWBP($shift, $ampere, $voltase, $mesin, $sttwbp, $angkaperminggu) {
         //=IF(E9>1;((F9*G9)/1000)*($S$6*$S$8);0)
 
         /**
@@ -82,9 +85,10 @@ class RumusHitungBIayaListrik {
         } 
             else {
                 
-                if($shift > 1){
+                if($shift > 0){
 
-                    $wbp = (($ampere * $voltase) / 1000) * (static::WBP*static::IntvalMinggu);
+                    $wbp = (($ampere * $voltase) / 1000) * ($sttwbp*$angkaperminggu);
+                    // $wbp = (($ampere * $voltase) / 1000) * (static::WBP*static::IntvalMinggu);
 
                 }
     
@@ -98,7 +102,7 @@ class RumusHitungBIayaListrik {
         //=+(H10*J10)+(I10*K10)
         // dd(['shift'=> $shift, 'lwbp'=>$mgmLWBP, 'wbp'=> $mgmWBP, 'fktor kali lwbp'=>$fklLWB, 'fktor kali lwbp'=> $fklWBP]);die;
       
-            if($shift >= 1){
+            if($shift > 0){
                 $total = ($mgmLWBP * $fklLWB) + ($mgmWBP * $fklWBP);
             }
 

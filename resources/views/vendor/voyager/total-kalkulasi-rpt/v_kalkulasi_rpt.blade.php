@@ -3,16 +3,14 @@
 @section('page_header')
     <div class="container-fluid">
         <h1 class="page-title">
-            <i class="voyager-credit-cards"></i> Buat Transaksi baru :
+            <i class="voyager-params"></i> Calculation Machine :
         </h1>
       
         {{-- <a href="{{ route('tr.mch.store.tr.sc.edp') }}" class="btn btn-success btn-add-new">
           <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Form kalkulasi(Penyusutan)</span>
         </a> --}}
 
-        <a href="{{ route('tr.tnp.total.kalkulasi') }}" class="btn btn-warning btn-add-new">
-          <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Form generate calculate machine</span>
-        </a>
+          {{-- <a href="{{ route('tr.tnp.total.kalkulasi') }}" class="btn btn-warning btn-add-new"> --}}
     </div>
 @stop
 @section('content')
@@ -678,7 +676,7 @@ $(document).ready(function(){
                   processing: '<span class="text-info">Sedang memproses..</span>',
                   search: "Cari",
                   infoEmpty: "Tidak ada data apapun disini..",
-                  info: `${total_rows}`,
+                  info: "tabel ini sudah disesuaikan dengan pengakumulasian per-mesin.",
                   // info: "menampilkan baris data halaman _PAGE_ dari _PAGES_",
                   zeroRecords: "Pencarian dalam keyword inputan anda tidak dapat kami temukan..",
                 },

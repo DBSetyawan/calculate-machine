@@ -7,16 +7,49 @@ use Illuminate\Http\Request;
 interface ListrikInterface
 {
     
-    public function RumusPemakaianLWBP(
+    public function RumusPemakaianLWBP_shift1(
                         $shift,
                         $ampere,
-                        $voltase,$mesin
+                        $voltase,
+                        $mesin,
+                        $lwbp,
+                        $angkaperminggu
+                    );
+
+    public function RumusPemakaianLWBP_shift2(
+                        $shift,
+                        $ampere,
+                        $voltase,
+                        $mesin,
+                        $lwbp,
+                        $angkaperminggu
+                    );
+
+    public function RumusPemakaianLWBP_shift3(
+                        $shift,
+                        $ampere,
+                        $voltase,
+                        $mesin,
+                        $lwbp,
+                        $angkaperminggu
+                    );
+
+    public function RumusPemakaianLWBP_shift0(
+                        $shift,
+                        $ampere,
+                        $voltase,
+                        $mesin,
+                        $lwbp,
+                        $angkaperminggu
                     );
 
     public function RumusPemakaianWBP(
                         $shift,
                         $ampere,
-                        $voltase,$mesin
+                        $voltase,
+                        $mesin,
+                        $lwbp,
+                        $angkaperminggu
                     );
 
     public function RumusTotalBiayaListrik(
