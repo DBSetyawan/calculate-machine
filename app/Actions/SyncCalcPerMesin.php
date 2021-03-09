@@ -9,12 +9,12 @@ class SyncCalcPerMesin extends AbstractAction
 {
     public function getTitle()
     {
-        return 'Sinkronkan Pengakumulasian';
+        return;
     }
 
     public function getIcon()
     {
-        return 'voyager-resize-small';
+        return 'voyager-external';
     }
 
     public function getAttributes()

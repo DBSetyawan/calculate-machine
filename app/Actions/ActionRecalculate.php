@@ -9,12 +9,12 @@ class ActionRecalculate extends AbstractAction
 {
     public function getTitle()
     {
-        return 'Recalculate';
+        return '';
     }
 
     public function getIcon()
     {
-        return 'voyager-resize-small';
+        return 'voyager-wand';
     }
 
     public function getAttributes()

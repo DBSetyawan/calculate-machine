@@ -4,12 +4,15 @@ namespace App\Providers;
 
 //use Illuminate\Support\ServiceProvider;
 use TCG\Voyager\Facades\Voyager;
+use TCG\Voyager\Actions\ViewAction;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use App\Http\Controllers\KOP\Service\ListrikInterface;
 use App\Http\Controllers\KOP\VoyagerListrikController;
+use TCG\Voyager\Actions\EditAction;
+use TCG\Voyager\Actions\DeletionAction;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -34,6 +37,9 @@ class AppServiceProvider extends ServiceProvider
     {
         Voyager::addAction(\App\Actions\ActionRecalculate::class);
         Voyager::addAction(\App\Actions\SyncCalcPerMesin::class);
+        Voyager::replaceAction(EditAction::class,\App\Actions\UbahEditListrik::class);
+        Voyager::replaceAction(DeletionAction::class,\App\Actions\DeleteListrikAction::class);
+        Voyager::replaceAction(ViewAction::class,\App\Actions\ListrikViewAction::class);
 
         Schema::defaultStringLength(191);
         
@@ -50,6 +56,5 @@ class AppServiceProvider extends ServiceProvider
             return $view->with('messages', $messages);
         });
 
-        // Voyager::replaceAction(ViewAction::class,\App\Actions\class::class);
     }
 }

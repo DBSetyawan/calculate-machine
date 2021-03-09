@@ -31,13 +31,38 @@ use App\Http\Controllers\KOP\VoyagerLaporanGajiLainController;
 trait ListrikTraits {
 
     public function view_totalkalkulasi() {
-        // Fetch all the students from the 'student' table.
+
+        $reccll = AllRecalculate::orderBy('created_at','desc')->first()->total_tanpa_mtc_perjam;
+        $group_mesin = AllRecalculate::with('Listrik')->orderBy('created_at','desc')->first()->group_mesin;
+
+        // dd($group_mesin);
+
+        if($reccll == null){
+
+            $redirect = redirect()->back();
+
+            return $redirect->with([
+                'message'    => __('Code 403 access denied, silahkan akumulasi terlebih dahulu semua dokumen yang ingin diakumulasikan.'),
+                'alert-type' => 'warning',
+            ]);
+
+        }
+
+        if($group_mesin == null){
+
+            $redirect = redirect()->back();
+
+            return $redirect->with([
+                'message'    => __('Code 403 access denied, silahkan set group mesin pada dokumen yang ingin ditampilkan ditabel [ ALL CALCULATE ].'),
+                'alert-type' => 'warning',
+            ]);
+
+        } 
         $label = "[PROGRESS DEPLOY]";
         $sss = json_encode(DB::table('total_kalkulasi_tanpa_penyusutan')
         ->leftJoin('mesin', 'total_kalkulasi_tanpa_penyusutan.code_mesin', '=', 'mesin.id')
         ->leftJoin('kategori_bagian', 'total_kalkulasi_tanpa_penyusutan.category_bagian', '=', 'kategori_bagian.id')
         ->leftJoin('company', 'total_kalkulasi_tanpa_penyusutan.company_parent_id', '=', 'company.id')->get());
-        // dd($sss);
         return view('vendor.voyager.total-kalkulasi-rpt.v_kalkulasi_rpt', compact('label','sss'));
 
     }

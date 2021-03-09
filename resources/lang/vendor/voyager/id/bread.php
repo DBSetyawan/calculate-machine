@@ -3,6 +3,9 @@
 return [
     'add_bread'              => 'Add BREAD to this table',
     'bread_crud_actions'     => 'BREAD/CRUD Actions',
+    'scope'                  => 'tambahkan ruang lingkup',
+    'default_search_key'     => 'bawaan kata kunci pencarian',
+    'default_search_key_ph'  => 'Menentukan kata kunci pada set awal pendefinisian pencarian didatatable.',
     'bread_info'             => 'BREAD info',
     'controller_name_hint'   => 'ex. PageController, if left empty will use the BREAD Controller',
     'create_bread_for_table' => 'Create BREAD for :table table',

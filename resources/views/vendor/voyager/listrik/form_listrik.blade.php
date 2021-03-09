@@ -49,7 +49,7 @@
                                         <label for="program_id">Listrik /Jam</label>
                                         <select class="form-control select2" id="perjam" name="perjam" required>
                                             @foreach ($LsOutputPerjam as $c)
-                                        <option value="{{$c->persen}}">{{ RumusListrikOutputPerjam::percent($c->persen)}} - {{ $c->output_perjam }}</option>
+                                        <option value="{{$c->id}}">{{ RumusListrikOutputPerjam::percent($c->persen)}} - {{ $c->output_perjam }}</option>
                                             @endforeach
                                         </select>
                                     </div>

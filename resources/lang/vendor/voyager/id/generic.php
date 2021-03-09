@@ -6,6 +6,8 @@ return [
     'home'                 => 'Dashboard',
     'logout'                 => 'Keluar',
     'remember_me'            => 'simpan otomatis',
+    'none'                  => 'tidak ditemukan',
+    'descending'            => 'terendah -> terbesar',
     'locale'                => 'local',
     'bread'                 => 'Core Schema Development',
     'actions'                => 'Aksi',
