@@ -11,7 +11,7 @@ class DeleteListrikAction extends DeleteAction
 {
     public function getTitle()
     {
-        return __('hi');
+        return __('');
     }
 
     public function getIcon()

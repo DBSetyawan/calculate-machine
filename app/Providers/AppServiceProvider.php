@@ -39,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         Voyager::addAction(\App\Actions\SyncCalcPerMesin::class);
         Voyager::replaceAction(EditAction::class,\App\Actions\UbahEditListrik::class);
         Voyager::replaceAction(DeletionAction::class,\App\Actions\DeleteListrikAction::class);
+        Voyager::replaceAction(ViewAction::class,\App\Actions\ListrikViewAction::class);
 
         Schema::defaultStringLength(191);
         
