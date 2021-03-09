@@ -115,7 +115,7 @@ trait ListrikTraits {
             /**
              * @menghitung total. fix.
              */
-            $total = RptCalcMachine::InstanceOfCalcTotalTanpaPenyusutanPerbulan($calc->id_listrik, $penyusutanfe, $labors, $mtcsfe, $calc->id_bprodlain_insteadof_mtc, $gaji_lainnya, $b_penjualan, $bau);
+            $total = RptCalcMachine::InstanceOfCalcTotalTanpaPenyusutanPerbulan($calc->id_listrik, $penyusutanfe, $labors, $mtcsfe, $mtcsfefn->biaya_produksi_lain, $gaji_lainnya, $b_penjualan, $bau);
             
             /**
              * @menghitung total semua biaya perjam. fix.
@@ -174,7 +174,7 @@ trait ListrikTraits {
                             'total_tanpa_penyusutan_perjam' => $tanpa_penyusutan_total_perjam,
     
                             'total_tanpa_mtc' => $tanpa_penyusutan_plus_mtc_total,
-                            'total_tanpa_mtc_perjam' => $total,
+                            'total_tanpa_mtc_perjam' => $tanpa_mtc_total_perjam,
                         ]
                     );
              
@@ -191,6 +191,11 @@ trait ListrikTraits {
                 }
 
             }
+
+            /**
+             * @prepare log history recalculate.
+             * @model HistoryLogRecalculate::class
+             */
 
     }
 

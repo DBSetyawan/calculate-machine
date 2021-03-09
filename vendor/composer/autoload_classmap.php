@@ -9,6 +9,7 @@ return array(
     'App\\AccountMtc' => $baseDir . '/app/AccountMtc.php',
     'App\\AccountMtcTotal' => $baseDir . '/app/AccountMtcTotal.php',
     'App\\Actions\\ActionRecalculate' => $baseDir . '/app/Actions/ActionRecalculate.php',
+    'App\\Actions\\SyncCalcPerMesin' => $baseDir . '/app/Actions/SyncCalcPerMesin.php',
     'App\\AllRecalculate' => $baseDir . '/app/AllRecalculate.php',
     'App\\BPenjualanTotal' => $baseDir . '/app/BPenjualanTotal.php',
     'App\\BagianPenjualan' => $baseDir . '/app/BagianPenjualan.php',

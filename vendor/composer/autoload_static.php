@@ -804,6 +804,7 @@ class ComposerStaticInitbf9caa84afbd10586b93936e6de03628
         'App\\AccountMtc' => __DIR__ . '/../..' . '/app/AccountMtc.php',
         'App\\AccountMtcTotal' => __DIR__ . '/../..' . '/app/AccountMtcTotal.php',
         'App\\Actions\\ActionRecalculate' => __DIR__ . '/../..' . '/app/Actions/ActionRecalculate.php',
+        'App\\Actions\\SyncCalcPerMesin' => __DIR__ . '/../..' . '/app/Actions/SyncCalcPerMesin.php',
         'App\\AllRecalculate' => __DIR__ . '/../..' . '/app/AllRecalculate.php',
         'App\\BPenjualanTotal' => __DIR__ . '/../..' . '/app/BPenjualanTotal.php',
         'App\\BagianPenjualan' => __DIR__ . '/../..' . '/app/BagianPenjualan.php',
