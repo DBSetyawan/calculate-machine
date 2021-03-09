@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\KOP;
 
-use App\BiayaAdministrasiUmum;
 use App\Mesin;
 use Exception;
 use App\Company;
+use App\Listrik;
+use App\AllRecalculate;
 use App\KategoriBagian;
 use Illuminate\Http\Request;
+use App\BiayaAdministrasiUmum;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +25,35 @@ use App\Http\Controllers\KOP\Helpers\RumusBiayaAdministrasiUmum as HelpersRumusB
 
 class VoyagerRecalController extends BaseVoyagerBaseController
 {
+
+    public function SendRecalculate($id){
+
+        $listrikFind = Listrik::findOrFail($id);
+
+        $rf = AllRecalculate::create(
+            [
+                'company' => $listrikFind->company_parent_id,
+                'code_mesin' => $listrikFind->code_mesin,
+                'category_bagian' => $listrikFind->category_bagian,
+                'id_listrik' => $listrikFind->ncost_bulan_plus_adm,
+                // 'group_mesin' => $r->group_mesin, *update ketika setting recalculate untuk pengroupan mesin.
+                'listrik_fk' => $id,
+            
+            ]
+        );
+
+        if($rf){
+
+            $redirect = redirect()->back();
+            
+            return $redirect->with([
+                'message'    => __('berhasil mendaftarkan kalkulasi mesin, silahkan cek halaman setting recalculate.'),
+                'alert-type' => 'success',
+            ]);
+        
+        }
+
+    }
 
     public function RumusTotalBiayaAdministrasiUmum($biaya_pertahun)
     {

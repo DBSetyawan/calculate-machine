@@ -37,13 +37,13 @@ class RumusLabor {
 
                     if(in_array($code_mesin, ['43','41'])){
             
-                        $shift = 3;
+                        $shift = 1;
                 
                     }
 
                     if(in_array($code_mesin, ['44'])){
             
-                        $shift = 2;
+                        $shift = 1;
                 
                     }
 

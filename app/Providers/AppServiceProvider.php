@@ -33,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Voyager::addAction(\App\Actions\ActionRecalculate::class);
+        Voyager::addAction(\App\Actions\SyncCalcPerMesin::class);
 
         Schema::defaultStringLength(191);
         

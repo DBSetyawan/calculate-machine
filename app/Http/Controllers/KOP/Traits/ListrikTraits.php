@@ -45,8 +45,9 @@ trait ListrikTraits {
     public function recalculate(){
 
             $calc = AllRecalculate::orderby('id','desc')->first();
-            $recRow = AllRecalculate::with(['Listrik.Listrikperjam','KategoriBagian','Mesin','GroupMesin','Company'])->first();
-
+            $recRow = AllRecalculate::orderby('created_at','desc')->with(['Listrik.Listrikperjam','KategoriBagian','Mesin','GroupMesin','Company'])->first();
+            // dd($recRow);
+            
             $laporangajilain_bagianREPRO = LaporanGajiLain::whereIn('category_bagian', [9])->get();
             $totalREPRO = collect([$laporangajilain_bagianREPRO])->sum(function ($REPRO){
                 return $REPRO->sum('total_biaya_laporan_periode');
@@ -141,12 +142,18 @@ trait ListrikTraits {
             
             if($recall != []){
 
+                $biayaprodlain = RptMtc::where('code_mesin', $calc->code_mesin)->first();
+                $penyusutan = Penyusutan::where('code_mesin', $calc->code_mesin)->first();
+                $labor = Labor::where('code_mesin', $calc->code_mesin)->first();
+
                 $cr = AllRecalculate::whereIn('id', [$recall->id])->update(
                     [
-                        'id_labor' => $totallbr,
-                        'id_penyusutan' => $totalpeny,
+                        // 'id_labor' => $totallbr,
+                        'id_labor' => $labor->total_biaya,
+                        'id_penyusutan' => $penyusutan->penyusutan_perbulan,
+                        // 'id_penyusutan' => $totalpeny,
                         'id_mtc' => $totalmtmct,
-                        'id_bprodlain_insteadof_mtc' => $calc->id_bprodlain_insteadof_mtc,
+                        'id_bprodlain_insteadof_mtc' => $biayaprodlain->biaya_produksi_lain,
                         'id_gajilain' => $gaji_lainnya,
                         'id_bgoenjualan' => $b_penjualan,
                         'id_bau' => $bau,

@@ -79,6 +79,7 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::get('total-kalkulasi-rpts/totals-view','KOP\VoyagerTotalKalkulasiController@view_totalkalkulasi')->name('tr.total.kalkulasi');
     Route::get('calc-rpts/form-transaction-machine-calc','KOP\VoyagerTotalKalkulasiController@form_tr_kakulasi')->name('tr.mch.store.tr.sc.edp');
+    Route::get('recalculate-machine/received-cost/{id}','KOP\VoyagerRecalController@SendRecalculate')->name('var.recalculate.edp');
     Route::get('calc-rpts/form-test/','KOP\VoyagerTotalKalkulasiController@ListrikInstanceOfPenyusutan')->name('tr.test');
     Route::get('calc-rpts/rpts/','KOP\VoyagerListrikController@rpts')->name('rpts');
     // Route::get('/history-log-recalculate','KOP\VoyagerHIstoryLogCalculateController@index')->name('h.index');
