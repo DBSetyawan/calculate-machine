@@ -25,7 +25,7 @@ class ListrikViewAction extends VoyagerViewAction
     public function getAttributes()
     {
         return [
-            'class' => 'btn btn-sm btn-warning pull-right',
+            'class' => 'btn btn-sm btn-warning pull-right mr-1',
         ];
     }
 

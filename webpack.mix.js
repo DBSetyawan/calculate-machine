@@ -16,22 +16,22 @@ require('laravel-mix-copy-watched');
     jquery: ['$', 'window.jQuery']
 });
 
-// mix.js('resources/js/app.js', 'public/js')
-//     .sass('resources/sass/app.scss', 'public/css');
-    mix.sass('resources/sass/app.scss', 'public/css')
-   .purgeCss({
-     whitelist: [require('purgecss-with-wordpress').whitelist, 'html'],
-     whitelistPatterns: require('purgecss-with-wordpress').whitelistPatterns,
-   })
-   .options({
-     processCssUrls: false,
-     postCss: [require('tailwindcss')('./tailwind.config.js')],
-   });
+mix.js('resources/js/app.js', 'public/js')
+    .sass('resources/sass/app.scss', 'public/css');
+//     mix.sass('resources/sass/app.scss', 'public/css')
+//    .purgeCss({
+//      whitelist: [require('purgecss-with-wordpress').whitelist, 'html'],
+//      whitelistPatterns: require('purgecss-with-wordpress').whitelistPatterns,
+//    })
+//    .options({
+//      processCssUrls: false,
+//      postCss: [require('tailwindcss')('./tailwind.config.js')],
+//    });
 
-   mix.js('resources/js/app.js', 'public/js')
-//    .js('resources/assets/scripts/customizer.js', 'scripts')
-//    .blocks('resources/assets/scripts/editor.js', 'scripts')
-   .extract();
+//    mix.js('resources/js/app.js', 'public/js')
+// //    .js('resources/assets/scripts/customizer.js', 'scripts')
+// //    .blocks('resources/assets/scripts/editor.js', 'scripts')
+//    .extract();
 
 
 

@@ -187,9 +187,9 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
         if(!empty($simpanBiayaListrik) && $simpanBiayaListrik != [] && $simpanBiayaListrik != null){
 
-            $checkRow = AllRecalculate::whereNull('total_semua_biaya')->orderBy('created_at', 'desc')->get();
+            // $checkRow = AllRecalculate::whereNull('total_semua_biaya')->orderBy('created_at', 'desc')->get();
             
-            if($checkRow != []){
+            // if($checkRow != []){
 
                 $total_listrik = Listrik::whereIn('company_parent_id', [3])->get();
 
@@ -216,23 +216,23 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                     /**
                     * @parent recalculate machine logic.
                     */
-                    AllRecalculate::create(
-                        [
-                            'company' => $simpanBiayaListrik->company_parent_id,
-                            'code_mesin' => $simpanBiayaListrik->code_mesin,
-                            'category_bagian' => $simpanBiayaListrik->category_bagian,
-                            'group_mesin' => $r->group_mesin,
-                            'listrik_fk' => $total->id_listrik,
+                    // AllRecalculate::create(
+                    //     [
+                    //         'company' => $simpanBiayaListrik->company_parent_id,
+                    //         'code_mesin' => $simpanBiayaListrik->code_mesin,
+                    //         'category_bagian' => $simpanBiayaListrik->category_bagian,
+                    //         'group_mesin' => $r->group_mesin,
+                    //         'listrik_fk' => $total->id_listrik,
                         
-                        ]
-                    );
+                    //     ]
+                    // );
                 // }
-            }
-                else {
+            // }
+            //     else {
                     
-                    return response()->json(['error' => "u can't"]);
+            //         return response()->json(['error' => "u can't"]);
             
-            }
+            // }
 
         }
         

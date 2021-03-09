@@ -14,9 +14,12 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/public', function () {
+    return redirect()->route('voyager.login');
 });
+
+
+
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
     Route::get('export/all-calculate-machine-xlsx-tanpa-penyusutan','KOP\VoyagerTotalKalkulasiController@exportCalcTanpaPenyusutan')->name('voyager.excell.export.calc.exportCalcTanpaPenyusutan');

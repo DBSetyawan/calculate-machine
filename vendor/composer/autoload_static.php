@@ -955,6 +955,7 @@ class ComposerStaticInitbf9caa84afbd10586b93936e6de03628
         'App\\TransaksiMtcTotal' => __DIR__ . '/../..' . '/app/TransaksiMtcTotal.php',
         'App\\User' => __DIR__ . '/../..' . '/app/User.php',
         'App\\UserRole' => __DIR__ . '/../..' . '/app/UserRole.php',
+        'App\\Widgets\\Userdimmer' => __DIR__ . '/../..' . '/app/Widgets/Userdimmer.php',
         'Arrilot\\Widgets\\AbstractWidget' => __DIR__ . '/..' . '/arrilot/laravel-widgets/src/AbstractWidget.php',
         'Arrilot\\Widgets\\AsyncFacade' => __DIR__ . '/..' . '/arrilot/laravel-widgets/src/AsyncFacade.php',
         'Arrilot\\Widgets\\Console\\WidgetMakeCommand' => __DIR__ . '/..' . '/arrilot/laravel-widgets/src/Console/WidgetMakeCommand.php',
