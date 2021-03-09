@@ -754,8 +754,13 @@
           'icon_class' => 'voyager-power',
         ),
       ),
+      'data_tables' => 
+      array (
+        'pageLength' => 100,
+      ),
       'widgets' => 
       array (
+        0 => 'App\\Widgets\\Userdimmer',
       ),
     ),
     'bread' => 

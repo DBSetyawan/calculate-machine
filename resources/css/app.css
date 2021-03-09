@@ -1,0 +1,7 @@
+@tailwind base;
+
+@import 'globals';
+
+@tailwind components;
+
+@tailwind utilities;

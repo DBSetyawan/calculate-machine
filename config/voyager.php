@@ -143,8 +143,12 @@ return [
             ],
         ],
 
-        'widgets' => [
+        'data_tables' => [
+            "pageLength" => 100,
+        ],
 
+        'widgets' => [
+            'App\\Widgets\\Userdimmer'
         ],
 
     ],
