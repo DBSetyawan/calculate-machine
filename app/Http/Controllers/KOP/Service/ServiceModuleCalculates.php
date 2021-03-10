@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-interface ListrikInstanceOfCalc
+interface ServiceModuleCalculates
 {
     const NULLABLE_PENYUSUTAN = 0;
     
@@ -15,6 +15,10 @@ interface ListrikInstanceOfCalc
      * @Biaya kalkulasi mesin perbulan
      * @method [arguments] [calculate_listrik] @insteadOf module -> RptCalcMachine.
      */
+    public function UndefinedClass();
+
+    public function can_t_find_group_mesin();
+
     public function ListrikInstanceOfPenyusutan();
 
     public function IPenyusutanInstanceOfPenyusutan();

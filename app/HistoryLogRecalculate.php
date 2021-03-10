@@ -11,5 +11,19 @@ class HistoryLogRecalculate extends Model
 
     protected $guarded = [''];
     
+    public function Company()
+    {
+        return $this->belongsTo('App\Company', 'company');
+    }
+
+    public function Mesin()
+    {
+        return $this->belongsTo('App\Mesin', 'code_mesin');
+    }
+
+    public function KategoriBagian()
+    {
+        return $this->belongsTo('App\KategoriBagian', 'category_bagian');
+    }
 
 }

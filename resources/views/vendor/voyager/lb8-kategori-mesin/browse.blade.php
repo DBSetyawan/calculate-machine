@@ -13,7 +13,7 @@
             </a>
         @endcan
         @can('delete', app($dataType->model_name))
-            @include('voyager::partials.bulk-delete')
+            {{-- @include('voyager::partials.bulk-delete') --}}
         @endcan
         @can('edit', app($dataType->model_name))
             @if(isset($dataType->order_column) && isset($dataType->order_display_column))

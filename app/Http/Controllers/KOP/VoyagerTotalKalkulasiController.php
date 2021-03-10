@@ -15,11 +15,11 @@ use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
-use App\Http\Controllers\KOP\Traits\ListrikTraits;
-use App\Http\Controllers\KOP\Service\ListrikInstanceOfCalc;
+use App\Http\Controllers\KOP\Traits\ModuleCaculates;
+use App\Http\Controllers\KOP\Service\ServiceModuleCalculates;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
-class VoyagerTotalKalkulasiController extends BaseVoyagerBaseController Implements ListrikInstanceOfCalc
+class VoyagerTotalKalkulasiController extends BaseVoyagerBaseController Implements ServiceModuleCalculates
 {
 
     const ButtonexportCalcTanpaPenyusutan = "<a href='https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/export/all-calculate-machine-xlsx-tanpa-penyusutan' id='caltanpa_penyusutan' class='btn btn-warning calctp'><i class='voyager-news'></i> Download Tanpa Penyusutan</a>";
@@ -27,7 +27,7 @@ class VoyagerTotalKalkulasiController extends BaseVoyagerBaseController Implemen
     const ButtonexportCalcTanpaMTC = "<a href='https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/export/all-calculate-machine-xlsx-tanpa-maintenance' id='caltanpa_mtc' class='btn btn-info calcmtc'><i class='voyager-news'></i> Download Tanpa MTC</a>";
     const exportCalcTanpaMTCnTanpaPenyusutan = "<a href='https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/export/all-calculate-machine-xlsx-tanpa-maintenance-dan-tanpa-penyusutan' id='caltpmtctpc' class='btn btn-success calctnpmtctp'><i class='voyager-news'></i> Download Tanpa MTC & tanpa Penyusutan</a>";
     
-    use ListrikTraits;
+    use ModuleCaculates;
  
     public function index(Request $request)
     {
@@ -812,6 +812,28 @@ class VoyagerTotalKalkulasiController extends BaseVoyagerBaseController Implemen
         $action = new $request->action($dataType, null);
 
         return $action->massAction(explode(',', $request->ids), $request->headers->get('referer'));
+    }
+
+    public function UndefinedClass(){
+        
+        $redirect = redirect()->back();
+
+        return $redirect->with([
+            'message'    => __('Code 403 access denied, silahkan akumulasi terlebih dahulu semua dokumen yang ingin diakumulasikan.'),
+            'alert-type' => 'warning',
+        ]);
+
+    }
+
+    public function can_t_find_group_mesin(){
+
+        $redirect = redirect()->back();
+
+        return $redirect->with([
+            'message'    => __('Code 403 access denied, silahkan set dokumen group mesin terlebih dahulu, ketika ingin meilihat akumulasi otomatis.'),
+            'alert-type' => 'warning',
+        ]);
+
     }
 
     /**

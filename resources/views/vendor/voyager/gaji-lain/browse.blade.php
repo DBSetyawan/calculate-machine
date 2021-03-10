@@ -41,7 +41,7 @@
             <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Labor</span>
         </a>
         @can('delete', app($dataType->model_name))
-            @include('voyager::partials.bulk-delete')
+            {{-- @include('voyager::partials.bulk-delete') --}}
         @endcan
         @can('edit', app($dataType->model_name))
             @if(isset($dataType->order_column) && isset($dataType->order_display_column))

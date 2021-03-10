@@ -10,6 +10,7 @@ use App\AllRecalculate;
 use App\KategoriBagian;
 use Illuminate\Http\Request;
 use App\BiayaAdministrasiUmum;
+use App\HistoryLogRecalculate;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -43,6 +44,20 @@ class VoyagerRecalController extends BaseVoyagerBaseController
         );
 
         if($rf){
+
+            $data_recalculate = [
+
+                'changed_by' => NULL,
+                'dibuat_oleh' => Auth::user()->name,
+                'recalculate_status' => "active",
+                'id_logs' => $listrikFind->id,
+                'code_mesin' =>$listrikFind->code_mesin,
+                'company' => $listrikFind->company_parent_id,
+                'category_bagian' => $listrikFind->category_bagian,
+
+            ];
+
+            HistoryLogRecalculate::updateOrCreate($data_recalculate);
 
             $redirect = redirect()->back();
             
@@ -382,6 +397,7 @@ class VoyagerRecalController extends BaseVoyagerBaseController
         $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
         event(new BreadDataUpdated($dataType, $data));
+
 
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");

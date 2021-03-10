@@ -15,9 +15,11 @@ use App\AllRecalculate;
 use App\KategoriBagian;
 use App\LaporanGajiLain;
 use Illuminate\Http\Request;
+use App\HistoryLogRecalculate;
 use App\LaporanBagianPenjualan;
 use Illuminate\Support\Facades\DB;
 use App\Exports\CalcsMachineExport;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CalcSmuaBiayaExports;
 use App\LaporanBiayaAdministrasiUmum;
@@ -28,25 +30,15 @@ use App\Exports\CalcMachineTanpaMTCnTanpaPenyusutanExports;
 use App\Http\Controllers\KOP\Helpers\RumusListrikOutputPerjam;
 use App\Http\Controllers\KOP\VoyagerLaporanGajiLainController;
 
-trait ListrikTraits {
+trait ModuleCaculates {
 
-    protected function denied(){
-        
-        $redirect = redirect()->back();
-
-        return $redirect->with([
-            'message'    => __('Code 403 access denied, silahkan akumulasi terlebih dahulu semua dokumen yang ingin diakumulasikan.'),
-            'alert-type' => 'warning',
-        ]);
-
-    }
     public function view_totalkalkulasi() {
 
         $reccll = isset(AllRecalculate::orderBy('created_at','desc')->first()->total_tanpa_mtc_perjam) ? AllRecalculate::orderBy('created_at','desc')->first()->total_tanpa_mtc_perjam : "403";
 
         if($reccll == "403"){
             
-           return $this->denied();
+           return $this->UndefinedClass();
 
         }
 
@@ -54,39 +46,29 @@ trait ListrikTraits {
 
         if($group_mesin == "403"){
             
-            return $this->denied();
+            return $this->can_t_find_group_mesin();
 
         }
 
         if($reccll == null){
 
-           return  $this->denied();
+           return $this->UndefinedClass();
 
         }
 
         if($group_mesin == null){
 
-            $redirect = redirect()->back();
-
-            return $redirect->with([
-                'message'    => __('Code 403 access denied, silahkan set group mesin pada dokumen yang ingin ditampilkan ditabel [ ALL CALCULATE ].'),
-                'alert-type' => 'warning',
-            ]);
+            return $this->can_t_find_group_mesin();
 
         } 
 
-        // if($reccll != "403" || $group_mesin != "403" || $group_mesin != null || $reccll != null ) {
-
-            $label = "[PROGRESS DEPLOY]";
-            $sss = json_encode(DB::table('total_kalkulasi_tanpa_penyusutan')
-            ->leftJoin('mesin', 'total_kalkulasi_tanpa_penyusutan.code_mesin', '=', 'mesin.id')
-            ->leftJoin('kategori_bagian', 'total_kalkulasi_tanpa_penyusutan.category_bagian', '=', 'kategori_bagian.id')
-            ->leftJoin('company', 'total_kalkulasi_tanpa_penyusutan.company_parent_id', '=', 'company.id')->get());
-            return view('vendor.voyager.total-kalkulasi-rpt.v_kalkulasi_rpt', compact('label','sss'));
+        $label = "[PROGRESS DEPLOY]";
+        $sss = json_encode(DB::table('total_kalkulasi_tanpa_penyusutan')
+        ->leftJoin('mesin', 'total_kalkulasi_tanpa_penyusutan.code_mesin', '=', 'mesin.id')
+        ->leftJoin('kategori_bagian', 'total_kalkulasi_tanpa_penyusutan.category_bagian', '=', 'kategori_bagian.id')
+        ->leftJoin('company', 'total_kalkulasi_tanpa_penyusutan.company_parent_id', '=', 'company.id')->get());
+        return view('vendor.voyager.total-kalkulasi-rpt.v_kalkulasi_rpt', compact('label','sss'));
     
-        // }
-
-     
     }
 
     public function recalculate(){
@@ -197,6 +179,35 @@ trait ListrikTraits {
             
             if($recall != []){
 
+                $data_recalculate = [
+
+                    'dibuat_oleh' => Auth::user()->name,
+                    'changed_by' => Auth::user()->name,
+                    'listrik' => $calc->id_listrik,
+                    'penyusutan' => $penyusutanfe,
+                    'labor' => $labors,
+                    'mtc' => $mtcsfe,
+                    'biaya_produksi_lain' => $mtcsfefn->biaya_produksi_lain,
+                    'biaya_administrasi_umum' => $bau,
+                    'gaji_lainnya' => $gaji_lainnya,
+                    'bagian_penjualan' => $b_penjualan,
+                    'total_semua_biaya' => $total,
+                    'total_semua_biaya_perjam' => $semua_total_biaya_perjam,
+                    'total_tanpa_penyusutan_n_mtc' => $tanpa_penyusutan_plus_mtc_total,
+                    'total_tanpa_penyusutan_n_mtc_perjam' => $tanpa_penyusutan_plus_mtc_perjam,
+                    'total_tanpa_penyusutan' => $tanpa_penyusutan_total,
+                    'total_tanpa_penyusutan_perjam' => $tanpa_penyusutan_total_perjam,
+                    'total_tanpa_mtc' => $tanpa_penyusutan_plus_mtc_total,
+                    'total_tanpa_mtc_perjam' => $tanpa_mtc_total_perjam,
+                    'recalculate_status' => "active",
+                    'id_logs' => $recall->id,
+                    'code_mesin' => $calc->code_mesin,
+                    'company' => $recall->company,
+                    'group_mesin' => $calc->group_mesin,
+                    'category_bagian' => $recall->category_bagian,
+
+                ];
+
                 // $cr = AllRecalculate::orderBy(function ($query) use ($tanpa_penyusutan_total, $tanpa_penyusutan_total_perjam, $tanpa_penyusutan_plus_mtc_total, $tanpa_penyusutan_plus_mtc_perjam, $gaji_lainnya, $b_penjualan, $bau, $total, $recall, $penyusutanfefn, $mtcsfefn, $laborsfn, $semua_total_biaya_perjam){
                     $cr = AllRecalculate::whereIn('id', [$recall->id])->update(
                         [
@@ -228,21 +239,23 @@ trait ListrikTraits {
 
                 if($cr > 0){
 
-                    $redirect = redirect()->back();
-                    
-                    return $redirect->with([
-                        'message'    => __('berhasil mengakumulasi mesin.'),
-                        'alert-type' => 'success',
-                    ]);
-                
-                }
+                    $datalogs = HistoryLogRecalculate::updateOrCreate($data_recalculate);
 
+                    if(!empty($datalogs)){
+
+                        $redirect = redirect()->back();
+                        
+                        return $redirect->with([
+                            'message'    => __('berhasil mengakumulasi mesin & terdaftar dilogs.'),
+                            'alert-type' => 'success',
+                        ]
+                    );
+
+                }
+                
             }
 
-            /**
-             * @prepare log history recalculate.
-             * @model HistoryLogRecalculate::class
-             */
+        }
 
     }
 

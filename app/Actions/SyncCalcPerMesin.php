@@ -9,7 +9,7 @@ class SyncCalcPerMesin extends AbstractAction
 {
     public function getTitle()
     {
-        return;
+        return __('');
     }
 
     public function getIcon()
