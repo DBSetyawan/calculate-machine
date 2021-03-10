@@ -30,21 +30,37 @@ use App\Http\Controllers\KOP\VoyagerLaporanGajiLainController;
 
 trait ListrikTraits {
 
+    protected function denied(){
+        
+        $redirect = redirect()->back();
+
+        return $redirect->with([
+            'message'    => __('Code 403 access denied, silahkan akumulasi terlebih dahulu semua dokumen yang ingin diakumulasikan.'),
+            'alert-type' => 'warning',
+        ]);
+
+    }
     public function view_totalkalkulasi() {
 
-        $reccll = AllRecalculate::orderBy('created_at','desc')->first()->total_tanpa_mtc_perjam;
-        $group_mesin = AllRecalculate::with('Listrik')->orderBy('created_at','desc')->first()->group_mesin;
+        $reccll = isset(AllRecalculate::orderBy('created_at','desc')->first()->total_tanpa_mtc_perjam) ? AllRecalculate::orderBy('created_at','desc')->first()->total_tanpa_mtc_perjam : "403";
 
-        // dd($group_mesin);
+        if($reccll == "403"){
+            
+           return $this->denied();
+
+        }
+
+        $group_mesin = isset(AllRecalculate::with('Listrik')->orderBy('created_at','desc')->first()->group_mesin) ? AllRecalculate::with('Listrik')->orderBy('created_at','desc')->first()->group_mesin : "403";
+
+        if($group_mesin == "403"){
+            
+            return $this->denied();
+
+        }
 
         if($reccll == null){
 
-            $redirect = redirect()->back();
-
-            return $redirect->with([
-                'message'    => __('Code 403 access denied, silahkan akumulasi terlebih dahulu semua dokumen yang ingin diakumulasikan.'),
-                'alert-type' => 'warning',
-            ]);
+           return  $this->denied();
 
         }
 
@@ -58,13 +74,19 @@ trait ListrikTraits {
             ]);
 
         } 
-        $label = "[PROGRESS DEPLOY]";
-        $sss = json_encode(DB::table('total_kalkulasi_tanpa_penyusutan')
-        ->leftJoin('mesin', 'total_kalkulasi_tanpa_penyusutan.code_mesin', '=', 'mesin.id')
-        ->leftJoin('kategori_bagian', 'total_kalkulasi_tanpa_penyusutan.category_bagian', '=', 'kategori_bagian.id')
-        ->leftJoin('company', 'total_kalkulasi_tanpa_penyusutan.company_parent_id', '=', 'company.id')->get());
-        return view('vendor.voyager.total-kalkulasi-rpt.v_kalkulasi_rpt', compact('label','sss'));
 
+        // if($reccll != "403" || $group_mesin != "403" || $group_mesin != null || $reccll != null ) {
+
+            $label = "[PROGRESS DEPLOY]";
+            $sss = json_encode(DB::table('total_kalkulasi_tanpa_penyusutan')
+            ->leftJoin('mesin', 'total_kalkulasi_tanpa_penyusutan.code_mesin', '=', 'mesin.id')
+            ->leftJoin('kategori_bagian', 'total_kalkulasi_tanpa_penyusutan.category_bagian', '=', 'kategori_bagian.id')
+            ->leftJoin('company', 'total_kalkulasi_tanpa_penyusutan.company_parent_id', '=', 'company.id')->get());
+            return view('vendor.voyager.total-kalkulasi-rpt.v_kalkulasi_rpt', compact('label','sss'));
+    
+        // }
+
+     
     }
 
     public function recalculate(){

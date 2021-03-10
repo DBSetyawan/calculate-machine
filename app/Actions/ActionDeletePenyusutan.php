@@ -6,11 +6,11 @@ use TCG\Voyager\Actions\EditAction;
 use TCG\Voyager\Actions\DeleteAction;
 use TCG\Voyager\Actions\ViewAction as VoyagerViewAction;
 
-class DeleteListrikAction extends DeleteAction
+class ActionDeletePenyusutan extends DeleteAction
 {
     public function getTitle()
     {
-        return __('hi');
+        return __('');
     }
 
     public function getIcon()
@@ -21,6 +21,11 @@ class DeleteListrikAction extends DeleteAction
     public function getPolicy()
     {
         return 'delete';
+    }
+
+    public function shouldActionDisplayOnDataType()
+    {
+        return $this->dataType->slug == 'penyusutan';
     }
 
     public function getAttributes()
