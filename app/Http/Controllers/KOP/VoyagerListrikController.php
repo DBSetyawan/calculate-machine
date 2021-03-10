@@ -599,12 +599,20 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             ->where('listrik', $data->ncost_bulan_plus_adm)
             ->update(array('listrik' => $request->ncost_bulan_plus_adm));  
 
-            $logs = \App\HistoryLogRecalculate::firstOrCreate([
-                'changed_by' => Auth::user()->name,
-                'coloumn_after' => $request->ncost_bulan_plus_adm,
-                'coloumn_before' => $data->ncost_bulan_plus_adm,
-                'recalculate_status' => "active"
-              ]);
+            // $logs = \App\HistoryLogRecalculate::firstOrCreate([
+            //     'changed_by' => Auth::user()->name,
+            //     'coloumn_after' => $request->ncost_bulan_plus_adm,
+            //     'coloumn_before' => $data->ncost_bulan_plus_adm,
+            //     'recalculate_status' => "active"
+
+            //     'changed_by' => NULL,
+            //     'dibuat_oleh' => Auth::user()->name,
+            //     'recalculate_status' => "active",
+            //     'id_logs' => $data->id,
+            //     'code_mesin' =>$data->code_mesin,
+            //     'company' => $data->company_parent_id,
+            //     'category_bagian' => $listrikFind->category_bagian,
+            //   ]);
 
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\AllRecalculate;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\TotalKalkulasiTanpaPenyusutan;
@@ -23,7 +24,8 @@ class CalcsMachineExport implements FromQuery, WithProperties, WithMapping, With
     
     public function query()
     {
-        return TotalKalkulasiTanpaPenyusutan::query();
+        // return TotalKalkulasiTanpaPenyusutan::query();
+        return AllRecalculate::query();
     }
 
     /**
@@ -33,18 +35,17 @@ class CalcsMachineExport implements FromQuery, WithProperties, WithMapping, With
     {
         return [
             $calcs->id,
-            $calcs->code_calc_tnp_penyusutan,
-            $calcs->company_parent_id,
+            $calcs->company,
             $calcs->code_mesin,
-            $calcs->listrik,
-            $calcs->labor,
-            $calcs->mtc,
-            $calcs->b_prod_lain,
-            $calcs->gaji_lainnya,
-            $calcs->bagian_penjualan,
-            $calcs->bau,
-            $calcs->tanpa_penyusutan_total,
-            $calcs->tanpa_penyusutan_total_perjam
+            $calcs->id_listrik,
+            $calcs->id_labor,
+            $calcs->id_mtc,
+            $calcs->id_bprodlain_insteadof_mtc,
+            $calcs->id_gajilain,
+            $calcs->id_bgoenjualan,
+            $calcs->id_bau,
+            $calcs->total_tanpa_penyusutan,
+            $calcs->total_tanpa_penyusutan_perjam
         ];
     }
 
@@ -67,7 +68,6 @@ class CalcsMachineExport implements FromQuery, WithProperties, WithMapping, With
     {
         return [
             'ID',
-            'CODE_CALCULATE',
             'COMPANY',
             'MESIN',
             'LISTRIK',

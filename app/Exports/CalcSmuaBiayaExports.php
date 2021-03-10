@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\AllRecalculate;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\TotalKalkulasiTanpaPenyusutan;
@@ -30,12 +31,15 @@ class CalcSmuaBiayaExports implements FromQuery, WithProperties, WithMapping, Wi
     
     public function query()
     {
-        return TotalKalkulasiTanpaPenyusutan::query();
+
+        return AllRecalculate::query();
+
     }
 
     public function columnFormats(): array
     {
         return [
+            'D' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'E' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'F' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'G' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
@@ -56,19 +60,19 @@ class CalcSmuaBiayaExports implements FromQuery, WithProperties, WithMapping, Wi
     {
         return [
             $calcs->id,
-            $calcs->code_calc_tnp_penyusutan,
-            $calcs->company_parent_id,
+            // $calcs->code_calc_tnp_penyusutan,
+            $calcs->company,
             $calcs->code_mesin,
-            $calcs->listrik,
-            $calcs->labor,
-            $calcs->mtc,
-            $calcs->penyusutan,
-            $calcs->b_prod_lain,
-            $calcs->gaji_lainnya,
-            $calcs->bagian_penjualan,
-            $calcs->bau,
-            $calcs->semua_total_biaya,
-            $calcs->semua_total_biaya_perjam
+            $calcs->id_listrik,
+            $calcs->id_labor,
+            $calcs->id_mtc,
+            $calcs->id_penyusutan,
+            $calcs->id_bprodlain_insteadof_mtc,
+            $calcs->id_gajilain,
+            $calcs->id_bgoenjualan,
+            $calcs->id_bau,
+            $calcs->total_semua_biaya,
+            $calcs->total_semua_biaya_perjam
         ];
     }
 
@@ -76,7 +80,7 @@ class CalcSmuaBiayaExports implements FromQuery, WithProperties, WithMapping, Wi
     {
         return [
             'ID',
-            'CODE_CALCULATE',
+            // 'CODE_CALCULATE',
             'COMPANY',
             'MESIN',
             'LISTRIK',
