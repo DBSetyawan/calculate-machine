@@ -112,7 +112,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         if($r->shift == 1){
             
             $static_lwbshift = $r->sht_1lwbp;
-            $rumusLWBPerminggu = $this->RumusPemakaianLWBP_shift3($r->shift, $r->ampere, $r->voltase, $r->code_mesin, $r->sht_1lwbp, $r->intervalnumeric);
+            $rumusLWBPerminggu = $this->RumusPemakaianLWBP_shift1($r->shift, $r->ampere, $r->voltase, $r->code_mesin, $r->sht_1lwbp, $r->intervalnumeric);
         }
 
         if($r->shift == 0){
@@ -179,8 +179,11 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             'LWBP_faktorkali' => $r->faktor_kali_lwbp,
             'WBP_faktorkali' => $r->faktor_kali_wbp,
             'total_biaya_listrik' => $totalbiayaListrikperminggu,
-            // 'persen_cost_perbulan' => $total_seluruh_biaya_listrik_cost_perbulan,
-            // 'ncost_bulan_plus_adm' => $costADM,
+            'assumptionshift_lwbp1' => $r->sht_3lwbp,
+            'assumptionshift_lwbp2' => $r->sht_2lwbp,
+            'assumptionshift_lwbp3' => $r->sht_1lwbp,
+            'assumption_itval_perminggu' => $r->intervalnumeric,
+            'assumption_wbp' => $r->wbp
         ];
 
         $simpanBiayaListrik = Listrik::create($Totalakumulasibiayalistrik);
@@ -578,9 +581,10 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
     }
 
     // POST BR(E)AD
-    public function update(Request $request, $id)
+    public function update(Request $r, $id)
     {
-        $slug = $this->getSlug($request);
+
+        $slug = $this->getSlug($r);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
@@ -597,7 +601,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             $data = $model->findOrFail($id);
             DB::table('total_kalkulasi_tanpa_penyusutan')
             ->where('listrik', $data->ncost_bulan_plus_adm)
-            ->update(array('listrik' => $request->ncost_bulan_plus_adm));  
+            ->update(array('listrik' => $r->ncost_bulan_plus_adm));  
 
             // $logs = \App\HistoryLogRecalculate::firstOrCreate([
             //     'changed_by' => Auth::user()->name,
@@ -621,13 +625,112 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         $this->authorize('edit', $data);
 
         // Validate fields with ajax
-        $val = $this->validateBread($request->all(), $dataType->editRows, $dataType->name, $id)->validate();
-        $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
+        $val = $this->validateBread($r->all(), $dataType->editRows, $dataType->name, $id)->validate();
+        // $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
-        event(new BreadDataUpdated($dataType, $data));
+        // event(new BreadDataUpdated($dataType, $data));
         //ambil angka dari master listrik, kemudian recalculate ke history dan ditampilkan ke view kalkulasi.
         // $s = TotalCalc::whereIn('listrik', [(float)$data->ncost_bulan_plus_adm])->first();
         // dd($s);
+
+                /**
+         * Hitung LWBP perminggu
+         * @store append field LWBP perminggu.
+         */
+        if($r->shift == 3){
+
+            $static_lwbshift = $r->sht_3lwbp;
+            $rumusLWBPerminggu = $this->RumusPemakaianLWBP_shift3($r->shift, $r->ampere, $r->voltase, $r->code_mesin, $r->assumptionshift_lwbp3, $r->assumption_itval_perminggu);
+        }
+
+        if($r->shift == 2){
+
+            $static_lwbshift = $r->sht_2lwbp;
+            $rumusLWBPerminggu = $this->RumusPemakaianLWBP_shift2($r->shift, $r->ampere, $r->voltase, $r->code_mesin, $r->assumptionshift_lwbp2, $r->assumption_itval_perminggu);
+        }
+
+        if($r->shift == 1){
+            
+            $static_lwbshift = $r->sht_1lwbp;
+            $rumusLWBPerminggu = $this->RumusPemakaianLWBP_shift1($r->shift, $r->ampere, $r->voltase, $r->code_mesin, $r->assumptionshift_lwbp1, $r->assumption_itval_perminggu);
+        }
+
+        if($r->shift == 0){
+
+            $static_lwbshift = 0;
+            $rumusLWBPerminggu = $this->RumusPemakaianLWBP_shift0($r->shift, $r->ampere, $r->voltase, $r->code_mesin, 0, $r->assumption_itval_perminggu);
+        }
+        
+        /**
+         * Hitung WBP perminggu
+         * @store append field WBP perminggu.
+         */
+        $rumusWBPerminggu = $this->RumusPemakaianWBP($r->shift, $r->ampere, $r->voltase, $r->code_mesin, $r->assumption_wbp, $r->assumption_itval_perminggu);
+
+        /**
+         * Hitung Total Biaya Listrik perminggu.
+         * @store append field Total Biaya Listrik perminggu.
+         */
+        $totalbiayaListrikperminggu = $this->RumusTotalBiayaListrik($r->shift, $rumusLWBPerminggu, $rumusWBPerminggu, $r->LWBP_faktorkali, $r->WBP_faktorkali, $r->code_mesin);
+
+        /**
+         * Hitung Biaya Cost Perbulan.
+         * @store append field Cost Biaya Listrik perminggu.
+         */
+        $totalbiayacostperbulan = $this->RumusCostPerbulan($totalbiayaListrikperminggu);
+        // dd($totalbiayacostperbulan);
+
+        /**
+         * Cari prosentase Biaya Cost Perbulan.
+         * @store append field Cost Biaya Listrik perminggu.
+         */
+        $total_listrik = Listrik::whereIn('company_parent_id', [3])->get();
+
+        $total_seluruh_biaya_listrik_cost_perbulan = collect([$total_listrik])->sum(function ($biaya){
+            return sprintf("%.5f", $biaya->sum('nilai_cost_bulan'));
+        });
+    
+        $totalprosentasecostlistrik = $this->RumusPersenListrik($totalbiayacostperbulan, $total_seluruh_biaya_listrik_cost_perbulan);
+
+        /**
+         * Hitung Biaya PPJ.
+         * @store append field Cost Biaya Listrik perminggu.
+         */
+        $PPJ = RumusListrik::HitungPPJ($total_seluruh_biaya_listrik_cost_perbulan);
+
+        /**
+         * Hitung Biaya Cost perbulan + ADM.
+         * @store append field Cost Biaya Listrik perminggu.
+         */
+        $costADM = $this->RumusBiayaCostADM($PPJ, $totalprosentasecostlistrik);
+
+        $Totalakumulasibiayalistrik = [
+            'shift' => $r->shift,
+            // 'listrikperjam' => $r->perjam,
+            'ampere' => $r->ampere,
+            'voltase' =>  $r->voltase,
+            // 'company_parent_id' => $r->company_parent_id,
+            'code_mesin' => $r->code_mesin,
+            // 'code_listrik' => RumusListrik::generateIDListrik(), //not 
+            'LWBP_perminggu' => $rumusLWBPerminggu,
+            'WBP_perminggu' => $rumusWBPerminggu,
+            'nilai_cost_bulan' => (float) $totalbiayacostperbulan,
+            // 'category_bagian' => $r->category_bagian,
+            'LWBP_faktorkali' => $r->LWBP_faktorkali,
+            'WBP_faktorkali' => $r->WBP_faktorkali,
+            'total_biaya_listrik' => $totalbiayaListrikperminggu,
+            'assumptionshift_lwbp1' => $r->assumptionshift_lwbp3,
+            'assumptionshift_lwbp2' => $r->assumptionshift_lwbp2,
+            'assumptionshift_lwbp3' => $r->assumptionshift_lwbp1,
+            'assumption_itval_perminggu' => $r->assumption_itval_perminggu,
+            'assumption_wbp' => $r->assumption_wbp,
+            'persen_cost_perbulan' => NULL,
+            'ncost_bulan_plus_adm' => NULL,
+        ];
+        // dd($Totalakumulasibiayalistrik);
+
+        $simpanBiayaListrik = Listrik::UpdateOrCreate(['id' => $id], $Totalakumulasibiayalistrik);
+        
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");
         } else {
@@ -635,7 +738,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         }
 
         return $redirect->with([
-            'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}",
+            'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}"."Silahkan Mengakumulasi ulang biaya persen untuk dokumen ini.",
             'alert-type' => 'success',
         ]);
     }
