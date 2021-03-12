@@ -81,19 +81,19 @@ class VoyagerAccountMtcController extends BaseVoyagerBaseController Implements A
 
             ];
 
-            $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
+            $total = AccountMtcTotal::create($totaltracks);
+            // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
             
-            if($recall != []){
+            // if($recall != []){
 
-                $total = AccountMtcTotal::create($totaltracks);
 
-                AllRecalculate::whereIn('id', [$recall->id])->update(
-                    [
-                        'id_bprodlain_insteadof_mtc' => $total->acc_mtc_total
-                    ]
-                );
+            //     AllRecalculate::whereIn('id', [$recall->id])->update(
+            //         [
+            //             'id_bprodlain_insteadof_mtc' => $total->acc_mtc_total
+            //         ]
+            //     );
 
-            }
+            // }
 
         }
 

@@ -111,8 +111,6 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
 
         if(!empty($simpanDataRpTMTC) && $simpanDataRpTMTC != [] && $simpanDataRpTMTC != null){
 
-            // $id = Listrik::findOrFail($simpanBiayaListrik->id);
-
             $t = RptMtc::whereIn('company_parent_id', [3])->get();
 
             $total_penyusutan_perbulan = collect([$t])->sum(function ($biaya){
@@ -128,19 +126,19 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
 
             ];
             
-            $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
+            $total = TransaksiMtcTotal::create($totaltracks);
+            // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
             
-            if($recall != []){
+            // if($recall != []){
 
-                $total = TransaksiMtcTotal::create($totaltracks);
 
-                AllRecalculate::whereIn('id', [$recall->id])->update(
-                    [
-                        'id_bprodlain_insteadof_mtc' => $simpanDataRpTMTC->biaya_produksi_lain
-                    ]
-                );
+            //     AllRecalculate::whereIn('id', [$recall->id])->update(
+            //         [
+            //             'id_bprodlain_insteadof_mtc' => $simpanDataRpTMTC->biaya_produksi_lain
+            //         ]
+            //     );
 
-            }
+            // }
 
         }
 
@@ -426,8 +424,10 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
 
         $LsOutputPerjam = ListrikOutput::all();
         $cbagian = KategoriBagian::all();
+        $company = Company::all();
 
-        return Voyager::view($view, compact('cbagian','LsOutputPerjam','dataType', 'dataTypeContent', 'isModelTranslatable'));
+
+        return Voyager::view($view, compact('company','cbagian','LsOutputPerjam','dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     public function EventChangeRptMTC(Request $request)
@@ -464,6 +464,7 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
             $TotalBiayaPenyusutanMaintenance = $this->TotalBiayaPenyusutanMaintenance($RataRataPerbaikanPerbulan, $RataRataSparePartPerbulan);
 
                 $automatedRecalculateMTC = [
+                    'company_parent_id' => $request->company_parent_id,
                     'perbaikan_tahun1' => $request->perbaikan_tahun1,
                     'perbaikan_tahun2' => $request->perbaikan_tahun2,
                     'perbaikan_tahun3' => $request->perbaikan_tahun3,

@@ -6,6 +6,7 @@
     'debug' => true,
     'url' => 'https://vpn.krisanthium.com:7070/kalkulasimesin2',
     'asset_url' => 'https://vpn.krisanthium.com:7070/kalkulasimesin2',
+    'vpn' => 'http://192.168.88.113',
     'timezone' => 'Asia/Jakarta',
     'locale' => 'id',
     'fallback_locale' => 'en_US',

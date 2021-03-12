@@ -36,6 +36,15 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="program_id">Company</label>
+                                <select class="form-control select2" id="company_parent_id" name="company_parent_id" required>
+                                    @foreach ($company as $c)
+                                <option value="{{$c->id}}">{{$c->company_name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group">
                                 <label for="program_id">Category</label>
                                 <select class="form-control select2" id="category_bagian" name="category_bagian" required>
                                     @foreach ($cbagian as $cb)
@@ -199,10 +208,10 @@
 
                     'id'                    : $('input[name=id]').val(),
                     'category_bagian'       : $('select[name=category_bagian]').val(),
+                    'company_parent_id'     : $('select[name=company_parent_id]').val(),
                     'perbaikan_tahun1'      : $('input[name=perbaikan_tahun1]').val(),
                     'perbaikan_tahun2'      : $('input[name=perbaikan_tahun2]').val(),
                     'perbaikan_tahun3'      : $('input[name=pserbaikan_tahun3]').val(),
-
                     'sparepart_tahun1'      : $('input[name=sparepart_tahun1]').val(),
                     'sparepart_tahun2'      : $('input[name=sparepart_tahun2]').val(),
                     'sparepart_tahun3'      : $('input[name=sparepart_tahun3]').val(),

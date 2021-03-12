@@ -23,7 +23,7 @@ class ActionRecalculate extends AbstractAction
     {
         // if(Auth::user()->role->id == 3 || Auth::user()->role->id == 1 || Auth::user()->role->id == 2) {
             return [
-                'class' => 'btn btn-sm btn-primary pull-right',
+                'class' => 'btn btn-sm btn-success pull-right',
             ];
         // }
         //     else {

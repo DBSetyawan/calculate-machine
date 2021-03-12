@@ -84,11 +84,11 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
 
             ];
 
-            $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
+            $total = GjiLainTotal::create($totaltracks);
+            // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
             
-            if($recall != []){
+            // if($recall != []){
 
-                $total = GjiLainTotal::create($totaltracks);
 
                 // AllRecalculate::whereIn('id', [$recall->id])->update(
                 //     [
@@ -96,7 +96,7 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
                 //     ]
                 // );
 
-            }
+            // }
 
         }
 

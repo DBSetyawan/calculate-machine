@@ -56,6 +56,9 @@ return [
 
     'asset_url' => env('ASSET_URL', null),
 
+    //test vpn domain
+    'vpn' => env('VPN','http://192.168.88.113'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

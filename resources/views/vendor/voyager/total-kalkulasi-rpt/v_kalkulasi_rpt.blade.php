@@ -714,14 +714,14 @@ $(document).ready(function(){
                           {data: 'gaji_lainnya', name: 'GAJI LAINNYA', width: "100px"},
                           {data: 'bagian_penjualan', name: 'BAGIAN PENJUALAN'},
                           {data: 'bau', name: 'BIAYA ADMINISTRASI UMUM'},
-                          {data: 'semua_total_biaya', name: 'SEMUA TOTAL BIAYA'},
-                          {data: 'semua_total_biaya_perjam', name: 'SEMUA TOTAL BIAYA (/JAM)'},
+                          {data: 'semua_total_biaya', name: 'SEMUA TOTAL BIAYA', width: "100px"},
+                          {data: 'semua_total_biaya_perjam', name: 'SEMUA TOTAL BIAYA (/JAM)', width: "100px"},
                           {data: 'tanpa_penyusutan_plus_mtc_total', name: 'SEMUA TOTAL BIAYA TANPA PENYUSUTAN + MTC', width: "190px"},
                           {data: 'tanpa_penyusutan_plus_mtc_perjam', name: 'SEMUA TOTAL BIAYA TANPA PENYUSUTAN + MTC (/JAM)', width: "190px"},
                           {data: 'tanpa_penyusutan_total', name: 'SEMUA TOTAL BIAYA TANPA PENYUSUTAN (/JAM)', width: "190px"},
-                          {data: 'tanpa_penyusutan_total_perjam', name: 'SEMUA TOTAL BIAYA TANPA PENYUSUTAN (/JAM)'},
-                          {data: 'tanpa_mtc_total', name: 'SEMUA TOTAL BIAYA TANPA MTC'},
-                          {data: 'tanpa_mtc_total_perjam', name: 'SEMUA TOTAL BIAYA TANPA MTC (/JAM)'},
+                          {data: 'tanpa_penyusutan_total_perjam', name: 'SEMUA TOTAL BIAYA TANPA PENYUSUTAN (/JAM)', width: "190px"},
+                          {data: 'tanpa_mtc_total', name: 'SEMUA TOTAL BIAYA TANPA MTC', width: "150px"},
+                          {data: 'tanpa_mtc_total_perjam', name: 'SEMUA TOTAL BIAYA TANPA MTC (/JAM)', width: "150px"},
                           {data: 'action', name: 'action', orderable: false, searchable: false},
 
                   ],
@@ -1214,10 +1214,11 @@ $(document).ready(function(){
         });
     
   });
-  
-  async function ButtonexportCalcTanpaPenyusutan() {
 
-        return fetch(`https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/button-load-ButtonexportCalcTanpaPenyusutan`, {
+  async function ButtonexportCalcTanpaPenyusutan() {
+    let env = "{{ config('app.vpn') }}";
+    
+        return fetch(`${env}/kalkulasimesin2/public/admin/button-load-ButtonexportCalcTanpaPenyusutan`, {
                 method: 'GET',
                 cache: 'no-cache',
                 credentials: 'same-origin',
@@ -1238,8 +1239,11 @@ $(document).ready(function(){
 
   }
   
-      async function ButtonCalcSmuaBiayaExports() {
-          return fetch(`https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/button-load-ButtonCalcSmuaBiayaExports`, {
+    async function ButtonCalcSmuaBiayaExports() {
+
+      let env = "{{ config('app.vpn') }}";
+
+          return fetch(`${env}/kalkulasimesin2/public/admin/button-load-ButtonCalcSmuaBiayaExports`, {
                   method: 'GET',
                   cache: 'no-cache',
                   credentials: 'same-origin',
@@ -1259,8 +1263,11 @@ $(document).ready(function(){
 
       }
 
-      async function ButtonexportCalcTanpaMTCnTanpaPenyusutan() {
-          return fetch(`https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/button-load-ButtonexportCalcTanpaMTCnTanpaPenyusutan`, {
+    async function ButtonexportCalcTanpaMTCnTanpaPenyusutan() {
+
+      let env = "{{ config('app.vpn') }}";
+
+          return fetch(`${env}/kalkulasimesin2/public/admin/button-load-ButtonexportCalcTanpaMTCnTanpaPenyusutan`, {
                   method: 'GET',
                   cache: 'no-cache',
                   credentials: 'same-origin',
@@ -1281,7 +1288,8 @@ $(document).ready(function(){
       }
 
       async function ButtonexportCalcTanpaMTC() {
-          return fetch(`https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/button-load-ButtonexportCalcTanpaMTC`, {
+      let env = "{{ config('app.vpn') }}";
+          return fetch(`${env}/kalkulasimesin2/public/admin/button-load-ButtonexportCalcTanpaMTC`, {
                   method: 'GET',
                   cache: 'no-cache',
                   credentials: 'same-origin',

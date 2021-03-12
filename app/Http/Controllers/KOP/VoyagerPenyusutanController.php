@@ -81,20 +81,21 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
                 'changed_by' => Auth::user()->name
 
             ];
+            
+            PenyusutanTotal::create($totaltracks);
 
-            $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
+            // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
 
-            if($recall != []){
+            // if($recall != []){
 
-                $total = PenyusutanTotal::create($totaltracks);
 
-                AllRecalculate::whereIn('id', [$recall->id])->update(
-                    [
-                        'id_penyusutan' => $total->total_penyusutan
-                    ]
-                );
+            //     AllRecalculate::whereIn('id', [$recall->id])->update(
+            //         [
+            //             'id_penyusutan' => $total->total_penyusutan
+            //         ]
+            //     );
 
-            }
+            // }
 
         }
 
@@ -369,6 +370,8 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
     // POST BR(E)AD
     public function update(Request $request, $id)
     {
+
+        // dd($request->all());
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -401,6 +404,7 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
         $UpdaterumusTotalPenyusutan = $this->RmsPenyusutan((float) $request->purchaseorder_value, $request->umur);
 
         $automatedTotalakumulasibiayaPenyusutan = [
+            'company_parent_id' => $request->company_parent_id,
             'penyusutan_perbulan' => (float) $UpdaterumusTotalPenyusutan,
             'purchaseorder_value' => $request->purchaseorder_value,
             'umur' => $request->umur,

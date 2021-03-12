@@ -111,19 +111,19 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
 
             ];
 
-            $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
+            $total = LaborTotal::create($totaltracks);
+            // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
             
-            if($recall != []){
+            // if($recall != []){
 
-                $total = LaborTotal::create($totaltracks);
 
-                AllRecalculate::whereIn('id', [$recall->id])->update(
-                    [
-                        'id_labor' => $total->total_labor
-                    ]
-                );
+            //     AllRecalculate::whereIn('id', [$recall->id])->update(
+            //         [
+            //             'id_labor' => $total->total_labor
+            //         ]
+            //     );
 
-            }
+            // }
 
         }
 
@@ -465,6 +465,7 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
         $total_biaya_upah_perbulan = $this->RumusTotalBiayaLabor($biayasupervisor, $biayaoperator, $biayahelper);
 
         $result_gaji_labor = [
+            'company_parent_id' => $request->company_parent_id,
             'shift' => $request->shift,
             'supervisor' => $request->supervisor,
             'operator' => $request->operator,

@@ -74,19 +74,19 @@ class VoyagerLaporanBiayaAdministrasiUmumController extends BaseVoyagerBaseContr
 
             ];
 
-            $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
+            $total = BauTotal::create($totaltracks);
+            // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
             
-            if($recall != []){
+            // if($recall != []){
 
-                $total = BauTotal::create($totaltracks);
 
-                AllRecalculate::whereIn('id', [$recall->id])->update(
-                    [
-                        'id_bau' => $total->total_bau
-                    ]
-                );
+            //     AllRecalculate::whereIn('id', [$recall->id])->update(
+            //         [
+            //             'id_bau' => $total->total_bau
+            //         ]
+            //     );
 
-            }
+            // }
 
         }
 
@@ -391,6 +391,7 @@ class VoyagerLaporanBiayaAdministrasiUmumController extends BaseVoyagerBaseContr
 
         $result_badm = [
             'tahun1' => $request->tahun1,
+            'company_parent_id' => $request->company_parent_id,
             'tahun2' => $request->tahun2,
             'tahun3' => $request->tahun3,
             'total_biaya_lp_adm' => $total_biaya_lp_adm

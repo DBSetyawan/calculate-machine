@@ -64,19 +64,19 @@ class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController 
 
             ];
 
-            $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
+            $total = BPenjualanTotal::create($totaltracks);
+            // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
             
-            if($recall != []){
+            // if($recall != []){
 
-                $total = BPenjualanTotal::create($totaltracks);
 
-                AllRecalculate::whereIn('id', [$recall->id])->update(
-                    [
-                        'id_bgoenjualan' => $total->total_bgpenjualan
-                    ]
-                );
+            //     AllRecalculate::whereIn('id', [$recall->id])->update(
+            //         [
+            //             'id_bgoenjualan' => $total->total_bgpenjualan
+            //         ]
+            //     );
 
-            }
+            // }
 
         }
 
@@ -386,6 +386,7 @@ class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController 
         $total_biaya_upah_lpperbulan = $this->RumusLapBagianPenjualanPerbulan($request->tahun1, $request->tahun2, $request->tahun3, $request->nama_biaya);
 
         $result_lbpnjualan = [
+            'company_parent_id' => $request->company_parent_id,
             'tahun1' => $request->tahun1,
             'tahun2' => $request->tahun2,
             'tahun3' => $request->tahun3,
