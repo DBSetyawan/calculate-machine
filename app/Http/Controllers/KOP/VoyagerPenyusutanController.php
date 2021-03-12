@@ -384,9 +384,9 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
             $data = $model->withTrashed()->findOrFail($id);
         } else {
             $data = $model->findOrFail($id);
-            DB::table('total_kalkulasi_tanpa_penyusutan')
-            ->where('penyusutan', $data->penyusutan_perbulan)
-            ->update(array('penyusutan' => $request->penyusutan_perbulan)); 
+            // DB::table('total_kalkulasi_tanpa_penyusutan')
+            // ->where('penyusutan', $data->penyusutan_perbulan)
+            // ->update(array('penyusutan' => $request->penyusutan_perbulan)); 
         }
 
         // Check permission
@@ -394,9 +394,19 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
 
         // Validate fields with ajax
         $val = $this->validateBread($request->all(), $dataType->editRows, $dataType->name, $id)->validate();
-        $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
+        // $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
-        event(new BreadDataUpdated($dataType, $data));
+        // event(new BreadDataUpdated($dataType, $data));
+
+        $UpdaterumusTotalPenyusutan = $this->RmsPenyusutan((float) $request->purchaseorder_value, $request->umur);
+
+        $automatedTotalakumulasibiayaPenyusutan = [
+            'penyusutan_perbulan' => (float) $UpdaterumusTotalPenyusutan,
+            'purchaseorder_value' => $request->purchaseorder_value,
+            'umur' => $request->umur,
+        ];
+
+        Penyusutan::UpdateOrCreate(['id' => $id], $automatedTotalakumulasibiayaPenyusutan);
 
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");
@@ -405,9 +415,10 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
         }
 
         return $redirect->with([
-            'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}",
+            'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}"." $data->code_penyusutan berhasil direcalculate.",
             'alert-type' => 'success',
         ]);
+
     }
 
     //***************************************

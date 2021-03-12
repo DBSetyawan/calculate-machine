@@ -70,6 +70,7 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::post('rpt-mtcs/store-rpt-mtc-store','KOP\VoyagerRptMTController@HitungAkumulasiRPTMaintenance')->name('rpt.mtc.store.master');
     Route::get('rpt-mtcs/form-rpt-mtc','KOP\VoyagerRptMTController@formRPTMTCAction')->name('rpt.mtc.form.master');
+    Route::post('rpt-mtcs/updated-rpt-mtc','KOP\VoyagerRptMTController@EventChangeRptMTC')->name('rpt.mtc.form.EventChangeRptMTC');
     
     Route::post('account-mtcs/store-account-mtc-store','KOP\VoyagerAccountMtcController@HitungAkumulasiAccountMaintenance')->name('accounts.mtc.store.master');
     Route::get('account-mtcs/form-account-mtcs','KOP\VoyagerAccountMtcController@formAccountMTCActions')->name('account.mtc.form.master');

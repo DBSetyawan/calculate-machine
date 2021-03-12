@@ -599,24 +599,24 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             $data = $model->withTrashed()->findOrFail($id);
         } else {
             $data = $model->findOrFail($id);
-            DB::table('total_kalkulasi_tanpa_penyusutan')
-            ->where('listrik', $data->ncost_bulan_plus_adm)
-            ->update(array('listrik' => $r->ncost_bulan_plus_adm));  
+            // DB::table('total_kalkulasi_tanpa_penyusutan')
+            // ->where('listrik', $data->ncost_bulan_plus_adm)
+            // ->update(array('listrik' => $r->ncost_bulan_plus_adm));  
 
-            // $logs = \App\HistoryLogRecalculate::firstOrCreate([
-            //     'changed_by' => Auth::user()->name,
-            //     'coloumn_after' => $request->ncost_bulan_plus_adm,
-            //     'coloumn_before' => $data->ncost_bulan_plus_adm,
-            //     'recalculate_status' => "active"
+            // // $logs = \App\HistoryLogRecalculate::firstOrCreate([
+            // //     'changed_by' => Auth::user()->name,
+            // //     'coloumn_after' => $request->ncost_bulan_plus_adm,
+            // //     'coloumn_before' => $data->ncost_bulan_plus_adm,
+            // //     'recalculate_status' => "active"
 
-            //     'changed_by' => NULL,
-            //     'dibuat_oleh' => Auth::user()->name,
-            //     'recalculate_status' => "active",
-            //     'id_logs' => $data->id,
-            //     'code_mesin' =>$data->code_mesin,
-            //     'company' => $data->company_parent_id,
-            //     'category_bagian' => $listrikFind->category_bagian,
-            //   ]);
+            // //     'changed_by' => NULL,
+            // //     'dibuat_oleh' => Auth::user()->name,
+            // //     'recalculate_status' => "active",
+            // //     'id_logs' => $data->id,
+            // //     'code_mesin' =>$data->code_mesin,
+            // //     'company' => $data->company_parent_id,
+            // //     'category_bagian' => $listrikFind->category_bagian,
+            // //   ]);
 
         }
 
@@ -633,7 +633,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         // $s = TotalCalc::whereIn('listrik', [(float)$data->ncost_bulan_plus_adm])->first();
         // dd($s);
 
-                /**
+        /**
          * Hitung LWBP perminggu
          * @store append field LWBP perminggu.
          */
@@ -704,7 +704,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
          */
         $costADM = $this->RumusBiayaCostADM($PPJ, $totalprosentasecostlistrik);
 
-        $Totalakumulasibiayalistrik = [
+        $automatedTotalakumulasibiayalistrik = [
             'shift' => $r->shift,
             // 'listrikperjam' => $r->perjam,
             'ampere' => $r->ampere,
@@ -724,21 +724,20 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             'assumptionshift_lwbp3' => $r->assumptionshift_lwbp1,
             'assumption_itval_perminggu' => $r->assumption_itval_perminggu,
             'assumption_wbp' => $r->assumption_wbp,
-            'persen_cost_perbulan' => NULL,
-            'ncost_bulan_plus_adm' => NULL,
+            'persen_cost_perbulan' => NULL, /**khusus listrik*/// update atau re-akumulasi persen ditombol yang sudah tersedia per dokumen.
+            'ncost_bulan_plus_adm' => NULL, /**khusus listrik*/// update atau re-akumulasi persen ditombol yang sudah tersedia per dokumen.
         ];
-        // dd($Totalakumulasibiayalistrik);
 
-        $simpanBiayaListrik = Listrik::UpdateOrCreate(['id' => $id], $Totalakumulasibiayalistrik);
+        Listrik::UpdateOrCreate(['id' => $id], $automatedTotalakumulasibiayalistrik);
         
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");
         } else {
             $redirect = redirect()->back();
         }
-
+        
         return $redirect->with([
-            'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}"."Silahkan Mengakumulasi ulang biaya persen untuk dokumen ini.",
+            'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}"."Silahkan mengakumulasi ulang biaya persen cost perbulan pada dokumen $data->code_listrik.",
             'alert-type' => 'success',
         ]);
     }

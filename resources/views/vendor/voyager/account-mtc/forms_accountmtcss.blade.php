@@ -10,7 +10,7 @@
 @section('page_header')
     <h1 class="page-title">
         <i class="voyager-plus"></i>
-        Transaksi Accoutn MTC
+        Transaksi Account MTC
     </h1>
 @stop
 
