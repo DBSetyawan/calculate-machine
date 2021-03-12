@@ -412,7 +412,6 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
     // POST BR(E)AD
     public function update(Request $request, $id)
     {
-
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -428,9 +427,9 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
             $data = $model->withTrashed()->findOrFail($id);
         } else {
             $data = $model->findOrFail($id);
-            DB::table('total_kalkulasi_tanpa_penyusutan')
-            ->where('labor', $data->total_biaya)
-            ->update(array('labor' => $request->total_biaya)); 
+            // DB::table('total_kalkulasi_tanpa_penyusutan')
+            // ->where('labor', $data->total_biaya)
+            // ->update(array('labor' => $request->total_biaya)); 
         }
 
         // Check permission
@@ -438,9 +437,47 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
 
         // Validate fields with ajax
         $val = $this->validateBread($request->all(), $dataType->editRows, $dataType->name, $id)->validate();
-        $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
+        // $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
-        event(new BreadDataUpdated($dataType, $data));
+        // event(new BreadDataUpdated($dataType, $data));
+
+        /**
+         * Hitung Biaya Level
+         * @method RumusBiayaGajiUpahSupervisor, RumusBiayaGajiUpahOperator, RumusBiayaGajiUpahHelper
+         *
+         * Total biaya level Supervisor
+         */
+        $biayasupervisor = $this->RumusBiayaGajiUpahSupervisor($request->shift, $request->jumlah_mesin_ditanggani, $request->code_mesin);
+        
+        /**
+         * Total biaya level Operator
+         */
+        $biayaoperator = $this->RumusBiayaGajiUpahOperator($request->shift, $request->operator);
+         
+        /**
+         * Total biaya level helper
+         */
+        $biayahelper = $this->RumusBiayaGajiUpahHelper($request->shift, $request->helper);
+
+        /**
+         * Total biaya labor
+         */
+        $total_biaya_upah_perbulan = $this->RumusTotalBiayaLabor($biayasupervisor, $biayaoperator, $biayahelper);
+
+        $result_gaji_labor = [
+            'shift' => $request->shift,
+            'supervisor' => $request->supervisor,
+            'operator' => $request->operator,
+            'helper' => $request->helper,
+            'supporting' => $request->supporting,
+            'supervisor_level3' => $biayasupervisor,
+            'operator_level2' => $biayaoperator,
+            'helper_level0' => $biayahelper,
+            'support_level0' => 0,
+            'total_biaya' => $total_biaya_upah_perbulan,
+        ];
+
+        Labor::UpdateOrCreate(['id'=>$id], $result_gaji_labor);
 
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");
@@ -448,8 +485,10 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
             $redirect = redirect()->back();
         }
 
+        $mesin = isset(Mesin::findOrFail($data->code_mesin)->code_mesin) ? Mesin::findOrFail($data->code_mesin)->code_mesin : "mesin tidak diketahui";
+
         return $redirect->with([
-            'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}",
+            'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}"."Silahkan mengakumulasi ulang biaya persen cost perbulan pada mesin $mesin.",
             'alert-type' => 'success',
         ]);
     }

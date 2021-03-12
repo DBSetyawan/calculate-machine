@@ -380,9 +380,19 @@ class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController 
 
         // Validate fields with ajax
         $val = $this->validateBread($request->all(), $dataType->editRows, $dataType->name, $id)->validate();
-        $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
+        // $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
-        event(new BreadDataUpdated($dataType, $data));
+        // event(new BreadDataUpdated($dataType, $data));
+        $total_biaya_upah_lpperbulan = $this->RumusLapBagianPenjualanPerbulan($request->tahun1, $request->tahun2, $request->tahun3, $request->nama_biaya);
+
+        $result_lbpnjualan = [
+            'tahun1' => $request->tahun1,
+            'tahun2' => $request->tahun2,
+            'tahun3' => $request->tahun3,
+            'biaya_perbulan_bag_penjualan' => $total_biaya_upah_lpperbulan,
+        ];
+
+        LaporanBagianPenjualan::UpdateOrCreate(['id'=> $id], $result_lbpnjualan);
 
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");
@@ -391,7 +401,7 @@ class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController 
         }
 
         return $redirect->with([
-            'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}",
+            'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}"."Silahkan mengakumulasi ulang total biaya pada nama akun biaya $data->nama_biaya.",
             'alert-type' => 'success',
         ]);
     }

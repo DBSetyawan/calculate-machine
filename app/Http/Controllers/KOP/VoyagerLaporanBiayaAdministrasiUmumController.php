@@ -383,9 +383,20 @@ class VoyagerLaporanBiayaAdministrasiUmumController extends BaseVoyagerBaseContr
 
         // Validate fields with ajax
         $val = $this->validateBread($request->all(), $dataType->editRows, $dataType->name, $id)->validate();
-        $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
+        // $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
-        event(new BreadDataUpdated($dataType, $data));
+        // event(new BreadDataUpdated($dataType, $data));
+
+        $total_biaya_lp_adm = $this->TotalLaporanBiayaAdministrasiUmum($request->tahun1, $request->tahun2, $request->tahun3, $request->nama_biaya);
+
+        $result_badm = [
+            'tahun1' => $request->tahun1,
+            'tahun2' => $request->tahun2,
+            'tahun3' => $request->tahun3,
+            'total_biaya_lp_adm' => $total_biaya_lp_adm
+        ];
+
+        LaporanBiayaAdministrasiUmum::UpdateOrCreate(['id' => $id],$result_badm);
 
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");

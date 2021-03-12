@@ -389,10 +389,21 @@ class VoyagerAccountMtcController extends BaseVoyagerBaseController Implements A
 
         // Validate fields with ajax
         $val = $this->validateBread($request->all(), $dataType->editRows, $dataType->name, $id)->validate();
-        $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
+        // $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
-        event(new BreadDataUpdated($dataType, $data));
+        // event(new BreadDataUpdated($dataType, $data));
 
+        $HitungTotalBiayaLuarMesinProduksi = $this->HitungTotalBiayaLuarMesinProduksi($request->tahun1, $request->tahun2, $request->tahun3, $request->nama_account);
+
+        $data_response_accountmtc = [
+            'tahun1' => $request->tahun1,
+            'tahun2' => $request->tahun2,
+            'tahun3' => $request->tahun3,
+            'biaya_perbulan' => $HitungTotalBiayaLuarMesinProduksi
+        ];
+
+        AccountMtc::UpdateOrCreate(['id' => $id], $data_response_accountmtc);
+        
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");
         } else {
@@ -400,7 +411,7 @@ class VoyagerAccountMtcController extends BaseVoyagerBaseController Implements A
         }
 
         return $redirect->with([
-            'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}",
+            'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}"." Silahkan mengakumulasi ulang total biaya perbulan pada dokumen $data->code_account_mtc.",
             'alert-type' => 'success',
         ]);
     }

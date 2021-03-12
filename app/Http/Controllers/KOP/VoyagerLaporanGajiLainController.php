@@ -416,6 +416,7 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
 
         event(new BreadDataUpdated($dataType, $data));
 
+      
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");
         } else {
@@ -505,9 +506,21 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
     {
         try {
             
-            $string = $request->except(["lsoutput"]);
+            // $string = $request->except(["lsoutput"]);
 
-            $updateData = str_replace(".", "",  $string);
+            // $updateData = str_replace(".", "",  $string);
+
+            
+            // $total_biaya_upah_perbulan = $this->RumusTotalLaporanGajiLain($r->tahun1, $r->tahun2, $r->tahun3);
+
+            // $result_gaji_labor = [
+            //     'tahun1' => $r->tahun1,
+            //     'tahun2' => $r->tahun2,
+            //     'tahun3' => $r->tahun3,
+            //     'total_biaya_laporan_periode' => $total_biaya_upah_perbulan
+            // ];
+    
+            // $simpanDataLaporanGajiLain = LaporanGajiLain::create($result_gaji_labor);
 
             $jumlah_total = $this->RumusTotalLaporanGajiLain($request->input('tahun1'), $request->input('tahun2'), $request->input('tahun3'));
 
@@ -520,21 +533,21 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
                 ])
                 ->first();
 
-            $first = LaporanGajiLain::whereIn('category_bagian', [$request->input('category_bagian')])->get();
+            LaporanGajiLain::whereIn('category_bagian', [$request->input('category_bagian')])->get();
 
-                $hasil_akhir_gj_lain = $this->jumlahAkhirGajiLain($first);
+                // $hasil_akhir_gj_lain = $this->jumlahAkhirGajiLain($first);
            
 
-               $logs = \App\HistoryLogRecalculate::create([
-                'changed_by' => Auth::user()->name,
-                'coloumn_after' => $hasil_akhir_gj_lain,
-                'coloumn_before' => $update_data_lp_gaji_lain->total_biaya_laporan_periode,
-                'recalculate_status' => "active"
-              ]);
+            //    $logs = \App\HistoryLogRecalculate::create([
+            //     'changed_by' => Auth::user()->name,
+            //     'coloumn_after' => $hasil_akhir_gj_lain,
+            //     'coloumn_before' => $update_data_lp_gaji_lain->total_biaya_laporan_periode,
+            //     'recalculate_status' => "active"
+            //   ]);
 
-             $synccalcmachine = RptCalcMachine::InstanceOfCalcGajiLainSSR($this->saldoAkhir_REPRO(), $this->saldoAkhir_MTC(), $this->saldoAkhir_UMUM(), $this->saldoAkhir_QC(), $request->lsoutput);
+            //  $synccalcmachine = RptCalcMachine::InstanceOfCalcGajiLainSSR($this->saldoAkhir_REPRO(), $this->saldoAkhir_MTC(), $this->saldoAkhir_UMUM(), $this->saldoAkhir_QC(), $request->lsoutput);
              
-            $firsts = TotalKalkulasiTanpaPenyusutan::where('gaji_lainnya', $synccalcmachine)->first();
+            // $firsts = TotalKalkulasiTanpaPenyusutan::where('gaji_lainnya', $synccalcmachine)->first();
             // progress deploy pencarian data, dengan ID
             // $da = DB::table('total_kalkulasi_tanpa_penyusutan')
             //  ->where('gaji_lainnya', '=',$synccalcmachine)->first();
@@ -545,12 +558,12 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
                     'success' => __('voyager::generic.successfully_updated'), 
                     'data' => $update_data_lp_gaji_lain,
                     's' => $jumlah_total,
-                    'results' => $synccalcmachine,
+                    // 'results' => $synccalcmachine,
                     'repro' => $this->saldoAkhir_REPRO(),
                     'umum' => $this->saldoAkhir_UMUM(),
                     'qc' => $this->saldoAkhir_QC(),
-                    'mtc' => $this->saldoAkhir_MTC(),
-                    'da' => $firsts
+                    'mtc' => $this->saldoAkhir_MTC()
+                    // 'da' => $firsts
                 ]
             );
             

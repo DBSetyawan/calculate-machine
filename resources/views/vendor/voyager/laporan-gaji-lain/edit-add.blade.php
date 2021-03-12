@@ -83,7 +83,7 @@
                                        value="{{ old('tahun3', $dataTypeContent->total_biaya_laporan_periode ?? '') }}">
                             </div> --}}
 
-                            <div class="form-group">
+                            <div class="form-group hidden">
                                 <label for="kelurahan_id">Listrik Output</label>
                                 <select class="form-control select2" id="lsoutput" name="lsoutput">
                                     @foreach($lsoutput as $a)
@@ -194,14 +194,13 @@
                     encode          : true
                 })
                 .done(function(data) {
-                    console.log(data)
 
-                    // if(data.success){
-                    //     Toast.fire({
-                    //     icon: 'success',
-                    //     title: `${data.success}`
-                    // })
-                    // }
+                    if(data.success){
+                            Toast.fire({
+                            icon: 'success',
+                            title: `${data.success}`
+                        })
+                    }
                     
                     $(".removeLater").val('');
 
