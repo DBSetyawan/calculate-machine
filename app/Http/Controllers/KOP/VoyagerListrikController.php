@@ -166,7 +166,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
         $Totalakumulasibiayalistrik = [
             'shift' => $r->shift,
-            'listrikperjam' => $r->perjam,
+            'listrikperjam' => $r->listrikperjam,
             'ampere' => $r->ampere,
             'voltase' =>  $r->voltase,
             'company_parent_id' => $r->company_parent_id,
@@ -706,7 +706,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
         $automatedTotalakumulasibiayalistrik = [
             'shift' => $r->shift,
-            // 'listrikperjam' => $r->perjam,
+            'listrikperjam' => $r->listrikperjam,
             'ampere' => $r->ampere,
             'voltase' =>  $r->voltase,
             // 'company_parent_id' => $r->company_parent_id,
