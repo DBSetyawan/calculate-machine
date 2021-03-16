@@ -53,55 +53,56 @@ class VoyagerAccountMtcController extends BaseVoyagerBaseController Implements A
             'company_parent_id' => $r->company_parent_id,
             'code_account_mtc' => RumusAccountMTC::generateIDAccountACMTC(), 
             'nama_account' => $r->nama_account,
-            // 'reason' => $r->reason,
             'tahun1' => $r->tahun1,
             'tahun2' => $r->tahun2,
             'tahun3' => $r->tahun3,
             'biaya_perbulan' => $HitungTotalBiayaLuarMesinProduksi
         ];
 
+    if($r->setTo["isConfirmed"] == "true"){
+
         $simpanBiayaTotalAccountMTC = AccountMtc::create($data_response_accountmtc);
 
         if(!empty($simpanBiayaTotalAccountMTC) && $simpanBiayaTotalAccountMTC != [] && $simpanBiayaTotalAccountMTC != null){
 
-            // $id = Listrik::findOrFail($simpanBiayaListrik->id);
+                $tx = AccountMtc::whereIn('company_parent_id', [3])->get();
 
-            $tx = AccountMtc::whereIn('company_parent_id', [3])->get();
+                $t = collect([$tx])->sum(function ($biaya){
+                    return sprintf("%.5f", $biaya->sum('biaya_perbulan'));
+                });
+                
+                $totaltracks = [
 
-            $t = collect([$tx])->sum(function ($biaya){
-                return sprintf("%.5f", $biaya->sum('biaya_perbulan'));
-            });
-            
-            $totaltracks = [
+                    'id_acc_mtc' => $simpanBiayaTotalAccountMTC->id,
+                    'acc_mtc_total' => $t,
+                    'status' => 1,
+                    'changed_by' => Auth::user()->name
 
-                'id_acc_mtc' => $simpanBiayaTotalAccountMTC->id,
-                'acc_mtc_total' => $t,
-                'status' => 1,
-                'changed_by' => Auth::user()->name
+                ];
 
-            ];
-
-            $total = AccountMtcTotal::create($totaltracks);
-            // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
-            
-            // if($recall != []){
+                $total = AccountMtcTotal::create($totaltracks);
 
 
-            //     AllRecalculate::whereIn('id', [$recall->id])->update(
-            //         [
-            //             'id_bprodlain_insteadof_mtc' => $total->acc_mtc_total
-            //         ]
-            //     );
+                return response()->json(
+                    [
+                        'total_perbulan' => $simpanBiayaTotalAccountMTC->biaya_perbulan,
+                        'isConfirmed' => $r->setTo["isConfirmed"],
 
-            // }
+                    ]
+                );
+
+            }
+
+        } else {
+
+            return response()->json(
+                [
+                    'total_perbulan' => $HitungTotalBiayaLuarMesinProduksi,
+                    'isDenied' => $r->setTo["isDenied"],
+                ]
+            );
 
         }
-
-        return response()->json(
-            [
-                'total_perbulan' => $simpanBiayaTotalAccountMTC->biaya_perbulan
-            ]
-        );
 
     }
  

@@ -92,6 +92,8 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
             'total_biaya' => $total_biaya_upah_perbulan,
         ];
 
+    if($r->setTo["isConfirmed"] == "true"){
+
         $simpanDataBiayaListrik = Labor::create($result_gaji_labor);
 
         if(!empty($simpanDataBiayaListrik) && $simpanDataBiayaListrik != [] && $simpanDataBiayaListrik != null){
@@ -112,30 +114,34 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
             ];
 
             $total = LaborTotal::create($totaltracks);
-            // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
+
+                return response()->json(
+                    [
+                        'set_default_mesin' => $r->jumlah_penangganan_mesin,
+                        'spv' => $simpanDataBiayaListrik->supervisor_level3,
+                        'opt' => $simpanDataBiayaListrik->operator_level2,
+                        'help' => $biayahelper,
+                        'isConfirmed' => $r->setTo["isConfirmed"],
+                        'total_biaya_levels' => $total_biaya_upah_perbulan,
+                    ]
+                );
+
+            }
+       
+        } else {
+
+            return response()->json(
+                [
+                    'set_default_mesin' => $r->jumlah_penangganan_mesin,
+                    'spv' => $biayasupervisor,
+                    'isDenied' => $r->setTo["isDenied"],
+                    'opt' => $biayaoperator,
+                    'help' => $biayahelper,
+                    'total_biaya_levels' => $total_biaya_upah_perbulan,
+                ]
+            );
             
-            // if($recall != []){
-
-
-            //     AllRecalculate::whereIn('id', [$recall->id])->update(
-            //         [
-            //             'id_labor' => $total->total_labor
-            //         ]
-            //     );
-
-            // }
-
         }
-
-        return response()->json(
-            [
-                'set_default_mesin' => $r->jumlah_penangganan_mesin,
-                'spv' => $simpanDataBiayaListrik->supervisor_level3,
-                'opt' => $simpanDataBiayaListrik->operator_level2,
-                'help' => $biayahelper,
-                'total_biaya_levels' => $total_biaya_upah_perbulan,
-            ]
-        );
 
     }
     

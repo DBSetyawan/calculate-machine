@@ -243,7 +243,6 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
                 return response()->json(
                     [
-                        'r' => $r->all(),
                         'isDenied' => $r->setTo["isDenied"],
                         'lwbp_perminggu' => $rumusLWBPerminggu,
                         'wbp_perminggu' => ceil($rumusWBPerminggu),

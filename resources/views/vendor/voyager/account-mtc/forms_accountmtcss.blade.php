@@ -135,25 +135,98 @@
                     'tahun3'                 : $('input[name=tahun3]').val(),
                 };
 
-                $.ajax({
-                    type        : 'POST',
-                    url         : "{{ route('accounts.mtc.store.master') }}", 
-                    data        : formData, 
-                    dataType    : 'json', 
-                    encode          : true
+       
+                Swal.fire({
+                    title: 'Informasi',
+                    text: 'Apakah anda ingin mengakumulasi biaya perhitugan biaya Biaya lain produksi sekarang?',
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: `ya, akumulasikan & simpan datanya`,
+                    cancelButtonText: `jangan diakumulasi & simpan data`,
+                    denyButtonText: `belum, masih mengakumulasi biaya & jangan simpan`,
+                    }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+
+                        const pesanStore = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 10000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                }
+                            })
+                                          
+                                pesanStore.fire({
+                                    icon: 'info',
+                                    title: 'Data sedang diproses, tunggu sebentar..'
+                                })
+
+
+                        let store = {...formData, 'setTo': result}
+                        $.ajax({
+                            type        : 'POST',
+                            url         : "{{ route('accounts.mtc.store.master') }}", 
+                            data        : store, 
+                            dataType    : 'json', 
+                            encode          : true
+                        })
+                        .done(function(data) {
+
+                            $("#total_biaya_account_perbulan").val(data.total_perbulan);
+
+                            if(data.isConfirmed == "true"){
+
+                                return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi Biaya produksi lain berhasil diakumulasi & disimpan', 'success')
+                            }
+                        });
+                               
+
+                    } else if (result.isDenied) {
+
+                        const PesanPending = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 10000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    }
+                                })
+                                          
+                                 PesanPending.fire({
+                                    icon: 'info',
+                                    title: 'Data sedang diproses, tunggu sebentar..'
+                                })
+
+                        let dataPending = {...formData, 'setTo': result}
+
+                        $.ajax({
+                                type        : 'POST',
+                                url         : "{{ route('accounts.mtc.store.master') }}", 
+                                data        : dataPending, 
+                                dataType    : 'json', 
+                                encode          : true
+                            })
+                            .done(function(data) {
+
+                                $("#total_biaya_account_perbulan").val(data.total_perbulan);
+
+                              
+                                if(data.isDenied == "true"){
+
+                                    return Swal.fire('#Informasi.', 'jika sudah yakin ingin menyimpan akumulasi biaya biaya produksi lain, tekan tombol hitung biaya produksi lain, kemudian sistem akan mengakumulasi dan sekaligus menyimpan datanya.', 'info')
+                                }
+
+                            }
+                        );
+                    }
                 })
-                .done(function(data) {
-
-                    $("#total_biaya_account_perbulan").val(data.total_perbulan);
-
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Berhasil menyimpan data.'
-                    })
-                    
-                    $(".removeLater").val('');
-
-                });
 
              event.preventDefault();
             });
