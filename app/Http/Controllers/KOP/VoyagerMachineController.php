@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\KOP;
 
+use App\Mesin;
 use Exception;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
@@ -166,6 +167,12 @@ class VoyagerMachineController extends BaseVoyagerBaseController
             'showSoftDeleted',
             'showCheckboxColumn'
         ));
+    }
+
+    public function detailcodemesin(Request $req){
+
+        $mesin = Mesin::whereIn('id', [(Int) $req->mesinid])->with('KbagianTo','CompanyTo','GroupMesinTo','MesinListrikPerjamTo','AsumsiTo')->first();
+        return response()->json(['detail'=> $mesin]);
     }
 
     public function show(Request $request, $id)

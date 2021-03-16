@@ -49,6 +49,9 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::post('labors/store-mtc','KOP\VoyagerLaborController@HitungAkumulasiLabor')->name('labors.store.master');
     Route::get('labors/form-mtc','KOP\VoyagerLaborController@formLaborAction')->name('labors.form.master');
+    
+    // cari detail mesin di form listrik
+    Route::post('mesin-detail','KOP\VoyagerMachineController@detailcodemesin')->name('detail.data.mesin');
 
     Route::post('laporan-gaji-lains/store-laporan-gaji-lain','KOP\VoyagerLaporanGajiLainController@HitungAkumulasiLaporanGajiLain')->name('laporan.g.lains.store.master');
     Route::get('laporan-gaji-lains/form-laporan-gaji-lain','KOP\VoyagerLaporanGajiLainController@formLaporanGajiLainAction')->name('laporan.g.lains.form.master');

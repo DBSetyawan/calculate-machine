@@ -37,7 +37,7 @@ class VoyagerRecalController extends BaseVoyagerBaseController
                 'code_mesin' => $listrikFind->code_mesin,
                 'category_bagian' => $listrikFind->category_bagian,
                 'id_listrik' => $listrikFind->ncost_bulan_plus_adm,
-                // 'group_mesin' => $r->group_mesin, *update ketika setting recalculate untuk pengroupan mesin.
+                'group_mesin' => $listrikFind->group_mesin,
                 'listrik_fk' => $id,
             
             ]

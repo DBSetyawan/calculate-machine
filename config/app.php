@@ -57,7 +57,7 @@ return [
     'asset_url' => env('ASSET_URL', null),
 
     //test vpn domain
-    'vpn' => env('VPN','http://192.168.88.113'),
+    'vpn' => env('VPN','https://vpn.krisanthium.com:7070'),
 
     /*
     |--------------------------------------------------------------------------

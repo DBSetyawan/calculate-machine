@@ -79,6 +79,7 @@ trait ModuleCaculates {
             $mtcsfe = RptMtc::where('code_mesin', $calc->code_mesin)->first()->total_biaya_perbulan;
             $penyusutanfe = Penyusutan::where('code_mesin', $calc->code_mesin)->first()->penyusutan_perbulan;
             $labors = Labor::where('code_mesin', $calc->code_mesin)->first()->total_biaya;
+            dd($mtcsfe,$penyusutanfe, $labors);
 
             $penyusutanfefn = Penyusutan::where('code_mesin', $calc->code_mesin)->first();
             $laborsfn = Labor::where('code_mesin', $calc->code_mesin)->first();

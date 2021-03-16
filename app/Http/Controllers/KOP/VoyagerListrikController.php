@@ -17,6 +17,7 @@ use App\Lb8KategoriMesin;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use TCG\Voyager\Events\BreadDataAdded;
 use TCG\Voyager\Events\BreadDataDeleted;
@@ -171,6 +172,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             'voltase' =>  $r->voltase,
             'company_parent_id' => $r->company_parent_id,
             'code_mesin' => $r->code_mesin,
+            'group_mesin' => $r->group_mesin,
             'code_listrik' => RumusListrik::generateIDListrik(), //not 
             'LWBP_perminggu' => $rumusLWBPerminggu,
             'WBP_perminggu' => $rumusWBPerminggu,
@@ -186,70 +188,74 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             'assumption_wbp' => $r->wbp
         ];
 
-        $simpanBiayaListrik = Listrik::create($Totalakumulasibiayalistrik);
+        
+        if($r->setTo["isConfirmed"] == "true"){
 
-        if(!empty($simpanBiayaListrik) && $simpanBiayaListrik != [] && $simpanBiayaListrik != null){
+            $simpanBiayaListrik = Listrik::create($Totalakumulasibiayalistrik);
 
-            // $checkRow = AllRecalculate::whereNull('total_semua_biaya')->orderBy('created_at', 'desc')->get();
-            
-            // if($checkRow != []){
+            if(!empty($simpanBiayaListrik) && $simpanBiayaListrik != [] && $simpanBiayaListrik != null){
 
-                $total_listrik = Listrik::whereIn('company_parent_id', [3])->get();
+                    $total_listrik = Listrik::whereIn('company_parent_id', [3])->get();
 
-                $t = collect([$total_listrik])->sum(function ($biaya){
-                    return sprintf("%.5f", $biaya->sum('ncost_bulan_plus_adm'));
-                });
+                    if(!empty($total_listrik) || $total_listrik != null || $total_listrik != []){
 
-                $totaltracks = [
-
-                    'id_listrik' => $simpanBiayaListrik->id,
-                    'before_total_listrik' => 0,
-                    'total_listrik' => $t,
-                    'status' => 1,
-                    'changed_by' => Auth::user()->name
+                        $t = collect([$total_listrik])->sum(function ($biaya){
+                            return sprintf("%.5f", $biaya->sum('ncost_bulan_plus_adm'));
+                        });
+        
+                    } else {
+                        $t = 0;
+                    }
     
-                ];
+                    $totaltracks = [
     
-                $total = ListrikTotal::create($totaltracks);
+                        'id_listrik' => $simpanBiayaListrik->id,
+                        'before_total_listrik' => 0,
+                        'total_listrik' => $t,
+                        'status' => 1,
+                        'changed_by' => Auth::user()->name
+        
+                    ];
+        
+                    $total = ListrikTotal::create($totaltracks);
+    
+                return response()->json(
+                    [
+                        'isConfirmed' => $r->setTo["isConfirmed"],
+                        'lwbp_perminggu' => $rumusLWBPerminggu,
+                        'wbp_perminggu' => ceil($rumusWBPerminggu),
+                        'total_biaya_listrik_perminggu' => $totalbiayaListrikperminggu,
+                        'totalbiaya_cost_perbulan' => $totalbiayacostperbulan,
+                        'persen_cost_perbulan' => $simpanBiayaListrik->persen_cost_perbulan,
+                        'ncost_bulan_plus_adm' => $simpanBiayaListrik->ncost_bulan_plus_adm,
+                        'testCase' => $Totalakumulasibiayalistrik
+                    ]
+                );
+                Log::info("masuk");
+    
+            }
 
-                // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
 
-                // if($recall != []){
+        } 
+            else {
 
-                    /**
-                    * @parent recalculate machine logic.
-                    */
-                    // AllRecalculate::create(
-                    //     [
-                    //         'company' => $simpanBiayaListrik->company_parent_id,
-                    //         'code_mesin' => $simpanBiayaListrik->code_mesin,
-                    //         'category_bagian' => $simpanBiayaListrik->category_bagian,
-                    //         'group_mesin' => $r->group_mesin,
-                    //         'listrik_fk' => $total->id_listrik,
-                        
-                    //     ]
-                    // );
-                // }
-            // }
-            //     else {
-                    
-            //         return response()->json(['error' => "u can't"]);
-            
-            // }
+                // Log::info("asdasd");
+
+                return response()->json(
+                    [
+                        'r' => $r->all(),
+                        'isDenied' => $r->setTo["isDenied"],
+                        'lwbp_perminggu' => $rumusLWBPerminggu,
+                        'wbp_perminggu' => ceil($rumusWBPerminggu),
+                        'total_biaya_listrik_perminggu' => $totalbiayaListrikperminggu,
+                        'totalbiaya_cost_perbulan' => $totalbiayacostperbulan,
+                        // 'persen_cost_perbulan' => $simpanBiayaListrik->persen_cost_perbulan,
+                        // 'ncost_bulan_plus_adm' => $simpanBiayaListrik->ncost_bulan_plus_adm,
+                        'testCase' => $Totalakumulasibiayalistrik
+                ]
+            );
 
         }
-        
-        return response()->json(
-            [
-                'lwbp_perminggu' => $rumusLWBPerminggu,
-                'wbp_perminggu' => ceil($rumusWBPerminggu),
-                'total_biaya_listrik_perminggu' => $totalbiayaListrikperminggu,
-                'totalbiaya_cost_perbulan' => $totalbiayacostperbulan,
-                'persen_cost_perbulan' => $simpanBiayaListrik->persen_cost_perbulan,
-                'ncost_bulan_plus_adm' => $simpanBiayaListrik->ncost_bulan_plus_adm,
-                'testCase' => $Totalakumulasibiayalistrik
-            ]
-        );
 
     }
 

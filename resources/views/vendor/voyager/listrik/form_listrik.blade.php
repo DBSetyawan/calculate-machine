@@ -26,26 +26,48 @@
                         <div class="panel panel-bordered">
                             <div class="panel-body">
                                 <div class="contanier">
-
+                                    
                                     <div class="form-group">
+                                        <label for="program_id">Mesin</label>
+                                        <select class="form-control select2" id="code_mesin" name="code_mesin" required>
+                                            @foreach ($mesin as $m)
+                                        <option value="{{$m->id}}">{{$m->code_mesin}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <input type="text" class="form-control hidden" id="code_mesin_id" name="code_mesin_id" placeholder="">
+
+
+                                    {{-- <div class="form-group">
                                         <label for="program_id">Company</label>
                                         <select class="form-control select2" id="company_parent_id" name="company_parent_id" required>
                                             @foreach ($company as $c)
                                         <option value="{{$c->id}}">{{$c->company_name}}</option>
                                             @endforeach
                                         </select>
+                                    </div> --}}
+                                    <div class="form-group">
+                                        <label for="company">Company</label>
+                                        <input type="text" class="form-control" id="company_display" name="company_display" placeholder="">
+                                        <input type="text" class="form-control" id="company_parent_id" name="company_parent_id" placeholder="">
                                     </div>
 
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label for="program_id">Group mesin</label>
                                         <select class="form-control select2" id="group_mesin" name="group_mesin" required>
                                             @foreach ($group_mesin as $c)
                                         <option value="{{$c->id}}">{{$c->nama_kategori_mesin}}</option>
                                             @endforeach
                                         </select>
-                                    </div>
+                                    </div> --}}
 
                                     <div class="form-group">
+                                        <label for="company">Group Mesin</label>
+                                        <input type="text" class="form-control" id="group_mesin_display" name="group_mesin_display" placeholder="">
+                                        <input type="text" class="form-control" id="group_mesin" name="group_mesin" placeholder="">
+                                    </div>
+
+                                    {{-- <div class="form-group">
                                         <label for="program_id">Listrik /Jam</label>
                                         <select class="form-control select2" id="perjam" name="perjam" required>
                                             @foreach ($LsOutputPerjam as $c)
@@ -53,23 +75,26 @@
                                             @endforeach
                                         </select>
                                     </div>
-                            
+                             --}}
                                     <div class="form-group">
-                                        <label for="program_id">Mesin</label>
-                                        <select class="form-control select2" id="code_mesin" name="code_mesin" required>
-                                            @foreach ($mesin as $m)
-                                        <option value="{{$m->id}}">{{$m->code_mesin}} - {{$m->deskripsi}}</option>
-                                            @endforeach
-                                        </select>
+                                        <label for="company">Listrik /Jam</label>
+                                        <input type="text" class="form-control" id="perjam_display" name="perjam_display" placeholder="">
+                                        <input type="text" class="form-control" id="perjam" name="perjam" placeholder="">
                                     </div>
 
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label for="program_id">Category</label>
                                         <select class="form-control select2" id="category_bagian" name="category_bagian" required>
                                             @foreach ($cbagian as $cb)
                                         <option value="{{$cb->id}}">{{$cb->nama_bagian}}</option>
                                             @endforeach
                                         </select>
+                                    </div> --}}
+
+                                    <div class="form-group">
+                                        <label for="company">Kategori Bagian</label>
+                                        <input type="text" class="form-control" id="category_bagian_display" name="category_bagian_display" placeholder="">
+                                        <input type="text" class="form-control" id="category_bagian" name="category_bagian" placeholder="">
                                     </div>
 
                                     {{-- <div class="form-group">
@@ -77,7 +102,7 @@
                                         <input type="text" class="form-control" id="shift" name="shift" placeholder="Shift">
                                     </div> --}}
 
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label for="program_id">Shift</label>
                                         <select class="form-control select2 slect2" id="shift" name="shift" required>
                                             <option value="0">None</option>
@@ -85,6 +110,11 @@
                                             <option value="2">Shift 2</option>
                                             <option value="3">Shift 3</option>
                                         </select>
+                                    </div> --}}
+                                    <div class="form-group">
+                                        <label for="company">Shift</label>
+                                        <input type="text" class="form-control" id="shift_display" name="shift_display" placeholder="">
+                                        <input type="text" class="form-control" id="shift" name="shift" placeholder="">
                                     </div>
                                     {{-- 
                                          const LWBP = 17;
@@ -94,27 +124,31 @@
 
                                     <div class="form-group">
                                         <label for="url_instagram">LWBP (shift1)</label>
-                                        <input type="text" class="form-control" style="display: none" id="sht_1lwbp" value="{{ $LwbpMaster[2]->lwbp }}" name="sht_1lwbp" placeholder="">
+                                        {{-- <input type="text" class="form-control" id="sht_1lwbp" value="{{ $LwbpMaster[2]->lwbp }}" name="sht_1lwbp" placeholder=""> --}}
+                                        <input type="text" class="form-control" id="sht_1lwbp" name="sht_1lwbp" placeholder="">
                                     </div>
 
                                     <div class="form-group">
                                         <label for="url_instagram">WBP (shift 1,2,3)</label>
-                                        <input type="text" style="display: none;" class="form-control" id="wbp" value="{{ $LwbpMaster[0]->wbp }}" name="wbp" placeholder="">
+                                        <input type="text" class="form-control" id="wbp" name="wbp" placeholder="">
+                                        {{-- <input type="text" class="form-control" id="wbp" value="{{ $LwbpMaster[0]->wbp }}" name="wbp" placeholder=""> --}}
                                     </div>
 
                                     <div class="form-group">
                                         <label for="shift2">LWBP (shift 2)</label>
-                                        <input type="text" style="display: none;" class="form-control" id="sht_2lwbp" value="{{ $LwbpMaster[1]->lwbp }}" name="sht_2lwbp" placeholder="">
+                                        {{-- <input type="text"  class="form-control" id="sht_2lwbp" value="{{ $LwbpMaster[1]->lwbp }}" name="sht_2lwbp" placeholder=""> --}}
+                                        <input type="text"  class="form-control" id="sht_2lwbp" name="sht_2lwbp" placeholder="">
                                     </div>
 
                                     <div class="form-group">
                                         <label for="shift3">LWBP (shift 3)</label>
-                                        <input type="text" class="form-control" style="display: none;" id="sht_3lwbp" value="{{ $LwbpMaster[0]->lwbp }}" name="sht_3lwbp" placeholder="">
+                                        <input type="text" class="form-control" id="sht_3lwbp" name="sht_3lwbp" placeholder="">
                                     </div>
 
                                     <div class="form-group">
                                         <label for="url_instagram">Hitungan minggu dalam angka</label>
-                                        <input type="text" class="form-control" style="display: none;" id="intervalnumeric" value="{{ $LwbpMaster[0]->Intervalmingguan }}" name="intervalnumeric" placeholder="Ampere">
+                                        <input type="text" class="form-control" id="intervalnumeric" name="intervalnumeric" placeholder="Ampere">
+                                        {{-- <input type="text" class="form-control" id="intervalnumeric" value="{{ $LwbpMaster[0]->Intervalmingguan }}" name="intervalnumeric" placeholder="Ampere"> --}}
                                     </div>
 
                                     <div class="form-group">
@@ -182,14 +216,14 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-md-4">
                                 <span>Total Cost Perbulan + ADM</span>
                             </div>
                             <div class="col-md-8">
                                 <span> <input type="text" readonly="true" class="form-control" id="totalcostperbulanadm" name="totalcostperbulanadm" placeholder=""></span>
                             </div>
-                        </div>
+                        </div> --}}
 
                         {{-- <div class="row">
                             <div class="col-md-4">
@@ -225,6 +259,120 @@
 
 @section('javascript')
     <script>
+
+        async function GetFullDataMesin(mesinid
+                ) {
+                            let datamesinid = {
+                                    mesinid:mesinid
+                                }
+                        const apiDataMesin = "{{ route('detail.data.mesin') }}";
+                                
+                            const settings = {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                            'Content-Type': 'application/json;charset=utf-8'
+                                            },
+                                        body: JSON.stringify(datamesinid)
+                                }
+                        try {
+                                
+                                const fetchResponse = await fetch(`${apiDataMesin}`, settings);
+                                const data = await fetchResponse.json();
+                                return data;
+                            } catch (error) {
+                            return error
+                            }    
+                    }
+
+            $("#company_parent_id").hide();
+            $("#group_mesin").hide();
+            $("#perjam").hide();
+            $("#category_bagian").hide();
+            $("#shift").hide();
+            $('#code_mesin').on('change', function() {
+
+
+                GetFullDataMesin(this.value).then(function(results){
+
+                        $("#code_mesin_id").val(results.detail.id);
+                        $("#company_display").val(results.detail.company_to.company_name);
+                        $("#company_parent_id").val(results.detail.company_to.id);
+                        $("#group_mesin_display").val(results.detail.group_mesin_to.nama_kategori_mesin);
+                        $("#group_mesin").val(results.detail.group_mesin_to.id);
+                        $("#perjam_display").val(parseFloat(results.detail.mesin_listrik_perjam_to.persen).toFixed(2)+"%");
+                        $("#perjam").val(results.detail.mesin_listrik_perjam_to.persen);
+                        $("#category_bagian_display").val(results.detail.kbagian_to.nama_bagian);
+                        $("#category_bagian").val(results.detail.kbagian_to.id);
+                        $("#ampere").val(results.detail.ampere);
+                        $("#voltase").val(results.detail.voltase);
+                        $("#shift_display").val("Mesin shift ke "+results.detail.asumsi_to.shift);
+                        $("#shift").val(results.detail.asumsi_to.shift);
+
+                            if( results.detail.asumsi_to.shift == "1"){
+                                //  shift1()
+                                $("#sht_1lwbp").val(results.detail.asumsi_to.lwbp);
+                                $("#wbp").val(results.detail.asumsi_to.wbp);
+                                $("#intervalnumeric").val(results.detail.asumsi_to.Intervalmingguan);
+
+                                document.getElementById("sht_1lwbp").style.display = "inline";
+                                document.getElementById("wbp").style.display = "inline";
+                                document.getElementById("sht_2lwbp").style.display = "none";
+                                document.getElementById("sht_3lwbp").style.display = "none";
+                                document.getElementById("intervalnumeric").style.display = "inline";
+
+                                $('#sht_1lwbp').attr('disabled', true);
+                                $('#wbp').attr('disabled', true);
+                                $('#sht_2lwbp').attr('disabled', true);
+                                $('#sht_3lwbp').attr('disabled', true);
+                                $('#intervalnumeric').attr('disabled', true);
+
+                            } 
+
+                            if( results.detail.asumsi_to.shift == "2"){
+                                // shift2()
+                                $("#sht_2lwbp").val(results.detail.asumsi_to.lwbp);
+                                $("#wbp").val(results.detail.asumsi_to.wbp);
+                                $("#intervalnumeric").val(results.detail.asumsi_to.Intervalmingguan);
+
+                                document.getElementById("sht_1lwbp").style.display = "none";
+                                document.getElementById("sht_2lwbp").style.display = "inline";
+                                document.getElementById("sht_3lwbp").style.display = "none";
+                                document.getElementById("wbp").style.display = "inline";
+                                document.getElementById("intervalnumeric").style.display = "inline";
+
+                                $('#sht_1lwbp').attr('disabled', true);
+                                $('#wbp').attr('disabled', true);
+                                $('#sht_2lwbp').attr('disabled', true);
+                                $('#sht_3lwbp').attr('disabled', true);
+                                $('#intervalnumeric').attr('disabled', true);
+                                
+                            }
+                            
+                            if( results.detail.asumsi_to.shift == "3"){
+                                // shift3()
+                                $("#sht_3lwbp").val(results.detail.asumsi_to.lwbp);
+                                $("#wbp").val(results.detail.asumsi_to.wbp);
+                                $("#intervalnumeric").val(results.detail.asumsi_to.Intervalmingguan);
+
+                                document.getElementById("sht_2lwbp").style.display = "none";
+                                document.getElementById("sht_3lwbp").style.display = "inline";
+                                document.getElementById("sht_1lwbp").style.display = "none";
+                                document.getElementById("wbp").style.display = "inline";
+                                document.getElementById("intervalnumeric").style.display = "inline";
+
+                                $('#sht_1lwbp').attr('disabled', true);
+                                $('#wbp').attr('disabled', true);
+                                $('#sht_2lwbp').attr('disabled', true);
+                                $('#sht_3lwbp').attr('disabled', true);
+                                $('#intervalnumeric').attr('disabled', true);
+
+                            }
+                        
+                    }
+                );  
+
+            });
 
     function shift1() {
         document.getElementById("sht_1lwbp").style.display = "inline";
@@ -284,6 +432,12 @@
     }
 
     $(document).ready(function(){
+        $("#sht_3lwbp").hide();
+        $("#sht_2lwbp").hide();
+        $("#sht_1lwbp").hide();
+        $("#wbp").hide();
+        $("#intervalnumeric").hide();
+        
 
         $('.slect2').on('change', function() {
             if(this.value == "0") {
@@ -305,19 +459,9 @@
         });
     });
 
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-        })
 
         $('document').ready(function () {
+
             $('.toggleswitch').bootstrapToggle();
         });
 
@@ -333,13 +477,13 @@
                     'faktor_kali_wbp'    : $('input[name=faktor_kali_wbp]').val(),
                     'faktor_kali_lwbp'   : $('input[name=faktor_kali_lwbp]').val(),
                     'persenlistriks'     : $('input[name=persenlistriks]').val(),
-                    'group_mesin'        : $('select[name=group_mesin]').val(),
-                    'company_parent_id'  : $('select[name=company_parent_id]').val(),
-                    'perjam'             : $('select[name=perjam]').val(),
-                    'category_bagian'    : $('select[name=category_bagian]').val(),
-                    'code_mesin'         : $('select[name=code_mesin]').val(),
+                    'group_mesin'        : $('input[name=group_mesin]').val(),
+                    'company_parent_id'  : $('input[name=company_parent_id]').val(),
+                    'perjam'             : $('input[name=perjam]').val(),
+                    'category_bagian'    : $('input[name=category_bagian]').val(),
+                    'code_mesin'         : $('input[name=code_mesin_id]').val(),
 
-                    'shift'              : $('select[name=shift]').val(),
+                    'shift'              : $('input[name=shift]').val(),
                     'sht_1lwbp'          : $('input[name=sht_1lwbp]').val(),
                     'sht_2lwbp'          : $('input[name=sht_2lwbp]').val(),
                     'sht_3lwbp'          : $('input[name=sht_3lwbp]').val(),
@@ -349,28 +493,108 @@
 
                 };
 
-                $.ajax({
-                    type        : 'POST',
-                    url         : "{{ route('listriks.store.master') }}", 
-                    data        : formData, 
-                    dataType    : 'json', 
-                    encode          : true
-                })
-                .done(function(data) {
-                    $("#lwbp_").val(data.lwbp_perminggu); 
-                    $("#wbp_").val(data.wbp_perminggu); 
-                    $("#totalbiayalstrk_").val(data.total_biaya_listrik_perminggu);
-                    $("#totalcostperbulan").val(data.totalbiaya_cost_perbulan);
-                    $("#totalcostperbulanadm").val(data.ncost_bulan_plus_adm);
-                    $("#persenlistriks").val(data.persen_listrik);
-                    console.log("selesai memproses :",data);
-                    
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Berhasil menyimpan data.'
-                    })
+                Swal.fire({
+                    title: 'Informasi',
+                    text: 'Apakah anda ingin mengakumulasi biaya perhitugan listrik sekarang?',
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: `ya, akumulasikan & simpan datanya`,
+                    cancelButtonText: `jangan diakumulasi & simpan data`,
+                    denyButtonText: `belum, masih mengakumulasi biaya & jangan simpan`,
+                    }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
 
-                });
+                        const pesanStore = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 10000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    }
+                                })
+                                          
+                                 pesanStore.fire({
+                                    icon: 'info',
+                                    title: 'Data sedang diproses, tunggu sebentar..'
+                                })
+
+
+                        let store = {...formData, 'setTo': result}
+
+                        $.ajax({
+                            type        : 'POST',
+                            url         : "{{ route('listriks.store.master') }}", 
+                            data        : store, 
+                            dataType    : 'json', 
+                            encode          : true
+                        })
+                        .done(function(data) {
+                            $("#lwbp_").val(data.lwbp_perminggu); 
+                            $("#wbp_").val(data.wbp_perminggu); 
+                            $("#totalbiayalstrk_").val(data.total_biaya_listrik_perminggu);
+                            $("#totalcostperbulan").val(data.totalbiaya_cost_perbulan);
+                            $("#totalcostperbulanadm").val(data.ncost_bulan_plus_adm);
+                            $("#persenlistriks").val(data.persen_listrik);
+                            
+                            if(data.isConfirmed == "true"){
+
+                                    return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya listrik berhasil diakumulasi & disimpan', 'success')
+                                }
+
+                            }
+                        );
+
+                    } else if (result.isDenied) {
+
+                        const PesanPending = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 10000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    }
+                                })
+                                          
+                                 PesanPending.fire({
+                                    icon: 'info',
+                                    title: 'Data sedang diproses, tunggu sebentar..'
+                                })
+
+                        let dataPending = {...formData, 'setTo': result}
+
+                            $.ajax({
+                                type        : 'POST',
+                                url         : "{{ route('listriks.store.master') }}", 
+                                data        : dataPending, 
+                                dataType    : 'json', 
+                                encode          : true
+                            })
+                            .done(function(data) {
+                                $("#lwbp_").val(data.lwbp_perminggu); 
+                                $("#wbp_").val(data.wbp_perminggu); 
+                                $("#totalbiayalstrk_").val(data.total_biaya_listrik_perminggu);
+                                $("#totalcostperbulan").val(data.totalbiaya_cost_perbulan);
+                                // $("#totalcostperbulanadm").val(data.ncost_bulan_plus_adm);
+                                // $("#persenlistriks").val(data.persen_listrik);
+                                
+                                if(data.isDenied == "true"){
+
+                                    return Swal.fire('#Informasi.', 'jika sudah yakin ingin menyimpan akumulasi listrik, tekan tombol berwarna biru setelah menekan tombol hitung listrik, kemudian sistem akan mengakumulasi dan sekaligus menyimpan datanya.', 'info')
+                                }
+                      
+
+                            });
+                    }
+                })
+
+              
 
              event.preventDefault();
             });

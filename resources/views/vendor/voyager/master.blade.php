@@ -122,8 +122,8 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 
 
 <script type="text/javascript" src="{{ voyager_asset('js/app.js') }}"></script>
-{{-- <script src="{{ ('https://vpn.krisanthium.com:7070/kalkulasimesin2/public/js/app.js') }}"></script> --}}
-<script src="{{ ('http://192.168.88.113/kalkulasimesin2/public/js/app.js') }}"></script>
+<script src="{{ ('https://vpn.krisanthium.com:7070/kalkulasimesin2/public/js/app.js') }}"></script>
+{{-- <script src="{{ ('http://192.168.88.113/kalkulasimesin2/public/js/app.js') }}"></script> --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
 <script>
 document.addEventListener("keydown", function(event) {
