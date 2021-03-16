@@ -296,7 +296,7 @@
                         @endif
                         @inject('ListrikOutput','App\ListrikOutput')
                         @php
-                            $total_listrik = $ListrikOutput->whereIn('company_parent_id', [3])->get();
+                            $total_listrik = $ListrikOutput->get();
 
                             $x = collect([$total_listrik])->sum(function ($region){
                                     return $region->sum('output_perjam');
