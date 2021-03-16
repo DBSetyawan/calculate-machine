@@ -77,9 +77,9 @@ trait ModuleCaculates {
             $recRow = AllRecalculate::orderby('created_at','desc')->with(['Listrik.Listrikperjam','KategoriBagian','Mesin','GroupMesin','Company'])->first();
             
             // $mtcsfe = RptMtc::where('code_mesin', $calc->code_mesin)->first()->total_biaya_perbulan;
-            $penyusutanfe = Penyusutan::where('code_mesin', $calc->code_mesin)->first()->penyusutan_perbulan;
-            // $labors = Labor::where('code_mesin', $calc->code_mesin)->first()->total_biaya;
-            dd($penyusutanfe);
+            // $penyusutanfe = Penyusutan::where('code_mesin', $calc->code_mesin)->first()->penyusutan_perbulan;
+            $labors = Labor::where('code_mesin', $calc->code_mesin)->first()->total_biaya;
+            dd($labors);
 
             $penyusutanfefn = Penyusutan::where('code_mesin', $calc->code_mesin)->first();
             $laborsfn = Labor::where('code_mesin', $calc->code_mesin)->first();

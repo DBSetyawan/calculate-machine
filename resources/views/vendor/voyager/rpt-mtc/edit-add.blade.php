@@ -39,7 +39,7 @@
                                 <label for="program_id">Company</label>
                                 <select class="form-control select2" id="company_parent_id" name="company_parent_id" required>
                                     @foreach ($company as $c)
-                                <option value="{{$c->id}}">{{$c->company_name}}</option>
+                                <option value="{{$c->id}}"  @if($dataTypeContent->company_parent_id == $c->id) selected='selected' @endif>{{$c->company_name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -211,7 +211,7 @@
                     'company_parent_id'     : $('select[name=company_parent_id]').val(),
                     'perbaikan_tahun1'      : $('input[name=perbaikan_tahun1]').val(),
                     'perbaikan_tahun2'      : $('input[name=perbaikan_tahun2]').val(),
-                    'perbaikan_tahun3'      : $('input[name=pserbaikan_tahun3]').val(),
+                    'perbaikan_tahun3'      : $('input[name=perbaikan_tahun3]').val(),
                     'sparepart_tahun1'      : $('input[name=sparepart_tahun1]').val(),
                     'sparepart_tahun2'      : $('input[name=sparepart_tahun2]').val(),
                     'sparepart_tahun3'      : $('input[name=sparepart_tahun3]').val(),

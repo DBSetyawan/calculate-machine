@@ -107,6 +107,8 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
             'total_biaya_perbulan' => $TotalBiayaPenyusutanMaintenance,
         ];
 
+    if($r->setTo["isConfirmed"] == "true"){
+
         $simpanDataRpTMTC = RptMtc::create($data_response_rptmtc);
 
         if(!empty($simpanDataRpTMTC) && $simpanDataRpTMTC != [] && $simpanDataRpTMTC != null){
@@ -116,40 +118,44 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
             $total_penyusutan_perbulan = collect([$t])->sum(function ($biaya){
                 return sprintf("%.5f", $biaya->sum('total_biaya_perbulan'));
             });
-            
-            $totaltracks = [
+                
+                $totaltracks = [
 
-                'id_tr_mtc' => $simpanDataRpTMTC->id,
-                'total_tr_mtc_total' => $total_penyusutan_perbulan,
-                'status' => 1,
-                'changed_by' => Auth::user()->name
+                    'id_tr_mtc' => $simpanDataRpTMTC->id,
+                    'total_tr_mtc_total' => $total_penyusutan_perbulan,
+                    'status' => 1,
+                    'changed_by' => Auth::user()->name
 
-            ];
-            
+                ];
+                
             $total = TransaksiMtcTotal::create($totaltracks);
-            // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
-            
-            // if($recall != []){
 
-
-            //     AllRecalculate::whereIn('id', [$recall->id])->update(
-            //         [
-            //             'id_bprodlain_insteadof_mtc' => $simpanDataRpTMTC->biaya_produksi_lain
-            //         ]
-            //     );
-
-            // }
+            return response()->json(
+                [
+                    'rata_rata_perbaikan_perbulan' => $simpanDataRpTMTC->rata_rata_perbaikan_perbulan,
+                    'rata_rata_sparepart_perbulan' => $simpanDataRpTMTC->rata_rata_sparepart_perbulan,
+                    'isConfirmed' => $r->setTo["isConfirmed"],
+                    'biaya_produksi_lain' => $simpanDataRpTMTC->biaya_produksi_lain,
+                    'total_biaya_perbulan' => $simpanDataRpTMTC->total_biaya_perbulan,
+                ]
+            );
 
         }
 
-        return response()->json(
-            [
-                'rata_rata_perbaikan_perbulan' => $simpanDataRpTMTC->rata_rata_perbaikan_perbulan,
-                'rata_rata_sparepart_perbulan' => $simpanDataRpTMTC->rata_rata_sparepart_perbulan,
-                'biaya_produksi_lain' => $simpanDataRpTMTC->biaya_produksi_lain,
-                'total_biaya_perbulan' => $simpanDataRpTMTC->total_biaya_perbulan,
-            ]
-        );
+    } else {
+
+            return response()->json(
+                [
+                    'rata_rata_perbaikan_perbulan' => $RataRataPerbaikanPerbulan,
+                    'rata_rata_sparepart_perbulan' => $RataRataSparePartPerbulan,
+                    'biaya_produksi_lain' => $TotalSemuaBiayaProduksilain,
+                    'total_biaya_perbulan' => $TotalBiayaPenyusutanMaintenance,
+                    'isDenied' => $r->setTo["isDenied"],
+                ]
+            );
+
+
+        }
 
     }
     

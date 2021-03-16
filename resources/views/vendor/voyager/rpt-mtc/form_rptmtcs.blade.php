@@ -29,33 +29,54 @@
                             <div class="panel-body">
                                 <div class="contanier">
 
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label for="program_id">Company</label>
                                         <select class="form-control select2" id="company_parent_id" name="company_parent_id" required>
                                             @foreach ($company as $c)
                                         <option value="{{$c->id}}">{{$c->company_name}}</option>
                                             @endforeach
                                         </select>
+                                    </div> --}}
+                                    <div class="form-group">
+                                        <label for="program_id">Mesin</label>
+                                        <select class="form-control select2" id="code_mesin" name="code_mesin" required>
+                                            @foreach ($mesin as $m)
+                                        <option value="{{$m->id}}">{{$m->code_mesin}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <input type="text" class="form-control" id="code_mesin_id" name="code_mesin_id" placeholder="">
+
+                                    <div class="form-group">
+                                        <label for="company">Company</label>
+                                        <input type="text" class="form-control" id="company_display" name="company_display" placeholder="">
+                                        <input type="text" class="form-control" id="company_parent_id" name="company_parent_id" placeholder="">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="company">Kategori Bagian</label>
+                                        <input type="text" class="form-control" id="category_bagian_display" name="category_bagian_display" placeholder="">
+                                        <input type="text" class="form-control" id="category_bagian" name="category_bagian" placeholder="">
                                     </div>
                             
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label for="program_id">Mesin</label>
                                         <select class="form-control select2" id="code_mesin" name="code_mesin" required>
                                             @foreach ($mesin as $m)
                                         <option value="{{$m->id}}">{{$m->code_mesin}} - {{$m->deskripsi}}</option>
                                             @endforeach
                                         </select>
-                                    </div>
+                                    </div> --}}
 
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label for="program_id">Category</label>
                                         <select class="form-control select2" id="category_bagian" name="category_bagian" required>
                                             @foreach ($cbagian as $cb)
                                         <option value="{{$cb->id}}">{{$cb->nama_bagian}}</option>
                                             @endforeach
                                         </select>
-                                    </div>
-
+                                    </div> --}}
+{{-- 
                                     <div class="form-group">
                                         <label for="program_id">Listrik Output Perjam</label>
                                         <select class="form-control select2" id="percent" name="percent" required>
@@ -63,6 +84,11 @@
                                         <option value="{{$ls->persen}}">{{$ls->persen}}</option>
                                             @endforeach
                                         </select>
+                                    </div> --}}
+                                    <div class="form-group">
+                                        <label for="company">Listrik /Jam</label>
+                                        <input type="text" class="form-control" id="perjam_display" name="perjam_display" placeholder="">
+                                        <input type="text" class="form-control" id="perjam" name="perjam" placeholder="">
                                     </div>
 
                                     <div class="form-group">
@@ -186,8 +212,51 @@
             }
         })
 
+        async function GetFullDataMesin(mesinid
+                ) {
+                            let datamesinid = {
+                                    mesinid:mesinid
+                                }
+                        const apiDataMesin = "{{ route('detail.data.mesin') }}";
+                                
+                            const settings = {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                            'Content-Type': 'application/json;charset=utf-8'
+                                            },
+                                        body: JSON.stringify(datamesinid)
+                                }
+                        try {
+                                
+                                const fetchResponse = await fetch(`${apiDataMesin}`, settings);
+                                const data = await fetchResponse.json();
+                                return data;
+                            } catch (error) {
+                            return error
+                            }    
+                    }
+
         $('document').ready(function () {
             $('.toggleswitch').bootstrapToggle();
+            $("#company_parent_id").hide();
+            $("#code_mesin_id").hide();
+            $("#category_bagian").hide();
+            $("#perjam").hide();
+            $('#code_mesin').on('change', function() {
+
+                GetFullDataMesin(this.value).then(function(results){
+                        $("#code_mesin_id").val(results.detail.id);
+                        $("#company_display").val(results.detail.company_to.company_name);
+                        $("#company_parent_id").val(results.detail.company_to.id);
+                        $("#category_bagian_display").val(results.detail.kbagian_to.nama_bagian);
+                        $("#category_bagian").val(results.detail.kbagian_to.id);
+                        $("#perjam_display").val(parseFloat(results.detail.mesin_listrik_perjam_to.persen).toFixed(2)+"%");
+                        $("#perjam").val(results.detail.mesin_listrik_perjam_to.persen);
+                                
+                    });
+                });
+
         });
 
         $(document).ready(function() {
@@ -196,10 +265,10 @@
 
                 var formData = {
 
-                    'code_mesin'          : $('select[name=code_mesin]').val(),
-                    'category_bagian'     : $('select[name=category_bagian]').val(),
-                    'percent'             : $('select[name=percent]').val(),
-                    'company_parent_id'   : $('select[name=company_parent_id]').val(),
+                    'code_mesin'          : $('input[name=code_mesin_id]').val(),
+                    'category_bagian'     : $('input[name=category_bagian]').val(),
+                    'percent'             : $('input[name=perjam]').val(),
+                    'company_parent_id'   : $('input[name=company_parent_id]').val(),
                     'perbaikan_tahun1'    : $('input[name=perbaikan_tahun1]').val(),
                     'perbaikan_tahun2'    : $('input[name=perbaikan_tahun2]').val(),
                     'perbaikan_tahun3'    : $('input[name=perbaikan_tahun3]').val(),
@@ -210,28 +279,103 @@
 
                 };
 
-                $.ajax({
-                    type        : 'POST',
-                    url         : "{{ route('rpt.mtc.store.master') }}", 
-                    data        : formData, 
-                    dataType    : 'json', 
-                    encode          : true
+                
+                Swal.fire({
+                    title: 'Informasi',
+                    text: 'Apakah anda ingin mengakumulasi biaya perhitugan biaya MTC sekarang?',
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: `ya, akumulasikan & simpan datanya`,
+                    cancelButtonText: `jangan diakumulasi & simpan data`,
+                    denyButtonText: `belum, masih mengakumulasi biaya & jangan simpan`,
+                    }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+
+                        const pesanStore = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 10000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                }
+                            })
+                                          
+                                pesanStore.fire({
+                                    icon: 'info',
+                                    title: 'Data sedang diproses, tunggu sebentar..'
+                                })
+
+
+                        let store = {...formData, 'setTo': result}
+                            $.ajax({
+                                type        : 'POST',
+                                url         : "{{ route('rpt.mtc.store.master') }}", 
+                                data        : store, 
+                                dataType    : 'json', 
+                                encode          : true
+                            })
+                            .done(function(data) {
+
+                                $("#rtrtperbaikanperbulan").val(data.rata_rata_perbaikan_perbulan);
+                                $("#sparepart_perbulan").val(data.rata_rata_sparepart_perbulan);
+                                $("#biaya_produksi_lain").val(data.biaya_produksi_lain);
+                                $("#total_biaya_perbulan").val(data.total_biaya_perbulan);
+
+                                if(data.isConfirmed == "true"){
+
+                                    return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya MTC berhasil diakumulasi & disimpan', 'success')
+                                }
+
+                            });
+                               
+
+                    } else if (result.isDenied) {
+
+                        const PesanPending = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 10000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    }
+                                })
+                                          
+                                 PesanPending.fire({
+                                    icon: 'info',
+                                    title: 'Data sedang diproses, tunggu sebentar..'
+                                })
+
+                        let dataPending = {...formData, 'setTo': result}
+
+                        $.ajax({
+                                type        : 'POST',
+                                url         : "{{ route('rpt.mtc.store.master') }}", 
+                                data        : dataPending, 
+                                dataType    : 'json', 
+                                encode          : true
+                            })
+                            .done(function(data) {
+
+                                $("#rtrtperbaikanperbulan").val(data.rata_rata_perbaikan_perbulan);
+                                $("#sparepart_perbulan").val(data.rata_rata_sparepart_perbulan);
+                                $("#biaya_produksi_lain").val(data.biaya_produksi_lain);
+                                $("#total_biaya_perbulan").val(data.total_biaya_perbulan);
+
+                                if(data.isDenied == "true"){
+
+                                    return Swal.fire('#Informasi.', 'jika sudah yakin ingin menyimpan akumulasi biaya mtc, tekan tombol hitung mtc, kemudian sistem akan mengakumulasi dan sekaligus menyimpan datanya.', 'info')
+                                }
+
+                            });
+                    }
                 })
-                .done(function(data) {
-
-                    $("#rtrtperbaikanperbulan").val(data.rata_rata_perbaikan_perbulan);
-                    $("#sparepart_perbulan").val(data.rata_rata_sparepart_perbulan);
-                    $("#biaya_produksi_lain").val(data.biaya_produksi_lain);
-                    $("#total_biaya_perbulan").val(data.total_biaya_perbulan);
-
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Berhasil menyimpan data.'
-                    })
-                    
-                    // $(".removeLater").val('');
-
-                });
 
              event.preventDefault();
             });
