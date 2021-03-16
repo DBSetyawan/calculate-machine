@@ -61,11 +61,11 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
             'nama_sim' => $r->nama_sim
         ];
 
+    if($r->setTo["isConfirmed"] == "true"){
+
         $simpanBiayaListrik = Penyusutan::create($TotalakumulasibiayaPenyusutan);
 
         if(!empty($simpanBiayaListrik) && $simpanBiayaListrik != [] && $simpanBiayaListrik != null){
-
-            // $id = Listrik::findOrFail($simpanBiayaListrik->id);
 
             $total_listrik = Penyusutan::whereIn('company_parent_id', [3])->get();
 
@@ -84,27 +84,26 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
             
             PenyusutanTotal::create($totaltracks);
 
-            // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
-
-            // if($recall != []){
-
-
-            //     AllRecalculate::whereIn('id', [$recall->id])->update(
-            //         [
-            //             'id_penyusutan' => $total->total_penyusutan
-            //         ]
-            //     );
-
-            // }
-
         }
 
-        return response()->json(
-            [
-                'd' => $simpanBiayaListrik->penyusutan_perbulan
-            ]
-        );
+                return response()->json(
+                    [
+                        'd' => $simpanBiayaListrik->penyusutan_perbulan,
+                        'isConfirmed' => $r->setTo["isConfirmed"],
 
+                    ]
+                );
+            } 
+                else {
+                
+                    return response()->json(
+                        [
+                            'd' => $rumusTotalPenyusutan,
+                            'isDenied' => $r->setTo["isDenied"],
+
+                        ]
+                );
+            }
     }
  
     public function index(Request $request)
