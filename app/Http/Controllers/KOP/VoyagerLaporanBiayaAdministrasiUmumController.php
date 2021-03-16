@@ -53,11 +53,11 @@ class VoyagerLaporanBiayaAdministrasiUmumController extends BaseVoyagerBaseContr
             'code_adm_umum' => RumusLaporanBiayaAdministrasiUmum::generateIDLaporanBiayaAdministrasiUmum(),
         ];
 
+    if($r->setTo["isConfirmed"] == "true"){
+
         $simpanDataLaporanLBAU = LaporanBiayaAdministrasiUmum::create($result_badm);
 
         if(!empty($simpanDataLaporanLBAU) && $simpanDataLaporanLBAU != [] && $simpanDataLaporanLBAU != null){
-
-            // $id = Listrik::findOrFail($simpanBiayaListrik->id);
 
             $tbau = LaporanBiayaAdministrasiUmum::whereIn('company_parent_id', [3])->get();
 
@@ -75,26 +75,25 @@ class VoyagerLaporanBiayaAdministrasiUmumController extends BaseVoyagerBaseContr
             ];
 
             $total = BauTotal::create($totaltracks);
-            // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
-            
-            // if($recall != []){
+
+                return response()->json(
+                    [
+                        'total_biaya_lp_adm' => $simpanDataLaporanLBAU->total_biaya_lp_adm,
+                        'isConfirmed' => $r->setTo["isConfirmed"],
+                    ]
+                );
+
+            }
 
 
-            //     AllRecalculate::whereIn('id', [$recall->id])->update(
-            //         [
-            //             'id_bau' => $total->total_bau
-            //         ]
-            //     );
-
-            // }
-
+        } else {
+            return response()->json(
+                [
+                    'total_biaya_lp_adm' => $total_biaya_lp_adm,
+                    'isDenied' => $r->setTo["isDenied"],
+                ]
+            );
         }
-
-        return response()->json(
-            [
-                'total_biaya_lp_adm' => $simpanDataLaporanLBAU->total_biaya_lp_adm,
-            ]
-        );
 
     }
  

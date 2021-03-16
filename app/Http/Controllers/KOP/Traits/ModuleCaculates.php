@@ -73,13 +73,13 @@ trait ModuleCaculates {
 
     public function recalculate(){
 
-            $calc = AllRecalculate::orderby('id','desc')->first();
+            $calc = AllRecalculate::orderby('id','desc')->with('mesin.MesinListrikPerjamTo')->first();
             $recRow = AllRecalculate::orderby('created_at','desc')->with(['Listrik.Listrikperjam','KategoriBagian','Mesin','GroupMesin','Company'])->first();
-            
-            // $mtcsfe = RptMtc::where('code_mesin', $calc->code_mesin)->first()->total_biaya_perbulan;
-            // $penyusutanfe = Penyusutan::where('code_mesin', $calc->code_mesin)->first()->penyusutan_perbulan;
+
+            $ambil_listrik_dari_mesin = $calc->mesin->MesinListrikPerjamTo->persen;
+            $mtcsfe = RptMtc::where('code_mesin', $calc->code_mesin)->first()->total_biaya_perbulan;
+            $penyusutanfe = Penyusutan::where('code_mesin', $calc->code_mesin)->first()->penyusutan_perbulan;
             $labors = Labor::where('code_mesin', $calc->code_mesin)->first()->total_biaya;
-            dd($labors);
 
             $penyusutanfefn = Penyusutan::where('code_mesin', $calc->code_mesin)->first();
             $laborsfn = Labor::where('code_mesin', $calc->code_mesin)->first();
@@ -129,18 +129,18 @@ trait ModuleCaculates {
             /**
              * @menghitung gaji_lainnya. fix.
              */
-            $gaji_lainnya = $this->CalcBiayaGajiLainInstaceOfKalkulasi($totalREPRO, $totalMTC, $totalUMUM, $totalQC, $recRow->Listrik->Listrikperjam->persen);
+            $gaji_lainnya = $this->CalcBiayaGajiLainInstaceOfKalkulasi($totalREPRO, $totalMTC, $totalUMUM, $totalQC, $ambil_listrik_dari_mesin);
 
             /**
              * @menghitung bagian_penjualan. fix
              */
-            $b_penjualan = $this->CalcBiayaBagPenjualanInstaceOfKalkulasi(RumusLapBagPenjualan::TotalSeluruhLPenjualanBagianPenjualan(), $recRow->Listrik->Listrikperjam->persen);
+            $b_penjualan = $this->CalcBiayaBagPenjualanInstaceOfKalkulasi(RumusLapBagPenjualan::TotalSeluruhLPenjualanBagianPenjualan(), $ambil_listrik_dari_mesin);
 
             /**
              * @menghitung total BAU. fix.
              */
 
-            $bau = $this->CalcBiayaAdministrasiUmumInstaceOfKalkulasi($totalbau, $recRow->Listrik->Listrikperjam->persen);
+            $bau = $this->CalcBiayaAdministrasiUmumInstaceOfKalkulasi($totalbau, $ambil_listrik_dari_mesin);
 
             /**
              * @menghitung total. fix.
@@ -683,13 +683,14 @@ trait ModuleCaculates {
 
     public function detailTransactionPenyusutan(Request $request)
     {
-        
+        // dd($new);
         if ($request->ajax()) {
             
             if(!empty($request->penyusutan))
             {
+        $new = AllRecalculate::with(['listrik','KategoriBagian','Mesin.GroupMesinTo','GroupMesin','Company'])->get();
                 
-                $new = AllRecalculate::with(['listrik','KategoriBagian','Mesin','GroupMesin','Company'])->get();
+               
                 $listrik = DB::table('total_kalkulasi_tanpa_penyusutan')
                 ->leftJoin('mesin', 'total_kalkulasi_tanpa_penyusutan.code_mesin', '=', 'mesin.id')
                 ->rightJoin('lb8_kategori_mesin', 'total_kalkulasi_tanpa_penyusutan.group_mesin', '=', 'lb8_kategori_mesin.id')
@@ -729,7 +730,7 @@ trait ModuleCaculates {
                         //     })->implode('<br>');
                         // })
                         ->editColumn('fungsi_mesin', function($fungsimesin) {
-                            return $fungsimesin->mesin->fungsi_mesin;
+                            return $fungsimesin->mesin->code_mesin;
                         })
                         ->editColumn('company_name', function($company) {
                             // dd($company->Company);
@@ -738,8 +739,8 @@ trait ModuleCaculates {
                         ->editColumn('code_mesin', function($codemesin) {
                             return $codemesin->mesin->code_mesin;
                         })
-                        ->editColumn('group_mesin', function($lb8_kategori_mesin) {
-                            return $lb8_kategori_mesin->GroupMesin->nama_kategori_mesin;
+                        ->editColumn('nama_mesin_karegori', function($lb8_kategori_mesin) {
+                            return $lb8_kategori_mesin->Mesin->GroupMesinTo->nama_kategori_mesin;
                         })
                     // ->addIndexColumn()
                     // ->addColumn('kategori_bagian',function($query){

@@ -705,7 +705,7 @@ $(document).ready(function(){
                           {data: 'company_name', name: 'company_name',  width: "50px" },
                           {data: 'code_mesin', name: 'code_mesin'},
                           {data: 'fungsi_mesin', name: 'fungsi_mesin'},
-                          {data: 'group_mesin', name: 'GROUP MESIN',  width: "170px" },
+                          {data: 'nama_mesin_karegori', name: 'GROUP MESIN',  width: "170px" },
                           {data: 'listrik', name: 'listrik', width: "100px"},
                           {data: 'penyusutan', name: 'penyusutan'},
                           {data: 'labor', name: 'labor', width: "100px"},

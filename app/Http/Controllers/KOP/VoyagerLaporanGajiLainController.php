@@ -63,11 +63,11 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
             'code_rpt_gaji_lain' => HelpersLaporanGajiLain::generateIDLaporanGajiLain(),
         ];
 
+    if($r->setTo["isConfirmed"] == "true"){
+
         $simpanDataLaporanGajiLain = LaporanGajiLain::create($result_gaji_labor);
 
         if(!empty($simpanDataLaporanGajiLain) && $simpanDataLaporanGajiLain != [] && $simpanDataLaporanGajiLain != null){
-
-            // $id = Listrik::findOrFail($simpanBiayaListrik->id);
 
             $x = LaporanGajiLain::whereIn('company_parent_id', [3])->get();
 
@@ -85,27 +85,25 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
             ];
 
             $total = GjiLainTotal::create($totaltracks);
-            // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
-            
-            // if($recall != []){
+                return response()->json(
+                    [
+                        'total_biaya_gj_periode' => $simpanDataLaporanGajiLain->total_biaya_laporan_periode,
+                        'isConfirmed' => $r->setTo["isConfirmed"],
+                    ]
+                );
+            }
 
+        } else {
 
-                // AllRecalculate::whereIn('id', [$recall->id])->update(
-                //     [
-                //         'id_gajilain' => $total->total_gj_lain
-                //     ]
-                // );
+            return response()->json(
+                [
+                    'total_biaya_gj_periode' => $total_biaya_upah_perbulan,
+                    'isDenied' => $r->setTo["isDenied"],
 
-            // }
+                ]
+            );
 
         }
-
-
-        return response()->json(
-            [
-                'total_biaya_gj_periode' => $simpanDataLaporanGajiLain->total_biaya_laporan_periode,
-            ]
-        );
 
     }
 

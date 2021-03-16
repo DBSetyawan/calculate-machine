@@ -177,25 +177,96 @@
 
                 };
 
-                $.ajax({
-                    type        : 'POST',
-                    url         : "{{ route('laporan.g.lains.store.master') }}", 
-                    data        : formData, 
-                    dataType    : 'json', 
-                    encode          : true
+           
+
+                Swal.fire({
+                    title: 'Informasi',
+                    text: 'Apakah anda ingin mengakumulasi biaya perhitugan gaji lainnya sekarang?',
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: `ya, akumulasikan & simpan datanya`,
+                    cancelButtonText: `jangan diakumulasi & simpan data`,
+                    denyButtonText: `belum, masih mengakumulasi biaya & jangan simpan`,
+                    }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+
+                        const pesanStore = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 10000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    }
+                                })
+                                          
+                                 pesanStore.fire({
+                                    icon: 'info',
+                                    title: 'Data sedang diproses, tunggu sebentar..'
+                                })
+
+
+                        let store = {...formData, 'setTo': result}
+
+                        $.ajax({
+                            type        : 'POST',
+                            url         : "{{ route('laporan.g.lains.store.master') }}", 
+                            data        : store, 
+                            dataType    : 'json', 
+                            encode          : true
+                        })
+                        .done(function(data) {
+                            $("#total_gj_lainnya_periode").val(data.total_biaya_gj_periode);
+
+                            if(data.isConfirmed == "true"){
+
+                                return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya gaji lainnya berhasil diakumulasi & disimpan', 'success')
+                            }
+
+                        });
+
+                    } else if (result.isDenied) {
+
+                        const PesanPending = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 10000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    }
+                                })
+                                          
+                                 PesanPending.fire({
+                                    icon: 'info',
+                                    title: 'Data sedang diproses, tunggu sebentar..'
+                                })
+
+                        let dataPending = {...formData, 'setTo': result}
+
+                        $.ajax({
+                                type        : 'POST',
+                                url         : "{{ route('laporan.g.lains.store.master') }}", 
+                                data        : dataPending, 
+                                dataType    : 'json', 
+                                encode          : true
+                            })
+                            .done(function(data) {
+                                $("#total_gj_lainnya_periode").val(data.total_biaya_gj_periode);
+
+                                if(data.isDenied == "true"){
+
+                                    return Swal.fire('#Informasi.', 'jika sudah yakin ingin menyimpan akumulasi gaji lainnya, tekan tombol berwarna biru setelah menekan tombol hitung listrik, kemudian sistem akan mengakumulasi dan sekaligus menyimpan datanya.', 'info')
+                                }
+                            }
+                        );
+                    }
                 })
-                .done(function(data) {
-                    $("#total_gj_lainnya_periode").val(data.total_biaya_gj_periode);
-
-                    console.log(data)
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Berhasil menyimpan data.'
-                    })
-                    
-                    $(".removeLater").val('');
-
-                });
 
              event.preventDefault();
             });

@@ -45,6 +45,8 @@ class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController 
             'biaya_perbulan_bag_penjualan' => $total_biaya_upah_lpperbulan,
         ];
 
+    if($r->setTo["isConfirmed"] == "true"){
+
         $simpanDataLaporanLapBagPenjualan = LaporanBagianPenjualan::create($result_lbpnjualan);
 
         if(!empty($simpanDataLaporanLapBagPenjualan) && $simpanDataLaporanLapBagPenjualan != [] && $simpanDataLaporanLapBagPenjualan != null){
@@ -65,26 +67,25 @@ class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController 
             ];
 
             $total = BPenjualanTotal::create($totaltracks);
-            // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
-            
-            // if($recall != []){
 
+                return response()->json(
+                    [
+                        'total_biaya_perbulan_lbpenjualan' => $simpanDataLaporanLapBagPenjualan->biaya_perbulan_bag_penjualan,
+                        'isConfirmed' => $r->setTo["isConfirmed"],
+                    ]
+                );
+            }
 
-            //     AllRecalculate::whereIn('id', [$recall->id])->update(
-            //         [
-            //             'id_bgoenjualan' => $total->total_bgpenjualan
-            //         ]
-            //     );
+        } else {
 
-            // }
+            return response()->json(
+                [
+                    'total_biaya_perbulan_lbpenjualan' => $total_biaya_upah_lpperbulan,
+                    'isDenied' => $r->setTo["isDenied"],
+                ]
+            );
 
         }
-
-        return response()->json(
-            [
-                'total_biaya_perbulan_lbpenjualan' => $simpanDataLaporanLapBagPenjualan->biaya_perbulan_bag_penjualan,
-            ]
-        );
 
     }
 

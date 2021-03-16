@@ -588,9 +588,8 @@
 
                                     return Swal.fire('#Informasi.', 'jika sudah yakin ingin menyimpan akumulasi listrik, tekan tombol berwarna biru setelah menekan tombol hitung listrik, kemudian sistem akan mengakumulasi dan sekaligus menyimpan datanya.', 'info')
                                 }
-                      
-
-                            });
+                            }
+                        );
                     }
                 })
 
