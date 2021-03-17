@@ -636,7 +636,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         // event(new BreadDataUpdated($dataType, $data));
         //ambil angka dari master listrik, kemudian recalculate ke history dan ditampilkan ke view kalkulasi.
         // $s = TotalCalc::whereIn('listrik', [(float)$data->ncost_bulan_plus_adm])->first();
-        // dd($s);
+        // dd($r->all());
 
         /**
          * Hitung LWBP perminggu

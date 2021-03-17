@@ -162,6 +162,10 @@
             $('.toggleswitch').bootstrapToggle();
         });
 
+    function formatCurrency(x) {
+        return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    }
+
         $(document).ready(function() {
 
             $('form').submit(function(event) {
@@ -176,8 +180,6 @@
                     'tahun3'                : $('input[name=tahun3]').val(),
 
                 };
-
-           
 
                 Swal.fire({
                     title: 'Informasi',
@@ -219,7 +221,7 @@
                             encode          : true
                         })
                         .done(function(data) {
-                            $("#total_gj_lainnya_periode").val(data.total_biaya_gj_periode);
+                            $("#total_gj_lainnya_periode").val("Rp "+formatCurrency(Math.round(data.total_biaya_gj_periode)));
 
                             if(data.isConfirmed == "true"){
 
@@ -257,7 +259,7 @@
                                 encode          : true
                             })
                             .done(function(data) {
-                                $("#total_gj_lainnya_periode").val(data.total_biaya_gj_periode);
+                                $("#total_gj_lainnya_periode").val("Rp "+formatCurrency(Math.round(data.total_biaya_gj_periode)));
 
                                 if(data.isDenied == "true"){
 

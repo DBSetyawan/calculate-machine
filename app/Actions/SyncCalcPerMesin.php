@@ -19,9 +19,20 @@ class SyncCalcPerMesin extends AbstractAction
 
     public function getAttributes()
     {
+        /**
+         * content 
+         * https://github.com/wintercounter/Protip/blob/master/test/testcontent.html
+         */
         // if(Auth::user()->role->id == 3 || Auth::user()->role->id == 1 || Auth::user()->role->id == 2) {
             return [
-                'class' => 'btn btn-sm btn-info pull-right',
+                'class' => 'btn btn-sm protip btn-info pull-right',
+                'data-pt-title'=>"Fungsi tombol ini untuk meregistrasi temporary recalculate.",
+                'data-pt-size'=>"small",
+                'data-pt-trigger'=>"hover",
+                'data-pt-gravity'=>"2",
+                'data-pt-scheme'=>"blue",
+                'data-pt-animate'=>"rotateInDownLeft",
+                'data-pt-position'=>"corner-left-bottom",
             ];
         // }
         //     else {

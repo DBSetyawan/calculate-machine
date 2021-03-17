@@ -176,7 +176,7 @@
                         })
                         .done(function(data) {
 
-                            $("#total_biaya_account_perbulan").val(data.total_perbulan);
+                            $("#total_biaya_account_perbulan").val("Rp "+formatCurrency(Math.round(data.total_perbulan)));
 
                             if(data.isConfirmed == "true"){
 
@@ -215,9 +215,8 @@
                             })
                             .done(function(data) {
 
-                                $("#total_biaya_account_perbulan").val(data.total_perbulan);
+                                $("#total_biaya_account_perbulan").val("Rp "+formatCurrency(Math.round(data.total_perbulan)));
 
-                              
                                 if(data.isDenied == "true"){
 
                                     return Swal.fire('#Informasi.', 'jika sudah yakin ingin menyimpan akumulasi biaya biaya produksi lain, tekan tombol hitung biaya produksi lain, kemudian sistem akan mengakumulasi dan sekaligus menyimpan datanya.', 'info')
@@ -233,5 +232,8 @@
 
         });
 
+    function formatCurrency(x) {
+        return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    }
     </script>
 @stop

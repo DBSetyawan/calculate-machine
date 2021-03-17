@@ -20,9 +20,9 @@
     
     <!-- App CSS -->
     <link rel="stylesheet" href="{{ voyager_asset('css/app.css') }}"/>
-    {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
+    <link href="{{ asset('public/css/prtip.min.css') }}" rel="stylesheet">
     {{-- <link rel="stylesheet" href="{{ asset('public/css/fv.css') }}"/> --}}
-    
+        
     @yield('css')
     @if(__('voyager::generic.is_rtl') == 'true')
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-rtl/3.4.0/css/bootstrap-rtl.css">
@@ -125,6 +125,7 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 <script src="{{ ('https://vpn.krisanthium.com:7070/kalkulasimesin2/public/js/app.js') }}"></script>
 {{-- <script src="{{ ('http://192.168.88.113/kalkulasimesin2/public/js/app.js') }}"></script> --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+<script type="text/javascript" src="{{ asset('public/js/protip.min.js') }}"></script>
 <script>
 document.addEventListener("keydown", function(event) {
       if (event.altKey && event.code === "KeyX") {

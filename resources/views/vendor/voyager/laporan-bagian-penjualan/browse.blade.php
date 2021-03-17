@@ -13,7 +13,7 @@
             </a> --}}
         @endcan
         <a href="{{ route('lp.bg.pnjualan.form.master') }}" class="btn btn-success btn-add-new">
-            <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Lp bg. penjualan</span>
+            <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Bagian penjualan</span>
         </a>
         @can('delete', app($dataType->model_name))
             {{-- @include('voyager::partials.bulk-delete') --}}

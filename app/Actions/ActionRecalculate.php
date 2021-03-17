@@ -23,7 +23,14 @@ class ActionRecalculate extends AbstractAction
     {
         // if(Auth::user()->role->id == 3 || Auth::user()->role->id == 1 || Auth::user()->role->id == 2) {
             return [
-                'class' => 'btn btn-sm btn-success pull-right',
+                'class' => 'btn btn-sm btn-success pull-right protip',
+                'data-pt-title'=>"Fungsi tombol ini untuk mengakumulasi biaya % perbulan & cost perbulan + ADM.",
+                'data-pt-size'=>"small",
+                'data-pt-trigger'=>"hover",
+                'data-pt-gravity'=>"2",
+                'data-pt-scheme'=>"leaf",
+                'data-pt-animate'=>"rotateInDownLeft",
+                'data-pt-position'=>"corner-left-bottom",
             ];
         // }
         //     else {

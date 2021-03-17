@@ -193,6 +193,11 @@
 
 @section('javascript')
     <script>
+
+    function formatCurrency(x) {
+        return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    }
+
         const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -235,6 +240,11 @@
         $("#company_parent_id").hide();
         $("#shift").hide();
         $("#category_bagian").hide();
+
+        $("#company_display").prop("disabled", true);
+        $("#perjam_display").prop("disabled", true);
+        $("#shift_display").prop("disabled", true);
+        $("#category_bagian_display").prop("disabled", true);
 
         $('.toggleswitch').bootstrapToggle();
             $('#code_mesin').on('change', function() {
@@ -311,11 +321,12 @@
                             encode          : true
                         })
                         .done(function(data) {
-                            $("#gaji_supervisor").val(data.spv);
-                            $("#gaji_operator").val(data.opt);
-                            $("#gaji_helper").val(data.help);
-                            $("#total_perbulan_p").val(data.total_biaya_levels);
-                            $("#jumlah_mesin_yangditangani").val(data.set_default_mesin);
+
+                            $("#gaji_supervisor").val("Rp "+formatCurrency(Math.round(data.spv)));
+                            $("#gaji_operator").val("Rp "+formatCurrency(Math.round(data.opt)));
+                            $("#gaji_helper").val("Rp "+formatCurrency(Math.round(data.help)));
+                            $("#total_perbulan_p").val("Rp "+formatCurrency(Math.round(data.total_biaya_levels)));
+                            $("#jumlah_mesin_yangditangani").val("Rp "+formatCurrency(Math.round(data.set_default_mesin)));
 
                             if(data.isConfirmed == "true"){
 
@@ -354,11 +365,11 @@
                             encode          : true
                         })
                         .done(function(data) {
-                            $("#gaji_supervisor").val(data.spv);
-                            $("#gaji_operator").val(data.opt);
-                            $("#gaji_helper").val(data.help);
-                            $("#total_perbulan_p").val(data.total_biaya_levels);
-                            $("#jumlah_mesin_yangditangani").val(data.set_default_mesin);
+                            $("#gaji_supervisor").val("Rp "+formatCurrency(Math.round(data.spv)));
+                            $("#gaji_operator").val("Rp "+formatCurrency(Math.round(data.opt)));
+                            $("#gaji_helper").val("Rp "+formatCurrency(Math.round(data.help)));
+                            $("#total_perbulan_p").val("Rp "+formatCurrency(Math.round(data.total_biaya_levels)));
+                            $("#jumlah_mesin_yangditangani").val("Rp "+formatCurrency(Math.round(data.set_default_mesin)));
   
                             if(data.isDenied == "true"){
 

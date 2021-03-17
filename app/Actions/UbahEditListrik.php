@@ -25,7 +25,14 @@ class UbahEditListrik extends VoyagerViewAction
     public function getAttributes()
     {
         return [
-            'class' => 'btn btn-sm btn-primary pull-right edit',
+            'class' => 'btn btn-sm btn-primary pull-right edit protip',
+            'data-pt-title'=>"Fungsi tombol ini untuk merecalculate data.",
+            'data-pt-size'=>"small",
+            'data-pt-trigger'=>"hover",
+            'data-pt-gravity'=>"2",
+            'data-pt-scheme'=>"aqua",
+            'data-pt-animate'=>"rotateInDownLeft",
+            'data-pt-position'=>"corner-left-bottom",
         ];
     }
 

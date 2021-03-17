@@ -93,6 +93,10 @@
                 toast.addEventListener('mouseleave', Swal.resumeTimer)
             }
         })
+        
+    function formatCurrency(x) {
+        return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    }
 
         $('document').ready(function () {
             $('.toggleswitch').bootstrapToggle();
@@ -150,7 +154,7 @@
                             encode          : true
                         })
                         .done(function(data) {
-                            $("#total_l_bag_penjualan").val(data.total_biaya_perbulan_lbpenjualan);
+                            $("#total_l_bag_penjualan").val("Rp "+formatCurrency(Math.round(data.total_biaya_perbulan_lbpenjualan)));
 
                             if(data.isConfirmed == "true"){
 
@@ -188,7 +192,7 @@
                             encode          : true
                         })
                         .done(function(data) {
-                            $("#total_l_bag_penjualan").val(data.total_biaya_perbulan_lbpenjualan);
+                            $("#total_l_bag_penjualan").val("Rp "+formatCurrency(Math.round(data.total_biaya_perbulan_lbpenjualan)));
 
                             if(data.isDenied == "true"){
 

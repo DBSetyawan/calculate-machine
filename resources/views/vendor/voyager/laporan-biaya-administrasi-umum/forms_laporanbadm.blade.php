@@ -100,6 +100,11 @@
         $('document').ready(function () {
             $('.toggleswitch').bootstrapToggle();
         });
+        
+    function formatCurrency(x) {
+        return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    }
+
 
         $(document).ready(function() {
 
@@ -155,7 +160,7 @@
                             encode      : true
                         })
                         .done(function(data) {
-                            $("#total_b_administrasi_umumlp").val(data.total_biaya_lp_adm);
+                            $("#total_b_administrasi_umumlp").val("Rp "+formatCurrency(Math.round(data.total_biaya_lp_adm)));
 
                             if(data.isConfirmed == "true"){
 
@@ -194,7 +199,8 @@
                             encode      : true
                         })
                         .done(function(data) {
-                            $("#total_b_administrasi_umumlp").val(data.total_biaya_lp_adm);
+                            $("#total_b_administrasi_umumlp").val("Rp "+formatCurrency(Math.round(data.total_biaya_lp_adm)));
+
                             if(data.isDenied == "true"){
 
                                 return Swal.fire('#Informasi.', 'jika sudah yakin ingin menyimpan akumulasi biaya administrasi umum, tekan tombol berwarna biru setelah menekan tombol hitung listrik, kemudian sistem akan mengakumulasi dan sekaligus menyimpan datanya.', 'info')

@@ -26,7 +26,14 @@ class ListrikViewAction extends VoyagerViewAction
     public function getAttributes()
     {
         return [
-            'class' => 'btn btn-sm btn-warning pull-right mr-1',
+            'class' => 'btn btn-sm btn-warning pull-right mr-1 protip',
+            'data-pt-title'=>"Fungsi tombol ini untuk melihat detail dokumen.",
+            'data-pt-size'=>"small",
+            'data-pt-trigger'=>"hover",
+            'data-pt-gravity'=>"2",
+            'data-pt-scheme'=>"orange",
+            'data-pt-animate'=>"rotateInDownLeft",
+            'data-pt-position'=>"corner-left-bottom",
         ];
     }
 
