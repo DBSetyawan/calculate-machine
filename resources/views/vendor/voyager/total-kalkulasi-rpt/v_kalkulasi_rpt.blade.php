@@ -756,16 +756,16 @@ $(document).ready(function(){
         // `d` is the original data object for the row
                   return '<table class="table">'+
                       '<tr>'+
-                          '<td>Full name:</td>'+
+                          '<td>Mockup data:</td>'+
                           '<td>'+JSON.stringify(d)+'</td>'+
                           '</tr>'+
                       '<tr>'+
-                          '<td>Email:</td>'+
-                          '<td>asdasdasda</td>'+
+                          '<td>other data:</td>'+
+                          '<td>[{}]</td>'+
                           '</tr>'+
                       '<tr>'+
-                          '<td>Extra info:</td>'+
-                          '<td>And any further details here (images etc)...</td>'+
+                          '<td>Extra data:</td>'+
+                          '<td>[{...exs}]</td>'+
                           '</tr>'+
                       '</table>';
               }
