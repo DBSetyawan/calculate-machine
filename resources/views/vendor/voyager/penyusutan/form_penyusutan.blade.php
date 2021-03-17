@@ -183,6 +183,8 @@
             $("#category_bagian").hide();
             $("#code_mesin_id").hide();
             $("#company_parent_id").hide();
+            $("#company_display").prop("disabled", true);
+            $("#category_bagian_display").prop("disabled", true);
 
                  
             $('#code_mesin').on('change', function() {
@@ -200,6 +202,10 @@
 
             $('.toggleswitch').bootstrapToggle();
         });
+
+    function formatCurrency(x) {
+        return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    }
 
         $(document).ready(function() {
 
@@ -255,8 +261,7 @@
                                     encode          : true
                                 })
                                 .done(function(data) {
-                                    $("#total_perbulan_p").val(data.d);
-
+                                    $("#total_perbulan_p").val("Rp "+formatCurrency(Math.round(data.d)));
                                     if(data.isConfirmed == "true"){
 
                                         return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya penyusutan berhasil diakumulasi & disimpan', 'success')
@@ -293,7 +298,7 @@
                                     encode          : true
                                 })
                                 .done(function(data) {
-                                    $("#total_perbulan_p").val(data.d);
+                                    $("#total_perbulan_p").val("Rp "+formatCurrency(Math.round(data.d)));
                                     if(data.isDenied == "true"){
 
                                         return Swal.fire('#Informasi.', 'jika sudah yakin ingin menyimpan akumulasi biaya penyusutan, tekan tombol hitung penyusutan, kemudian sistem akan mengakumulasi dan sekaligus menyimpan datanya.', 'info')

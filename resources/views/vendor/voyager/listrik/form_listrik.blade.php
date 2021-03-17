@@ -290,8 +290,16 @@
             $("#perjam").hide();
             $("#category_bagian").hide();
             $("#shift").hide();
-            $('#code_mesin').on('change', function() {
 
+            $("#company_display").prop("disabled", true);
+            $("#group_mesin_display").prop("disabled", true);
+            $("#perjam_display").prop("disabled", true);
+            $("#category_bagian_display").prop("disabled", true);
+            $("#shift_display").prop("disabled", true);
+            $("#ampere").prop("disabled", true);
+            $("#voltase").prop("disabled", true);
+            $('#code_mesin').on('change', function() {
+   
 
                 GetFullDataMesin(this.value).then(function(results){
 
@@ -459,6 +467,9 @@
         });
     });
 
+    function formatCurrency(x) {
+        return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    }
 
         $('document').ready(function () {
 
@@ -490,7 +501,6 @@
                     'wbp'                : $('input[name=wbp]').val(),
                     'intervalnumeric'    : $('input[name=intervalnumeric]').val(),
 
-
                 };
 
                 Swal.fire({
@@ -498,7 +508,7 @@
                     text: 'Apakah anda ingin mengakumulasi biaya perhitugan listrik sekarang?',
                     showDenyButton: true,
                     showCancelButton: true,
-                    confirmButtonText: `ya, akumulasikan & simpan datanya`,
+                    confirmButtonText: `ya, akumulasikan & simpan datanya ✓`,
                     cancelButtonText: `jangan diakumulasi & simpan data`,
                     denyButtonText: `belum, masih mengakumulasi biaya & jangan simpan`,
                     }).then((result) => {
@@ -533,13 +543,13 @@
                             encode          : true
                         })
                         .done(function(data) {
-                            $("#lwbp_").val(data.lwbp_perminggu); 
-                            $("#wbp_").val(data.wbp_perminggu); 
-                            $("#totalbiayalstrk_").val(data.total_biaya_listrik_perminggu);
-                            $("#totalcostperbulan").val(data.totalbiaya_cost_perbulan);
-                            $("#totalcostperbulanadm").val(data.ncost_bulan_plus_adm);
-                            $("#persenlistriks").val(data.persen_listrik);
-                            
+                            $("#totalcostperbulanadm").val("Rp "+formatCurrency(Math.round(data.ncost_bulan_plus_adm)));
+                            $("#persenlistriks").val("Rp "+formatCurrency(Math.round(data.persen_listrik)));
+                            $("#lwbp_").val(Math.round(data.lwbp_perminggu)); 
+                            $("#wbp_").val(Math.round(data.wbp_perminggu)); 
+                            $("#totalbiayalstrk_").val("Rp "+formatCurrency(Math.round(data.total_biaya_listrik_perminggu)));
+                            $("#totalcostperbulan").val("Rp "+formatCurrency(Math.round(data.totalbiaya_cost_perbulan)));
+                        
                             if(data.isConfirmed == "true"){
 
                                     return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya listrik berhasil diakumulasi & disimpan', 'success')
@@ -577,10 +587,10 @@
                                 encode          : true
                             })
                             .done(function(data) {
-                                $("#lwbp_").val(data.lwbp_perminggu); 
-                                $("#wbp_").val(data.wbp_perminggu); 
-                                $("#totalbiayalstrk_").val(data.total_biaya_listrik_perminggu);
-                                $("#totalcostperbulan").val(data.totalbiaya_cost_perbulan);
+                                $("#lwbp_").val(Math.round(data.lwbp_perminggu)); 
+                                $("#wbp_").val(Math.round(data.wbp_perminggu)); 
+                                $("#totalbiayalstrk_").val("Rp "+formatCurrency(Math.round(data.total_biaya_listrik_perminggu)));
+                                $("#totalcostperbulan").val("Rp "+formatCurrency(Math.round(data.totalbiaya_cost_perbulan)));
                                 // $("#totalcostperbulanadm").val(data.ncost_bulan_plus_adm);
                                 // $("#persenlistriks").val(data.persen_listrik);
                                 
@@ -592,8 +602,6 @@
                         );
                     }
                 })
-
-              
 
              event.preventDefault();
             });

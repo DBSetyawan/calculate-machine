@@ -237,7 +237,15 @@
                             }    
                     }
 
+    function formatCurrency(x) {
+        return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    }
+
         $('document').ready(function () {
+            $("#company_display").prop("disabled", true);
+            $("#category_bagian_display").prop("disabled", true);
+            $("#perjam_display").prop("disabled", true);
+
             $('.toggleswitch').bootstrapToggle();
             $("#company_parent_id").hide();
             $("#code_mesin_id").hide();
@@ -320,10 +328,10 @@
                             })
                             .done(function(data) {
 
-                                $("#rtrtperbaikanperbulan").val(data.rata_rata_perbaikan_perbulan);
-                                $("#sparepart_perbulan").val(data.rata_rata_sparepart_perbulan);
-                                $("#biaya_produksi_lain").val(data.biaya_produksi_lain);
-                                $("#total_biaya_perbulan").val(data.total_biaya_perbulan);
+                                $("#rtrtperbaikanperbulan").val("Rp "+formatCurrency(Math.round(data.rata_rata_perbaikan_perbulan)));
+                                $("#sparepart_perbulan").val("Rp "+formatCurrency(Math.round(data.rata_rata_sparepart_perbulan)));
+                                $("#biaya_produksi_lain").val("Rp "+formatCurrency(Math.round(data.biaya_produksi_lain)));
+                                $("#total_biaya_perbulan").val("Rp "+formatCurrency(Math.round(data.total_biaya_perbulan)));
 
                                 if(data.isConfirmed == "true"){
 
@@ -363,11 +371,10 @@
                             })
                             .done(function(data) {
 
-                                $("#rtrtperbaikanperbulan").val(data.rata_rata_perbaikan_perbulan);
-                                $("#sparepart_perbulan").val(data.rata_rata_sparepart_perbulan);
-                                $("#biaya_produksi_lain").val(data.biaya_produksi_lain);
-                                $("#total_biaya_perbulan").val(data.total_biaya_perbulan);
-
+                                $("#rtrtperbaikanperbulan").val("Rp "+formatCurrency(Math.round(data.rata_rata_perbaikan_perbulan)));
+                                $("#biaya_produksi_lain").val("Rp "+formatCurrency(Math.round(data.biaya_produksi_lain)));
+                                $("#total_biaya_perbulan").val("Rp "+formatCurrency(Math.round(data.total_biaya_perbulan)));
+                                $("#sparepart_perbulan").val("Rp "+formatCurrency(Math.round(data.rata_rata_sparepart_perbulan)));
                                 if(data.isDenied == "true"){
 
                                     return Swal.fire('#Informasi.', 'jika sudah yakin ingin menyimpan akumulasi biaya mtc, tekan tombol hitung mtc, kemudian sistem akan mengakumulasi dan sekaligus menyimpan datanya.', 'info')
