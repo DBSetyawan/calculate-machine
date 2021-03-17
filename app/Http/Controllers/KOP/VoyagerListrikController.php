@@ -181,9 +181,9 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             'LWBP_faktorkali' => $r->faktor_kali_lwbp,
             'WBP_faktorkali' => $r->faktor_kali_wbp,
             'total_biaya_listrik' => $totalbiayaListrikperminggu,
-            'assumptionshift_lwbp1' => $r->sht_3lwbp,
+            'assumptionshift_lwbp1' => $r->sht_1lwbp,
             'assumptionshift_lwbp2' => $r->sht_2lwbp,
-            'assumptionshift_lwbp3' => $r->sht_1lwbp,
+            'assumptionshift_lwbp3' => $r->sht_3lwbp,
             'assumption_itval_perminggu' => $r->intervalnumeric,
             'assumption_wbp' => $r->wbp
         ];
@@ -448,7 +448,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
         $costADM = $this->RumusBiayaCostADM($PPJ, $persen_costperbulan);
 
-        $costperbulan->persen_cost_perbulan = $saldo_akhir_cost_perbulan;
+        $costperbulan->persen_cost_perbulan = $persen_costperbulan;
         $costperbulan->ncost_bulan_plus_adm = $costADM;
         $costperbulan->save();
 
@@ -665,7 +665,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             $static_lwbshift = 0;
             $rumusLWBPerminggu = $this->RumusPemakaianLWBP_shift0($r->shift, $r->ampere, $r->voltase, $r->code_mesin, 0, $r->assumption_itval_perminggu);
         }
-        
+
         /**
          * Hitung WBP perminggu
          * @store append field WBP perminggu.
@@ -724,9 +724,9 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             'LWBP_faktorkali' => $r->LWBP_faktorkali,
             'WBP_faktorkali' => $r->WBP_faktorkali,
             'total_biaya_listrik' => $totalbiayaListrikperminggu,
-            'assumptionshift_lwbp1' => $r->assumptionshift_lwbp3,
+            'assumptionshift_lwbp1' => $r->assumptionshift_lwbp1,
             'assumptionshift_lwbp2' => $r->assumptionshift_lwbp2,
-            'assumptionshift_lwbp3' => $r->assumptionshift_lwbp1,
+            'assumptionshift_lwbp3' => $r->assumptionshift_lwbp3,
             'assumption_itval_perminggu' => $r->assumption_itval_perminggu,
             'assumption_wbp' => $r->assumption_wbp,
             'persen_cost_perbulan' => NULL, /**khusus listrik*/// update atau re-akumulasi persen ditombol yang sudah tersedia per dokumen.

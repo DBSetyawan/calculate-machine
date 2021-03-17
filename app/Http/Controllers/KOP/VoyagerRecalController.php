@@ -30,6 +30,15 @@ class VoyagerRecalController extends BaseVoyagerBaseController
     public function SendRecalculate($id){
 
         $listrikFind = Listrik::findOrFail($id);
+        
+
+        if(!$listrikFind->ncost_bulan_plus_adm){
+            $redirect = redirect()->back();
+            return $redirect->with([
+                'message'    => __('gagal menyinkronkan dokumen, harap mengakumulasi biaya cost perbulan + ADM.'),
+                'alert-type' => 'error',
+                ]);
+        }
 
         $rf = AllRecalculate::create(
             [

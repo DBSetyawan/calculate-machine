@@ -259,8 +259,28 @@
                                                     @if ($row->display_name == 'NILAI COST/BLN')
                                                         <span>{{ "Rp " . number_format($data->nilai_cost_bulan,0,',','.') }}</span>
                                                     @endif
+                                                    @php
+                                                    // dd($data->persen_cost_perbulan);
+                                                    if(is_null($data->persen_cost_perbulan)){
+                                                        $x = 0.01;
+                                                    } else {
+                                                        $x = $data->persen_cost_perbulan;
+                                                    }
+                                                     if ($x == 0) return 0;
+
+                                                        $rounded = round($x, 2);
+                                                        $minValue = 0.01;
+
+                                                        
+                                                        if ($rounded < $minValue) {
+                                                            $dd=  number_format($minValue, 2);
+                                                        } else {
+                                                            $dd = number_format($rounded, 2);
+                                                        }
+                                                        
+                                                    @endphp
                                                     @if ($row->display_name == '%')
-                                                        <span>{{ ceil((float)$data->persen_cost_perbulan ) / 100 . '%' }}</span>
+                                                        <span>{{ $dd . '%' }}</span>
                                                     @endif
                                                 @endif
                                             </td>
@@ -304,6 +324,27 @@
                         
                             $total_listrik = $listrik->whereIn('company_parent_id', [3])->get();
 
+                            $persen = collect([$total_listrik])->sum(function ($prsttl){
+                                    $ttlpr = $prsttl->sum('persen_cost_perbulan');
+                                    if(is_null($ttlpr)){
+                                        $x = 0.01;
+                                    } else {
+                                        $x = $ttlpr;
+                                    }
+                                        if ($x == 0) return 0;
+
+                                        $rounded = round($x, 2);
+                                        $minValue = 0.01;
+
+                                        
+                                        if ($rounded < $minValue) {
+                                            $prs =  number_format($minValue, 2);
+                                        } else {
+                                            $prs = number_format($rounded, 2);
+                                        }
+                                        return $prs;
+                                });
+
                             $x = collect([$total_listrik])->sum(function ($region){
                                     return sprintf("%.5f", $region->sum('nilai_cost_bulan'));
                                 });
@@ -319,6 +360,12 @@
                         <div class="panel panel-bordered">
                             <div class="panel-body">
                                 <div class="pull-left">
+                                    <div class="col-2">
+                                        <label for="total PPJ" class="badge badge-success">Total semua % cost :</label> <span class="">{{$persen}} %</span>
+                                    </div>
+                                    <div class="col-2">
+                                        <label for="total PPJ" class="badge badge-success">Total semua cost perbulannya :</label> <span class="">Rp {{number_format($x, 0, ".", ".")}}</span>
+                                    </div>
                                     <div class="col-2">
                                         <label for="total PPJ" class="badge badge-success">Total cost + ADM :</label> <span class="">Rp {{number_format($totalcostadm, 0, ".", ".")}}</span>
                                     </div>

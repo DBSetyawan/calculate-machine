@@ -154,7 +154,7 @@ class RumusHitungBIayaListrik {
 
     public static function HitungPPJ($totalcosperbulan){
 
-        return ( ($totalcosperbulan) + ($totalcosperbulan*0.03) + 6000 );
+        return ((float) ($totalcosperbulan) + ($totalcosperbulan*0.03) + 6000 );
 
     }
 

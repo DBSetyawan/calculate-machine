@@ -801,13 +801,13 @@ trait ModuleCaculates {
                     ->editColumn('tanpa_mtc_total_perjam', function($tanpa_mtc_total_perjam) {
                         return RptCalcMachine::frm_rph($tanpa_mtc_total_perjam->total_tanpa_mtc_perjam);
                     }) 
-                    ->addColumn('action', function($row) use($request){
-                        // dd($request->all());
+                    // ->addColumn('action', function($row) use($request){
+                    //     // dd($request->all());
 
-                        return '<div class="col-md-12"><span class="no-sort no-click bread-actions"><a class="btn btn-sm btn-primary pull-right edit"><span class="voyager-edit"> Ubah ?</span> </a>';
+                    //     return '<div class="col-md-12"><span class="no-sort no-click bread-actions"><a class="btn btn-sm btn-primary pull-right edit"><span class="voyager-edit"> Ubah ?</span> </a>';
                     
-                    })
-                    ->rawColumns(['action','group_mesin'])
+                    // })
+                    ->rawColumns(['group_mesin'])
                     ->escapeColumns()->make(true);
         }
       

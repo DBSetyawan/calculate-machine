@@ -103,6 +103,7 @@
                         <table id="dataTablePenyusutan" class="table table-hover" >
                               <thead>
                                 <tr>
+                                  <th></th>
                                   <th>COMPANY</th>
                                   <th>MESIN</th>
                                   <th>KATEGORI MESIN</th>
@@ -125,7 +126,7 @@
                                     <th>TOTAL SEMUA BIAYA TANPA MTC</th>
                                     <th>TOTAL SEMUA BIAYA TANPA MTC (/JAM)</th>
                                     {{-- @if(Auth::User()->role->name == "admin" ) --}}
-                                    <th>Actions</th>
+                                    {{-- <th>Actions</th> --}}
 
                                     {{-- @endif --}}
                                 </tr>
@@ -702,6 +703,12 @@ $(document).ready(function(){
                   allowReorder: true
                 },
                 columns: [
+                          {
+                              "className":      'details-control',
+                              "orderable":      false,
+                              "data":           null,
+                              "defaultContent": ''
+                          },
                           {data: 'company_name', name: 'company_name',  width: "50px" },
                           {data: 'code_mesin', name: 'code_mesin'},
                           {data: 'fungsi_mesin', name: 'fungsi_mesin'},
@@ -722,12 +729,46 @@ $(document).ready(function(){
                           {data: 'tanpa_penyusutan_total_perjam', name: 'SEMUA TOTAL BIAYA TANPA PENYUSUTAN (/JAM)', width: "190px"},
                           {data: 'tanpa_mtc_total', name: 'SEMUA TOTAL BIAYA TANPA MTC', width: "150px"},
                           {data: 'tanpa_mtc_total_perjam', name: 'SEMUA TOTAL BIAYA TANPA MTC (/JAM)', width: "150px"},
-                          {data: 'action', name: 'action', orderable: false, searchable: false},
+                          // {data: 'action', name: 'action', orderable: false, searchable: false},
 
                   ],
             });
             
             dataTable.columns.adjust().draw();
+
+            $('#dataTablePenyusutan tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = dataTable.row( tr );
+
+                if ( row.child.isShown() ) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    // Open this row
+                    row.child( format(row.data()) ).show();
+                    tr.addClass('shown');
+                }
+            } );
+            function format ( d ) {
+              // console.log("da",d)
+        // `d` is the original data object for the row
+                  return '<table class="table">'+
+                      '<tr>'+
+                          '<td>Full name:</td>'+
+                          '<td>'+JSON.stringify(d)+'</td>'+
+                          '</tr>'+
+                      '<tr>'+
+                          '<td>Email:</td>'+
+                          '<td>asdasdasda</td>'+
+                          '</tr>'+
+                      '<tr>'+
+                          '<td>Extra info:</td>'+
+                          '<td>And any further details here (images etc)...</td>'+
+                          '</tr>'+
+                      '</table>';
+              }
 
         $("#dataTablePenyusutan_filter label input").addClass( 'CustomFilter' );
 
