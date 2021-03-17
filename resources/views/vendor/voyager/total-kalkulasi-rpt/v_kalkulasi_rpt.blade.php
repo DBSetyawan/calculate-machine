@@ -54,7 +54,7 @@
                                                     {{-- <small class="text-muted">Automated.</small> --}}
                                                   </div>
                                                   <p class="mb-1 text-muted">Jika mencentang MAINTENANCE, maka tabel dibawah akan menyesuaikan hanya tanpa MTC. kolom MAINTENANCE akan disembunyikan, TOTAL SEMUA BIAYA MTC & TOTAL SEMUA BIAYA MTC PERJAMNYA akan ditampilkan.</p>
-                                                  <h3 class="mb-1"><input type="checkbox" name='hide_columns_mtcs' class="Maintenance CheckEventListFormation btn" id="mtcs" value='7'>Tanpa Maintenance</h3>
+                                                  <h3 class="mb-1"><input type="checkbox" name='hide_columns_mtcs' class="Maintenance CheckEventListFormation btn" id="mtcs" value='8'>Tanpa Maintenance</h3>
                                                 </a>
                                               <hr class="text-muted">
                                                 <a class="list-group-item list-group-item-action active">
@@ -65,7 +65,7 @@
                                                     {{-- <small class="text-muted">Automated.</small> --}}
                                                   </div>
                                                   <p class="mb-1 text-muted">Jika mencentang PENYUSUTAN, maka tabel dibawah akan menyesuaikan hanya tanpa PENYUSUTAN. kolom PENYUSUTAN akan disembunyikan, TOTAL SEMUA BIAYA PENYUSUTAN & TOTAL SEMUA BIAYA PENYUSUTAN PERJAMNYA akan ditampilkan.</p>
-                                                  <h3 class="mb-1"><input type="checkbox" name='hide_columns_pystn' class="Penyusutan CheckEventListFormation btn" id="pnyt" value='5'>Tanpa Penyusutan</h3>
+                                                  <h3 class="mb-1"><input type="checkbox" name='hide_columns_pystn' class="Penyusutan CheckEventListFormation btn" id="pnyt" value='6'>Tanpa Penyusutan</h3>
                                                 </a>
                                                 <a class="list-group-item list-group-item-action active" id="alltruepnytmtc">
                                                   <hr class="text-muted">
@@ -99,6 +99,7 @@
                         </div>
                       </div>
                     </div>
+                    <button id="btn-show-all-children" class="btn btn-small btn-warning" type="button">show/hide detail data</button>
                     <div class="table-responsive TransactionTr">
                         <table id="dataTablePenyusutan" class="table table-hover" >
                               <thead>
@@ -211,7 +212,7 @@ $(document).ready(function(){
 
     } else {
 
-        if(thisLocalStorageEventCheckedPenyusutanOnly[0] == "5"){
+        if(thisLocalStorageEventCheckedPenyusutanOnly[0] == "6"){
 
             $(".Penyusutan").prop("checked", true);
             $(".CustomFilter").focus();
@@ -253,7 +254,7 @@ $(document).ready(function(){
 
     } else {
 
-        if(thisLocalStorageEventCheckedMTCOnly[0] == "7"){
+        if(thisLocalStorageEventCheckedMTCOnly[0] == "8"){
 
             $(".Maintenance").prop("checked", true);
             $(".CustomFilter").focus();
@@ -389,7 +390,7 @@ $(document).ready(function(){
 
           } else {
 
-                  if(thisLocalStorageEventCheckedMTCOnly[0] == "7"){
+                  if(thisLocalStorageEventCheckedMTCOnly[0] == "8"){
 
                     setTimeout(function(){ 
 
@@ -418,7 +419,7 @@ $(document).ready(function(){
                     }, 1000);
 
                   }
-                    else if(thisLocalStorageEventCheckedPenyusutanOnly[0] == "5"){
+                    else if(thisLocalStorageEventCheckedPenyusutanOnly[0] == "6"){
 
                         setTimeout(function(){ 
 
@@ -511,15 +512,15 @@ $(document).ready(function(){
 
     setTimeout(function(){ 
       let reset = $('#dataTablePenyusutan').DataTable().draw();
-      reset.column([5]).visible(true);
-      reset.column([7]).visible(true);
+      reset.column([6]).visible(true);
+      reset.column([8]).visible(true);
 
-      reset.column([11]).visible(true);
       reset.column([12]).visible(true);
-      reset.column([14]).visible(false);
       reset.column([13]).visible(true);
-      reset.column([16]).visible(false);
       reset.column([15]).visible(false);
+      reset.column([14]).visible(true);
+      reset.column([17]).visible(false);
+      reset.column([16]).visible(false);
 
       $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
       $("#setall").hide();
@@ -741,19 +742,29 @@ $(document).ready(function(){
                 var row = dataTable.row( tr );
 
                 if ( row.child.isShown() ) {
-                    // This row is already open - close it
                     row.child.hide();
                     tr.removeClass('shown');
                 }
                 else {
-                    // Open this row
                     row.child( format(row.data()) ).show();
                     tr.addClass('shown');
                 }
             } );
+
+            $('#btn-show-all-children').on('click', function(){
+                dataTable.rows(':not(.parent)').nodes().to$().find('td:first-child').trigger('click');
+            });
+
+            $('#btn-hide-all-children').on('click', function(){
+                // Collapse row details
+                dataTable.rows('.parent').nodes().to$().find('td:first-child').trigger('click');
+            });
             function format ( d ) {
               // console.log("da",d)
         // `d` is the original data object for the row
+        // if (obj.hasOwnProperty("id")){
+        //     console.log(obj.id);          // ini mengambil object tertentu pada Output stringfy JSON instead of hasOwnProperty method
+        // }
                   return '<table class="table">'+
                       '<tr>'+
                           '<td>Mockup data:</td>'+
@@ -779,15 +790,15 @@ $(document).ready(function(){
           $("#penyusutan").removeAttr("disabled");
           $("#penyusutan").prop("checked", false);
           let refresh = $('#dataTablePenyusutan').DataTable().draw();
-              refresh.column([4]).visible(true);
-              refresh.column([6]).visible(true);
+              refresh.column([5]).visible(true);
+              refresh.column([7]).visible(true);
 
-              refresh.column([11]).visible(true);
               refresh.column([12]).visible(true);
-              refresh.column([14]).visible(false);
-              refresh.column([13]).visible(false);
-              refresh.column([16]).visible(false);
+              refresh.column([13]).visible(true);
               refresh.column([15]).visible(false);
+              refresh.column([14]).visible(false);
+              refresh.column([17]).visible(false);
+              refresh.column([16]).visible(false);
 
               $('.CheckEventListFormation:checkbox:checked').each(function() {
                     this.checked = false; 
@@ -807,13 +818,13 @@ $(document).ready(function(){
             $("#reset_filters_calc").click(function(){
 
                   let db_temp = $('#dataTablePenyusutan').DataTable().draw();
-                  db_temp.column([4]).visible(true);
-                  db_temp.column([6]).visible(true);
+                  db_temp.column([5]).visible(true);
+                  db_temp.column([7]).visible(true);
 
-                  db_temp.column([11]).visible(true);
                   db_temp.column([12]).visible(true);
+                  db_temp.column([13]).visible(true);
+                  db_temp.column([15]).visible(false);
                   db_temp.column([14]).visible(false);
-                  db_temp.column([13]).visible(false);
 
                   $("input[type='checkbox']").removeAttr("disabled");
 
@@ -840,15 +851,15 @@ $(document).ready(function(){
                       $("#resets").hide();
                       $("#setall").show();
                       
-                      dataTable.column([17]).visible(false);
                       dataTable.column([18]).visible(false);
                       dataTable.column([19]).visible(false);
+                      dataTable.column([20]).visible(false);
+                      dataTable.column([16]).visible(true);
+                      dataTable.column([17]).visible(false);
+                      dataTable.column([14]).visible(false);
                       dataTable.column([15]).visible(true);
-                      dataTable.column([16]).visible(false);
                       dataTable.column([13]).visible(false);
-                      dataTable.column([14]).visible(true);
-                      dataTable.column([12]).visible(false);
-                      dataTable.column([11]).visible(true);
+                      dataTable.column([12]).visible(true);
                       $("#pnyt").attr('disabled', 'disabled'); 
                       $("#mtcs").attr('disabled', 'disabled'); 
 
@@ -887,25 +898,25 @@ $(document).ready(function(){
 
                               let rf1 = $('#dataTablePenyusutan').DataTable().draw();
 
-                              rf1.column([11]).visible(false);
-                                rf1.column([12]).visible(false);
+                              rf1.column([12]).visible(false);
                                 rf1.column([13]).visible(false);
                                 rf1.column([14]).visible(false);
-                                rf1.column([17]).visible(false);
+                                rf1.column([15]).visible(false);
                                 rf1.column([18]).visible(false);
+                                rf1.column([19]).visible(false);
                             } 
 
                             if(x == 7){
                               
                               let rf2 = $('#dataTablePenyusutan').DataTable().draw();
 
-                                rf2.column([4]).visible(true);
-                                rf2.column([13]).visible(false);
+                                rf2.column([5]).visible(true);
                                 rf2.column([14]).visible(false);
                                 rf2.column([15]).visible(false);
                                 rf2.column([16]).visible(false);
-                                rf2.column([11]).visible(false);
+                                rf2.column([17]).visible(false);
                                 rf2.column([12]).visible(false);
+                                rf2.column([13]).visible(false);
 
                             }
 
@@ -924,14 +935,14 @@ $(document).ready(function(){
                       localStorage.setItem("EventPenyusutanTrue", JSON.stringify( peny ) );
                       
                       dataTable.column(peny).visible(false);
-                      dataTable.column([11]).visible(false);
                       dataTable.column([12]).visible(false);
                       dataTable.column([13]).visible(false);
                       dataTable.column([14]).visible(false);
-                      dataTable.column([17]).visible(true);
-                      dataTable.column([18]).visible(false);
                       dataTable.column([15]).visible(false);
-                      dataTable.column([16]).visible(true);
+                      dataTable.column([18]).visible(true);
+                      dataTable.column([19]).visible(false);
+                      dataTable.column([16]).visible(false);
+                      dataTable.column([17]).visible(true);
 
                 });
 
@@ -980,15 +991,15 @@ $(document).ready(function(){
                               $(".csbe").hide(); //smua biaya
 
                       let db_temp = $('#dataTablePenyusutan').DataTable().draw();
-                          db_temp.column([11]).visible(false);
                           db_temp.column([12]).visible(false);
                           db_temp.column([13]).visible(false);
                           db_temp.column([14]).visible(false);
-                          db_temp.column([17]).visible(true);
-                          db_temp.column([18]).visible(true);
                           db_temp.column([15]).visible(false);
+                          db_temp.column([18]).visible(true);
+                          db_temp.column([19]).visible(true);
                           db_temp.column([16]).visible(false);
-                          db_temp.column(4).visible(true);
+                          db_temp.column([17]).visible(false);
+                          db_temp.column(5).visible(true);
 
                           setTimeout(function(){ 
           
@@ -1018,15 +1029,15 @@ $(document).ready(function(){
 
                     } else {
                         let db_temp = $('#dataTablePenyusutan').DataTable().draw();
-                            db_temp.column([11]).visible(true);
                             db_temp.column([12]).visible(true);
                             db_temp.column([13]).visible(true);
-                            db_temp.column([14]).visible(false);
-                            db_temp.column([17]).visible(false);
-                            db_temp.column([18]).visible(false);
+                            db_temp.column([14]).visible(true);
                             db_temp.column([15]).visible(false);
+                            db_temp.column([18]).visible(false);
+                            db_temp.column([19]).visible(false);
                             db_temp.column([16]).visible(false);
-                            db_temp.column(5).visible(true);
+                            db_temp.column([17]).visible(false);
+                            db_temp.column(6).visible(true);
 
                           setTimeout(function(){ 
           
@@ -1073,15 +1084,15 @@ $(document).ready(function(){
                   localStorage.setItem("EventMTCtrue", JSON.stringify( mtcs ) );
 
                       dataTable.column(mtcs).visible(false);
-                      dataTable.column([13]).visible(false);
                       dataTable.column([14]).visible(false);
                       dataTable.column([15]).visible(false);
                       dataTable.column([16]).visible(false);
-                      dataTable.column([11]).visible(true);
-                      dataTable.column([12]).visible(false);
                       dataTable.column([17]).visible(false);
-                      dataTable.column([18]).visible(true);
+                      dataTable.column([12]).visible(true);
+                      dataTable.column([13]).visible(false);
+                      dataTable.column([18]).visible(false);
                       dataTable.column([19]).visible(true);
+                      dataTable.column([20]).visible(true);
 
                 });
 
@@ -1116,17 +1127,17 @@ $(document).ready(function(){
 
                     if(checkedmtc) {
                       
-                          dataTable.column([13]).visible(false);
                           dataTable.column([14]).visible(false);
                           dataTable.column([15]).visible(false);
-                          dataTable.column([16]).visible(true);
+                          dataTable.column([16]).visible(false);
                           dataTable.column([17]).visible(true);
-                          dataTable.column([18]).visible(false);
+                          dataTable.column([18]).visible(true);
                           dataTable.column([19]).visible(false);
-                          dataTable.column([11]).visible(true);
-                          dataTable.column([12]).visible(false);
-                          dataTable.column([7]).visible(true);
-                          dataTable.column([5]).visible(false);
+                          dataTable.column([20]).visible(false);
+                          dataTable.column([12]).visible(true);
+                          dataTable.column([13]).visible(false);
+                          dataTable.column([8]).visible(true);
+                          dataTable.column([6]).visible(false);
 
                           setTimeout(function(){ 
           
@@ -1146,7 +1157,7 @@ $(document).ready(function(){
                               $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
                               $(".CustomFilter").focus();
                           
-                          }, 10000);
+                          }, 1000);
 
                           setTimeout(() => {
                           
@@ -1156,16 +1167,16 @@ $(document).ready(function(){
 
                     } else {
 
-                          dataTable.column([7]).visible(true);
-                          dataTable.column([13]).visible(true);
-                          dataTable.column([14]).visible(false);
+                          dataTable.column([8]).visible(true);
+                          dataTable.column([14]).visible(true);
                           dataTable.column([15]).visible(false);
                           dataTable.column([16]).visible(false);
                           dataTable.column([17]).visible(false);
                           dataTable.column([18]).visible(false);
                           dataTable.column([19]).visible(false);
-                          dataTable.column([11]).visible(true);
+                          dataTable.column([20]).visible(false);
                           dataTable.column([12]).visible(true);
+                          dataTable.column([13]).visible(true);
 
                               setTimeout(function(){ 
 
