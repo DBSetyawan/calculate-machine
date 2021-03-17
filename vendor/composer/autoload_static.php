@@ -806,6 +806,7 @@ class ComposerStaticInitbf9caa84afbd10586b93936e6de03628
         'App\\Actions\\ActionDeletePenyusutan' => __DIR__ . '/../..' . '/app/Actions/ActionDeletePenyusutan.php',
         'App\\Actions\\ActionRecalculate' => __DIR__ . '/../..' . '/app/Actions/ActionRecalculate.php',
         'App\\Actions\\DeleteListrikAction' => __DIR__ . '/../..' . '/app/Actions/DeleteListrikAction.php',
+        'App\\Actions\\ListrikOutputActionEdit' => __DIR__ . '/../..' . '/app/Actions/ListrikOutputActionEdit.php',
         'App\\Actions\\ListrikViewAction' => __DIR__ . '/../..' . '/app/Actions/ListrikViewAction.php',
         'App\\Actions\\SyncCalcPerMesin' => __DIR__ . '/../..' . '/app/Actions/SyncCalcPerMesin.php',
         'App\\Actions\\UbahEditListrik' => __DIR__ . '/../..' . '/app/Actions/UbahEditListrik.php',

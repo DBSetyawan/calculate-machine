@@ -127,6 +127,11 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
 <script type="text/javascript" src="{{ asset('public/js/protip.min.js') }}"></script>
 <script>
+
+$(document).ready(function(){
+    $.protip();
+});
+
 document.addEventListener("keydown", function(event) {
       if (event.altKey && event.code === "KeyX") {
         let link = '{!! route("tr.total.kalkulasi")  !!}';

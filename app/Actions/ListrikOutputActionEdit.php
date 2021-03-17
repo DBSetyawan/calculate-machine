@@ -3,9 +3,10 @@
 namespace App\Actions;
 
 use TCG\Voyager\Actions\EditAction;
+use TCG\Voyager\Actions\AbstractAction;
 use TCG\Voyager\Actions\ViewAction as VoyagerViewAction;
 
-class UbahEditListrik extends VoyagerViewAction
+class ListrikOutputActionEdit extends AbstractAction
 {
     public function getTitle()
     {
@@ -21,16 +22,11 @@ class UbahEditListrik extends VoyagerViewAction
     {
         return 'edit';
     }
-    
-    public function shouldActionDisplayOnDataType()
-    {
-        return $this->dataType->slug == 'listrik';
-    }
 
     public function getAttributes()
     {
         return [
-            'class' => 'btn btn-sm btn-primary pull-right edit protip',
+            'class' => 'btn btn-sm btn-primary pull-right protip',
             'data-pt-title'=>"Fungsi tombol ini untuk merecalculate data.",
             'data-pt-size'=>"small",
             'data-pt-trigger'=>"hover",
@@ -41,6 +37,11 @@ class UbahEditListrik extends VoyagerViewAction
         ];
     }
 
+    public function shouldActionDisplayOnDataType()
+    {
+        return $this->dataType->slug == 'listrik-output';
+    }
+    
     public function getDefaultRoute()
     {
         return route('voyager.'.$this->dataType->slug.'.edit', $this->data->{$this->data->getKeyName()});

@@ -11,6 +11,7 @@ return array(
     'App\\Actions\\ActionDeletePenyusutan' => $baseDir . '/app/Actions/ActionDeletePenyusutan.php',
     'App\\Actions\\ActionRecalculate' => $baseDir . '/app/Actions/ActionRecalculate.php',
     'App\\Actions\\DeleteListrikAction' => $baseDir . '/app/Actions/DeleteListrikAction.php',
+    'App\\Actions\\ListrikOutputActionEdit' => $baseDir . '/app/Actions/ListrikOutputActionEdit.php',
     'App\\Actions\\ListrikViewAction' => $baseDir . '/app/Actions/ListrikViewAction.php',
     'App\\Actions\\SyncCalcPerMesin' => $baseDir . '/app/Actions/SyncCalcPerMesin.php',
     'App\\Actions\\UbahEditListrik' => $baseDir . '/app/Actions/UbahEditListrik.php',

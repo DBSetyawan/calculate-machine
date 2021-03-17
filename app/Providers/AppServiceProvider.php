@@ -35,9 +35,24 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Voyager::addAction(\App\Actions\JobLevelAction::class);
         Voyager::addAction(\App\Actions\ActionRecalculate::class);
+        Voyager::addAction(\App\Actions\ActionAccount::class);
+        Voyager::addAction(\App\Actions\ActionLabor::class);
+        Voyager::addAction(\App\Actions\ActionEditPenyusutan::class);
+        Voyager::addAction(\App\Actions\ActionCompany::class);
+        Voyager::addAction(\App\Actions\ActionEditMesin::class);
+        Voyager::addAction(\App\Actions\ActionMTC::class);
+        Voyager::addAction(\App\Actions\grouMesinAction::class);
+        Voyager::addAction(\App\Actions\ActionKategoriBagian::class);
         Voyager::addAction(\App\Actions\SyncCalcPerMesin::class);
+        Voyager::addAction(\App\Actions\ActionBagianPenjualan::class);
+        Voyager::addAction(\App\Actions\ActionBAU::class);
+        Voyager::addAction(\App\Actions\gajilainAction::class);
+        Voyager::addAction(\App\Actions\editUserAction::class);
+        Voyager::addAction(\App\Actions\ActionEditRoles::class);
         Voyager::replaceAction(EditAction::class,\App\Actions\UbahEditListrik::class);
+        Voyager::addAction(\App\Actions\ListrikOutputActionEdit::class);
         Voyager::replaceAction(DeletionAction::class,\App\Actions\DeleteListrikAction::class);
         Voyager::replaceAction(DeletionAction::class,\App\Actions\ActionDeletePenyusutan::class);
         Voyager::replaceAction(ViewAction::class,\App\Actions\ListrikViewAction::class);
