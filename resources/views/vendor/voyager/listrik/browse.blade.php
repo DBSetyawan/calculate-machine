@@ -265,20 +265,20 @@
                                                     @php
                                                     // dd($data->persen_cost_perbulan);
                                                     if(is_null($data->persen_cost_perbulan)){
-                                                        $x = 0.01;
+                                                        $x = 0.001;
                                                     } else {
                                                         $x = $data->persen_cost_perbulan;
                                                     }
                                                      if ($x == 0) return 0;
 
                                                         $rounded = round($x, 2);
-                                                        $minValue = 0.01;
+                                                        $minValue = 0.001;
 
                                                         
                                                         if ($rounded < $minValue) {
-                                                            $dd=  number_format($minValue, 2);
+                                                            $dd=  number_format($minValue, 0);
                                                         } else {
-                                                            $dd = number_format($rounded, 2);
+                                                            $dd = number_format($rounded * 100, 0);
                                                         }
                                                         
                                                     @endphp
@@ -450,7 +450,12 @@
                             title: 'CODE: [200][success], % cost perbulan | cost perbulan + ADM, telah diakumulasikan.'
                         });
 
-                         $("#RecalALLdocument").text("Recalculate otomatis semua biaya listrik");
+                        $("#RecalALLdocument").text("Recalculate otomatis semua biaya listrik");
+
+                        let curr = '{{ route("voyager.listrik.index") }}';
+                        setTimeout(function(){ 
+                            window.location.href = curr;
+                        }, 4000);
 
                     }
 

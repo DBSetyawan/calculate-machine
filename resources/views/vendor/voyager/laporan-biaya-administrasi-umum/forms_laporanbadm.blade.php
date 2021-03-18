@@ -166,6 +166,10 @@
 
                                 return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya biaya administrasi umum berhasil diakumulasi & disimpan', 'success')
                             }
+                            let curr = '{{ route("voyager.laporan-biaya-administrasi-umum.index") }}';
+                            setTimeout(function(){ 
+                                window.location.href = curr;
+                            }, 4000);
 
                         });
 

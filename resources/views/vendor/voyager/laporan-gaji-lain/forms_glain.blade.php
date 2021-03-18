@@ -227,6 +227,10 @@
 
                                 return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya gaji lainnya berhasil diakumulasi & disimpan', 'success')
                             }
+                            let curr = '{{ route("voyager.laporan-gaji-lain.index") }}';
+                            setTimeout(function(){ 
+                                window.location.href = curr;
+                            }, 4000);
 
                         });
 

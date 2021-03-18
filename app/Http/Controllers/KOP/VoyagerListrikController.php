@@ -442,50 +442,52 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
      */
     public function all_recalculate(Request $r){
 
-        try {
-        $saldo_akhir_cost_perbulan = $this->total_cost_perbulan();
-        $alllstrk = Listrik::all();
-        $ListrikInstance = New Listrik;
+        try 
+            {
+                    
+                $saldo_akhir_cost_perbulan = $this->total_cost_perbulan();
+                $alllstrk = Listrik::all();
+                $ListrikInstance = New Listrik;
 
-        foreach($alllstrk as $sd => $tmp){
+                foreach($alllstrk as $sd => $tmp){
 
-            $persen_costperbulan = $this->RumusPersenListrik($tmp->nilai_cost_bulan, $saldo_akhir_cost_perbulan);
-    
-            $PPJ = RumusListrik::HitungPPJ($saldo_akhir_cost_perbulan);
-    
-            $costADM = $this->RumusBiayaCostADM($PPJ, $persen_costperbulan);
+                    $persen_costperbulan = $this->RumusPersenListrik($tmp->nilai_cost_bulan, $saldo_akhir_cost_perbulan);
+            
+                    $PPJ = RumusListrik::HitungPPJ($saldo_akhir_cost_perbulan);
+            
+                    $costADM = $this->RumusBiayaCostADM($PPJ, $persen_costperbulan);
 
-            $data[] = [
-                'id' => $tmp->id,
-                'persen_cost_perbulan' => $persen_costperbulan,
-                'ncost_bulan_plus_adm' => $costADM
-            ];
-            $index = 'id';
+                    $data[] = [
+                        'id' => $tmp->id,
+                        'persen_cost_perbulan' => $persen_costperbulan,
+                        'ncost_bulan_plus_adm' => $costADM
+                    ];
+                    $index = 'id';
 
-            $bulk_batch = \Batch::update($ListrikInstance, $data, $index);
+                    $bulk_batch = \Batch::update($ListrikInstance, $data, $index);
+                }
+
+            return response()->json(['json'=> $data, 'success' => $bulk_batch]);
+
+        } catch (Exception $e) {
+            $code = 500;
+            $message = __('voyager::generic.internal_error');
+
+            if ($e->getCode()) {
+                $code = $e->getCode();
+            }
+
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'data' => [
+                    'status'  => $code,
+                    'message' => $message,
+                ],
+            ], $code);
         }
-
-        return response()->json(['json'=> $data, 'success' => $bulk_batch]);
-
-    } catch (Exception $e) {
-        $code = 500;
-        $message = __('voyager::generic.internal_error');
-
-        if ($e->getCode()) {
-            $code = $e->getCode();
-        }
-
-        if ($e->getMessage()) {
-            $message = $e->getMessage();
-        }
-
-        return response()->json([
-            'data' => [
-                'status'  => $code,
-                'message' => $message,
-            ],
-        ], $code);
-    }
     
     
             // $costperbulan->persen_cost_perbulan = $persen_costperbulan;

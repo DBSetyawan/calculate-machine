@@ -332,6 +332,10 @@
 
                                 return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya labor berhasil diakumulasi & disimpan', 'success')
                             }
+                            let curr = '{{ route("voyager.labor.index") }}';
+                            setTimeout(function(){ 
+                                window.location.href = curr;
+                            }, 4000);
 
                         });
                                

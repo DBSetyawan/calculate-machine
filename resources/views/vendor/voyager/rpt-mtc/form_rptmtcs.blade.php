@@ -337,6 +337,10 @@
 
                                     return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya MTC berhasil diakumulasi & disimpan', 'success')
                                 }
+                                let curr = '{{ route("voyager.rpt-mtc.index") }}';
+                                    setTimeout(function(){ 
+                                        window.location.href = curr;
+                                    }, 4000);
 
                             });
                                

@@ -160,6 +160,10 @@
 
                                 return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya bagian penjualan berhasil diakumulasi & disimpan', 'success')
                             }
+                            let curr = '{{ route("voyager.laporan-bagian-penjualan.index") }}';
+                            setTimeout(function(){ 
+                                window.location.href = curr;
+                            }, 4000);
 
                         });
 
