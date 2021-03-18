@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '31b319668fddd535c96f01ea3353c096625353a9',
+    'reference' => '9659b248e5e25f9a27695086179d392e265a09fa',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -607,7 +607,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '31b319668fddd535c96f01ea3353c096625353a9',
+      'reference' => '9659b248e5e25f9a27695086179d392e265a09fa',
     ),
     'laravel/sail' => 
     array (
@@ -698,6 +698,15 @@
       array (
       ),
       'reference' => '361c0f545c3172ee26c3d596a0aa03f0cef65e6a',
+    ),
+    'mavinoo/laravel-batch' => 
+    array (
+      'pretty_version' => 'v2.2.5',
+      'version' => '2.2.5.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '4b543161fe888fc2e9449f7d799e939e8b871ce3',
     ),
     'mockery/mockery' => 
     array (

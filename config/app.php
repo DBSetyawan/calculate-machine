@@ -177,6 +177,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Mavinoo\Batch\BatchServiceProvider::class,
 
 
         App\Providers\ListrikServiceProvider::class,
@@ -261,6 +262,7 @@ return [
         'RptCalcMachine' => App\Http\Controllers\KOP\Helpers\RptCalcMachine::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Batch' => Mavinoo\Batch\BatchFacade::class,
 
     ],
 

@@ -36,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Voyager::addAction(\App\Actions\JobLevelAction::class);
+        Voyager::addAction(\App\Actions\AsumsiAction::class);
         Voyager::addAction(\App\Actions\ActionRecalculate::class);
         Voyager::addAction(\App\Actions\ActionAccount::class);
         Voyager::addAction(\App\Actions\ActionLabor::class);

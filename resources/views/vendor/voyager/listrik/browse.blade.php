@@ -15,6 +15,9 @@
         <a href="{{ route('listriks.form.master') }}" class="btn btn-success btn-add-new">
             <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Listrik</span>
         </a>
+        <a class="btn btn-primary" id="RecalALLdocument">
+            <i class="voyager-eye"></i> <span>{{ __('Recalculate otomatis semua biaya listrik') }}</span>
+        </a>
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
         @endcan
@@ -418,6 +421,66 @@
         <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
     @endif
     <script>
+
+        $('#RecalALLdocument').on('click', function(e) {
+
+                setTimeout(() => {
+                     $("#RecalALLdocument").text("Sedang diakumulasikan..");
+                }, 1000);
+                
+                recalculate_modules(true).then(function(res){
+                    // console.log(res);
+
+                    if(res.success == 1){
+
+                        const success = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        })
+
+                        success.fire({
+                            icon: 'success',
+                            title: 'CODE: [200][success], % cost perbulan | cost perbulan + ADM, telah diakumulasikan.'
+                        });
+
+                         $("#RecalALLdocument").text("Recalculate otomatis semua biaya listrik");
+
+                    }
+
+                });
+            });
+
+        async function recalculate_modules(mesinid
+                ) {
+                            let datamesinid = {
+                                    mesinid:mesinid
+                                }
+                        const apiDataMesin = "{{ route('voyager.listrik.recalculate.all_recalculate') }}";
+                                
+                            const settings = {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                            'Content-Type': 'application/json;charset=utf-8'
+                                            },
+                                        body: JSON.stringify(datamesinid)
+                                }
+                        try {
+                                
+                                const fetchResponse = await fetch(`${apiDataMesin}`, settings);
+                                const data = await fetchResponse.json();
+                                return data;
+                            } catch (error) {
+                            return JSON.parse(error)
+                            }    
+                    }
 
         $(document).ready(function () {
             @if (!$dataType->server_side)

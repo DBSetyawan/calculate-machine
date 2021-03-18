@@ -3705,6 +3705,62 @@
             "install-path": "../markbaker/matrix"
         },
         {
+            "name": "mavinoo/laravel-batch",
+            "version": "v2.2.5",
+            "version_normalized": "2.2.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mavinoo/laravelBatch.git",
+                "reference": "4b543161fe888fc2e9449f7d799e939e8b871ce3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mavinoo/laravelBatch/zipball/4b543161fe888fc2e9449f7d799e939e8b871ce3",
+                "reference": "4b543161fe888fc2e9449f7d799e939e8b871ce3",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.3@dev"
+            },
+            "time": "2021-03-05T17:42:51+00:00",
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Mavinoo\\Batch\\BatchServiceProvider"
+                    ],
+                    "aliases": {
+                        "Batch": "Mavinoo\\Batch\\BatchFacade"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Mavinoo\\Batch\\": "src/"
+                },
+                "files": [
+                    "src/Common/Helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mohammad Ghanbari",
+                    "email": "mavin.developer@gmail.com"
+                }
+            ],
+            "description": "Insert and update batch (bulk) in laravel",
+            "support": {
+                "issues": "https://github.com/mavinoo/laravelBatch/issues",
+                "source": "https://github.com/mavinoo/laravelBatch/tree/v2.2.5"
+            },
+            "install-path": "../mavinoo/laravel-batch"
+        },
+        {
             "name": "mockery/mockery",
             "version": "1.4.3",
             "version_normalized": "1.4.3.0",

@@ -765,20 +765,20 @@ $(document).ready(function(){
         // if (obj.hasOwnProperty("id")){
         //     console.log(obj.id);          // ini mengambil object tertentu pada Output stringfy JSON instead of hasOwnProperty method
         // }
-                  return '<table class="table">'+
+                  return '<div class="page-content browse container-fluid"><table class="table table-hover">'+
                       '<tr>'+
-                          '<td>Mockup data:</td>'+
-                          '<td>'+JSON.stringify(d)+'</td>'+
+                          // '<td>Mockup data:</td>'+
+                          '<td>Keterangan mesin : '+JSON.stringify(d.mesin.deskripsi)+'</td>'+
                           '</tr>'+
-                      '<tr>'+
-                          '<td>other data:</td>'+
-                          '<td>[{}]</td>'+
-                          '</tr>'+
-                      '<tr>'+
-                          '<td>Extra data:</td>'+
-                          '<td>[{...exs}]</td>'+
-                          '</tr>'+
-                      '</table>';
+                      // '<tr>'+
+                      //     '<td>other data:</td>'+
+                      //     '<td>[{}]</td>'+
+                      //     '</tr>'+
+                      // '<tr>'+
+                      //     '<td>Extra data:</td>'+
+                      //     '<td>[{...exs}]</td>'+
+                      //     '</tr>'+
+                      '</table></div>';
               }
 
         $("#dataTablePenyusutan_filter label input").addClass( 'CustomFilter' );
