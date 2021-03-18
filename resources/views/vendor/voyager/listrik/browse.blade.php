@@ -18,6 +18,9 @@
         <a class="btn btn-primary" id="RecalALLdocument">
             <i class="voyager-eye"></i> <span>{{ __('Recalculate otomatis semua biaya listrik') }}</span>
         </a>
+        <a class="btn btn-info" id="RecalTemporaryRecalculate">
+            <i class="voyager-eye"></i> <span>{{ __('Temporary recalculate') }}</span>
+        </a>
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
         @endcan
@@ -328,6 +331,24 @@
                             $total_listrik = $listrik->whereIn('company_parent_id', [3])->get();
 
                             $persen = collect([$total_listrik])->sum(function ($prsttl){
+
+                                // if(is_null($data->persen_cost_perbulan)){
+                                //         $x = 0.001;
+                                //     } else {
+                                //         $x = $data->persen_cost_perbulan;
+                                //     }
+                                //         if ($x == 0) return 0;
+
+                                //         $rounded = round($x, 2);
+                                //         $minValue = 0.001;
+
+                                        
+                                //         if ($rounded < $minValue) {
+                                //             $dd=  number_format($minValue, 0);
+                                //         } else {
+                                //             $dd = number_format($rounded * 100, 0);
+                                //         }
+
                                     $ttlpr = $prsttl->sum('persen_cost_perbulan');
                                     if(is_null($ttlpr)){
                                         $x = 0.01;
@@ -339,11 +360,10 @@
                                         $rounded = round($x, 2);
                                         $minValue = 0.01;
 
-                                        
                                         if ($rounded < $minValue) {
-                                            $prs =  number_format($minValue, 2);
+                                            $pres = number_format($minValue, 0);
                                         } else {
-                                            $prs = number_format($rounded, 2);
+                                            $prs = number_format($rounded * 100, 0);
                                         }
                                         return $prs;
                                 });
@@ -422,6 +442,47 @@
     @endif
     <script>
 
+        $('#RecalTemporaryRecalculate').on('click', function(e) {
+
+            setTimeout(() => {
+                     $("#RecalTemporaryRecalculate").text("Sedang ditransfer ke temporary calculate..");
+                }, 1000);
+                
+                sendTemporaryCalculates(true).then(function(res){
+
+                    if(res.success.totalRows !== 0 && (res.success.totalRows !== undefined) && (res.success.totalRows !== null) && (res.success.totalRows !== "")){
+
+                        const success = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        })
+
+                        success.fire({
+                            icon: 'success',
+                            title: 'CODE: [200][success], semua dokumen listrik berhasil ditransfer ke temporary recalculate.\n keterangan detail transfer dokumen:\n total dokumen: '+res.success.totalRows+'\n hasil pencarian data event: '+res.success.totalQuery+'\n batasan yang diperbolehkan untuk transfer: '+res.success.totalBatch +' dokumen mesin',
+                        });
+
+                        $("#RecalTemporaryRecalculate").text("Temporary recalculate");
+
+                        let curr = '{{ route("voyager.all-recalculate.index") }}';
+                        setTimeout(function(){ 
+                            window.location.href = curr;
+                        }, 4000);
+
+                    }
+
+                });
+
+        });
+
+
         $('#RecalALLdocument').on('click', function(e) {
 
                 setTimeout(() => {
@@ -487,6 +548,31 @@
                             }    
                     }
 
+            async function sendTemporaryCalculates(mesinid
+                ) {
+                            let datatemp = {
+                                    mesinid:mesinid
+                                }
+
+                        const apiDataMesin = "{{ route('voyager.listrik.recalculate.temporary.recall.all') }}";
+                                
+                            const settings = {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                            'Content-Type': 'application/json;charset=utf-8'
+                                            },
+                                        body: JSON.stringify(datatemp)
+                                }
+                        try {
+                                
+                                const fetchResponse = await fetch(`${apiDataMesin}`, settings);
+                                const data = await fetchResponse.json();
+                                return data;
+                            } catch (error) {
+                                return JSON.parse(error)
+                            }    
+                    }
         $(document).ready(function () {
             @if (!$dataType->server_side)
                 var table = $('#dataTable').DataTable({!! json_encode(
@@ -516,7 +602,6 @@
                 $('input[name="row_id"]').prop('checked', $(this).prop('checked')).trigger('change');
             });
         });
-
 
         var deleteFormAction;
         $('td').on('click', '.delete', function (e) {

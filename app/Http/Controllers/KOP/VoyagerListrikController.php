@@ -437,6 +437,106 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         ));
     }
 
+    public function SendTemporaryRecalculate() {
+
+        try {
+
+            $alllstrk = Listrik::all();
+            $ListrikInstance = new AllRecalculate;
+
+            $columns = [
+                'company',
+                'code_mesin',
+                'category_bagian',
+                'id_listrik',
+                'group_mesin',
+                'listrik_fk'
+            ];
+            foreach($alllstrk as $datatemp){
+
+                $data[] = [
+                    $datatemp->company_parent_id,
+                    $datatemp->code_mesin,
+                    $datatemp->category_bagian,
+                    $datatemp->ncost_bulan_plus_adm,
+                    $datatemp->group_mesin,
+                    $datatemp->id
+                ];
+                
+            }
+                $batchSize = 500; // insert 500 (default), 100 minimum rows in one query
+
+                $result = \Batch::insert($ListrikInstance, $columns, $data, $batchSize);
+
+            return response()->json(['success' => $result]);
+
+        } catch (Exception $e) {
+            $code = 500;
+            $message = __('voyager::generic.internal_error');
+
+            if ($e->getCode()) {
+                $code = $e->getCode();
+            }
+
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'data' => [
+                    'status'  => $code,
+                    'message' => $message,
+                ],
+            ], $code);
+        }
+
+            // if(!$listrikFind->ncost_bulan_plus_adm){
+            //     $redirect = redirect()->back();
+            //     return $redirect->with([
+            //         'message'    => __('gagal menyinkronkan dokumen, harap mengakumulasi biaya cost perbulan + ADM.'),
+            //         'alert-type' => 'error',
+            //         ]);
+            // }
+    
+            // $rf = AllRecalculate::create(
+            //     [
+            //         'company' => $listrikFind->company_parent_id,
+            //         'code_mesin' => $listrikFind->code_mesin,
+            //         'category_bagian' => $listrikFind->category_bagian,
+            //         'id_listrik' => $listrikFind->ncost_bulan_plus_adm,
+            //         'group_mesin' => $listrikFind->group_mesin,
+            //         'listrik_fk' => $id,
+                
+            //     ]
+            // );
+    
+            // if($rf){
+    
+            //     $data_recalculate = [
+    
+            //         'changed_by' => NULL,
+            //         'dibuat_oleh' => Auth::user()->name,
+            //         'recalculate_status' => "active",
+            //         'id_logs' => $listrikFind->id,
+            //         'code_mesin' =>$listrikFind->code_mesin,
+            //         'company' => $listrikFind->company_parent_id,
+            //         'category_bagian' => $listrikFind->category_bagian,
+    
+            //     ];
+    
+            //     HistoryLogRecalculate::updateOrCreate($data_recalculate);
+    
+            //     $redirect = redirect()->back();
+                
+            //     return $redirect->with([
+            //         'message'    => __('berhasil mendaftarkan kalkulasi mesin, silahkan cek halaman setting recalculate.'),
+            //         'alert-type' => 'success',
+            //     ]);
+            
+            // }
+    
+    }
+
     /**
      * @progress deploy update all dokumen listrik
      */
