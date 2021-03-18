@@ -15,7 +15,7 @@
         <a href="{{ route('listriks.form.master') }}" class="btn btn-success btn-add-new">
             <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Listrik</span>
         </a>
-        <a class="btn btn-primary" id="RecalALLdocument">
+        <a class="btn btn-warning" id="RecalALLdocument">
             <i class="voyager-eye"></i> <span>{{ __('Recalculate otomatis semua biaya listrik') }}</span>
         </a>
         <a class="btn btn-info" id="RecalTemporaryRecalculate">
@@ -481,7 +481,6 @@
                 });
 
         });
-
 
         $('#RecalALLdocument').on('click', function(e) {
 

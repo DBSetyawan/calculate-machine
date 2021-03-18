@@ -537,6 +537,26 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
     
     }
 
+    protected function resetFunc(){
+
+        $alllstrk = Listrik::all();
+        $ListrikInstance = New Listrik;
+
+        foreach($alllstrk as $tmp){
+
+            $data[] = [
+                'id' => $tmp->id,
+                'persen_cost_perbulan' => NULL,
+                'ncost_bulan_plus_adm' => NULL
+            ];
+
+            $index = 'id';
+
+            \Batch::update($ListrikInstance, $data, $index);
+        }
+
+    }
+
     /**
      * @progress deploy update all dokumen listrik
      */
@@ -915,6 +935,8 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
         Listrik::UpdateOrCreate(['id' => $id], $automatedTotalakumulasibiayalistrik);
         
+        $this->resetFunc();
+
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");
         } else {

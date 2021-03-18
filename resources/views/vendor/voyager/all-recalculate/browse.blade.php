@@ -12,7 +12,8 @@
                 <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }}</span>
             </a> --}}
         @endcan
-        <a href="{{ route('voyager.recalculate') }}" class="btn btn-success btn-add-new">
+        <a id="sendcalculate" class="btn btn-success btn-add-new">
+            {{-- <a href="{{ route('voyager.recalculate') }}" class="btn btn-success btn-add-new"> --}}
             <i class="voyager-double-right"></i> <span>{{ __('Recalculate Machine') }} </span>
         </a>
         @can('delete', app($dataType->model_name))
@@ -382,6 +383,68 @@
             });
         });
 
+        $('#sendcalculate').on('click', function(e) {
+
+            setTimeout(() => {
+                $("#sendcalculate").text("Data sedang dikalkulasi, tunggu sebentar..");
+            }, 500);
+
+            sendingrecalculate(true).then(function(res){
+                if(res.json == 1){
+
+                    const success = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    success.fire({
+                        icon: 'success',
+                        title: 'CODE: [200][success], data berhasil disinkronkan ke KOP kalkulasi mesin.'
+                    });
+
+                    $("#sendcalculate").text("Recalculate Machine");
+
+                    let curr = '{{ route("tr.total.kalkulasi") }}';
+                    setTimeout(function(){ 
+                        window.location.href = curr;
+                    }, 6000);
+
+                }
+
+            });
+        });
+
+        async function sendingrecalculate(mesinid
+        ) {
+                    let datafix = {
+                            mesinid:mesinid
+                        }
+                const apiDataMesin = "{{ route('voyager.recalculate') }}";
+                        
+                    const settings = {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                    'Content-Type': 'application/json;charset=utf-8'
+                                },
+                                body: JSON.stringify(datafix)
+                        }
+                try {
+                        
+                        const fetchResponse = await fetch(`${apiDataMesin}`, settings);
+                        const data = await fetchResponse.json();
+                        return data;
+                    } catch (error) {
+                        return JSON.parse(error)
+                }    
+            }
 
         var deleteFormAction;
         $('td').on('click', '.delete', function (e) {
