@@ -1,7 +1,6 @@
 @extends('voyager::master')
-
+@inject('listrik','App\Listrik')
 @section('page_title', __('voyager::generic.viewing').' '.$dataType->getTranslatedAttribute('display_name_plural'))
-
 @section('page_header')
     <div class="container-fluid">
         <h1 class="page-title">
@@ -15,6 +14,46 @@
         <a href="{{ route('listriks.form.master') }}" class="btn btn-success btn-add-new">
             <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Listrik</span>
         </a>
+        @php
+                        
+        $total_listrik = $listrik->whereIn('company_parent_id', [3])->get();
+
+            $persen = collect([$total_listrik])->sum(function ($prsttl){
+
+                $ttlpr = $prsttl->sum('persen_cost_perbulan');
+                    if(is_null($ttlpr)){
+                        $x = 0.01;
+                    } else {
+                        $x = $ttlpr;
+                    }
+                        if ($x == 0) return 0;
+
+                        $rounded = round($x, 2);
+                        $minValue = 0.01;
+
+                        if ($rounded < $minValue) {
+                            $pres = number_format($minValue, 0);
+                        } else {
+                            $prs = number_format($rounded * 100, 0);
+                        }
+                        return $prs;
+                });
+
+            $cost_lstrkperbulan = collect([$total_listrik])->sum(function ($region){
+                    return sprintf("%.5f", $region->sum('nilai_cost_bulan'));
+                });
+
+                $chckt = $total_listrik->map(function ($region){
+                    return $region->ncost_bulan_plus_adm;
+                });
+
+            $totalPPJ = ( ($cost_lstrkperbulan) + ($cost_lstrkperbulan*0.03) + 6000 );
+
+            $totalcostadm = collect([$total_listrik])->sum(function ($region){
+                    return sprintf("%.5f", $region->sum('ncost_bulan_plus_adm'));
+                });
+
+        @endphp
         <a class="btn btn-warning" id="RecalALLdocument">
             <i class="voyager-eye"></i> <span>{{ __('Recalculate otomatis semua biaya listrik') }}</span>
         </a>
@@ -325,60 +364,6 @@
                             </div>
                         </div>
                         @endif
-                        @inject('listrik','App\Listrik')
-                        @php
-                        
-                            $total_listrik = $listrik->whereIn('company_parent_id', [3])->get();
-
-                            $persen = collect([$total_listrik])->sum(function ($prsttl){
-
-                                // if(is_null($data->persen_cost_perbulan)){
-                                //         $x = 0.001;
-                                //     } else {
-                                //         $x = $data->persen_cost_perbulan;
-                                //     }
-                                //         if ($x == 0) return 0;
-
-                                //         $rounded = round($x, 2);
-                                //         $minValue = 0.001;
-
-                                        
-                                //         if ($rounded < $minValue) {
-                                //             $dd=  number_format($minValue, 0);
-                                //         } else {
-                                //             $dd = number_format($rounded * 100, 0);
-                                //         }
-
-                                    $ttlpr = $prsttl->sum('persen_cost_perbulan');
-                                    if(is_null($ttlpr)){
-                                        $x = 0.01;
-                                    } else {
-                                        $x = $ttlpr;
-                                    }
-                                        if ($x == 0) return 0;
-
-                                        $rounded = round($x, 2);
-                                        $minValue = 0.01;
-
-                                        if ($rounded < $minValue) {
-                                            $pres = number_format($minValue, 0);
-                                        } else {
-                                            $prs = number_format($rounded * 100, 0);
-                                        }
-                                        return $prs;
-                                });
-
-                            $x = collect([$total_listrik])->sum(function ($region){
-                                    return sprintf("%.5f", $region->sum('nilai_cost_bulan'));
-                                });
-                            
-                            $totalPPJ = ( ($x) + ($x*0.03) + 6000 );
-
-                            $totalcostadm = collect([$total_listrik])->sum(function ($region){
-                                    return sprintf("%.5f", $region->sum('ncost_bulan_plus_adm'));
-                                });
-
-                        @endphp
                         <br/>
                         <div class="panel panel-bordered">
                             <div class="panel-body">
@@ -387,7 +372,7 @@
                                         <label for="total PPJ" class="badge badge-success">Total semua % cost :</label> <span class="">{{$persen}} %</span>
                                     </div>
                                     <div class="col-2">
-                                        <label for="total PPJ" class="badge badge-success">Total semua cost perbulannya :</label> <span class="">Rp {{number_format($x, 0, ".", ".")}}</span>
+                                        <label for="total PPJ" class="badge badge-success">Total semua cost perbulannya :</label> <span class="">Rp {{number_format($cost_lstrkperbulan, 0, ".", ".")}}</span>
                                     </div>
                                     <div class="col-2">
                                         <label for="total PPJ" class="badge badge-success">Total cost + ADM :</label> <span class="">Rp {{number_format($totalcostadm, 0, ".", ".")}}</span>
@@ -406,8 +391,6 @@
             </div>
         </div>
     </div>
-
-
     {{-- Single delete modal --}}
     <div class="modal modal-danger fade" tabindex="-1" id="delete_modal" role="dialog">
         <div class="modal-dialog">
@@ -442,6 +425,21 @@
     @endif
     <script>
 
+        let cost = @json($chckt)
+
+        for (var i = 0; i < cost.length; i++) {
+
+            if(cost[i] == null){
+                    $('#RecalTemporaryRecalculate').hide()
+                break;            
+            }
+                else{
+                    $('#RecalTemporaryRecalculate').show()
+
+            }
+
+        };
+      
         $('#RecalTemporaryRecalculate').on('click', function(e) {
 
             setTimeout(() => {
