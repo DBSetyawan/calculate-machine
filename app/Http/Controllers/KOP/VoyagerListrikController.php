@@ -446,6 +446,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         try {
 
             $alllstrk = Listrik::all();
+            $recall = AllRecalculate::all();
             $ListrikInstance = new AllRecalculate;
 
             $columns = [
@@ -456,19 +457,29 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                 'group_mesin',
                 'listrik_fk'
             ];
-            foreach($alllstrk as $datatemp){
 
-                $data[] = [
-                    $datatemp->company_parent_id,
-                    $datatemp->code_mesin,
-                    $datatemp->category_bagian,
-                    $datatemp->ncost_bulan_plus_adm,
-                    $datatemp->group_mesin,
-                    $datatemp->id
-                ];
-                
-            }
-                $batchSize = 500; // insert 500 (default), 100 minimum rows in one query
+                        foreach($alllstrk as $datatemp){
+
+                            $data[] = [
+                                $datatemp->company_parent_id,
+                                $datatemp->code_mesin,
+                                $datatemp->category_bagian,
+                                $datatemp->ncost_bulan_plus_adm,
+                                $datatemp->group_mesin,
+                                $datatemp->id
+                            ];
+                            
+                        }
+
+                        // foreach($recall as $datatemp){
+
+                        //     $d[] = [
+                        //         $datatemp
+                        //     ];
+                            
+                        // }
+
+                    $batchSize = 500;
 
                 $result = \Batch::insert($ListrikInstance, $columns, $data, $batchSize);
 

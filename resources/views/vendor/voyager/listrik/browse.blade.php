@@ -22,17 +22,17 @@
 
                 $ttlpr = $prsttl->sum('persen_cost_perbulan');
                     if(is_null($ttlpr)){
-                        $x = 0.01;
+                        $x = 0.0001;
                     } else {
                         $x = $ttlpr;
                     }
                         if ($x == 0) return 0;
 
                         $rounded = round($x, 2);
-                        $minValue = 0.01;
+                        $minValue = 0.0001;
 
                         if ($rounded < $minValue) {
-                            $pres = number_format($minValue, 0);
+                            $prs = number_format($minValue, 0);
                         } else {
                             $prs = number_format($rounded * 100, 0);
                         }
@@ -118,13 +118,12 @@
                                 @endif
                             </form>
                         @endif
-                        <div class="alert alert-warning" role="alert"> <i class="voyager-info-circled"></i> <span >Pastikan terlebih dahulu dokumen biaya akumulasi listrik, sudah sesuai sebelum mentransfer data ke temporary KOP kalkulasi mesin.</div>
+                        <div class="alert alert-warning" role="alert"> <i class="voyager-info-circled"></i> <span >Pastikan terlebih dahulu dokumen biaya akumulasi listrik sudah sesuai, sebelum mentransfer data ke temporary KOP kalkulasi mesin.</div>
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                   <h3 class="panel-title">KOP Kalkulasi mesin perhitungan listrik & transfer dokumen temporary:</h3>
                                 </div>
                                 <div class="panel-body">
-                                   
                                     <div class="float-right"> <a class="btn btn-success btn-small" id="RecalALLdocument">
                                         <i class="voyager-refresh"></i> <span class="protip"
                                         data-pt-position="left"
@@ -133,7 +132,7 @@
                                         data-pt-trigger="hover"
                                         data-pt-size="normal"
                                         data-pt-scheme="leaf"
-                                        data-pt-offset-left="2">{{ __('Kalkulasi % cost & cost + ADM') }}</span>
+                                        data-pt-offset-left="1">{{ __('Kalkulasi % cost & cost + ADM') }}</span>
                                     </a></div><br><br/>
                                     <div class="float-right">   <a class="btn btn-small btn-info" id="RecalTemporaryRecalculate">
                                         <i class="voyager-documentation"></i> <i class="voyager-forward"></i> <span class="protip"
@@ -145,13 +144,15 @@
                                         data-pt-scheme="leaf"
                                         data-pt-offset-left="1">{{ __('Transfer dokumen') }}</span>
                                     </a></div><br>
-                                 
-                                    <div id='loading'></div>
                                 </div>
                               </div>
+                              <div class="float-right">
+                                  <div id='loading'>
+                                  </div>
+                              </div>
                             </div>
+                        </div>
                         <div class="table-responsive">
-                         <br/>
                             <table id="dataTable" class="table table-hover">
                                 <thead>
                                     <tr>
@@ -335,15 +336,17 @@
                                                     @endif
                                                     @php
                                                     // dd($data->persen_cost_perbulan);
+
+                                                    
                                                     if(is_null($data->persen_cost_perbulan)){
-                                                        $x = 0.001;
+                                                        $x = 0.0001;
                                                     } else {
                                                         $x = $data->persen_cost_perbulan;
                                                     }
                                                      if ($x == 0) return 0;
 
                                                         $rounded = round($x, 2);
-                                                        $minValue = 0.001;
+                                                        $minValue = 0.0001;
 
                                                         
                                                         if ($rounded < $minValue) {
@@ -401,13 +404,16 @@
                                         <label for="total PPJ" class="badge badge-success">Total semua % cost :</label> <span class="">{{$persen}} %</span>
                                     </div>
                                     <div class="col-2">
-                                        <label for="total PPJ" class="badge badge-success">Total semua cost perbulannya :</label> <span class="">Rp {{number_format($cost_lstrkperbulan, 0, ".", ".")}}</span>
-                                    </div>
-                                    <div class="col-2">
                                         <label for="total PPJ" class="badge badge-success">Total cost + ADM :</label> <span class="">Rp {{number_format($totalcostadm, 0, ".", ".")}}</span>
                                     </div>
                                     <div class="col-2">
+                                        <label for="total PPJ" class="badge badge-success">Total semua cost perbulannya :</label> <span class="">Rp {{number_format($cost_lstrkperbulan, 0, ".", ".")}}</span>
+                                    </div>
+                                    <div class="col-2">
                                         <label for="total PPJ" class="badge badge-success">Total PPJ :</label> <span class="">Rp {{number_format($totalPPJ, 0, ".", ".")}}</span>
+                                        <code>
+                                            seluruh total cost perbulan*(seluruh total cost perbulan * 0.03(3%)) + MATERAI 3000
+                                        </code>
                                     </div>
                                     <div class="col-2">
                                         {{-- <label for="total PPJ" class="badge badge-success"></label> <span class="">Rp {{number_format($totalcostadm, 0, ".", ".")}}</span> --}}
@@ -527,6 +533,8 @@
                     
                     sendTemporaryCalculates(true).then(function(res){
 
+                        // console.log(res.checking)
+
                         if(res.success.totalRows !== 0 && (res.success.totalRows !== undefined) && (res.success.totalRows !== null) && (res.success.totalRows !== "")){
 
                             const success = Swal.mixin({
@@ -544,10 +552,10 @@
 
                             success.fire({
                                 icon: 'success',
-                                title: 'CODE: [200][success], semua dokumen listrik berhasil ditransfer ke temporary recalculate.\n keterangan detail transfer dokumen:\n total dokumen: '+res.success.totalRows+'\n hasil pencarian data event: '+res.success.totalQuery+'\n batasan yang diperbolehkan untuk transfer: '+res.success.totalBatch +' dokumen mesin',
+                                title: 'Informasi, semua dokumen listrik berhasil ditransfer ke temporary recalculate.\n keterangan detail transfer dokumen:\n total dokumen: '+res.success.totalRows+'\n hasil pencarian data event: '+res.success.totalQuery+'\n batasan yang diperbolehkan untuk transfer: '+res.success.totalBatch +' dokumen mesin',
                             });
 
-                            $("#RecalTemporaryRecalculate").html('<i class="voyager-documentation"></i> <i class="voyager-forward"></i>');
+                            $("#RecalTemporaryRecalculate").html('<i class="voyager-documentation"></i> <i class="voyager-forward"></i> Transfer dokumen');
 
                             let curr = '{{ route("voyager.all-recalculate.index") }}';
                             setTimeout(function(){ 
@@ -606,11 +614,11 @@
 
                         success.fire({
                             icon: 'success',
-                            title: 'CODE: [200][success], % cost perbulan | cost perbulan + ADM, telah diakumulasikan.'
+                            title: 'Informasi, % cost perbulan | cost perbulan + ADM, telah diakumulasikan.'
                         });
 
                         // $("#RecalALLdocument").html('<i class="voyager-refresh"></i> Kalkulasi % cost & cost + ADM');
-                        $("#RecalALLdocument").html('<i class="voyager-refresh"></i>');
+                        $("#RecalALLdocument").html('<i class="voyager-refresh"></i> Kalkulasi % cost & cost + ADM');
 
                         let curr = '{{ route("voyager.listrik.index") }}';
                         setTimeout(function(){ 
