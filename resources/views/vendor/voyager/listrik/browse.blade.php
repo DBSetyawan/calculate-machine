@@ -54,12 +54,6 @@
                 });
 
         @endphp
-        <a class="btn btn-warning" id="RecalALLdocument">
-            <i class="voyager-eye"></i> <span>{{ __('Recalculate otomatis semua biaya listrik') }}</span>
-        </a>
-        <a class="btn btn-info" id="RecalTemporaryRecalculate">
-            <i class="voyager-eye"></i> <span>{{ __('Temporary recalculate') }}</span>
-        </a>
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
         @endcan
@@ -123,6 +117,13 @@
                             </form>
                         @endif
                         <div class="table-responsive">
+                            <a class="btn btn-warning" id="RecalALLdocument">
+                                <i class="voyager-refresh"></i> <span>{{ __('Kalkulasi % cost & cost + ADM') }}</span>
+                            </a>
+                            <a class="btn btn-info" id="RecalTemporaryRecalculate">
+                                <i class="voyager-documentation"></i> <i class="voyager-forward"></i> <span>{{ __('Transfer dokumen') }}</span>
+                            </a>
+                            <div id='loading'></div>
                             <table id="dataTable" class="table table-hover">
                                 <thead>
                                     <tr>
@@ -439,11 +440,23 @@
             }
 
         };
-      
+            var timeout;
+
+            function LoadingRecalculate() {
+                $('#loading').html('<img style="width:24px" src="{{ asset("public/spinning-arrows.gif")}}"/>');
+                clearTimeout(timeout);
+            }
+
+            function LoadingTransfersTempKOPmachine() {
+                $('#loading').html('<img style="width:30px" src="{{ asset("public/circles-menu-1.gif")}}"/>');
+                clearTimeout(timeout);
+            }
+
         $('#RecalTemporaryRecalculate').on('click', function(e) {
+            LoadingTransfersTempKOPmachine();
 
             setTimeout(() => {
-                     $("#RecalTemporaryRecalculate").text("Sedang ditransfer ke temporary calculate..");
+                     $("#RecalTemporaryRecalculate").html('Sedang ditransfer ke KOP kalkulasi mesin');
                 }, 1000);
                 
                 sendTemporaryCalculates(true).then(function(res){
@@ -457,6 +470,7 @@
                             timer: 3000,
                             timerProgressBar: true,
                             didOpen: (toast) => {
+                                $("#loading").hide();
                                 toast.addEventListener('mouseenter', Swal.stopTimer)
                                 toast.addEventListener('mouseleave', Swal.resumeTimer)
                             }
@@ -467,12 +481,12 @@
                             title: 'CODE: [200][success], semua dokumen listrik berhasil ditransfer ke temporary recalculate.\n keterangan detail transfer dokumen:\n total dokumen: '+res.success.totalRows+'\n hasil pencarian data event: '+res.success.totalQuery+'\n batasan yang diperbolehkan untuk transfer: '+res.success.totalBatch +' dokumen mesin',
                         });
 
-                        $("#RecalTemporaryRecalculate").text("Temporary recalculate");
+                        $("#RecalTemporaryRecalculate").html('<i class="voyager-documentation"></i> <i class="voyager-forward"></i> Transfer dokumen');
 
                         let curr = '{{ route("voyager.all-recalculate.index") }}';
                         setTimeout(function(){ 
                             window.location.href = curr;
-                        }, 4000);
+                        }, 5000);
 
                     }
 
@@ -481,7 +495,7 @@
         });
 
         $('#RecalALLdocument').on('click', function(e) {
-
+            LoadingRecalculate();
                 setTimeout(() => {
                      $("#RecalALLdocument").text("Sedang diakumulasikan..");
                 }, 1000);
@@ -498,6 +512,7 @@
                             timer: 3000,
                             timerProgressBar: true,
                             didOpen: (toast) => {
+                                $("#loading").hide();
                                 toast.addEventListener('mouseenter', Swal.stopTimer)
                                 toast.addEventListener('mouseleave', Swal.resumeTimer)
                             }
@@ -508,12 +523,13 @@
                             title: 'CODE: [200][success], % cost perbulan | cost perbulan + ADM, telah diakumulasikan.'
                         });
 
-                        $("#RecalALLdocument").text("Recalculate otomatis semua biaya listrik");
+                        $("#RecalALLdocument").html('<i class="voyager-refresh"></i> Kalkulasi % cost & cost + ADM');
 
                         let curr = '{{ route("voyager.listrik.index") }}';
                         setTimeout(function(){ 
+
                             window.location.href = curr;
-                        }, 4000);
+                        }, 5000);
 
                     }
 
