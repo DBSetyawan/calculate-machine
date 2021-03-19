@@ -219,7 +219,11 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                     ];
         
                     $total = ListrikTotal::create($totaltracks);
-    
+                    
+                        if(!empty($total)){
+                            $this->resetFunc();
+                        }
+
                 return response()->json(
                     [
                         'isConfirmed' => $r->setTo["isConfirmed"],

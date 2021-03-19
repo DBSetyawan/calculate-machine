@@ -181,11 +181,12 @@
                             if(data.isConfirmed == "true"){
 
                                 return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi Biaya produksi lain berhasil diakumulasi & disimpan', 'success')
+                               
+                                let curr = '{{ route("voyager.account-mtc.index") }}';
+                                setTimeout(function(){ 
+                                    window.location.href = curr;
+                                }, 4000);
                             }
-                            let curr = '{{ route("voyager.account-mtc.index") }}';
-                            setTimeout(function(){ 
-                                window.location.href = curr;
-                            }, 4000);
                         });
 
                     } else if (result.isDenied) {

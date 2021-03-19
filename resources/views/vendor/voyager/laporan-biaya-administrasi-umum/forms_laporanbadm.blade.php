@@ -162,14 +162,15 @@
                         .done(function(data) {
                             $("#total_b_administrasi_umumlp").val("Rp "+formatCurrency(Math.round(data.total_biaya_lp_adm)));
 
-                            if(data.isConfirmed == "true"){
-
-                                return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya biaya administrasi umum berhasil diakumulasi & disimpan', 'success')
-                            }
+                        if(data.isConfirmed == "true"){
+                            
                             let curr = '{{ route("voyager.laporan-biaya-administrasi-umum.index") }}';
                             setTimeout(function(){ 
                                 window.location.href = curr;
                             }, 4000);
+
+                                return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya biaya administrasi umum berhasil diakumulasi & disimpan', 'success')
+                            }
 
                         });
 

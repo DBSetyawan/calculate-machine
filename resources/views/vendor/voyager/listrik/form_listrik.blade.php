@@ -552,14 +552,16 @@
                         
                             if(data.isConfirmed == "true"){
 
-                                    return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya listrik berhasil diakumulasi & disimpan', 'success')
-                                }
-
                                 let curr = '{{ route("voyager.listrik.index") }}';
                                 setTimeout(function(){ 
                                     window.location.href = curr;
                                 }, 4000);
 
+                                    return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya listrik berhasil diakumulasi & disimpan', 'success')
+                               
+                                }
+
+                              
                             }
                         );
 
