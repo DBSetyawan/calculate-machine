@@ -363,7 +363,7 @@ $(document).ready(function(){
                     }, 1000);
           }
 
-          if(thisLocalStorageEventCheckedMTCOnly[0] == "7" && thisLocalStorageEventCheckedPenyusutanOnly[0] == "5"){
+          if(thisLocalStorageEventCheckedMTCOnly[0] == "8" && thisLocalStorageEventCheckedPenyusutanOnly[0] == "6"){
 
             setTimeout(function(){ 
 
