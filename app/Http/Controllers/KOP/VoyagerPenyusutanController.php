@@ -404,12 +404,31 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
 
         $automatedTotalakumulasibiayaPenyusutan = [
             'company_parent_id' => $request->company_parent_id,
+            'code_mesin' => $request->code_mesin,
             'penyusutan_perbulan' => (float) $UpdaterumusTotalPenyusutan,
             'purchaseorder_value' => $request->purchaseorder_value,
             'umur' => $request->umur,
         ];
 
         Penyusutan::UpdateOrCreate(['id' => $id], $automatedTotalakumulasibiayaPenyusutan);
+
+        $pnystnttl = Penyusutan::all();
+        $AllRecalculateInstance = New AllRecalculate;
+
+        foreach($pnystnttl as $indexs => $data_peny){
+
+            $UpdaterumusTotalPenyusutan = $this->RmsPenyusutan((float) $data_peny->purchaseorder_value, $data_peny->umur);
+
+            $dpney[] = [
+                'code_mesin' => $data_peny->code_mesin,
+                'id_penyusutan' => $UpdaterumusTotalPenyusutan
+            ];
+
+            $code_mesin = 'code_mesin';
+
+            \Batch::update($AllRecalculateInstance, $dpney, $code_mesin);
+
+        }
 
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");

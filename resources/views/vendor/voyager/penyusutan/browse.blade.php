@@ -305,7 +305,7 @@
                             <div class="panel-body">
                                 <div class="pull-left">
                                     <div class="col-2">
-                                        <label for="total PPJ" class="badge badge-success">Total cost perbulan :</label> <span class="">Rp {{number_format($x, 0, ".", ".")}}</span>
+                                        <label for="total PPJ" class="badge badge-success">Total penyusutan perbulan :</label> <span class="">Rp {{number_format($x, 0, ".", ".")}}</span>
                                     </div>
                                 </div>
                             </div>

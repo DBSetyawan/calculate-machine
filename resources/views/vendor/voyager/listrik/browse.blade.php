@@ -145,6 +145,30 @@
                                         data-pt-offset-left="1">{{ __('Transfer dokumen') }}</span>
                                     </a></div><br>
                                 </div>
+                                <div class="panel panel-bordered">
+                                    <div class="panel-body">
+                                        <div class="pull-left">
+                                            <div class="col-2">
+                                                <label for="total PPJ" class="badge badge-success">Total semua % cost :</label> <span class="">{{$persen}} %</span>
+                                            </div>
+                                            <div class="col-2">
+                                                <label for="total PPJ" class="badge badge-success">Total cost + ADM :</label> <span class="">Rp {{number_format($totalcostadm, 0, ".", ".")}}</span>
+                                            </div>
+                                            <div class="col-2">
+                                                <label for="total PPJ" class="badge badge-success">Total semua cost perbulannya :</label> <span class="">Rp {{number_format($cost_lstrkperbulan, 0, ".", ".")}}</span>
+                                            </div>
+                                            <div class="col-2">
+                                                <label for="total PPJ" class="badge badge-success">Total PPJ :</label> <span class="">Rp {{number_format($totalPPJ, 0, ".", ".")}}</span>
+                                                <code>
+                                                    seluruh total cost perbulan*(seluruh total cost perbulan * 0.03(3%)) + MATERAI 3000
+                                                </code>
+                                            </div>
+                                            <div class="col-2">
+                                                {{-- <label for="total PPJ" class="badge badge-success"></label> <span class="">Rp {{number_format($totalcostadm, 0, ".", ".")}}</span> --}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                               </div>
                               <div class="float-right">
                                   <div id='loading'>
@@ -397,30 +421,7 @@
                         </div>
                         @endif
                         <br/>
-                        <div class="panel panel-bordered">
-                            <div class="panel-body">
-                                <div class="pull-left">
-                                    <div class="col-2">
-                                        <label for="total PPJ" class="badge badge-success">Total semua % cost :</label> <span class="">{{$persen}} %</span>
-                                    </div>
-                                    <div class="col-2">
-                                        <label for="total PPJ" class="badge badge-success">Total cost + ADM :</label> <span class="">Rp {{number_format($totalcostadm, 0, ".", ".")}}</span>
-                                    </div>
-                                    <div class="col-2">
-                                        <label for="total PPJ" class="badge badge-success">Total semua cost perbulannya :</label> <span class="">Rp {{number_format($cost_lstrkperbulan, 0, ".", ".")}}</span>
-                                    </div>
-                                    <div class="col-2">
-                                        <label for="total PPJ" class="badge badge-success">Total PPJ :</label> <span class="">Rp {{number_format($totalPPJ, 0, ".", ".")}}</span>
-                                        <code>
-                                            seluruh total cost perbulan*(seluruh total cost perbulan * 0.03(3%)) + MATERAI 3000
-                                        </code>
-                                    </div>
-                                    <div class="col-2">
-                                        {{-- <label for="total PPJ" class="badge badge-success"></label> <span class="">Rp {{number_format($totalcostadm, 0, ".", ".")}}</span> --}}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                      
                     </div>
                 </div>
             </div>
@@ -597,7 +598,7 @@
                 
                 recalculate_modules(true).then(function(res){
 
-                    if(res.success == 1){
+                    if(res.ref = 200){
 
                         const success = Swal.mixin({
                             toast: true,
@@ -624,7 +625,7 @@
                         setTimeout(function(){ 
 
                                 window.location.href = curr;
-                            }, 5000);
+                            }, 3000);
 
                         }
 

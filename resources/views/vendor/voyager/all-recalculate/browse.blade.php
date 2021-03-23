@@ -441,8 +441,12 @@
                         const fetchResponse = await fetch(`${apiDataMesin}`, settings);
                         const data = await fetchResponse.json();
                         return data;
-                    } catch (error) {
-                        return JSON.parse(error)
+                    } catch (objError) {
+                        if (objError instanceof SyntaxError) {
+                                console.error(JSON.stringify(objError));
+                            } else {
+                                console.error(objError);
+                            }
                 }    
             }
 

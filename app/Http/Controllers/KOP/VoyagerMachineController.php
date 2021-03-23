@@ -4,6 +4,11 @@ namespace App\Http\Controllers\KOP;
 
 use App\Mesin;
 use Exception;
+use App\Company;
+use App\LwbpMaster;
+use App\ListrikOutput;
+use App\KategoriBagian;
+use App\Lb8KategoriMesin;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
@@ -168,11 +173,72 @@ class VoyagerMachineController extends BaseVoyagerBaseController
             'showCheckboxColumn'
         ));
     }
-
+    
     public function detailcodemesin(Request $req){
 
         $mesin = Mesin::whereIn('id', [(Int) $req->mesinid])->with('KbagianTo','CompanyTo','GroupMesinTo','MesinListrikPerjamTo','AsumsiTo')->first();
         return response()->json(['detail'=> $mesin]);
+    }
+
+    public function storePlaceEv(Request $r){
+        
+        $datamesin = [
+            'ampere' => $r->ampere,
+            'faktor_kali_lwbp' =>  $r->faktor_kali_lwbp,
+            'faktor_kali_wbp' =>  $r->faktor_kali_wbp,
+            'voltase' =>  $r->voltase,
+            'deskripsi' =>  $r->deskripsi,
+            'code_mesin' => $r->code_mesin,
+            'asumsi_id' => $r->asumsi_id,
+            'company_id' => $r->company_id,
+            'group_mesin_id' => $r->group_mesin_id,
+            'category_bagian_id' => $r->category_bagian_id,
+            'listrik_perjam_id' => $r->listrik_perjam_id
+        ];
+
+        if($r->setTo["isConfirmed"] == "true"){
+
+            $simpanMesin = Mesin::create($datamesin);
+            // $simpanMesin = Mesin::UpdateOrCreate(['code_mesin' => $r->code_mesin], $datamesin);
+
+            // if(!empty($simpanMesin) && $simpanMesin != [] && $simpanMesin != null){
+
+                    // $totaltracks = [
+    
+                    //     'id_listrik' => $simpanMesin->id,
+                    //     'changed_by' => Auth::user()->name
+        
+                    // ];
+        
+                    // $total = ListrikTotal::create($totaltracks);
+                    
+                    //     if(!empty($total)){
+                    //         $this->resetFunc();
+                    //     }
+
+                return response()->json(
+                    [
+                        'isConfirmed' => $r->setTo["isConfirmed"]
+                        // 'data' => $datamesin,
+                        // 'isConfirmed' => $r->all()
+                    ]
+                );
+    
+            }
+        // } 
+    }
+
+    public function formMachineAction(Request $request)
+    {
+        $company = Company::all();
+        $group_mesin = Lb8KategoriMesin::all();
+        $mesin = Mesin::all();
+        $cbagian = KategoriBagian::all();
+        $LsOutputPerjam = ListrikOutput::all();
+        $LwbpMaster = LwbpMaster::all();
+
+
+        return view('vendor.voyager.mesin.form_machine', compact('LwbpMaster','mesin','LsOutputPerjam','group_mesin','company','cbagian'));
     }
 
     public function show(Request $request, $id)

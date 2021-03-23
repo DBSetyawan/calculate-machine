@@ -11,6 +11,7 @@ use App\ListrikOutput;
 use App\AllRecalculate;
 use App\KategoriBagian;
 use App\LaporanGajiLain;
+use Mavinoo\Batch\Batch;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Http\JsonResponse;
@@ -532,6 +533,25 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
                 ->first();
 
             LaporanGajiLain::whereIn('category_bagian', [$request->input('category_bagian')])->get();
+
+            $LaporanGajiLain = LaporanGajiLain::all();
+            $AllRecalculateInstance = New AllRecalculate;
+    
+            foreach($LaporanGajiLain as $indexs => $dtlg){
+    
+                $jumlah_total = $this->RumusTotalLaporanGajiLain($dtlg->tahun1, $dtlg->tahun2, $dtlg->tahun3);
+    
+                $dpney[] = [
+                    'code_mesin' => $dtlg->code_mesin,
+                    'id_gajilain' => $jumlah_total
+                ];
+    
+                $code_mesin = 'code_mesin';
+    
+                \Batch::update($AllRecalculateInstance, $dpney, $code_mesin);
+    
+            }
+    
 
                 // $hasil_akhir_gj_lain = $this->jumlahAkhirGajiLain($first);
            

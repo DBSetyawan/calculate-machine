@@ -45,6 +45,15 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="program_id">Mesin</label>
+                                <select class="form-control select2" id="code_mesin" name="code_mesin" required>
+                                    @foreach ($mesin as $m)
+                                <option value="{{$m->id}}" @if($dataTypeContent->code_mesin == $m->id) selected='selected' @endif>{{$m->code_mesin}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group">
                                 <label for="program_id">Category</label>
                                 <select class="form-control select2" id="category_bagian" name="category_bagian" required>
                                     @foreach ($cbagian as $cb)
@@ -208,6 +217,7 @@
 
                     'id'                    : $('input[name=id]').val(),
                     'category_bagian'       : $('select[name=category_bagian]').val(),
+                    'code_mesin'            : $('select[name=code_mesin]').val(),
                     'company_parent_id'     : $('select[name=company_parent_id]').val(),
                     'perbaikan_tahun1'      : $('input[name=perbaikan_tahun1]').val(),
                     'perbaikan_tahun2'      : $('input[name=perbaikan_tahun2]').val(),

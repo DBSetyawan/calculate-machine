@@ -292,7 +292,7 @@
                                 });
                         @endphp
                         <br/>
-                        <div class="panel panel-bordered">
+                        {{-- <div class="panel panel-bordered">
                             <div class="panel-body">
                                 <div class="pull-left">
                                     <div class="col-2">
@@ -300,7 +300,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

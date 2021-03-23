@@ -37,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Voyager::addAction(\App\Actions\JobLevelAction::class);
         Voyager::addAction(\App\Actions\AsumsiAction::class);
-        Voyager::addAction(\App\Actions\ActionRecalculate::class);
+        // Voyager::addAction(\App\Actions\ActionRecalculate::class);
         Voyager::addAction(\App\Actions\ActionAccount::class);
         Voyager::addAction(\App\Actions\ActionLabor::class);
         Voyager::addAction(\App\Actions\ActionEditPenyusutan::class);
@@ -46,7 +46,7 @@ class AppServiceProvider extends ServiceProvider
         Voyager::addAction(\App\Actions\ActionMTC::class);
         Voyager::addAction(\App\Actions\grouMesinAction::class);
         Voyager::addAction(\App\Actions\ActionKategoriBagian::class);
-        Voyager::addAction(\App\Actions\SyncCalcPerMesin::class);
+        // Voyager::addAction(\App\Actions\SyncCalcPerMesin::class);
         Voyager::addAction(\App\Actions\ActionBagianPenjualan::class);
         Voyager::addAction(\App\Actions\ActionBAU::class);
         Voyager::addAction(\App\Actions\gajilainAction::class);

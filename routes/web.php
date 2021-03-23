@@ -104,6 +104,9 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('button-load-ButtonCalcSmuaBiayaExports','KOP\VoyagerTotalKalkulasiController@ButtonCalcSmuaBiayaExports')->name('voyager.ButtonCalcSmuaBiayaExports');
     Route::get('button-load-ButtonexportCalcTanpaMTC','KOP\VoyagerTotalKalkulasiController@ButtonexportCalcTanpaMTC')->name('voyager.ButtonexportCalcTanpaMTC');
     Route::get('button-load-ButtonexportCalcTanpaMTCnTanpaPenyusutan','KOP\VoyagerTotalKalkulasiController@ButtonexportCalcTanpaMTCnTanpaPenyusutan')->name('voyager.exportCalcTanpaMTCnTanpaPenyusutan');
+    Route::get('mesins/form-machine','KOP\VoyagerMachineController@formMachineAction')->name('mesin.form.master');
+    Route::post('mesins/store-form-machine','KOP\VoyagerMachineController@storePlaceEv')->name('mesin.storePlaceEv.master');
+    
     Route::get('/clear', function() {
 
         Artisan::call('cache:clear');

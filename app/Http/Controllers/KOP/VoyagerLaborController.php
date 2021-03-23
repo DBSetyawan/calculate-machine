@@ -486,6 +486,45 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
 
         Labor::UpdateOrCreate(['id'=>$id], $result_gaji_labor);
 
+        $lbrttl = Labor::all();
+        $AllRecalculateInstance = New AllRecalculate;
+
+        foreach($lbrttl as $indexs => $data_lbr){
+
+        /**
+         * Hitung Biaya Level
+         * @method RumusBiayaGajiUpahSupervisor, RumusBiayaGajiUpahOperator, RumusBiayaGajiUpahHelper
+         *
+         * Total biaya level Supervisor
+         */
+        $biayasupervisor = $this->RumusBiayaGajiUpahSupervisor($data_lbr->shift, $data_lbr->jumlah_mesin_ditanggani, $data_lbr->code_mesin);
+        
+        /**
+         * Total biaya level Operator
+         */
+        $biayaoperator = $this->RumusBiayaGajiUpahOperator($data_lbr->shift, $data_lbr->operator);
+         
+        /**
+         * Total biaya level helper
+         */
+        $biayahelper = $this->RumusBiayaGajiUpahHelper($data_lbr->shift, $data_lbr->helper);
+
+        /**
+         * Total biaya labor
+         */
+        $total_biaya_upah_perbulan = $this->RumusTotalBiayaLabor($biayasupervisor, $biayaoperator, $biayahelper);
+
+            $dlbr[] = [
+                'code_mesin' => $data_lbr->code_mesin,
+                'id_labor' => $total_biaya_upah_perbulan
+            ];
+
+                $code_mesin = 'code_mesin';
+
+            \Batch::update($AllRecalculateInstance, $dlbr, $code_mesin);
+
+        }
+
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");
         } else {

@@ -431,9 +431,9 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
         $LsOutputPerjam = ListrikOutput::all();
         $cbagian = KategoriBagian::all();
         $company = Company::all();
+        $mesin = Mesin::all();
 
-
-        return Voyager::view($view, compact('company','cbagian','LsOutputPerjam','dataType', 'dataTypeContent', 'isModelTranslatable'));
+        return Voyager::view($view, compact('company','mesin','cbagian','LsOutputPerjam','dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     public function EventChangeRptMTC(Request $request)
@@ -488,6 +488,52 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
                 ];
         
                $data_success = RptMtc::findOrFail($request->id)->update($automatedRecalculateMTC);
+
+               $rptmtc = RptMtc::all();
+               $AllRecalculateInstance = New AllRecalculate;
+       
+            //    foreach($rptmtc as $indexs => $datarmtc){
+
+                 /**
+                 * Hitung Total Perbaikan Biaya perbulan
+                 * @param $perbaikanpertahunn.
+                 */
+                $RataRataPerbaikanPerbulan = $this->RataRataPerbaikanPerbulan($request->perbaikan_tahun1, $request->perbaikan_tahun2, $request->perbaikan_tahun3);
+                
+                /**
+                 * Hitung Total Sparepart Biaya perbulan
+                 * @param $perbaikanpertahunn.
+                */
+                $RataRataSparePartPerbulan = $this->RataRataSparePartPerbulan($request->sparepart_tahun1, $request->sparepart_tahun2, $request->sparepart_tahun3);
+                
+                /**
+                 * mengambil master account_mct AE$34 * sheet listrik AF5
+                 * @development process
+                 */
+                $totalBiayaAccountMTC = AccountMtc::whereIn('company_parent_id', [3])->get();
+
+                $totalAccountMTC = collect([$totalBiayaAccountMTC])->sum(function ($totalbiayaacmtc){
+                        return $totalbiayaacmtc->sum('biaya_perbulan');
+                    });
+
+                $TotalSemuaBiayaProduksilain = $this->TotalSemuaBiayaProduksi($totalAccountMTC, $request->percent, $request->category_bagian);
+                // dd($TotalSemuaBiayaProduksilain);
+                /**
+                 * total biaya penyusutan perbulan
+                 */
+                $TotalBiayaPenyusutanMaintenance = $this->TotalBiayaPenyusutanMaintenance($RataRataPerbaikanPerbulan, $RataRataSparePartPerbulan);
+
+                    $dmtc[] = [
+                        'code_mesin' => $request->code_mesin,
+                        'id_mtc' => $TotalBiayaPenyusutanMaintenance,
+                        'id_bprodlain_insteadof_mtc' => $TotalSemuaBiayaProduksilain
+                    ];
+        
+                        $code_mesin = 'code_mesin';
+        
+                    \Batch::update($AllRecalculateInstance, $dmtc, $code_mesin);
+
+            //    }
             
             return response()->json(['success' => __('voyager::generic.successfully_updated'), 'data' => $data_success]);
             

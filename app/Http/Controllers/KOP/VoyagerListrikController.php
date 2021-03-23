@@ -192,7 +192,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         
         if($r->setTo["isConfirmed"] == "true"){
 
-            $simpanBiayaListrik = Listrik::create($Totalakumulasibiayalistrik);
+            $simpanBiayaListrik = Listrik::UpdateOrCreate(['code_mesin' => $r->code_mesin],$Totalakumulasibiayalistrik);
 
             if(!empty($simpanBiayaListrik) && $simpanBiayaListrik != [] && $simpanBiayaListrik != null){
 
@@ -573,7 +573,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
     }
 
     /**
-     * @progress deploy update all dokumen listrik
+     * @bulk update all dokumen listrik
      */
     public function all_recalculate(Request $r){
 
@@ -583,6 +583,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                 $saldo_akhir_cost_perbulan = $this->total_cost_perbulan();
                 $alllstrk = Listrik::all();
                 $ListrikInstance = New Listrik;
+                $AllRecalculateInstance = New AllRecalculate;
 
                 foreach($alllstrk as $sd => $tmp){
 
@@ -597,12 +598,27 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                         'persen_cost_perbulan' => $persen_costperbulan,
                         'ncost_bulan_plus_adm' => $costADM
                     ];
+
                     $index = 'id';
 
                     $bulk_batch = \Batch::update($ListrikInstance, $data, $index);
+
+                    /**
+                     * sync to recalculate;
+                     */
+                    $dlstrik[] = [
+                        'code_mesin' => $tmp->code_mesin,
+                        'id_listrik' => $costADM
+                    ];
+
+                        $code_mesin = 'code_mesin';
+
+                    \Batch::update($AllRecalculateInstance, $dlstrik, $code_mesin);
+                    
                 }
 
-            return response()->json(['json'=> $data, 'success' => $bulk_batch]);
+
+            return response()->json(['json'=> $data, 'ref' => '200', 'success' => $bulk_batch]);
 
         } catch (Exception $e) {
             $code = 500;

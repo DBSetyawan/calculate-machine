@@ -163,11 +163,11 @@
                                     <div class="panel-body">
                                         <div class="form-group">
                                             <label for="url_instagram">Faktor kali LWBP</label>
-                                            <input type="text" class="form-control" id="faktor_kali_lwbp" name="faktor_kali_lwbp" placeholder="Faktor kali LWBP">
+                                            <input type="text" class="form-control fkl" id="faktor_kali_lwbp" name="faktor_kali_lwbp" placeholder="Faktor kali LWBP">
                                         </div>
                                         <div class="form-group">
                                             <label for="url_instagram">Faktor kali WBP</label>
-                                            <input type="text" class="form-control" id="faktor_kali_wbp" name="faktor_kali_wbp" placeholder="Faktor kali WBP">
+                                            <input type="text" class="form-control fkw" id="faktor_kali_wbp" name="faktor_kali_wbp" placeholder="Faktor kali WBP">
                                         </div>
                                     </div>
                                 </div>
@@ -302,7 +302,7 @@
    
 
                 GetFullDataMesin(this.value).then(function(results){
-
+                    
                         $("#code_mesin_id").val(results.detail.id);
                         $("#company_display").val(results.detail.company_to.company_name);
                         $("#company_parent_id").val(results.detail.company_to.id);
@@ -316,6 +316,8 @@
                         $("#voltase").val(results.detail.voltase);
                         $("#shift_display").val("Mesin shift ke "+results.detail.asumsi_to.shift);
                         $("#shift").val(results.detail.asumsi_to.shift);
+                        $(".fkl").val(results.detail.faktor_kali_lwbp);
+                        $(".fkw").val(results.detail.faktor_kali_wbp);
 
                             if( results.detail.asumsi_to.shift == "1"){
                                 //  shift1()
