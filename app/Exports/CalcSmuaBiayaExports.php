@@ -32,7 +32,9 @@ class CalcSmuaBiayaExports implements FromQuery, WithProperties, WithMapping, Wi
     public function query()
     {
 
-        return AllRecalculate::query();
+        return AllRecalculate::with(['Listrik.Listrikperjam',
+        'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
+        'Company'])->query();
 
     }
 
@@ -61,8 +63,8 @@ class CalcSmuaBiayaExports implements FromQuery, WithProperties, WithMapping, Wi
         return [
             $calcs->id,
             // $calcs->code_calc_tnp_penyusutan,
-            $calcs->company,
-            $calcs->code_mesin,
+            $calcs->Company->company_name,
+            $calcs->mesin->code_mesin,
             $calcs->id_listrik,
             $calcs->id_labor,
             $calcs->id_mtc,

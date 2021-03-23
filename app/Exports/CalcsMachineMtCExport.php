@@ -24,7 +24,9 @@ class CalcsMachineMtCExport implements FromQuery, WithProperties, WithMapping, W
     
     public function query()
     {
-        return AllRecalculate::query();
+        return AllRecalculate::with(['Listrik.Listrikperjam',
+        'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
+        'Company'])->query();
     }
 
     /**
@@ -34,8 +36,9 @@ class CalcsMachineMtCExport implements FromQuery, WithProperties, WithMapping, W
     {
         return [
             $calcs->id,
-            $calcs->company,
-            $calcs->code_mesin,
+            $calcs->Company->company_name,
+            $calcs->mesin->code_mesin,
+            0,
             $calcs->id_listrik,
             $calcs->id_penyusutan,
             $calcs->id_labor,
@@ -60,7 +63,8 @@ class CalcsMachineMtCExport implements FromQuery, WithProperties, WithMapping, W
             'J' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'K' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'L' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
-            'M' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE
+            'M' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
+            'N' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE
         ];
     }
 
@@ -70,6 +74,7 @@ class CalcsMachineMtCExport implements FromQuery, WithProperties, WithMapping, W
             'ID',
             'COMPANY',
             'MESIN',
+            'MAINTENANCE',
             'LISTRIK',
             'PENYUSUTAN',
             'LABOR',
