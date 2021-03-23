@@ -6,6 +6,7 @@ use Exception;
 use App\Company;
 use App\AllRecalculate;
 use App\BPenjualanTotal;
+use Mavinoo\Batch\Batch;
 use Illuminate\Http\Request;
 use App\LaporanBagianPenjualan;
 use TCG\Voyager\Facades\Voyager;
@@ -395,6 +396,25 @@ class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController 
         ];
 
         LaporanBagianPenjualan::UpdateOrCreate(['id'=> $id], $result_lbpnjualan);
+
+        $AllRecalculateInstance = new AllRecalculate;
+        $rcl = AllRecalculate::all();
+
+        foreach($rcl as $indexs => $dtlg){
+    
+          // event(new BreadDataUpdated($dataType, $data));
+          $total_biaya_upah_lpperbulan = $this->RumusLapBagianPenjualanPerbulan($request->tahun1, $request->tahun2, $request->tahun3, $request->nama_biaya);
+
+            $dpney[] = [
+                'code_mesin' => $dtlg->code_mesin,
+                'id_bgoenjualan' => $total_biaya_upah_lpperbulan
+            ];
+
+            $code_mesin = 'code_mesin';
+
+            \Batch::update($AllRecalculateInstance, $dpney, $code_mesin);
+
+        }
 
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");

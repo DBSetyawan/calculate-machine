@@ -487,7 +487,7 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
         Labor::UpdateOrCreate(['id'=>$id], $result_gaji_labor);
 
         $lbrttl = Labor::all();
-        $AllRecalculateInstance = New AllRecalculate;
+        $AllRecalculateInstance = new AllRecalculate;
 
         foreach($lbrttl as $indexs => $data_lbr){
 

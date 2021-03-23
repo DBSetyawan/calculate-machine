@@ -523,23 +523,24 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
 
             $jumlah_total = $this->RumusTotalLaporanGajiLain($request->input('tahun1'), $request->input('tahun2'), $request->input('tahun3'));
 
-                $update_data_lp_gaji_lain = tap(DB::table('laporan_gaji_lain')->where('id', $request->input('id')))
-                ->update( [
-                    'tahun1' => $request->input('tahun1'),
-                    'tahun2' => $request->input('tahun2'),
-                    'tahun3' => $request->input('tahun3'),
-                    'total_biaya_laporan_periode' => $jumlah_total
-                ])
-                ->first();
+                // $update_data_lp_gaji_lain = tap(DB::table('laporan_gaji_lain')->where('id', $request->input('id')))
+                // ->update( [
+                //     'tahun1' => $request->input('tahun1'),
+                //     'tahun2' => $request->input('tahun2'),
+                //     'tahun3' => $request->input('tahun3'),
+                //     'total_biaya_laporan_periode' => $jumlah_total
+                // ])
+                // ->first();
 
             LaporanGajiLain::whereIn('category_bagian', [$request->input('category_bagian')])->get();
 
             $LaporanGajiLain = LaporanGajiLain::all();
-            $AllRecalculateInstance = New AllRecalculate;
+            $AllRecalculateInstance = new AllRecalculate;
+            $rcl = AllRecalculate::all();
     
-            foreach($LaporanGajiLain as $indexs => $dtlg){
+            foreach($rcl as $indexs => $dtlg){
     
-                $jumlah_total = $this->RumusTotalLaporanGajiLain($dtlg->tahun1, $dtlg->tahun2, $dtlg->tahun3);
+                $jumlah_total = $this->RumusTotalLaporanGajiLain($request->tahun1, $request->tahun2, $request->tahun3);
     
                 $dpney[] = [
                     'code_mesin' => $dtlg->code_mesin,
@@ -574,7 +575,7 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
             return response()->json(
                 [
                     'success' => __('voyager::generic.successfully_updated'), 
-                    'data' => $update_data_lp_gaji_lain,
+                    // 'data' => $update_data_lp_gaji_lain,
                     's' => $jumlah_total,
                     // 'results' => $synccalcmachine,
                     'repro' => $this->saldoAkhir_REPRO(),

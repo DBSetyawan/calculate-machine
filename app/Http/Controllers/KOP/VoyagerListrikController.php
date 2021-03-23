@@ -584,6 +584,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                 $alllstrk = Listrik::all();
                 $ListrikInstance = New Listrik;
                 $AllRecalculateInstance = New AllRecalculate;
+                $collectInsteadALLRECALL = AllRecalculate::all();
 
                 foreach($alllstrk as $sd => $tmp){
 
@@ -601,22 +602,23 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
                     $index = 'id';
 
-                    $bulk_batch = \Batch::update($ListrikInstance, $data, $index);
+                    \Batch::update($ListrikInstance, $data, $index);
 
-                    /**
-                     * sync to recalculate;
-                     */
-                    $dlstrik[] = [
-                        'code_mesin' => $tmp->code_mesin,
-                        'id_listrik' => $costADM
-                    ];
-
+                    if($collectInsteadALLRECALL !== []){
+                        /**
+                         * sync to recalculate;
+                         */
+                        $dlstrik[] = [
+                            'code_mesin' => $tmp->code_mesin,
+                            'id_listrik' => $costADM
+                        ];
+    
                         $code_mesin = 'code_mesin';
-
-                    \Batch::update($AllRecalculateInstance, $dlstrik, $code_mesin);
+    
+                        $bulk_batch = \Batch::update($AllRecalculateInstance, $dlstrik, $code_mesin);
+                    }
                     
                 }
-
 
             return response()->json(['json'=> $data, 'ref' => '200', 'success' => $bulk_batch]);
 

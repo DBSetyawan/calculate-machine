@@ -398,6 +398,25 @@ class VoyagerLaporanBiayaAdministrasiUmumController extends BaseVoyagerBaseContr
 
         LaporanBiayaAdministrasiUmum::UpdateOrCreate(['id' => $id],$result_badm);
 
+        $AllRecalculateInstance = new AllRecalculate;
+        $rcl = AllRecalculate::all();
+
+        foreach($rcl as $indexs => $dtlg){
+    
+          // event(new BreadDataUpdated($dataType, $data));
+          $total_biaya_lp_adm = $this->TotalLaporanBiayaAdministrasiUmum($request->tahun1, $request->tahun2, $request->tahun3, $request->nama_biaya);
+
+            $dpney[] = [
+                'code_mesin' => $dtlg->code_mesin,
+                'id_bau' => $total_biaya_lp_adm
+            ];
+
+            $code_mesin = 'code_mesin';
+
+            \Batch::update($AllRecalculateInstance, $dpney, $code_mesin);
+
+        }
+
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");
         } else {
