@@ -109,6 +109,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('reset-total-tanpa-penyusutan','KOP\VoyagerTotalKalkulasiController@reclltnpapenyusutan')->name('mesin.recll.tnp.penyusutan');
     Route::post('reset-total-tanpa-rclluncheckpnyt','KOP\VoyagerTotalKalkulasiController@rclluncheckpnyt')->name('mesin.rclluncheckpnyt.tnp.penyusutan');
     Route::post('reset-total-tanpa-mtcs','KOP\VoyagerTotalKalkulasiController@rcllunchecktnpmtcs')->name('mesin.rclluncheckpnyt.tnp.mtcs');
+    Route::post('reset-total-tanpa-MtcRecalculateOnly','KOP\VoyagerTotalKalkulasiController@MtcRecalculateOnly')->name('mesin.rclluncheckpnyt.tnp.MtcRecalculateOnly');
+    Route::post('reset-total-tanpa-PenyusutanRecalculateOnly','KOP\VoyagerTotalKalkulasiController@MtcRecalculateOnly')->name('mesin.rclluncheckpnyt.tnp.PenyusutanRecalculateOnly');
     
     Route::get('/clear', function() {
 

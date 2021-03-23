@@ -7,6 +7,7 @@ use App\Mesin;
 use Exception;
 use App\RptMtc;
 use DataTables;
+use RumusPenyusutan;
 use App\Company;
 use App\Listrik;
 use App\TotalCalc;
@@ -27,6 +28,7 @@ use App\Exports\CalcSmuaBiayaExports;
 use App\LaporanBiayaAdministrasiUmum;
 use App\Exports\CalcsMachineMtCExport;
 use App\TotalKalkulasiTanpaPenyusutan;
+use App\Http\Controllers\KOP\Helpers\RumusRptMaintenance;
 use App\Http\Controllers\KOP\Helpers\RumusLapBagPenjualan;
 use App\Exports\CalcMachineTanpaMTCnTanpaPenyusutanExports;
 use App\Http\Controllers\KOP\Helpers\RumusListrikOutputPerjam;
@@ -120,6 +122,88 @@ trait ModuleCaculates {
         }
 
         return response()->json(['res' => 200]);
+    }
+
+    public function PenyusutanRecalculateOnly(){
+
+        $pnystnttl = Penyusutan::all();
+
+            $AllRecalculateInstance = new AllRecalculate;
+
+            foreach($pnystnttl as $indexs => $data_peny){
+
+                $UpdaterumusTotalPenyusutan = RumusPenyusutan::HitungTotalPenyusutanPerbulan((float) $data_peny->purchaseorder_value, $data_peny->umur);
+
+                $dpney[] = [
+                    'code_mesin' => $data_peny->code_mesin,
+                    'id_penyusutan' => $UpdaterumusTotalPenyusutan
+                ];
+
+                $code_mesin = 'code_mesin';
+
+                \Batch::update($AllRecalculateInstance, $dpney, $code_mesin);
+
+            }
+
+        return response()->json(['res' => 200]);
+
+    }
+
+    public function MtcRecalculateOnly(){
+
+        try {
+
+            $AllRecalculateInstance = new AllRecalculate;
+            // $allrec = AllRecalculate::all();
+            $allrec = RptMtc::all();
+            
+                foreach($allrec as $index => $datarmtc){
+
+                    /**
+                     * Hitung Total Perbaikan Biaya perbulan
+                     * @param $perbaikanpertahunn.
+                     */
+                    $RataRataPerbaikanPerbulan = RumusRptMaintenance::HitungRataRataPerbaikanPerbulan($datarmtc->perbaikan_tahun1, $datarmtc->perbaikan_tahun2, $datarmtc->perbaikan_tahun3);
+                    
+                    /**
+                     * Hitung Total Sparepart Biaya perbulan
+                     * @param $perbaikanpertahunn.
+                    */
+                    $RataRataSparePartPerbulan =  RumusRptMaintenance::HitungRataRataSparePartPerbulan($datarmtc->sparepart_tahun1, $datarmtc->sparepart_tahun2, $datarmtc->sparepart_tahun3);
+                    
+                    /**
+                     * total biaya penyusutan perbulan
+                     */
+                    $TotalBiayaPenyusutanMaintenance = RumusRptMaintenance::HitungTotalPenyusutanPerbulan($RataRataPerbaikanPerbulan, $RataRataSparePartPerbulan);
+
+                                $dmtc[] = [
+                                    'code_mesin' => $datarmtc->code_mesin,
+                                    'id_mtc' => $TotalBiayaPenyusutanMaintenance
+                                ];
+            
+                            $code_mesin = 'code_mesin';
+
+                        \Batch::update($AllRecalculateInstance, $dmtc, $code_mesin);
+
+                    }
+
+                return response()->json(['res' => 200]);
+
+        } catch (Exception $e) {
+            $code = 500;
+            $message = __('voyager::generic.internal_error');
+
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'data' => [
+                    'message' => $message,
+                ],
+            ], $code);
+        }
+
     }
 
     public function rclluncheckpnyt(){
@@ -1039,17 +1123,6 @@ trait ModuleCaculates {
         $cbagian = KategoriBagian::all();
 
         return view('vendor.voyager.total-kalkulasi-rpt.form_kalkulasirpts', compact('LoadLabor','loadProsentaseListrik','b_bag_administrasi_umum','b_bag_penjualan','b_labor_umum','b_labor_qc','b_labor_prepress','b_labor_mtc','b_mtc','b_penyusutan','b_listrik','company','mesin','cbagian'));
-    }
-
-    public function recall_calculation(){
-        
-        // progress deploy gaji lainnya..
-        // $first = TotalKalkulasiTanpaPenyu    sutan::whereIn('category_bagian', [$request->input('category_bagian')])->get();
-
-        // $a = app(VoyagerLaporanGajiLainController::class)->jumlahAkhirGajiLain($first);
-
-        // return response()->json(['data' => $a]);
-
     }
 
 }

@@ -402,6 +402,12 @@ $(document).ready(function(){
                         }
                       });
 
+                  recalcc_tanpamtcs().then(value => {
+                      if(value.res == 200){
+                        $('#dataTablePenyusutan').DataTable().draw()
+                      }
+                  });
+
               $(".calctnpmtctp").show();
               $('#main-logo a').attr('href', "asdasdasd");
 
@@ -427,11 +433,11 @@ $(document).ready(function(){
                             
                           )
 
-                      recalcc_tanpapenyusutan().then(value => {
-                        if(value.res == 200){
-                          $('#dataTablePenyusutan').DataTable().draw()
-                        }
-                      });
+                  recalcc_tanpamtcs().then(value => {
+                      if(value.res == 200){
+                        $('#dataTablePenyusutan').DataTable().draw()
+                      }
+                  });
         
                       $(".calcmtc").show(); //smua biaya
 
@@ -458,6 +464,13 @@ $(document).ready(function(){
                                 
                               $(".calctp").html(sd.button_ButtonexportCalcTanpaPenyusutan)
                           )     
+
+                          recalcc_tanpapenyusutan().then(value => {
+                            if(value.res == 200){
+                              $('#dataTablePenyusutan').DataTable().draw()
+                            }
+                          });
+
 
                           $(".calctp").show();
 
@@ -548,7 +561,7 @@ $(document).ready(function(){
 
     setTimeout(function(){ 
       let reset = $('#dataTablePenyusutan').DataTable().draw();
-      reset.column([6]).visible(true);
+      reset.column([7]).visible(true);
       reset.column([6]).visible(true);
       reset.column([8]).visible(true);
 
@@ -919,6 +932,9 @@ $(document).ready(function(){
                       dataTable.column([17]).visible(false);
                       dataTable.column([14]).visible(false);
                       dataTable.column([15]).visible(true);
+                      dataTable.column([6]).visible(true);
+                      dataTable.column([7]).visible(true);
+                      dataTable.column([8]).visible(true);
                       dataTable.column([13]).visible(false);
                       dataTable.column([12]).visible(true);
                       $("#pnyt").attr('disabled', 'disabled'); 
@@ -977,8 +993,8 @@ $(document).ready(function(){
                             if(x == 8){
                               
                               let rf2 = $('#dataTablePenyusutan').DataTable().draw();
-
-                                rf2.column([5]).visible(true);
+                                
+                                rf2.column([5]).visible(false);
                                 rf2.column([14]).visible(false);
                                 rf2.column([15]).visible(false);
                                 rf2.column([16]).visible(false);
@@ -1075,7 +1091,9 @@ $(document).ready(function(){
                           db_temp.column([19]).visible(true);
                           db_temp.column([16]).visible(false);
                           db_temp.column([17]).visible(false);
-                          db_temp.column(5).visible(false);
+                          db_temp.column(6).visible(true);
+                          db_temp.column(7).visible(true);
+                          db_temp.column(8).visible(true);
                           // db_temp.column(5).visible(true);
 
                           setTimeout(function(){ 
@@ -1091,11 +1109,24 @@ $(document).ready(function(){
                                       
                                     )
 
-                                    recalcc_tanpapenyusutan().then(value => {
+                                    // recalcc_tanpapenyusutan().then(value => {
+                                    //   if(value.res == 200){
+                                    //     $('#dataTablePenyusutan').DataTable().draw()
+                                    //   }
+                                    // });
+                                  //set penyusutan only
+                                  recalcc_PenyusutanRecalculateOnly().then(value => {
+                                    if(value.res == 200){
+                                      $('#dataTablePenyusutan').DataTable().draw()
+                                    }
+                                  });
+
+                                  recalcc_tanpamtcs().then(value => {
                                       if(value.res == 200){
                                         $('#dataTablePenyusutan').DataTable().draw()
                                       }
                                     });
+
                                 // $(".calcmtc").show(); //smua biayacaltanpa_mtc
                                 $(".calcmtc").show(); //smua biayacaltanpa_mtc
 
@@ -1120,7 +1151,9 @@ $(document).ready(function(){
                             db_temp.column([19]).visible(false);
                             db_temp.column([16]).visible(false);
                             db_temp.column([17]).visible(false);
-                            db_temp.column(6).visible(false);
+                            db_temp.column(6).visible(true);
+                            db_temp.column(7).visible(true);
+                            db_temp.column(8).visible(true);
                             // db_temp.column(6).visible(true);
 
                           setTimeout(function(){ 
@@ -1243,7 +1276,7 @@ $(document).ready(function(){
                           dataTable.column([12]).visible(true);
                           dataTable.column([13]).visible(false);
                           dataTable.column([8]).visible(true);
-                          dataTable.column([6]).visible(false);
+                          dataTable.column([6]).visible(true);
 
                           setTimeout(function(){ 
           
@@ -1254,6 +1287,19 @@ $(document).ready(function(){
                                   $(".calctp").html(sd.button_ButtonexportCalcTanpaPenyusutan)
                               
                               )  
+
+                              recalcc_tanpapenyusutan().then(value => {
+                                  if(value.res == 200){
+                                    $('#dataTablePenyusutan').DataTable().draw()
+                                  }
+                                });
+                              
+                              //this only setting recalulate mtc only
+                              recalcc_mtconly().then(value => {
+                                if(value.res == 200){
+                                  $('#dataTablePenyusutan').DataTable().draw()
+                                }
+                              });
 
                               $(".calctp").show();
 
@@ -1436,12 +1482,36 @@ $(document).ready(function(){
         );
 
       }
-
+      
       async function recalcc_tanpapenyusutan() {
 
         let env = "{{ config('app.vpn') }}";
 
             return fetch(`${env}/kalkulasimesin2/public/admin/reset-total-tanpa-penyusutan`, {
+                    method: 'POST',
+                    cache: 'no-cache',
+                    credentials: 'same-origin',
+                    redirect: 'follow',
+                    referrer: 'no-referrer',
+                    headers: {
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                                'Content-Type': 'application/json'
+                            }
+                    }
+                )
+            .then(response => response.json())
+              .catch((error) => {
+                  console.log(error);
+              }
+          );
+
+        }
+
+        async function recalcc_mtconly() {
+
+        let env = "{{ config('app.vpn') }}";
+
+            return fetch(`${env}/kalkulasimesin2/public/admin/reset-total-tanpa-MtcRecalculateOnly`, {
                     method: 'POST',
                     cache: 'no-cache',
                     credentials: 'same-origin',
@@ -1484,7 +1554,7 @@ $(document).ready(function(){
           );
 
         }
-
+        
         async function recalcc_tanpamtcs() {
 
           let env = "{{ config('app.vpn') }}";
@@ -1508,6 +1578,31 @@ $(document).ready(function(){
           );
 
         }
+
+        async function recalcc_PenyusutanRecalculateOnly() {
+
+          let env = "{{ config('app.vpn') }}";
+
+            return fetch(`${env}/kalkulasimesin2/public/admin/reset-total-tanpa-PenyusutanRecalculateOnly`, {
+                    method: 'POST',
+                    cache: 'no-cache',
+                    credentials: 'same-origin',
+                    redirect: 'follow',
+                    referrer: 'no-referrer',
+                    headers: {
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                                'Content-Type': 'application/json'
+                            }
+                    }
+                )
+            .then(response => response.json())
+                .catch((error) => {
+                  console.log(error);
+              }
+          );
+
+        }
+
 
     async function ButtonexportCalcTanpaMTCnTanpaPenyusutan() {
 
