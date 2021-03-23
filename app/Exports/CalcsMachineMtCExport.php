@@ -17,16 +17,16 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 
-class CalcsMachineMtCExport implements FromQuery, WithProperties, WithMapping, WithHeadings, WithColumnFormatting
+class CalcsMachineMtCExport implements FromCollection, WithProperties, WithMapping, WithHeadings, WithColumnFormatting
 {
 
     use Exportable;
     
-    public function query()
+    public function collection()
     {
         return AllRecalculate::with(['Listrik.Listrikperjam',
         'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
-        'Company'])->query();
+        'Company'])->get();
     }
 
     /**
@@ -37,8 +37,8 @@ class CalcsMachineMtCExport implements FromQuery, WithProperties, WithMapping, W
         return [
             $calcs->id,
             $calcs->Company->company_name,
-            $calcs->mesin->code_mesin,
-            0,
+            $calcs->Mesin->code_mesin,
+            (String) $calcs->id_mtc,
             $calcs->id_listrik,
             $calcs->id_penyusutan,
             $calcs->id_labor,
@@ -58,13 +58,13 @@ class CalcsMachineMtCExport implements FromQuery, WithProperties, WithMapping, W
             'E' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'F' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'G' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
+            // 'H' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'H' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'I' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'J' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'K' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'L' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
-            'M' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
-            'N' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE
+            'M' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE
         ];
     }
 
@@ -76,7 +76,7 @@ class CalcsMachineMtCExport implements FromQuery, WithProperties, WithMapping, W
             'MESIN',
             'MAINTENANCE',
             'LISTRIK',
-            'PENYUSUTAN',
+            // 'PENYUSUTAN',
             'LABOR',
             'BIAYA PRODUKSI LAIN',
             'GAJI LAINNYA',

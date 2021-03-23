@@ -17,17 +17,16 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 
-class CalcsMachineExport implements FromQuery, WithProperties, WithMapping, WithHeadings, WithColumnFormatting
+class CalcsMachineExport implements FromCollection, WithProperties, WithMapping, WithHeadings, WithColumnFormatting
 {
 
     use Exportable;
     
-    public function query()
+    public function collection()
     {
-        // return TotalKalkulasiTanpaPenyusutan::query();
         return AllRecalculate::with(['Listrik.Listrikperjam',
         'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
-        'Company'])->query();
+        'Company'])->get();
     }
 
     /**
@@ -38,8 +37,8 @@ class CalcsMachineExport implements FromQuery, WithProperties, WithMapping, With
         return [
             $calcs->id,
             $calcs->Company->company_name,
-            $calcs->mesin->code_mesin,
-            0,
+            $calcs->Mesin->code_mesin,
+            (String) $calcs->id_penyusutan,
             $calcs->id_listrik,
             $calcs->id_labor,
             $calcs->id_mtc,
@@ -55,6 +54,7 @@ class CalcsMachineExport implements FromQuery, WithProperties, WithMapping, With
     public function columnFormats(): array
     {
         return [
+            'D' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'E' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'F' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'G' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,

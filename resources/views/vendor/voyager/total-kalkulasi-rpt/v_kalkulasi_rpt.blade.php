@@ -45,29 +45,29 @@
                                           <ul class="list-group list-group-flush">
                                             <li class="list-group-item">
                                               <div class="list-group">
-                                                <a class="list-group-item list-group-item-action active">
-                                                  <div class="d-flex w-100 justify-content-between">
-                                                    <h5 class="mb-1 text-muted"><br />Berikan Tanda Centang pada contoh simbol ini <span class="glyphicon glyphicon glyphicon-check" aria-hidden="true"></span> untuk memulai mengatur perhitungan kalkulasi
+                                                <div class="list-group-item-action active">
+                                                  <div class="d-flex justify-content-between">
+                                                    <h5 class="mb-1 text-secondary"><br />Berikan Tanda Centang pada contoh simbol ini <span class="glyphicon glyphicon glyphicon-check" aria-hidden="true"></span> untuk memulai mengatur perhitungan kalkulasi
                                                       <span class="glyphicon glyphicon glyphicon-share-alt" aria-hidden="true"></span>
                                                           <input type="checkbox" class="form-check-input OpenedTr CheckEventListFormationFirst" id="penyusutan" value="1">
                                                       </h5>
                                                     {{-- <small class="text-muted">Automated.</small> --}}
                                                   </div>
-                                                  <p class="mb-1 text-muted">Jika mencentang MAINTENANCE, maka tabel dibawah akan menyesuaikan hanya tanpa MTC. kolom MAINTENANCE akan disembunyikan, TOTAL SEMUA BIAYA MTC & TOTAL SEMUA BIAYA MTC PERJAMNYA akan ditampilkan.</p>
+                                                  <p class="mb-1 text-secondary">Jika mencentang MAINTENANCE, maka tabel dibawah akan menyesuaikan hanya tanpa MTC. kolom MAINTENANCE akan disembunyikan, TOTAL SEMUA BIAYA MTC & TOTAL SEMUA BIAYA MTC PERJAMNYA akan ditampilkan.</p>
                                                   <h3 class="mb-1"><input type="checkbox" name='hide_columns_mtcs' class="Maintenance CheckEventListFormation btn" id="mtcs" value='8'>Tanpa Maintenance</h3>
-                                                </a>
+                                                </div>
                                               <hr class="text-muted">
-                                                <a class="list-group-item list-group-item-action active">
+                                                <div class="list-group-item-action active">
                                                   <div class="d-flex w-100 justify-content-between">
-                                                    <h5 class="mb-1 text-muted">
+                                                    <h5 class="mb-1 text-secondary">
                                                        {{-- <br />Berikan Tanda Centang pada contoh simbol ini <span class="glyphicon glyphicon glyphicon-check" aria-hidden="true"></span> untuk memulai mengatur perhitungan kalkulasi --}}
                                                     </h5>
                                                     {{-- <small class="text-muted">Automated.</small> --}}
                                                   </div>
-                                                  <p class="mb-1 text-muted">Jika mencentang PENYUSUTAN, maka tabel dibawah akan menyesuaikan hanya tanpa PENYUSUTAN. kolom PENYUSUTAN akan disembunyikan, TOTAL SEMUA BIAYA PENYUSUTAN & TOTAL SEMUA BIAYA PENYUSUTAN PERJAMNYA akan ditampilkan.</p>
+                                                  <p class="mb-1 text-secondary">Jika mencentang PENYUSUTAN, maka tabel dibawah akan menyesuaikan hanya tanpa PENYUSUTAN. kolom PENYUSUTAN akan disembunyikan, TOTAL SEMUA BIAYA PENYUSUTAN & TOTAL SEMUA BIAYA PENYUSUTAN PERJAMNYA akan ditampilkan.</p>
                                                   <h3 class="mb-1"><input type="checkbox" name='hide_columns_pystn' class="Penyusutan CheckEventListFormation btn" id="pnyt" value='6'>Tanpa Penyusutan</h3>
-                                                </a>
-                                                <a class="list-group-item list-group-item-action active" id="alltruepnytmtc">
+                                                </div>
+                                                <a class=" list-group-item-action active" id="alltruepnytmtc">
                                                   <hr class="text-muted">
                                                   <div class="d-flex w-100 justify-content-between">
                                                     <h5 class="mb-1 text-muted">
@@ -299,6 +299,14 @@ $(document).ready(function(){
                     
                     )
 
+              //set recallculate
+               recuncheck_tnppnystan().then(value => {
+                    if(value.res == 200){
+                      $('#dataTablePenyusutan').DataTable().draw()
+                    }
+                  }
+                );
+
               $(".csbe").show(); //smua biaya
 
             $(".calcmtc").hide(); //tanpa mtc
@@ -348,6 +356,14 @@ $(document).ready(function(){
                           
                         )
 
+              //set recallculate
+               recuncheck_tnppnystan().then(value => {
+                    if(value.res == 200){
+                      $('#dataTablePenyusutan').DataTable().draw()
+                    }
+                  }
+                );
+
                     $(".csbe").show(); //smua biaya
 
                     $(".calcmtc").hide(); //tanpa mtc
@@ -380,6 +396,12 @@ $(document).ready(function(){
                   
                   )  
 
+                  recalcc_tanpapenyusutan().then(value => {
+                        if(value.res == 200){
+                          $('#dataTablePenyusutan').DataTable().draw()
+                        }
+                      });
+
               $(".calctnpmtctp").show();
               $('#main-logo a').attr('href', "asdasdasd");
 
@@ -404,6 +426,12 @@ $(document).ready(function(){
                               $(".calcmtc").html(sd.button_ButtonexportCalcTanpaMTC)
                             
                           )
+
+                      recalcc_tanpapenyusutan().then(value => {
+                        if(value.res == 200){
+                          $('#dataTablePenyusutan').DataTable().draw()
+                        }
+                      });
         
                       $(".calcmtc").show(); //smua biaya
 
@@ -462,6 +490,14 @@ $(document).ready(function(){
                               
                             )
 
+                      //set recallculate
+                      recuncheck_tnppnystan().then(value => {
+                            if(value.res == 200){
+                              $('#dataTablePenyusutan').DataTable().draw()
+                            }
+                          }
+                        );
+
                         $(".csbe").show(); //smua biaya
 
                       $(".calcmtc").hide(); //tanpa mtc
@@ -513,6 +549,7 @@ $(document).ready(function(){
     setTimeout(function(){ 
       let reset = $('#dataTablePenyusutan').DataTable().draw();
       reset.column([6]).visible(true);
+      reset.column([6]).visible(true);
       reset.column([8]).visible(true);
 
       reset.column([12]).visible(true);
@@ -534,6 +571,14 @@ $(document).ready(function(){
                             $(".csbe").html(sd.button_ButtonCalcSmuaBiayaExports)
                           
                         )
+
+              //set recallculate
+               recuncheck_tnppnystan().then(value => {
+                    if(value.res == 200){
+                      $('#dataTablePenyusutan').DataTable().draw()
+                    }
+                  }
+                );
 
                     $(".csbe").show(); //smua biaya
 
@@ -578,6 +623,14 @@ $(document).ready(function(){
                           
                         )
 
+                //set recallculate
+               recuncheck_tnppnystan().then(value => {
+                    if(value.res == 200){
+                      $('#dataTablePenyusutan').DataTable().draw()
+                    }
+                  }
+                );
+
                     $(".csbe").show(); //smua biaya
 
             $(".calcmtc").hide(); //tanpa mtc
@@ -587,7 +640,7 @@ $(document).ready(function(){
 
         setTimeout(() => {
               document.querySelector('cal_semua_biaya').setAttribute('href', download_all_cost);
-            
+
           }, 1000);
 
       } else {
@@ -885,6 +938,13 @@ $(document).ready(function(){
                                 $(".calctnpmtctp").html(sd.button_ButtonexportCalcTanpaMTCnTanpaPenyusutan)
                             
                             )  
+
+                            recalcc_tanpapenyusutan().then(value => {
+                              if(value.res == 200){
+                                $('#dataTablePenyusutan').DataTable().draw()
+                              }
+                            });
+
                             $(".calctnpmtctp").show(); //tanpa mtc
 
                           $(".CustomFilter").focus();
@@ -902,7 +962,7 @@ $(document).ready(function(){
 
                       if(!$(this).is(':checked')){
 
-                            if(x == 5){
+                            if(x == 6){
 
                               let rf1 = $('#dataTablePenyusutan').DataTable().draw();
 
@@ -914,7 +974,7 @@ $(document).ready(function(){
                                 rf1.column([19]).visible(false);
                             } 
 
-                            if(x == 7){
+                            if(x == 8){
                               
                               let rf2 = $('#dataTablePenyusutan').DataTable().draw();
 
@@ -1015,7 +1075,8 @@ $(document).ready(function(){
                           db_temp.column([19]).visible(true);
                           db_temp.column([16]).visible(false);
                           db_temp.column([17]).visible(false);
-                          db_temp.column(5).visible(true);
+                          db_temp.column(5).visible(false);
+                          // db_temp.column(5).visible(true);
 
                           setTimeout(function(){ 
           
@@ -1029,6 +1090,12 @@ $(document).ready(function(){
                                         $(".calcmtc").html(sd.button_ButtonexportCalcTanpaMTC)
                                       
                                     )
+
+                                    recalcc_tanpapenyusutan().then(value => {
+                                      if(value.res == 200){
+                                        $('#dataTablePenyusutan').DataTable().draw()
+                                      }
+                                    });
                                 // $(".calcmtc").show(); //smua biayacaltanpa_mtc
                                 $(".calcmtc").show(); //smua biayacaltanpa_mtc
 
@@ -1053,7 +1120,8 @@ $(document).ready(function(){
                             db_temp.column([19]).visible(false);
                             db_temp.column([16]).visible(false);
                             db_temp.column([17]).visible(false);
-                            db_temp.column(6).visible(true);
+                            db_temp.column(6).visible(false);
+                            // db_temp.column(6).visible(true);
 
                           setTimeout(function(){ 
           
@@ -1066,6 +1134,14 @@ $(document).ready(function(){
                                     $(".csbe").html(sd.button_ButtonCalcSmuaBiayaExports)
                                   
                                 )
+
+                                //set recallculate
+                                recuncheck_tnppnystan().then(value => {
+                                    if(value.res == 200){
+                                      $('#dataTablePenyusutan').DataTable().draw()
+                                    }
+                                  }
+                                );
 
                             $(".csbe").show(); //smua biaya
 
@@ -1272,6 +1348,13 @@ $(document).ready(function(){
                         $('#dataTablePenyusutan').DataTable().destroy();
                         mesin_calc_table($(this).val());
                         $(".CustomFilter").focus();
+                        //set recallculate
+                        recuncheck_tnppnystan().then(value => {
+                              if(value.res == 200){
+                                $('#dataTablePenyusutan').DataTable().draw()
+                              }
+                            }
+                          );
 
                     }
                       else

@@ -17,16 +17,16 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 
-class CalcMachineTanpaMTCnTanpaPenyusutanExports implements FromQuery, WithProperties, WithMapping, WithHeadings, WithColumnFormatting
+class CalcMachineTanpaMTCnTanpaPenyusutanExports implements FromCollection, WithProperties, WithMapping, WithHeadings, WithColumnFormatting
 {
 
     use Exportable;
-    
-    public function query()
+
+    public function collection()
     {
-
-        return AllRecalculate::query();
-
+        return AllRecalculate::with(['Listrik.Listrikperjam',
+        'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
+        'Company'])->get();
     }
 
     /**
@@ -37,12 +37,12 @@ class CalcMachineTanpaMTCnTanpaPenyusutanExports implements FromQuery, WithPrope
         return [
             $calcs->id,
             // $calcs->code_calc_tnp_penyusutan,
-            $calcs->company,
-            $calcs->code_mesin,
+            $calcs->Company->company_name,
+            $calcs->Mesin->code_mesin,
             $calcs->id_listrik,
             $calcs->id_labor,
-            $calcs->id_mtc,
-            $calcs->id_penyusutan,
+            (String) $calcs->id_mtc,
+            (String) $calcs->id_penyusutan,
             $calcs->id_bprodlain_insteadof_mtc,
             $calcs->id_gajilain,
             $calcs->id_bgoenjualan,

@@ -17,7 +17,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 
-class CalcSmuaBiayaExports implements FromQuery, WithProperties, WithMapping, WithHeadings, WithColumnFormatting
+class CalcSmuaBiayaExports implements FromCollection, WithProperties, WithMapping, WithHeadings, WithColumnFormatting
 {
 
     use Exportable;
@@ -29,13 +29,11 @@ class CalcSmuaBiayaExports implements FromQuery, WithProperties, WithMapping, Wi
         return $setVal;
     }
     
-    public function query()
+    public function collection()
     {
-
         return AllRecalculate::with(['Listrik.Listrikperjam',
         'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
-        'Company'])->query();
-
+        'Company'])->get();
     }
 
     public function columnFormats(): array
@@ -64,7 +62,7 @@ class CalcSmuaBiayaExports implements FromQuery, WithProperties, WithMapping, Wi
             $calcs->id,
             // $calcs->code_calc_tnp_penyusutan,
             $calcs->Company->company_name,
-            $calcs->mesin->code_mesin,
+            $calcs->Mesin->code_mesin,
             $calcs->id_listrik,
             $calcs->id_labor,
             $calcs->id_mtc,
