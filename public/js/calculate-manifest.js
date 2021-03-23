@@ -1,152 +1,3 @@
-@extends('voyager::master')
-@section('page_title', __('voyager::generic.view'))
-@section('page_header')
-    <div class="container-fluid">
-        <h1 class="page-title">
-            <i class="voyager-params"></i> Calculation Machine :
-        </h1>
-      
-        {{-- <a href="{{ route('tr.mch.store.tr.sc.edp') }}" class="btn btn-success btn-add-new">
-          <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Form kalkulasi(Penyusutan)</span>
-        </a> --}}
-
-          {{-- <a href="{{ route('tr.tnp.total.kalkulasi') }}" class="btn btn-warning btn-add-new"> --}}
-    </div>
-@stop
-@section('content')
-    <div class="page-content browse container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-bordered">
-                    <div class="panel-body">
-                    <div class="panel-heading" style="border-bottom:0;margin-bottom:-4px">
-                    </div>
-                    <div class="panel panel-bordered">
-                      <div class="panel-body">
-                          <div class="row">
-                            <div class="col-2">
-                              @inject('TotalKalkulasiTanpaPenyusutan', 'App\TotalKalkulasiTanpaPenyusutan')
-                               <span class="badge badge-success hidden" style="cursor: pointer" id="resets"><i class="voyager-refresh"></i> Refresh data </span>
-                               <div class="accordion" id="accordionExample">
-                                <div class="card">
-                                  <div class="card-header" id="headingOne">
-                                    <h2 class="mb-0">
-                                      <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                       <span style="font-family: Quicksand"><h5 class="mb-1 btn btn-success"><i class="voyager-settings"></i> Settings Calculate <i class="voyager-double-down"></i> </span></h5>
-                                      </button>
-                                    </h2>
-                                  </div>
-                              
-                                  <div id="collapseOne" class="collapse " aria-labelledby="headingOne" data-parent="#accordionExample">
-                                    <div class="card-body">
-                                      <div class="container" id="penyesuaian">
-                                        <div class="card" style="width: auto;">
-                                          <li class="list-group-item">Fitur Menu</li>
-                                          <ul class="list-group list-group-flush">
-                                            <li class="list-group-item">
-                                              <div class="list-group">
-                                                <a class="list-group-item list-group-item-action active">
-                                                  <div class="d-flex w-100 justify-content-between">
-                                                    <h5 class="mb-1 text-muted"><br />Berikan Tanda Centang pada contoh simbol ini <span class="glyphicon glyphicon glyphicon-check" aria-hidden="true"></span> untuk memulai mengatur perhitungan kalkulasi
-                                                      <span class="glyphicon glyphicon glyphicon-share-alt" aria-hidden="true"></span>
-                                                          <input type="checkbox" class="form-check-input OpenedTr CheckEventListFormationFirst" id="penyusutan" value="1">
-                                                      </h5>
-                                                    {{-- <small class="text-muted">Automated.</small> --}}
-                                                  </div>
-                                                  <p class="mb-1 text-muted">Jika mencentang MAINTENANCE, maka tabel dibawah akan menyesuaikan hanya tanpa MTC. kolom MAINTENANCE akan disembunyikan, TOTAL SEMUA BIAYA MTC & TOTAL SEMUA BIAYA MTC PERJAMNYA akan ditampilkan.</p>
-                                                  <h3 class="mb-1"><input type="checkbox" name='hide_columns_mtcs' class="Maintenance CheckEventListFormation btn" id="mtcs" value='8'>Tanpa Maintenance</h3>
-                                                </a>
-                                              <hr class="text-muted">
-                                                <a class="list-group-item list-group-item-action active">
-                                                  <div class="d-flex w-100 justify-content-between">
-                                                    <h5 class="mb-1 text-muted">
-                                                       {{-- <br />Berikan Tanda Centang pada contoh simbol ini <span class="glyphicon glyphicon glyphicon-check" aria-hidden="true"></span> untuk memulai mengatur perhitungan kalkulasi --}}
-                                                    </h5>
-                                                    {{-- <small class="text-muted">Automated.</small> --}}
-                                                  </div>
-                                                  <p class="mb-1 text-muted">Jika mencentang PENYUSUTAN, maka tabel dibawah akan menyesuaikan hanya tanpa PENYUSUTAN. kolom PENYUSUTAN akan disembunyikan, TOTAL SEMUA BIAYA PENYUSUTAN & TOTAL SEMUA BIAYA PENYUSUTAN PERJAMNYA akan ditampilkan.</p>
-                                                  <h3 class="mb-1"><input type="checkbox" name='hide_columns_pystn' class="Penyusutan CheckEventListFormation btn" id="pnyt" value='6'>Tanpa Penyusutan</h3>
-                                                </a>
-                                                <a class="list-group-item list-group-item-action active" id="alltruepnytmtc">
-                                                  <hr class="text-muted">
-                                                  <div class="d-flex w-100 justify-content-between">
-                                                    <h5 class="mb-1 text-muted">
-                                                       <br />FYI, jika checkbox semua tercentang (PENYUSUTAN & MTC).
-                                                    </h5>
-                                                    {{-- <small class="text-muted">Automated.</small> --}}
-                                                  </div>
-                                                  <p class="mb-1 text-muted">Jika mencentang PENYUSUTAN & MAINTENANCE, maka tabel dibawah akan menyesuaikan hanya tanpa PENYUSUTAN & MAINTENANCE. kolom PENYUSUTAN & MAINTENANCE akan disembunyikan, TOTAL SEMUA BIAYA PENYUSUTAN + MTC & TOTAL SEMUA BIAYA PENYUSUTAN + MTC PERJAMNYA akan ditampilkan.</p>
-                                                  <small class="text-muted"><span class="badge badge-success"><i class="voyager-check"></i></span> PENYUSUTAN & MTC</span>
-                                                    <br/>&nbsp;<h5><p class="mb-1">* Jika ada kolom dan data tidak sesuai dengan semestinya, kontak developer.</p></h5>
-                                                  </small>
-                                                </a>
-                                              </div>
-                                            </li>
-                                            <li class="list-group-item">   
-                                              <span class="badge badge-success" style="cursor: pointer" id="setall"><i class="voyager-refresh"></i> Reset Ulang</span>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                      
-                                       {{-- <span class="badge badge-success" style="cursor: pointer" id="reset_filters_calc"><i class="voyager-refresh"></i> Reset </span> --}}
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <button id="btn-show-all-children" class="btn btn-small btn-warning" type="button">show/hide detail data</button>
-                    <div class="table-responsive TransactionTr">
-                        <table id="dataTablePenyusutan" class="table table-hover" >
-                              <thead>
-                                <tr>
-                                  <th></th>
-                                  <th>COMPANY</th>
-                                  <th>MESIN</th>
-                                  <th>KATEGORI MESIN</th>
-                                  <th>GROUP MESIN</th>
-
-                                  <th>LISTRIK</th>
-                                  <th>PENYUSUTAN</th>
-                                  <th>LABOR</th>
-                                  <th>MAINTENANCE</th>
-                                    <th>BIAYA PRODUKSI LAIN</th>
-                                    <th>GAJI LAINNYA</th>
-                                    <th>BAGIAN PENJUALAN</th>
-                                    <th>BIAYA ADMINISTRASI UMUM</th>
-                                    <th>TOTAL SEMUA BIAYA</th>
-                                    <th>TOTAL SEMUA BIAYA (/JAM)</th>
-                                    <th>TOTAL SEMUA BIAYA TANPA PENYUSUTAN + MTC</th>
-                                    <th>TOTAL SEMUA BIAYA TANPA PENYUSUTAN + MTC (/JAM)</th>
-                                    <th>TOTAL SEMUA BIAYA TANPA PENYUSUTAN</th>
-                                    <th>TOTAL SEMUA BIAYA TANPA PENYUSUTAN (/JAM)</th>
-                                    <th>TOTAL SEMUA BIAYA TANPA MTC</th>
-                                    <th>TOTAL SEMUA BIAYA TANPA MTC (/JAM)</th>
-                                    {{-- @if(Auth::User()->role->name == "admin" ) --}}
-                                    {{-- <th>Actions</th> --}}
-
-                                    {{-- @endif --}}
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-  </div>
-@stop
-
-@section('javascript')
-
-<script type="text/javascript">
 
 const isEmpty = (obj) => {
     
@@ -536,14 +387,6 @@ $(document).ready(function(){
                         )
 
                     $(".csbe").show(); //smua biaya
-
-        //set recallculate
-        recuncheck_tnppnystan().then(value => {
-              if(value.res == 200){
-                $('#dataTablePenyusutan').DataTable().draw()
-              }
-            }
-          );
       
       }, 1000);
 
@@ -941,10 +784,8 @@ $(document).ready(function(){
                       }).get();
 
                       localStorage.setItem("EventPenyusutanTrue", JSON.stringify( peny ) );
-
-                      //deploy memunculkan column penyusutan di set 0.
-
-                      // dataTable.column(peny).visible(false);
+                      
+                      dataTable.column(peny).visible(false);
                       dataTable.column([12]).visible(false);
                       dataTable.column([13]).visible(false);
                       dataTable.column([14]).visible(false);
@@ -953,12 +794,6 @@ $(document).ready(function(){
                       dataTable.column([19]).visible(false);
                       dataTable.column([16]).visible(false);
                       dataTable.column([17]).visible(true);
-
-                      recalcc_tanpapenyusutan().then(value => {
-                        if(value.res == 200){
-                          $('#dataTablePenyusutan').DataTable().draw()
-                        }
-                      });
 
                 });
 
@@ -1084,15 +919,7 @@ $(document).ready(function(){
                       }
 
                     localStorage.removeItem("EventPenyusutanTrue");
-
-                    //deploy memunculkan column penyusutan di set 0.
-                    //set recallculate
-                      recuncheck_tnppnystan().then(value => {
-                        if(value.res == 200){
-                          $('#dataTablePenyusutan').DataTable().draw()
-                        }
-                      }
-                    );
+                    
                 }
 
           });
@@ -1107,7 +934,7 @@ $(document).ready(function(){
 
                   localStorage.setItem("EventMTCtrue", JSON.stringify( mtcs ) );
 
-                      // dataTable.column(mtcs).visible(false);
+                      dataTable.column(mtcs).visible(false);
                       dataTable.column([14]).visible(false);
                       dataTable.column([15]).visible(false);
                       dataTable.column([16]).visible(false);
@@ -1117,12 +944,6 @@ $(document).ready(function(){
                       dataTable.column([18]).visible(false);
                       dataTable.column([19]).visible(true);
                       dataTable.column([20]).visible(true);
-
-                      recalcc_tanpamtcs().then(value => {
-                        if(value.res == 200){
-                          $('#dataTablePenyusutan').DataTable().draw()
-                        }
-                      });
 
                 });
 
@@ -1236,15 +1057,6 @@ $(document).ready(function(){
 
                         localStorage.removeItem("EventMTCtrue");
 
-                        //deploy memunculkan column penyusutan di set 0.
-                        //set recallculate
-                          recuncheck_tnppnystan().then(value => {
-                            if(value.res == 200){
-                              $('#dataTablePenyusutan').DataTable().draw()
-                            }
-                          }
-                        );
-
                      }
 
                   }
@@ -1257,7 +1069,7 @@ $(document).ready(function(){
 
         // sinkronkan data master ke kalkulasi tbl. <Test>:[<Gaji_Lain>]
         $("body").on('click', "#resyncalc", function(e) {
-          alert("sync")
+          alert("asdasd")
         })
 
           $('#penyusutan').click(function(){
@@ -1354,78 +1166,6 @@ $(document).ready(function(){
 
       }
 
-      async function recalcc_tanpapenyusutan() {
-
-        let env = "{{ config('app.vpn') }}";
-
-            return fetch(`${env}/kalkulasimesin2/public/admin/reset-total-tanpa-penyusutan`, {
-                    method: 'POST',
-                    cache: 'no-cache',
-                    credentials: 'same-origin',
-                    redirect: 'follow',
-                    referrer: 'no-referrer',
-                    headers: {
-                                'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                                'Content-Type': 'application/json'
-                            }
-                    }
-                )
-            .then(response => response.json())
-              .catch((error) => {
-                  console.log(error);
-              }
-          );
-
-        }
-
-        async function recuncheck_tnppnystan() {
-
-        let env = "{{ config('app.vpn') }}";
-
-            return fetch(`${env}/kalkulasimesin2/public/admin/reset-total-tanpa-rclluncheckpnyt`, {
-                    method: 'POST',
-                    cache: 'no-cache',
-                    credentials: 'same-origin',
-                    redirect: 'follow',
-                    referrer: 'no-referrer',
-                    headers: {
-                                'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                                'Content-Type': 'application/json'
-                            }
-                    }
-                )
-            .then(response => response.json())
-                .catch((error) => {
-                  console.log(error);
-              }
-          );
-
-        }
-
-        async function recalcc_tanpamtcs() {
-
-          let env = "{{ config('app.vpn') }}";
-
-            return fetch(`${env}/kalkulasimesin2/public/admin/reset-total-tanpa-mtcs`, {
-                    method: 'POST',
-                    cache: 'no-cache',
-                    credentials: 'same-origin',
-                    redirect: 'follow',
-                    referrer: 'no-referrer',
-                    headers: {
-                                'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                                'Content-Type': 'application/json'
-                            }
-                    }
-                )
-            .then(response => response.json())
-                .catch((error) => {
-                  console.log(error);
-              }
-          );
-
-        }
-
     async function ButtonexportCalcTanpaMTCnTanpaPenyusutan() {
 
       let env = "{{ config('app.vpn') }}";
@@ -1471,7 +1211,3 @@ $(document).ready(function(){
         );
 
       }
-
-
-  </script>
-@stop

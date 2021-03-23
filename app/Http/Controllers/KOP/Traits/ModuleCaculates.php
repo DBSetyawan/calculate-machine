@@ -72,6 +72,62 @@ trait ModuleCaculates {
         return view('vendor.voyager.total-kalkulasi-rpt.v_kalkulasi_rpt', compact('label','sss'));
     
     }
+    
+    
+    public function rcllunchecktnpmtcs(){
+
+        $SendTemporaryCalculateInstance = new AllRecalculate;
+        $allrecalculate = AllRecalculate::with(['Listrik.Listrikperjam',
+        'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
+        'Company'])->get();
+    
+        foreach($allrecalculate as $index => $tmp){
+
+            $data[] = [
+                'code_mesin' => $tmp->code_mesin,
+                'id_mtc' => 0
+            ];
+
+            $code_mesin = 'code_mesin';
+                            
+            $bulk_batch = \Batch::update($SendTemporaryCalculateInstance, $data, $code_mesin);
+
+
+        }
+
+        return response()->json(['res' => 200]);
+    }
+
+    public function reclltnpapenyusutan(){
+
+        $SendTemporaryCalculateInstance = new AllRecalculate;
+        $allrecalculate = AllRecalculate::with(['Listrik.Listrikperjam',
+        'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
+        'Company'])->get();
+    
+        foreach($allrecalculate as $index => $tmp){
+
+            $data[] = [
+                'code_mesin' => $tmp->code_mesin,
+                'id_penyusutan' => 0
+            ];
+
+            $code_mesin = 'code_mesin';
+                            
+            $bulk_batch = \Batch::update($SendTemporaryCalculateInstance, $data, $code_mesin);
+
+
+        }
+
+        return response()->json(['res' => 200]);
+    }
+
+    public function rclluncheckpnyt(){
+        
+            $this->recalculate();
+
+        return response()->json(['res' => 200]);
+    }
 
     public function recalculate(){
 
