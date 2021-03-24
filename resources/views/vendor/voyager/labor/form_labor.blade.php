@@ -27,11 +27,19 @@
                             <div class="panel-body">
                                 <div class="contanier">
 
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label for="program_id">Mesin</label>
                                         <select class="form-control select2" id="code_mesin" name="code_mesin" required>
                                             @foreach ($mesin as $m)
                                         <option value="{{$m->id}}">{{$m->code_mesin}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div> --}}
+                                    <div class="form-group">
+                                        <label for="program_id">Kategori bagian</label>
+                                            <select class="form-control select2" id="category_bagian" name="category_bagian" required>
+                                            @foreach ($cbagian as $m)
+                                        <option value="{{$m->id}}">{{$m->nama_bagian}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -68,20 +76,27 @@
                                             @endforeach
                                         </select>
                                     </div> --}}
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label for="company">Kategori Bagian</label>
                                         <input type="text" class="form-control" id="category_bagian_display" name="category_bagian_display" placeholder="">
                                         <input type="text" class="form-control" id="category_bagian" name="category_bagian" placeholder="">
                                     </div>
-                                    <div class="form-group">
+                                    --}}
+                                    <div class="form-group"> 
                                         <label for="company">Shift</label>
                                         <input type="text" class="form-control" id="shift_display" name="shift_display" placeholder="">
                                         <input type="text" class="form-control" id="shift" name="shift" placeholder="">
                                     </div>
 
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label for="url_instagram">Mesin yang ditangani</label>
                                         <input type="text" class="form-control removeLater" id="jumlah_penangganan_mesin" name="jumlah_penangganan_mesin" placeholder="Jumlah mesin yang ditangani (Khusus Inputan SPV)">
+                                    </div> --}}
+
+                                    <div class="form-group mesinch">
+                                        <label for="msncheck">Mesin yang ditangani</label>
+                                        <ul><div id="mesinttid" class="mesintt"></div></ul>
+                                        {{-- <input type="text" class="form-control removeLater" id="jumlah_penangganan_mesin" name="jumlah_penangganan_mesin" placeholder="Jumlah mesin yang ditangani (Khusus Inputan SPV)"> --}}
                                     </div>
 
                                     {{-- <div class="form-group">
@@ -213,7 +228,7 @@
         async function GetFullDataMesin(mesinid
                 ) {
                     let datamesinid = {
-                            mesinid:mesinid
+                            ctgId:mesinid
                         }
                 const apiDataMesin = "{{ route('detail.data.mesin') }}";
                         
@@ -235,7 +250,30 @@
                         }    
                     }
 
+            function isEmpty(value){
+                var isEmptyObject = function(a) {
+                    if (typeof a.length === 'undefined') { // it's an Object, not an Array
+                    var hasNonempty = Object.keys(a).some(function nonEmpty(element){
+                        return !isEmpty(a[element]);
+                    });
+                    return hasNonempty ? false : isEmptyObject(Object.keys(a));
+                    }
+
+                    return !a.some(function nonEmpty(element) { // check if array is really not empty as JS thinks
+                    return !isEmpty(element); // at least one element should be non-empty
+                    });
+                };
+                return (
+                    value == false
+                    || typeof value === 'undefined'
+                    || value == null
+                    || (typeof value === 'object' && isEmptyObject(value))
+                );
+                }
+
     $('document').ready(function () {
+
+ 
         $("#code_mesin_id").hide();
         $("#company_parent_id").hide();
         $("#shift").hide();
@@ -247,24 +285,70 @@
         $("#category_bagian_display").prop("disabled", true);
 
         $('.toggleswitch').bootstrapToggle();
-            $('#code_mesin').on('change', function() {
-            GetFullDataMesin(this.value).then(function(results){
 
-                    $("#code_mesin_id").val(results.detail.id);
-                    $("#company_display").val(results.detail.company_to.company_name);
-                    $("#company_parent_id").val(results.detail.company_to.id);
-                    $("#category_bagian_display").val(results.detail.kbagian_to.nama_bagian);
-                    $("#category_bagian").val(results.detail.kbagian_to.id);
-                    $("#shift_display").val("Mesin shift ke "+results.detail.asumsi_to.shift);
-                    $("#shift").val(results.detail.asumsi_to.shift);
+            $('#category_bagian').on('change', function() {
+                GetFullDataMesin(this.value).then(function(results){
+
+                        if(isEmpty(results.detail) == false){
+                              var eld;
+                            results.detail.forEach(function(eval) {
+                                // console.log(eval.code_mesin)
+
+                             
+                            // for(x = 0; x < results.detail.length; x++) {
+                                var element = $('<input id="mesnid" type="checkbox" name="code_mesin[]" value="'+eval.id+'">'+eval.code_mesin+'</>');
+                            // console.log()
+                                // console.log(results.detail[x])
+                                // $("#code_mesin_id").val(results.detail.id);
+                                $("#company_display").val(eval.company_to.company_name);
+                                $("#company_parent_id").val(eval.company_to.id);
+                                // $("#category_bagian_display").val(results.detail.kbagian_to.nama_bagian);
+                                // $("#category_bagian").val(results.detail.kbagian_to.id);
+                                $("#shift_display").val("Mesin shift ke "+eval.asumsi_to.shift);
+                                $("#shift").val(eval.asumsi_to.shift);
+                                // $('#mesinttid').append(elements);
+                                // var clone = $("#mesinttid").clone(); // making zeh' clones!
+                                // $("#mesinttid").remove();   
+                                // $("body").append(clone);  
+                                $("<div/>").addClass("notification").appendTo(".mesinch");         // original is gone
+     
+                                // elements.push(element);
+                                $(".notification").each(function(){
+                                    
+                                    $(this).append(element);
+
+                                });
+
+                            })
+                    
+                    } else if(isEmpty(results.detail) == true) {
+                              
+                                $(".notification").remove();
+                            
+                            // $('input[type="checkbox"]').each(function(){ 
+
+                            //     $(this).prop("disabled", true).remove();
+                            // }); 
+
+
+
+                    }
                             
                 });
             });
+
         });
 
         $(document).ready(function() {
 
             $('form').submit(function(event) {
+
+            event.preventDefault();
+
+            var data = [];
+            $("input[name='code_mesin[]']:checked").each(function() {
+                data.push($(this).val());
+            });
 
                 var formData = {
 
@@ -342,7 +426,7 @@
                                
 
                     } else if (result.isDenied) {
-
+                    
                         const PesanPending = Swal.mixin({
                                     toast: true,
                                     position: 'top-end',
@@ -359,8 +443,9 @@
                                     icon: 'info',
                                     title: 'Data sedang diproses, tunggu sebentar..'
                                 })
+                     
 
-                        let dataPending = {...formData, 'setTo': result}
+                        let dataPending = {...formData, 'setTo': result, data}
 
                         $.ajax({
                             type        : 'POST',
@@ -378,13 +463,12 @@
   
                             if(data.isDenied == "true"){
 
-                                return Swal.fire('#Informasi.', 'jika sudah yakin ingin menyimpan akumulasi labor, tekan tombol berwarna biru setelah menekan tombol hitung listrik, kemudian sistem akan mengakumulasi dan sekaligus menyimpan datanya.', 'info')
+                                return Swal.fire('#Informasi.', 'jika sudah yakin ingin menyimpan akumulasi labor, tekan tombol berwarna biru setelah menekan tombol hitung, kemudian sistem akan mengakumulasi dan sekaligus menyimpan datanya.', 'info')
                             }
                         });
                     }
                 })
 
-             event.preventDefault();
             });
 
         });

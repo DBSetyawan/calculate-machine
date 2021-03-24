@@ -129,12 +129,12 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
             }
        
         } else {
-
             return response()->json(
                 [
                     'set_default_mesin' => $r->jumlah_penangganan_mesin,
                     'spv' => $biayasupervisor,
                     'isDenied' => $r->setTo["isDenied"],
+                    'mesin' => $r->data,
                     'opt' => $biayaoperator,
                     'help' => $biayahelper,
                     'total_biaya_levels' => $total_biaya_upah_perbulan,
