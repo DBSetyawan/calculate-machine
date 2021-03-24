@@ -27,14 +27,7 @@
                             <div class="panel-body">
                                 <div class="contanier">
 
-                                    {{-- <div class="form-group">
-                                        <label for="program_id">Mesin</label>
-                                        <select class="form-control select2" id="code_mesin" name="code_mesin" required>
-                                            @foreach ($mesin as $m)
-                                        <option value="{{$m->id}}">{{$m->code_mesin}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div> --}}
+                                  
                                     <div class="form-group">
                                         <label for="program_id">Kategori bagian</label>
                                             <select class="form-control select2" id="category_bagian" name="category_bagian" required>
@@ -77,11 +70,18 @@
                                         </select>
                                     </div> --}}
                                     {{-- <div class="form-group">
-                                        <label for="company">Kategori Bagian</label>
-                                        <input type="text" class="form-control" id="category_bagian_display" name="category_bagian_display" placeholder="">
-                                        <input type="text" class="form-control" id="category_bagian" name="category_bagian" placeholder="">
+                                        <label for="company">Kategori Bagian</label> --}}
+                                        {{-- <input type="text" class="form-control" id="category_bagian_display" name="category_bagian_display" placeholder=""> --}}
+                                        <input type="text" class="form-control" id="category_bagian_id" name="category_bagian_id" placeholder="">
+                                    {{-- </div> --}}
+                                    <div class="form-group">
+                                        <label for="program_id">Mesin</label>
+                                        <select class="form-control select2" id="code_mesin" name="code_mesin" required>
+                                            @foreach ($mesin as $m)
+                                        <option value="{{$m->id}}">{{$m->code_mesin}}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
-                                    --}}
                                     <div class="form-group"> 
                                         <label for="company">Shift</label>
                                         <input type="text" class="form-control" id="shift_display" name="shift_display" placeholder="">
@@ -94,7 +94,7 @@
                                     </div> --}}
 
                                     <div class="form-group mesinch">
-                                        <label for="msncheck">Mesin yang ditangani</label>
+                                        <label for="msncheck">Jumlah mesin yang ditanggani</label>
                                         <ul><div id="mesinttid" class="mesintt"></div></ul>
                                         {{-- <input type="text" class="form-control removeLater" id="jumlah_penangganan_mesin" name="jumlah_penangganan_mesin" placeholder="Jumlah mesin yang ditangani (Khusus Inputan SPV)"> --}}
                                     </div>
@@ -272,12 +272,11 @@
                 }
 
     $('document').ready(function () {
-
  
         $("#code_mesin_id").hide();
         $("#company_parent_id").hide();
         $("#shift").hide();
-        $("#category_bagian").hide();
+        $("#category_bagian_id").hide();
 
         $("#company_display").prop("disabled", true);
         $("#perjam_display").prop("disabled", true);
@@ -286,24 +285,25 @@
 
         $('.toggleswitch').bootstrapToggle();
 
+        $('#code_mesin').on('change', function() {
+            $("#code_mesin_id").val($(this).val());
+        });
+
             $('#category_bagian').on('change', function() {
                 GetFullDataMesin(this.value).then(function(results){
 
                         if(isEmpty(results.detail) == false){
-                              var eld;
-                            results.detail.forEach(function(eval) {
-                                // console.log(eval.code_mesin)
 
-                             
+                            results.detail.forEach(function(eval) {
                             // for(x = 0; x < results.detail.length; x++) {
-                                var element = $('<input id="mesnid" type="checkbox" name="code_mesin[]" value="'+eval.id+'">'+eval.code_mesin+'</>');
+                                var element = $('<input id="mesnid" type="checkbox" name="code_mesin[]" value="'+eval.id+'"> <span class="badge badge-primary"> '+eval.code_mesin+' </span></>');
                             // console.log()
                                 // console.log(results.detail[x])
                                 // $("#code_mesin_id").val(results.detail.id);
                                 $("#company_display").val(eval.company_to.company_name);
                                 $("#company_parent_id").val(eval.company_to.id);
-                                // $("#category_bagian_display").val(results.detail.kbagian_to.nama_bagian);
-                                // $("#category_bagian").val(results.detail.kbagian_to.id);
+                                // $("#category_bagian_display").val(eval.kbagian_to.nama_bagian);
+                                $("#category_bagian_id").val(eval.kbagian_to.id);
                                 $("#shift_display").val("Mesin shift ke "+eval.asumsi_to.shift);
                                 $("#shift").val(eval.asumsi_to.shift);
                                 // $('#mesinttid').append(elements);
@@ -323,14 +323,7 @@
                     
                     } else if(isEmpty(results.detail) == true) {
                               
-                                $(".notification").remove();
-                            
-                            // $('input[type="checkbox"]').each(function(){ 
-
-                            //     $(this).prop("disabled", true).remove();
-                            // }); 
-
-
+                        $(".notification").remove();
 
                     }
                             
@@ -354,7 +347,7 @@
 
                     'company_parent_id'     : $('input[name=company_parent_id]').val(),
                     'code_mesin'            : $('input[name=code_mesin_id]').val(),
-                    'category_bagian'       : $('input[name=category_bagian]').val(),
+                    'category_bagian'       : $('input[name=category_bagian_id]').val(),
                     'shift'                 : $('input[name=shift]').val(),
                     'supervisor'            : $('input[name=supervisor]').val(),
                     'operator'              : $('input[name=operator]').val(),
@@ -377,56 +370,72 @@
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
 
-                        const pesanStore = Swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 10000,
-                                timerProgressBar: true,
-                                didOpen: (toast) => {
-                                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                                }
-                            })
-                                          
-                                pesanStore.fire({
-                                    icon: 'info',
-                                    title: 'Data sedang diproses, tunggu sebentar..'
+                        if(isEmpty(data) == true) {
+                           
+                           return Swal.fire('#Informasi.', 'anda masih belum memilih mesin yang ditanggani.', 'info')
+
+                       } 
+                            else {
+
+                                const pesanStore = Swal.mixin({
+                                        toast: true,
+                                        position: 'top-end',
+                                        showConfirmButton: false,
+                                        timer: 10000,
+                                        timerProgressBar: true,
+                                        didOpen: (toast) => {
+                                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                        }
+                                    })
+                                                
+                                        pesanStore.fire({
+                                            icon: 'info',
+                                            title: 'Data sedang diproses, tunggu sebentar..'
+                                        })
+
+
+                                let store = {...formData, 'setTo': result, data}
+                            
+                                $.ajax({
+                                    type        : 'POST',
+                                    url         : "{{ route('labors.store.master') }}", 
+                                    data        : store, 
+                                    dataType    : 'json', 
+                                    encode          : true
                                 })
+                                .done(function(data) {
 
+                                    $("#gaji_supervisor").val("Rp "+formatCurrency(Math.round(data.spv)));
+                                    $("#gaji_operator").val("Rp "+formatCurrency(Math.round(data.opt)));
+                                    $("#gaji_helper").val("Rp "+formatCurrency(Math.round(data.help)));
+                                    $("#total_perbulan_p").val("Rp "+formatCurrency(Math.round(data.total_biaya_levels)));
+                                    $("#jumlah_mesin_yangditangani").val("Sebanyak : "+data.mesin+" mesin");
 
-                        let store = {...formData, 'setTo': result}
-                    
-                        $.ajax({
-                            type        : 'POST',
-                            url         : "{{ route('labors.store.master') }}", 
-                            data        : store, 
-                            dataType    : 'json', 
-                            encode          : true
-                        })
-                        .done(function(data) {
+                                    if(data.isConfirmed == "true"){
 
-                            $("#gaji_supervisor").val("Rp "+formatCurrency(Math.round(data.spv)));
-                            $("#gaji_operator").val("Rp "+formatCurrency(Math.round(data.opt)));
-                            $("#gaji_helper").val("Rp "+formatCurrency(Math.round(data.help)));
-                            $("#total_perbulan_p").val("Rp "+formatCurrency(Math.round(data.total_biaya_levels)));
-                            $("#jumlah_mesin_yangditangani").val("Rp "+formatCurrency(Math.round(data.set_default_mesin)));
+                                        let curr = '{{ route("voyager.labor.index") }}';
+                                        setTimeout(function(){ 
+                                            window.location.href = curr;
+                                        }, 4000);
+                                        
+                                        return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya labor berhasil diakumulasi & disimpan', 'success')
+                                
+                                    }
 
-                            if(data.isConfirmed == "true"){
-
-                                return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya labor berhasil diakumulasi & disimpan', 'success')
-                          
-                                let curr = '{{ route("voyager.labor.index") }}';
-                                setTimeout(function(){ 
-                                    window.location.href = curr;
-                                }, 4000);
-                            }
-
-                        });
-                               
+                                }
+                            );
+                        }
 
                     } else if (result.isDenied) {
-                    
+
+                        if(isEmpty(data) == true) {
+                           
+                            return Swal.fire('#Informasi.', 'anda masih belum memilih mesin yang ditanggani.', 'info')
+
+                        }
+                            else {
+
                         const PesanPending = Swal.mixin({
                                     toast: true,
                                     position: 'top-end',
@@ -459,13 +468,14 @@
                             $("#gaji_operator").val("Rp "+formatCurrency(Math.round(data.opt)));
                             $("#gaji_helper").val("Rp "+formatCurrency(Math.round(data.help)));
                             $("#total_perbulan_p").val("Rp "+formatCurrency(Math.round(data.total_biaya_levels)));
-                            $("#jumlah_mesin_yangditangani").val("Rp "+formatCurrency(Math.round(data.set_default_mesin)));
+                            $("#jumlah_mesin_yangditangani").val("Sebanyak : "+data.mesin+" mesin");
   
-                            if(data.isDenied == "true"){
+                                if(data.isDenied == "true"){
 
-                                return Swal.fire('#Informasi.', 'jika sudah yakin ingin menyimpan akumulasi labor, tekan tombol berwarna biru setelah menekan tombol hitung, kemudian sistem akan mengakumulasi dan sekaligus menyimpan datanya.', 'info')
-                            }
-                        });
+                                     return Swal.fire('#Informasi.', 'jika sudah yakin ingin menyimpan akumulasi labor, tekan tombol berwarna biru setelah menekan tombol hitung, kemudian sistem akan mengakumulasi dan sekaligus menyimpan datanya.', 'info')
+                                }
+                            });
+                        }
                     }
                 })
 

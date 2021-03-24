@@ -8,7 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 class Mesin extends Model
 {
     protected $table= "mesin";
-    protected $guarded = [''];
+    // protected $guarded = [''];
+
+    protected $fillable = [
+        'code_mesin',
+        'deskripsi',
+        'fungsi_mesin',
+        'voltase',
+        'group_mesin_id',
+        'listrik_perjam_id',
+        'category_bagian_id',
+        'company_id',
+        'asumsi_id',
+        'on_off',
+        'display_on_off_machine',
+        'faktor_kali_lwbp',
+        'faktor_kali_wbp',
+    ];
 
     /**
      * @default sistem RFC.

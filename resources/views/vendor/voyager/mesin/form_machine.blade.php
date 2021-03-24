@@ -97,12 +97,12 @@
                                     <input type="text" class="form-control" id="voltase" data-validate-length-range="6" data-validate-words="2" name="faktor_kali_wbp" placeholder="Faktor kali WBP">
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary pull-right save_mach">Simpan</button>&nbsp;
+                            {{-- <button type="submit" class="btn btn-primary pull-right save_mach">Simpan</button>&nbsp; --}}
 
                             {{-- <button type="submit" class="btn btn-primary pull-right save">
                                 Add Donation
                             </button> --}}
-                        </form>
+                        {{-- </form> --}}
                         </div>
                     </div>
             </div>
@@ -115,10 +115,10 @@
                         <div class="page-content container-fluid">
 
 
-                            <form class="form-edit-add" role="form"
-                                method="POST" enctype="multipart/form-data" autocomplete="off">
+                            {{-- <form class="form-edit-add" role="form"
+                                method="POST" enctype="multipart/form-data" autocomplete="off"> --}}
                     
-                                {{ csrf_field() }}
+                                {{-- {{ csrf_field() }} --}}
                     
                                 <div class="row">
                                         <div class="col-md-8">
@@ -126,7 +126,7 @@
                                                 <div class="panel-body">
                                                     <div class="contanier">
                     
-                                                        <div class="form-group">
+                                                        {{-- <div class="form-group">
                                                             <label for="program_id">Mesin</label>
                                                             <select class="form-control select2" id="code_mesins" name="code_mesins" required>
                                                                 @foreach ($mesin as $m)
@@ -135,7 +135,7 @@
                                                             </select>
                                                         </div>
                                                         <input type="text" class="form-control" id="code_mesin_id" name="code_mesin_id" placeholder="">
-                    
+                     --}}
                     
                                                         {{-- <div class="form-group">
                                                             <label for="program_id">Company</label>
@@ -146,12 +146,12 @@
                                                             </select>
                                                         </div> --}}
                     
-                                                        <div class="form-group">
+                                                        {{-- <div class="form-group">
                                                             <label for="company">Company</label>
                                                             <input type="text" class="form-control" id="company_display" name="company_display" placeholder="">
                                                             <input type="text" class="form-control" id="company_parent_id" name="company_parent_id" placeholder="">
                                                         </div>
-                                                
+                                                 --}}
                                                         {{-- <div class="form-group">
                                                             <label for="program_id">Mesin</label>
                                                             <select class="form-control select2" id="code_mesin" name="code_mesin" required>
@@ -169,23 +169,23 @@
                                                                 @endforeach
                                                             </select>
                                                         </div> --}}
-                                                        <div class="form-group">
+                                                        {{-- <div class="form-group">
                                                             <label for="company">Kategori Bagian</label>
                                                             <input type="text" class="form-control" id="category_bagian_display" name="category_bagian_display" placeholder="">
                                                             <input type="text" class="form-control" id="category_bagian" name="category_bagian" placeholder="">
-                                                        </div>
+                                                        </div> --}}
                     
                                                         <div class="form-group">
                                                             <label for="url_instagram">Nama SIM</label>
-                                                            <input type="text" class="form-control removeLater" id="nama_sim" name="nama_sim" placeholder="Nama SIM">
+                                                            <input type="text" class="form-control" id="nama_sim" name="nama_sim" placeholder="Nama SIM">
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="url_instagram">Purchase</label>
-                                                            <input type="text" class="form-control removeLater" id="purchaseorder_value" name="purchaseorder_value" placeholder="Purchase value">
+                                                            <input type="text" class="form-control" id="purchaseorder_value" name="purchaseorder_value" placeholder="Purchase value">
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="url_instagram">Umur(bulan)</label>
-                                                            <input type="text" class="form-control removeLater" id="umur" name="umur" placeholder="Umur (Bulan)">
+                                                            <input type="text" class="form-control" id="umur" name="umur" placeholder="Umur (Bulan)">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -225,7 +225,9 @@
                                             </div> --}}
                     
                                         </div>
-                                        <button type="submit" class="btn btn-primary pull-right save_peny">Hitung biaya penyusutan</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <button type="submit" class="btn btn-primary pull-right save_mach">Simpan</button>&nbsp;
+
+                                        {{-- <button type="submit" class="btn btn-primary pull-right save_peny">Hitung biaya penyusutan</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --}}
                                     </div>
                                     </div>
 
@@ -301,7 +303,10 @@
                     'category_bagian_id'     : $('select[name=category_bagian_id]').val(),
                     'listrik_perjam_id'        : $('select[name=listrik_perjam_id]').val(),
                     'asumsi_id'             : $('select[name=asumsi_id]').val(),
-                    'company_id'    : $('select[name=company_id]').val()
+                    'company_id'    : $('select[name=company_id]').val(),
+                    'nama_sim'    : $('input[name=nama_sim]').val(),
+                    'purchaseorder_value'    : $('input[name=purchaseorder_value]').val(),
+                    'umur'    : $('input[name=umur]').val()
                 };
 
                 Swal.fire({
@@ -310,7 +315,7 @@
                     showDenyButton: true,
                     showCancelButton: true,
                     confirmButtonText: `ya, simpan mesin sekarang ✓`,
-                    denyButtonText: `belum, jangan simpan datanya`,
+                    // denyButtonText: `belum, jangan simpan datanya`,
                     }).then((result) => {
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
@@ -345,6 +350,7 @@
                         .done(function(data) {
                             
                             // console.log(data)
+                                $("#total_perbulan_p").val("Rp "+formatCurrency(Math.round(data.rumusTotalPenyusutan)));
                             if(data.isConfirmed == "true"){
 
                                 // console.log(data)

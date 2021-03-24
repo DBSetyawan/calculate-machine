@@ -59,7 +59,7 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
          *
          * Total biaya level Supervisor
          */
-        $biayasupervisor = $this->RumusBiayaGajiUpahSupervisor($r->shift, $r->jumlah_penangganan_mesin, $r->code_mesin);
+        $biayasupervisor = $this->RumusBiayaGajiUpahSupervisor($r->shift, count($r->data), $r->code_mesin);
         
         /**
          * Total biaya level Operator
@@ -89,6 +89,7 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
             'operator_level2' => $biayaoperator,
             'helper_level0' => $biayahelper,
             'support_level0' => 0,
+            'jumlah_mesin_ditanggani' => count($r->data),
             'total_biaya' => $total_biaya_upah_perbulan,
         ];
 
@@ -121,6 +122,7 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
                         'spv' => $simpanDataBiayaListrik->supervisor_level3,
                         'opt' => $simpanDataBiayaListrik->operator_level2,
                         'help' => $biayahelper,
+                        'mesin' => count($r->data),
                         'isConfirmed' => $r->setTo["isConfirmed"],
                         'total_biaya_levels' => $total_biaya_upah_perbulan,
                     ]
@@ -129,12 +131,13 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
             }
        
         } else {
+            
             return response()->json(
                 [
                     'set_default_mesin' => $r->jumlah_penangganan_mesin,
                     'spv' => $biayasupervisor,
                     'isDenied' => $r->setTo["isDenied"],
-                    'mesin' => $r->data,
+                    'mesin' => count($r->data),
                     'opt' => $biayaoperator,
                     'help' => $biayahelper,
                     'total_biaya_levels' => $total_biaya_upah_perbulan,

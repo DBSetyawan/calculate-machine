@@ -6,6 +6,8 @@ use App\Mesin;
 use Exception;
 use App\Company;
 use App\LwbpMaster;
+use RumusPenyusutan;
+use App\Penyusutan;
 use App\ListrikOutput;
 use App\KategoriBagian;
 use App\Lb8KategoriMesin;
@@ -18,6 +20,7 @@ use TCG\Voyager\Events\BreadDataDeleted;
 use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use TCG\Voyager\Database\Schema\SchemaManager;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
@@ -176,7 +179,7 @@ class VoyagerMachineController extends BaseVoyagerBaseController
     
     public function detailcodemesin(Request $req){
 
-        $mesin = Mesin::whereIn('category_bagian_id', [(Int) $req->ctgId])
+        $mesin = Mesin::whereIn('category_bagian_id', [(Int) $req->ctgId])->where('on_off', '!=', 0)
         ->with('KbagianTo','CompanyTo','GroupMesinTo','MesinListrikPerjamTo','AsumsiTo')->get();
         return response()->json(['detail'=> $mesin]);
     }
@@ -200,9 +203,33 @@ class VoyagerMachineController extends BaseVoyagerBaseController
         if($r->setTo["isConfirmed"] == "true"){
 
             $simpanMesin = Mesin::create($datamesin);
+            $dtmesin = Mesin::whereIn('id',[$simpanMesin->id])->first();
+            // if(!empty($simpanMesin) && $simpanMesin != [] && $simpanMesin != null){
+
+                    /**
+                     * Hitung Total Biaya Penyusutan
+                     * @param $purchaseorder_value, $umur_bulan.
+                     */
+                    $rumusTotalPenyusutan = RumusPenyusutan::HitungTotalPenyusutanPerbulan((float) $r->purchaseorder_value, $r->umur);
+
+                    // $totalseluruhcostbulanan = Listrik::whereIn('company_parent_id', [3])->sum('nilai_cost_bulan');
+                    $TotalakumulasibiayaPenyusutan = [
+                        'company_parent_id' => $dtmesin->company_id,
+                        'category_bagian' => $dtmesin->category_bagian_id,
+                        'code_mesin' => $dtmesin->id,
+                        'code_penyusutan' => RumusPenyusutan::generateIDPenyusutan(), //not 
+                        'penyusutan_perbulan' => (float) $rumusTotalPenyusutan,
+                        'purchaseorder_value' => $r->purchaseorder_value,
+                        'umur' => $r->umur,
+                        'nama_sim' => $r->nama_sim
+                    ];
+
+                $simpanBiayaListrik = Penyusutan::create($TotalakumulasibiayaPenyusutan);
+
+
+            // }
             // $simpanMesin = Mesin::UpdateOrCreate(['code_mesin' => $r->code_mesin], $datamesin);
 
-            // if(!empty($simpanMesin) && $simpanMesin != [] && $simpanMesin != null){
 
                     // $totaltracks = [
     
@@ -219,9 +246,10 @@ class VoyagerMachineController extends BaseVoyagerBaseController
 
                 return response()->json(
                     [
-                        'isConfirmed' => $r->setTo["isConfirmed"]
-                        // 'data' => $datamesin,
-                        // 'isConfirmed' => $r->all()
+                        'isConfirmed' => $r->setTo["isConfirmed"],
+                        // 'data' => $TotalakumulasibiayaPenyusutan,
+                        // 'isConfirmed' => $r->all(),
+                        'rumusTotalPenyusutan' => $rumusTotalPenyusutan,
                     ]
                 );
     

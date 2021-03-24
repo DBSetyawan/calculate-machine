@@ -105,7 +105,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('button-load-ButtonexportCalcTanpaMTC','KOP\VoyagerTotalKalkulasiController@ButtonexportCalcTanpaMTC')->name('voyager.ButtonexportCalcTanpaMTC');
     Route::get('button-load-ButtonexportCalcTanpaMTCnTanpaPenyusutan','KOP\VoyagerTotalKalkulasiController@ButtonexportCalcTanpaMTCnTanpaPenyusutan')->name('voyager.exportCalcTanpaMTCnTanpaPenyusutan');
     Route::get('mesins/form-machine','KOP\VoyagerMachineController@formMachineAction')->name('mesin.form.master');
-    Route::post('mesins/store-form-machine','KOP\VoyagerMachineController@storePlaceEv')->name('mesin.storePlaceEv.master');
+    Route::post('store-form-machine','KOP\VoyagerMachineController@storePlaceEv')->name('mesin.storePlaceEv.master');
     Route::post('reset-total-tanpa-penyusutan','KOP\VoyagerTotalKalkulasiController@reclltnpapenyusutan')->name('mesin.recll.tnp.penyusutan');
     Route::post('reset-total-tanpa-rclluncheckpnyt','KOP\VoyagerTotalKalkulasiController@rclluncheckpnyt')->name('mesin.rclluncheckpnyt.tnp.penyusutan');
     Route::post('reset-total-tanpa-mtcs','KOP\VoyagerTotalKalkulasiController@rcllunchecktnpmtcs')->name('mesin.rclluncheckpnyt.tnp.mtcs');

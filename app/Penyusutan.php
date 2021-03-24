@@ -13,6 +13,20 @@ class Penyusutan extends Model
 
     protected $guarded = [''];
 
+    protected $fillable = [
+        'code_penyusutan',
+        'company_parent_id',
+        'purchaseorder_value',
+        'nama_sim',
+        'purchaseorder_value',
+        'umur',
+        'penyusutan_perbulan',
+        'category_bagian',
+        'code_mesin',
+        'peny_perbulan_view',
+        'p_value_view'
+    ];
+
     // public function save(array $options = [])
     // {
     //     /**
