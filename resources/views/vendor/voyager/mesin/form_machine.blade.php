@@ -225,7 +225,7 @@
                                             </div> --}}
                     
                                         </div>
-                                        <button type="submit" class="btn btn-primary pull-right save_mach">Simpan</button>&nbsp;
+                                        <button type="submit" class="btn btn-primary pull-right save_mach">Simpan & hitung penyusutan</button>&nbsp;
 
                                         {{-- <button type="submit" class="btn btn-primary pull-right save_peny">Hitung biaya penyusutan</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --}}
                                     </div>
@@ -311,11 +311,11 @@
 
                 Swal.fire({
                     title: 'Informasi',
-                    text: 'Apakah anda ingin menyimpan data mesin ini ?',
-                    showDenyButton: true,
+                    text: 'Apakah anda ingin menyimpan data mesin & hitung biaya penyusutan?',
+                    // showDenyButton: true,
                     showCancelButton: true,
                     confirmButtonText: `ya, simpan mesin sekarang ✓`,
-                    // denyButtonText: `belum, jangan simpan datanya`,
+                    denyButtonText: `batalkan`,
                     }).then((result) => {
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
