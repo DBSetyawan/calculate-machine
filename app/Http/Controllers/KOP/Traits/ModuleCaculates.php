@@ -75,27 +75,27 @@ trait ModuleCaculates {
     
     }
     
-    
     public function rcllunchecktnpmtcs(){
 
         $SendTemporaryCalculateInstance = new AllRecalculate;
         $allrecalculate = AllRecalculate::with(['Listrik.Listrikperjam',
         'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
         'Company'])->get();
-    
-        foreach($allrecalculate as $index => $tmp){
+        
+                foreach($allrecalculate as $index => $tmp){
 
-            $data[] = [
-                'code_mesin' => $tmp->code_mesin,
-                'id_mtc' => 0
-            ];
+                    $data[] = [
+                        'code_mesin' => $tmp->code_mesin,
+                        'id_mtc' => 0
+                    ];
 
-            $code_mesin = 'code_mesin';
-                            
-            $bulk_batch = \Batch::update($SendTemporaryCalculateInstance, $data, $code_mesin);
+                    $code_mesin = 'code_mesin';
+                                    
+                    $bulk_batch = \Batch::update($SendTemporaryCalculateInstance, $data, $code_mesin);
 
+                }
 
-        }
+            $this->recalculate();
 
         return response()->json(['res' => 200]);
     }
@@ -106,20 +106,22 @@ trait ModuleCaculates {
         $allrecalculate = AllRecalculate::with(['Listrik.Listrikperjam',
         'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
         'Company'])->get();
-    
-        foreach($allrecalculate as $index => $tmp){
+        
+                foreach($allrecalculate as $index => $tmp){
 
-            $data[] = [
-                'code_mesin' => $tmp->code_mesin,
-                'id_penyusutan' => 0
-            ];
+                    $data[] = [
+                        'code_mesin' => $tmp->code_mesin,
+                        'id_penyusutan' => 0
+                    ];
 
-            $code_mesin = 'code_mesin';
-                            
-            $bulk_batch = \Batch::update($SendTemporaryCalculateInstance, $data, $code_mesin);
+                    $code_mesin = 'code_mesin';
+                                    
+                    $bulk_batch = \Batch::update($SendTemporaryCalculateInstance, $data, $code_mesin);
 
 
-        }
+                }
+
+            $this->recalculate();
 
         return response()->json(['res' => 200]);
     }
@@ -144,6 +146,8 @@ trait ModuleCaculates {
                 \Batch::update($AllRecalculateInstance, $dpney, $code_mesin);
 
             }
+
+            $this->recalculate();
 
         return response()->json(['res' => 200]);
 
@@ -186,6 +190,8 @@ trait ModuleCaculates {
                         \Batch::update($AllRecalculateInstance, $dmtc, $code_mesin);
 
                     }
+
+                    $this->recalculate();
 
                 return response()->json(['res' => 200]);
 

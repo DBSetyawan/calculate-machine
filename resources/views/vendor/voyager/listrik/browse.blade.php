@@ -142,7 +142,7 @@
                                         data-pt-trigger="hover"
                                         data-pt-size="normal"
                                         data-pt-scheme="leaf"
-                                        data-pt-offset-left="1">{{ __('Transfer dokumen') }}</span>
+                                        data-pt-offset-left="1">{{ __('Transfer data') }}</span>
                                     </a></div><br>
                                 </div>
                                 <div class="panel panel-bordered">

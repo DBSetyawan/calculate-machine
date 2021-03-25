@@ -159,7 +159,7 @@
                             let datamesinid = {
                                     mesinid:mesinid
                                 }
-                        const apiDataMesin = "{{ route('detail.data.mesin') }}";
+                        const apiDataMesin = "{{ route('detail.data.mesins') }}";
                                 
                             const settings = {
                                         method: 'POST',

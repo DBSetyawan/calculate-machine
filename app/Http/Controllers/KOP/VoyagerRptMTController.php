@@ -162,7 +162,7 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
     public function formRPTMTCAction(Request $request)
     {
         $company = Company::all();
-        $mesin = Mesin::all();
+        $mesin = Mesin::whereNotIn('on_off', [0])->get();
         $cbagian = KategoriBagian::all();
         $LsOutputPerjam = ListrikOutput::all();
 

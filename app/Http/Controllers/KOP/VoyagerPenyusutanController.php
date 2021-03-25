@@ -35,7 +35,7 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
     public function formPenyusutanAction(Request $request)
     {
         $company = Company::all();
-        $mesin = Mesin::all();
+        $mesin = Mesin::whereNotIn('on_off', [0])->get();
         $cbagian = KategoriBagian::all();
 
         return view('vendor.voyager.penyusutan.form_penyusutan', compact('company','mesin','cbagian'));

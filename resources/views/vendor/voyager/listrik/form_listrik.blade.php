@@ -265,7 +265,7 @@
                             let datamesinid = {
                                     mesinid:mesinid
                                 }
-                        const apiDataMesin = "{{ route('detail.data.mesin') }}";
+                        const apiDataMesin = "{{ route('detail.data.mesins') }}";
                                 
                             const settings = {
                                         method: 'POST',
@@ -302,7 +302,7 @@
    
 
                 GetFullDataMesin(this.value).then(function(results){
-                    
+
                         $("#code_mesin_id").val(results.detail.id);
                         $("#company_display").val(results.detail.company_to.company_name);
                         $("#company_parent_id").val(results.detail.company_to.id);

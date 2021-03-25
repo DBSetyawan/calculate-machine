@@ -77,7 +77,7 @@
                                                   </div>
                                                   <p class="mb-1 text-muted">Jika mencentang PENYUSUTAN & MAINTENANCE, maka tabel dibawah akan menyesuaikan hanya tanpa PENYUSUTAN & MAINTENANCE. kolom PENYUSUTAN & MAINTENANCE akan disembunyikan, TOTAL SEMUA BIAYA PENYUSUTAN + MTC & TOTAL SEMUA BIAYA PENYUSUTAN + MTC PERJAMNYA akan ditampilkan.</p>
                                                   <small class="text-muted"><span class="badge badge-success"><i class="voyager-check"></i></span> PENYUSUTAN & MTC</span>
-                                                    <br/>&nbsp;<h5><p class="mb-1">* Jika ada kolom dan data tidak sesuai dengan semestinya, kontak developer.</p></h5>
+                                                    <br/>&nbsp;<h5><p class="mb-1"><code>EDP</code> Jika mengalami kendala, report ke developer.</p></h5>
                                                   </small>
                                                 </a>
                                               </div>
