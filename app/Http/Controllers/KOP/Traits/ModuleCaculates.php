@@ -95,7 +95,7 @@ trait ModuleCaculates {
 
                 }
 
-            $this->recalculate();
+            // $this->recalculate();
 
         return response()->json(['res' => 200]);
     }
@@ -121,7 +121,7 @@ trait ModuleCaculates {
 
                 }
 
-            $this->recalculate();
+            // $this->recalculate();
 
         return response()->json(['res' => 200]);
     }
@@ -147,7 +147,7 @@ trait ModuleCaculates {
 
             }
 
-            $this->recalculate();
+            // $this->recalculate();
 
         return response()->json(['res' => 200]);
 
@@ -191,7 +191,7 @@ trait ModuleCaculates {
 
                     }
 
-                    $this->recalculate();
+                    // $this->recalculate();
 
                 return response()->json(['res' => 200]);
 

@@ -21,6 +21,7 @@
                     <div class="panel-body">
                     <div class="panel-heading" style="border-bottom:0;margin-bottom:-4px">
                     </div>
+
                     <div class="panel panel-bordered">
                       <div class="panel-body">
                           <div class="row">
@@ -41,51 +42,75 @@
                                     <div class="card-body">
                                       <div class="container" id="penyesuaian">
                                         <div class="card" style="width: auto;">
-                                          <li class="list-group-item">Fitur Menu</li>
-                                          <ul class="list-group list-group-flush">
-                                            <li class="list-group-item">
-                                              <div class="list-group">
-                                                <div class="list-group-item-action active">
-                                                  <div class="d-flex justify-content-between">
-                                                    <h5 class="mb-1 text-secondary"><br />Berikan Tanda Centang pada contoh simbol ini <span class="glyphicon glyphicon glyphicon-check" aria-hidden="true"></span> untuk memulai mengatur perhitungan kalkulasi
-                                                      <span class="glyphicon glyphicon glyphicon-share-alt" aria-hidden="true"></span>
-                                                          <input type="checkbox" class="form-check-input OpenedTr CheckEventListFormationFirst" id="penyusutan" value="1">
-                                                      </h5>
-                                                    {{-- <small class="text-muted">Automated.</small> --}}
-                                                  </div>
-                                                  <p class="mb-1 text-secondary">Jika mencentang MAINTENANCE, maka tabel dibawah akan menyesuaikan hanya tanpa MTC. kolom MAINTENANCE akan disembunyikan, TOTAL SEMUA BIAYA MTC & TOTAL SEMUA BIAYA MTC PERJAMNYA akan ditampilkan.</p>
-                                                  <h3 class="mb-1"><input type="checkbox" name='hide_columns_mtcs' class="Maintenance CheckEventListFormation btn" id="mtcs" value='8'>Tanpa Maintenance</h3>
-                                                </div>
-                                              <hr class="text-muted">
-                                                <div class="list-group-item-action active">
-                                                  <div class="d-flex w-100 justify-content-between">
-                                                    <h5 class="mb-1 text-secondary">
-                                                       {{-- <br />Berikan Tanda Centang pada contoh simbol ini <span class="glyphicon glyphicon glyphicon-check" aria-hidden="true"></span> untuk memulai mengatur perhitungan kalkulasi --}}
-                                                    </h5>
-                                                    {{-- <small class="text-muted">Automated.</small> --}}
-                                                  </div>
-                                                  <p class="mb-1 text-secondary">Jika mencentang PENYUSUTAN, maka tabel dibawah akan menyesuaikan hanya tanpa PENYUSUTAN. kolom PENYUSUTAN akan disembunyikan, TOTAL SEMUA BIAYA PENYUSUTAN & TOTAL SEMUA BIAYA PENYUSUTAN PERJAMNYA akan ditampilkan.</p>
-                                                  <h3 class="mb-1"><input type="checkbox" name='hide_columns_pystn' class="Penyusutan CheckEventListFormation btn" id="pnyt" value='6'>Tanpa Penyusutan</h3>
-                                                </div>
-                                                <a class=" list-group-item-action active" id="alltruepnytmtc">
+                                          <div class="row">
+                                            <div class="col-md-8">
+                                            <li class="list-group-item">Fitur Menu</li>
+                                              <ul class="list-group list-group-flush">
+                                                <li class="list-group-item">
+                                                  <div class="list-group">
+                                                    <div class="list-group-item-action active">
+                                                      <div class="d-flex justify-content-between">
+                                                        <h5 class="mb-1 text-secondary"><br />Berikan Tanda Centang pada contoh simbol ini <span class="glyphicon glyphicon glyphicon-check" aria-hidden="true"></span> untuk memulai mengatur perhitungan kalkulasi
+                                                          <span class="glyphicon glyphicon glyphicon-share-alt" aria-hidden="true"></span>
+                                                              <input type="checkbox" class="form-check-input OpenedTr CheckEventListFormationFirst" id="penyusutan" value="1">
+                                                          </h5>
+                                                        {{-- <small class="text-muted">Automated.</small> --}}
+                                                      </div>
+                                                      <p class="mb-1 text-secondary">Jika mencentang MAINTENANCE, maka tabel dibawah akan menyesuaikan hanya tanpa MTC. kolom MAINTENANCE akan disembunyikan, TOTAL SEMUA BIAYA MTC & TOTAL SEMUA BIAYA MTC PERJAMNYA akan ditampilkan.</p>
+                                                    </div>
                                                   <hr class="text-muted">
-                                                  <div class="d-flex w-100 justify-content-between">
-                                                    <h5 class="mb-1 text-muted">
-                                                       <br />FYI, jika checkbox semua tercentang (PENYUSUTAN & MTC).
-                                                    </h5>
-                                                    {{-- <small class="text-muted">Automated.</small> --}}
+                                                    <div class="list-group-item-action active">
+                                                      <div class="d-flex w-100 justify-content-between">
+                                                        <h5 class="mb-1 text-secondary">
+                                                          {{-- <br />Berikan Tanda Centang pada contoh simbol ini <span class="glyphicon glyphicon glyphicon-check" aria-hidden="true"></span> untuk memulai mengatur perhitungan kalkulasi --}}
+                                                        </h5>
+                                                        {{-- <small class="text-muted">Automated.</small> --}}
+                                                      </div>
+                                                      <p class="mb-1 text-secondary">Jika mencentang PENYUSUTAN, maka tabel dibawah akan menyesuaikan hanya tanpa PENYUSUTAN. kolom PENYUSUTAN akan disembunyikan, TOTAL SEMUA BIAYA PENYUSUTAN & TOTAL SEMUA BIAYA PENYUSUTAN PERJAMNYA akan ditampilkan.</p>
+                                                    </div>
+                                                    <a class=" list-group-item-action active" id="alltruepnytmtc">
+                                                      <hr class="text-muted">
+                                                      <div class="d-flex w-100 justify-content-between">
+                                                        <h5 class="mb-1 text-muted">
+                                                          <br />FYI, jika checkbox semua tercentang (PENYUSUTAN & MTC).
+                                                        </h5>
+                                                        {{-- <small class="text-muted">Automated.</small> --}}
+                                                      </div>
+                                                      <p class="mb-1 text-muted">Jika mencentang PENYUSUTAN & MAINTENANCE, maka tabel dibawah akan menyesuaikan hanya tanpa PENYUSUTAN & MAINTENANCE. kolom PENYUSUTAN & MAINTENANCE akan disembunyikan, TOTAL SEMUA BIAYA PENYUSUTAN + MTC & TOTAL SEMUA BIAYA PENYUSUTAN + MTC PERJAMNYA akan ditampilkan.</p>
+                                                      <small class="text-muted"><span class="badge badge-success"><i class="voyager-check"></i></span> PENYUSUTAN & MTC</span>
+                                                        <br/>&nbsp;<h5><p class="mb-1"><code>EDP</code> Jika mengalami kendala, report ke developer.</p></h5>
+                                                      </small>
+                                                    </a>
                                                   </div>
-                                                  <p class="mb-1 text-muted">Jika mencentang PENYUSUTAN & MAINTENANCE, maka tabel dibawah akan menyesuaikan hanya tanpa PENYUSUTAN & MAINTENANCE. kolom PENYUSUTAN & MAINTENANCE akan disembunyikan, TOTAL SEMUA BIAYA PENYUSUTAN + MTC & TOTAL SEMUA BIAYA PENYUSUTAN + MTC PERJAMNYA akan ditampilkan.</p>
-                                                  <small class="text-muted"><span class="badge badge-success"><i class="voyager-check"></i></span> PENYUSUTAN & MTC</span>
-                                                    <br/>&nbsp;<h5><p class="mb-1"><code>EDP</code> Jika mengalami kendala, report ke developer.</p></h5>
-                                                  </small>
-                                                </a>
-                                              </div>
-                                            </li>
-                                            <li class="list-group-item">   
-                                              <span class="badge badge-success" style="cursor: pointer" id="setall"><i class="voyager-refresh"></i> Reset Ulang</span>
-                                            </li>
-                                          </ul>
+                                                </li>
+                                                <li class="list-group-item">   
+                                                  <span class="badge badge-success" style="cursor: pointer" id="setall"><i class="voyager-refresh"></i> Reset Ulang</span>
+                                                </li>
+                                              </ul>
+                                                </div>
+                                            <div class="col-md-4">
+                                              <ul class="list-group list-group-flush">
+                                                <li class="list-group-item">
+                                                  <div class="list-group">
+                                                    <div class="list-group-item-action active">
+                                                      <div class="d-flex justify-content-between">
+                                                        <p class="mb-1"><input type="checkbox" name='hide_columns_mtcs' class="Maintenance CheckEventListFormation btn" id="mtcs" value='8'>Tanpa Maintenance</h3>
+                                                      </div>
+                                                    </div>
+                                                  <hr class="text-muted">
+                                                    <div class="list-group-item-action active">
+                                                      <div class="d-flex w-100 justify-content-between">
+                                                        <p class="mb-1"><input type="checkbox" name='hide_columns_pystn' class="Penyusutan CheckEventListFormation btn" id="pnyt" value='6'>Tanpa Penyusutan</h3>
+                                                      </div>
+                                                      </p>
+                                                    </div>
+                                                  </div>
+                                                </li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                        
+                                          
                                         </div>
                                       
                                        {{-- <span class="badge badge-success" style="cursor: pointer" id="reset_filters_calc"><i class="voyager-refresh"></i> Reset </span> --}}
