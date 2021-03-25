@@ -366,8 +366,8 @@ trait ModuleCaculates {
                             $bulk_batch = \Batch::update($SendTemporaryCalculateInstance, $data_recalculate, $sid);
 
                         }
-    
-                    return response()->json(['json' => $bulk_batch]);
+
+                    return response()->json(['res' => 200]);
 
                 } catch (Exception $e) {
                     $code = 500;
@@ -615,7 +615,9 @@ trait ModuleCaculates {
 
                         }
     
-                    return response()->json(['json' => $bulk_batch]);
+
+                    return response()->json(['res' => 200]);
+
 
                 } catch (Exception $e) {
                     $code = 500;
@@ -952,7 +954,7 @@ trait ModuleCaculates {
 
                         }
     
-                    return response()->json(['json' => $bulk_batch]);
+                    return response()->json(['res' => 200]);
 
                 } catch (Exception $e) {
                     $code = 500;

@@ -1339,9 +1339,9 @@ $(document).ready(function(){
                                     
                                   $(".calctp").html(sd.button_ButtonexportCalcTanpaPenyusutan)
                               
-                              )  
-
-                              recalcc_tanpapenyusutan().then(value => {
+                              ) 
+                               
+                                recalculateTanpaPenyusutan().then(value => {
                                   if(value.res == 200){
                                     $('#dataTablePenyusutan').DataTable().draw()
                                   }
