@@ -241,10 +241,19 @@ $(document).ready(function(){
 
             $(".Penyusutan").prop("checked", true);
             $(".CustomFilter").focus();
+            
+            recalculateTanpaPenyusutan().then(value => {
+                    if(value.res == 200){
+                      $('#dataTablePenyusutan').DataTable().draw()
+                    }
+                  }
+                );
 
           } else {
 
           $(".Penyusutan").prop("checked", false);
+
+          
 
           setTimeout(function(){ 
             
@@ -289,6 +298,12 @@ $(document).ready(function(){
             $(".Maintenance").prop("checked", false);
 
             setTimeout(function(){ 
+
+              recalcc_tanpapenyusutan().then(value => {
+                      if(value.res == 200){
+                        $('#dataTablePenyusutan').DataTable().draw()
+                      }
+                  });
               
                 $(".calctp").hide(); //tanpa penyusutan
                 $(".csbe").hide(); //smua biaya
@@ -419,19 +434,25 @@ $(document).ready(function(){
                         
                       $(".calctnpmtctp").html(sd.button_ButtonexportCalcTanpaMTCnTanpaPenyusutan)
                   
+                      
                   )  
-
-                  recalcc_tanpapenyusutan().then(value => {
+                        recalcc_recalculateTanpaPenyusutanNtanpaMTC().then(value => {
                         if(value.res == 200){
                           $('#dataTablePenyusutan').DataTable().draw()
                         }
-                      });
+                      })
 
-                  recalcc_tanpamtcs().then(value => {
-                      if(value.res == 200){
-                        $('#dataTablePenyusutan').DataTable().draw()
-                      }
-                  });
+                  // recalcc_tanpapenyusutan().then(value => {
+                  //       if(value.res == 200){
+                  //         $('#dataTablePenyusutan').DataTable().draw()
+                  //       }
+                  //     });
+
+                  // recalcc_tanpamtcs().then(value => {
+                  //     if(value.res == 200){
+                  //       $('#dataTablePenyusutan').DataTable().draw()
+                  //     }
+                  // });
 
               $(".calctnpmtctp").show();
               $('#main-logo a').attr('href', "asdasdasd");
@@ -458,11 +479,11 @@ $(document).ready(function(){
                             
                           )
 
-                  recalcc_tanpamtcs().then(value => {
-                      if(value.res == 200){
-                        $('#dataTablePenyusutan').DataTable().draw()
-                      }
-                  });
+                  // recalcc_tanpamtcs().then(value => {
+                  //     if(value.res == 200){
+                  //       $('#dataTablePenyusutan').DataTable().draw()
+                  //     }
+                  // });
         
                       $(".calcmtc").show(); //smua biaya
 
@@ -490,11 +511,11 @@ $(document).ready(function(){
                               $(".calctp").html(sd.button_ButtonexportCalcTanpaPenyusutan)
                           )     
 
-                          recalcc_tanpapenyusutan().then(value => {
-                            if(value.res == 200){
-                              $('#dataTablePenyusutan').DataTable().draw()
-                            }
-                          });
+                          // recalcc_tanpapenyusutan().then(value => {
+                          //   if(value.res == 200){
+                          //     $('#dataTablePenyusutan').DataTable().draw()
+                          //   }
+                          // });
 
 
                           $(".calctp").show();
@@ -609,7 +630,7 @@ $(document).ready(function(){
                             $(".csbe").html(sd.button_ButtonCalcSmuaBiayaExports)
                           
                         )
-
+                        
               //set recallculate
                recuncheck_tnppnystan().then(value => {
                     if(value.res == 200){
@@ -618,15 +639,15 @@ $(document).ready(function(){
                   }
                 );
 
-                    $(".csbe").show(); //smua biaya
+              $(".csbe").show(); //smua biaya
 
         //set recallculate
-        recuncheck_tnppnystan().then(value => {
-              if(value.res == 200){
-                $('#dataTablePenyusutan').DataTable().draw()
-              }
-            }
-          );
+        // recuncheck_tnppnystan().then(value => {
+        //       if(value.res == 200){
+        //         $('#dataTablePenyusutan').DataTable().draw()
+        //       }
+        //     }
+        //   );
       
       }, 1000);
 
@@ -986,6 +1007,12 @@ $(document).ready(function(){
                               }
                             });
 
+                            recalcc_tanpamtcs().then(value => {
+                                if(value.res == 200){
+                                  $('#dataTablePenyusutan').DataTable().draw()
+                                }
+                            });
+
                             $(".calctnpmtctp").show(); //tanpa mtc
 
                           $(".CustomFilter").focus();
@@ -1008,7 +1035,7 @@ $(document).ready(function(){
                               let rf1 = $('#dataTablePenyusutan').DataTable().draw();
 
                               rf1.column([12]).visible(false);
-                                rf1.column([13]).visible(false);
+                                rf1.column([13]).visible(true);
                                 rf1.column([14]).visible(false);
                                 rf1.column([15]).visible(false);
                                 rf1.column([18]).visible(false);
@@ -1019,7 +1046,7 @@ $(document).ready(function(){
                               
                               let rf2 = $('#dataTablePenyusutan').DataTable().draw();
                                 
-                                rf2.column([5]).visible(false);
+                                rf2.column([5]).visible(true);
                                 rf2.column([14]).visible(false);
                                 rf2.column([15]).visible(false);
                                 rf2.column([16]).visible(false);
@@ -1046,7 +1073,7 @@ $(document).ready(function(){
                       //deploy memunculkan column penyusutan di set 0.
 
                       // dataTable.column(peny).visible(false);
-                      dataTable.column([12]).visible(false);
+                      dataTable.column([12]).visible(true);
                       dataTable.column([13]).visible(false);
                       dataTable.column([14]).visible(false);
                       dataTable.column([15]).visible(false);
@@ -1108,14 +1135,16 @@ $(document).ready(function(){
                               $(".csbe").hide(); //smua biaya
 
                       let db_temp = $('#dataTablePenyusutan').DataTable().draw();
-                          db_temp.column([12]).visible(false);
+                          db_temp.column([12]).visible(true);
                           db_temp.column([13]).visible(false);
                           db_temp.column([14]).visible(false);
                           db_temp.column([15]).visible(false);
-                          db_temp.column([18]).visible(true);
+                          db_temp.column([18]).visible(false);
                           db_temp.column([19]).visible(true);
                           db_temp.column([16]).visible(false);
                           db_temp.column([17]).visible(false);
+                          db_temp.column([11]).visible(true);
+                          db_temp.column([20]).visible(true);
                           db_temp.column(6).visible(true);
                           db_temp.column(7).visible(true);
                           db_temp.column(8).visible(true);
@@ -1146,11 +1175,11 @@ $(document).ready(function(){
                                     }
                                   });
 
-                                  recalcc_tanpamtcs().then(value => {
-                                      if(value.res == 200){
-                                        $('#dataTablePenyusutan').DataTable().draw()
-                                      }
-                                    });
+                                  // recalcc_tanpamtcs().then(value => {
+                                  //     if(value.res == 200){
+                                  //       $('#dataTablePenyusutan').DataTable().draw()
+                                  //     }
+                                  //   });
 
                                 // $(".calcmtc").show(); //smua biayacaltanpa_mtc
                                 $(".calcmtc").show(); //smua biayacaltanpa_mtc
@@ -1220,13 +1249,6 @@ $(document).ready(function(){
                     localStorage.removeItem("EventPenyusutanTrue");
 
                     //deploy memunculkan column penyusutan di set 0.
-                    //set recallculate
-                      recuncheck_tnppnystan().then(value => {
-                        if(value.res == 200){
-                          $('#dataTablePenyusutan').DataTable().draw()
-                        }
-                      }
-                    );
                 }
 
           });
@@ -1274,6 +1296,12 @@ $(document).ready(function(){
                           
                         )
 
+                  recalcc_tanpamtcs().then(value => {
+                      if(value.res == 200){
+                        $('#dataTablePenyusutan').DataTable().draw()
+                      }
+                  });
+
                     $(".calcmtc").show(); //smua biaya
                     $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
                     $(".CustomFilter").focus();
@@ -1319,13 +1347,6 @@ $(document).ready(function(){
                                   }
                                 });
                               
-                              //this only setting recalulate mtc only
-                              recalcc_mtconly().then(value => {
-                                if(value.res == 200){
-                                  $('#dataTablePenyusutan').DataTable().draw()
-                                }
-                              });
-
                               $(".calctp").show();
 
                               $(".csbe").hide(); //smua biaya
@@ -1367,6 +1388,13 @@ $(document).ready(function(){
                                     
                                   )
 
+                              //this only setting recalulate mtc only
+                              recalcc_mtconly().then(value => {
+                                if(value.res == 200){
+                                  $('#dataTablePenyusutan').DataTable().draw()
+                                }
+                              });
+
                               $(".csbe").show(); //smua biaya
 
                                   $(".calcmtc").hide(); //tanpa mtc
@@ -1385,12 +1413,12 @@ $(document).ready(function(){
 
                         //deploy memunculkan column penyusutan di set 0.
                         //set recallculate
-                          recuncheck_tnppnystan().then(value => {
-                            if(value.res == 200){
-                              $('#dataTablePenyusutan').DataTable().draw()
-                            }
-                          }
-                        );
+                        //   recuncheck_tnppnystan().then(value => {
+                        //     if(value.res == 200){
+                        //       $('#dataTablePenyusutan').DataTable().draw()
+                        //     }
+                        //   }
+                        // );
 
                      }
 
@@ -1531,6 +1559,55 @@ $(document).ready(function(){
           );
 
         }
+        
+
+        async function recalcc_recalculateTanpaPenyusutanNtanpaMTC() {
+
+          let env = "{{ config('app.vpn') }}";
+
+              return fetch(`${env}/kalkulasimesin2/public/admin/reset-total-recalculateTanpaPenyusutanNtanpaMTC`, {
+                      method: 'POST',
+                      cache: 'no-cache',
+                      credentials: 'same-origin',
+                      redirect: 'follow',
+                      referrer: 'no-referrer',
+                      headers: {
+                                  'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                                  'Content-Type': 'application/json'
+                              }
+                      }
+                  )
+              .then(response => response.json())
+                .catch((error) => {
+                    console.log(error);
+                }
+            );
+
+          }
+
+          async function recalculateTanpaPenyusutan() {
+
+            let env = "{{ config('app.vpn') }}";
+
+                return fetch(`${env}/kalkulasimesin2/public/admin/button-load-recalculateTanpaPenyusutan`, {
+                        method: 'POST',
+                        cache: 'no-cache',
+                        credentials: 'same-origin',
+                        redirect: 'follow',
+                        referrer: 'no-referrer',
+                        headers: {
+                                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                                    'Content-Type': 'application/json'
+                                }
+                        }
+                    )
+                .then(response => response.json())
+                  .catch((error) => {
+                      console.log(error);
+                  }
+              );
+
+            }
 
         async function recalcc_mtconly() {
 

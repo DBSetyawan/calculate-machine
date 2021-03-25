@@ -440,34 +440,60 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         try {
 
             $alllstrk = Listrik::all();
+            $AllRecalculate = AllRecalculate::all();
             $ListrikInstance = new AllRecalculate;
 
-            $columns = [
-                'company',
-                'code_mesin',
-                'category_bagian',
-                'id_listrik',
-                'group_mesin',
-                'listrik_fk'
-            ];
+            // dd($AllRecalculate);
 
-                        foreach($alllstrk as $datatemp){
+            if(! $AllRecalculate->isEmpty()){
 
-                            $data[] = [
-                                $datatemp->company_parent_id,
-                                $datatemp->code_mesin,
-                                $datatemp->category_bagian,
-                                $datatemp->ncost_bulan_plus_adm,
-                                $datatemp->group_mesin,
-                                $datatemp->id
-                            ];
-                            
-                        }
+                foreach($alllstrk as $datatemp){
 
-                    $batchSize = 500;
+                    $data[] = [
+                        'company' => $datatemp->company_parent_id,
+                        'code_mesin' => $datatemp->code_mesin,
+                        'category_bagian' => $datatemp->category_bagian,
+                        'id_listrik' => $datatemp->ncost_bulan_plus_adm,
+                        'group_mesin' => $datatemp->group_mesin,
+                        'listrik_fk' => $datatemp->id
+                    ];
+        
+                    $index = 'code_mesin';
+        
+                   $result = \Batch::update($ListrikInstance, $data, $index);
+                   
+                }
+                
+            } else {
 
+                
+                $columns = [
+                    'company',
+                    'code_mesin',
+                    'category_bagian',
+                    'id_listrik',
+                    'group_mesin',
+                    'listrik_fk'
+                ];
+                
+                foreach($alllstrk as $datatemp){
+                    
+                    $data[] = [
+                        $datatemp->company_parent_id,
+                        $datatemp->code_mesin,
+                        $datatemp->category_bagian,
+                        $datatemp->ncost_bulan_plus_adm,
+                        $datatemp->group_mesin,
+                        $datatemp->id
+                    ];
+                    
+                }
+                
+                $batchSize = 500;
+                
                 $result = \Batch::insert($ListrikInstance, $columns, $data, $batchSize);
-
+                
+            }
             return response()->json(['success' => $result]);
 
         } catch (Exception $e) {

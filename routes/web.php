@@ -103,6 +103,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('button-load-relcalculate','KOP\VoyagerTotalKalkulasiController@recalculate')->name('voyager.recalculate');
     Route::get('button-load-ButtonCalcSmuaBiayaExports','KOP\VoyagerTotalKalkulasiController@ButtonCalcSmuaBiayaExports')->name('voyager.ButtonCalcSmuaBiayaExports');
     Route::get('button-load-ButtonexportCalcTanpaMTC','KOP\VoyagerTotalKalkulasiController@ButtonexportCalcTanpaMTC')->name('voyager.ButtonexportCalcTanpaMTC');
+    Route::post('button-load-recalculateTanpaPenyusutan','KOP\VoyagerTotalKalkulasiController@recalculateTanpaPenyusutan')->name('voyager.recalculateTanpaPenyusutan');
+    Route::post('reset-total-recalculateTanpaPenyusutanNtanpaMTC','KOP\VoyagerTotalKalkulasiController@recalculateTanpaPenyusutanNtanpaMTC')->name('voyager.recalculateTanpaPenyusutanNtanpaMTC');
     Route::get('button-load-ButtonexportCalcTanpaMTCnTanpaPenyusutan','KOP\VoyagerTotalKalkulasiController@ButtonexportCalcTanpaMTCnTanpaPenyusutan')->name('voyager.exportCalcTanpaMTCnTanpaPenyusutan');
     Route::get('mesins/form-machine','KOP\VoyagerMachineController@formMachineAction')->name('mesin.form.master');
     Route::post('store-form-machine','KOP\VoyagerMachineController@storePlaceEv')->name('mesin.storePlaceEv.master');
@@ -110,7 +112,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('reset-total-tanpa-rclluncheckpnyt','KOP\VoyagerTotalKalkulasiController@rclluncheckpnyt')->name('mesin.rclluncheckpnyt.tnp.penyusutan');
     Route::post('reset-total-tanpa-mtcs','KOP\VoyagerTotalKalkulasiController@rcllunchecktnpmtcs')->name('mesin.rclluncheckpnyt.tnp.mtcs');
     Route::post('reset-total-tanpa-MtcRecalculateOnly','KOP\VoyagerTotalKalkulasiController@MtcRecalculateOnly')->name('mesin.rclluncheckpnyt.tnp.MtcRecalculateOnly');
-    Route::post('reset-total-tanpa-PenyusutanRecalculateOnly','KOP\VoyagerTotalKalkulasiController@MtcRecalculateOnly')->name('mesin.rclluncheckpnyt.tnp.PenyusutanRecalculateOnly');
+    Route::post('reset-total-tanpa-PenyusutanRecalculateOnly','KOP\VoyagerTotalKalkulasiController@PenyusutanRecalculateOnly')->name('mesin.rclluncheckpnyt.tnp.PenyusutanRecalculateOnly');
     
     Route::get('/clear', function() {
 

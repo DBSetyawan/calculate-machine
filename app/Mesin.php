@@ -15,6 +15,7 @@ class Mesin extends Model
         'deskripsi',
         'fungsi_mesin',
         'voltase',
+        'ampere',
         'group_mesin_id',
         'listrik_perjam_id',
         'category_bagian_id',

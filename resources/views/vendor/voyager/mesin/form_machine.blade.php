@@ -358,8 +358,11 @@
                                     window.location.href = curr;
                                 }, 6500);
 
-                                    return Swal.fire('Data berhasil disimpan.', 'pastikan jika ingin menambah mesin, lengkapi data di master listrik | penyusutan | labor | MTC', 'success')
-                               
+                                    // return Swal.fire('Data berhasil disimpan.', 'pastikan jika ingin menambah mesin, lengkapi data di master listrik | penyusutan | labor | MTC', 'success')
+                                    pesanStore.fire({
+                                        icon: 'success',
+                                        title: 'Data berhasil disimpan..'
+                                    })
                                 }
                               
                             }
