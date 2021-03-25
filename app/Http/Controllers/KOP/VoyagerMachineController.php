@@ -194,40 +194,40 @@ class VoyagerMachineController extends BaseVoyagerBaseController
             'deskripsi' =>  $r->deskripsi,
             'code_mesin' => $r->code_mesin,
             'asumsi_id' => $r->asumsi_id,
+            'on_off' => 1,
             'company_id' => $r->company_id,
             'group_mesin_id' => $r->group_mesin_id,
             'category_bagian_id' => $r->category_bagian_id,
             'listrik_perjam_id' => $r->listrik_perjam_id
         ];
+        
+        /**
+         * Hitung Total Biaya Penyusutan
+         * @param $purchaseorder_value, $umur_bulan.
+         */
+        $rumusTotalPenyusutan = RumusPenyusutan::HitungTotalPenyusutanPerbulan((float) $r->purchaseorder_value, $r->umur);
 
         if($r->setTo["isConfirmed"] == "true"){
 
             $simpanMesin = Mesin::create($datamesin);
             $dtmesin = Mesin::whereIn('id',[$simpanMesin->id])->first();
-            // if(!empty($simpanMesin) && $simpanMesin != [] && $simpanMesin != null){
+            
+            if(!empty($simpanMesin) && $simpanMesin != [] && $simpanMesin != null){
 
-                    /**
-                     * Hitung Total Biaya Penyusutan
-                     * @param $purchaseorder_value, $umur_bulan.
-                     */
-                    $rumusTotalPenyusutan = RumusPenyusutan::HitungTotalPenyusutanPerbulan((float) $r->purchaseorder_value, $r->umur);
-
-                    // $totalseluruhcostbulanan = Listrik::whereIn('company_parent_id', [3])->sum('nilai_cost_bulan');
-                    $TotalakumulasibiayaPenyusutan = [
-                        'company_parent_id' => $dtmesin->company_id,
-                        'category_bagian' => $dtmesin->category_bagian_id,
-                        'code_mesin' => $dtmesin->id,
-                        'code_penyusutan' => RumusPenyusutan::generateIDPenyusutan(), //not 
-                        'penyusutan_perbulan' => (float) $rumusTotalPenyusutan,
-                        'purchaseorder_value' => $r->purchaseorder_value,
-                        'umur' => $r->umur,
-                        'nama_sim' => $r->nama_sim
-                    ];
+                $TotalakumulasibiayaPenyusutan = [
+                    'company_parent_id' => $dtmesin->company_id,
+                    'category_bagian' => $dtmesin->category_bagian_id,
+                    'code_mesin' => $dtmesin->id,
+                    'code_penyusutan' => RumusPenyusutan::generateIDPenyusutan(), //not 
+                    'penyusutan_perbulan' => (float) $rumusTotalPenyusutan,
+                    'purchaseorder_value' => $r->purchaseorder_value,
+                    'umur' => $r->umur,
+                    'nama_sim' => $r->nama_sim
+                ];
 
                 $simpanBiayaListrik = Penyusutan::create($TotalakumulasibiayaPenyusutan);
 
-
-            // }
+            }
             // $simpanMesin = Mesin::UpdateOrCreate(['code_mesin' => $r->code_mesin], $datamesin);
 
 
@@ -247,14 +247,21 @@ class VoyagerMachineController extends BaseVoyagerBaseController
                 return response()->json(
                     [
                         'isConfirmed' => $r->setTo["isConfirmed"],
-                        // 'data' => $TotalakumulasibiayaPenyusutan,
-                        // 'isConfirmed' => $r->all(),
                         'rumusTotalPenyusutan' => $rumusTotalPenyusutan,
                     ]
                 );
     
             }
-        // } 
+
+            else {
+
+                return response()->json(
+                    [
+                        'isDenied' => $r->setTo["isDenied"],
+                        'rumusTotalPenyusutan' => $rumusTotalPenyusutan,
+                    ]
+            );
+        }
     }
 
     public function formMachineAction(Request $request)

@@ -236,15 +236,11 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                         'testCase' => $Totalakumulasibiayalistrik
                     ]
                 );
-                Log::info("masuk");
     
             }
 
-
         } 
             else {
-
-                // Log::info("asdasd");
 
                 return response()->json(
                     [
@@ -253,8 +249,6 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                         'wbp_perminggu' => ceil($rumusWBPerminggu),
                         'total_biaya_listrik_perminggu' => $totalbiayaListrikperminggu,
                         'totalbiaya_cost_perbulan' => $totalbiayacostperbulan,
-                        // 'persen_cost_perbulan' => $simpanBiayaListrik->persen_cost_perbulan,
-                        // 'ncost_bulan_plus_adm' => $simpanBiayaListrik->ncost_bulan_plus_adm,
                         'testCase' => $Totalakumulasibiayalistrik
                 ]
             );
@@ -446,7 +440,6 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         try {
 
             $alllstrk = Listrik::all();
-            $recall = AllRecalculate::all();
             $ListrikInstance = new AllRecalculate;
 
             $columns = [
@@ -471,14 +464,6 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                             
                         }
 
-                        // foreach($recall as $datatemp){
-
-                        //     $d[] = [
-                        //         $datatemp
-                        //     ];
-                            
-                        // }
-
                     $batchSize = 500;
 
                 $result = \Batch::insert($ListrikInstance, $columns, $data, $batchSize);
@@ -488,10 +473,6 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         } catch (Exception $e) {
             $code = 500;
             $message = __('voyager::generic.internal_error');
-
-            if ($e->getCode()) {
-                $code = $e->getCode();
-            }
 
             if ($e->getMessage()) {
                 $message = $e->getMessage();
@@ -625,10 +606,6 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         } catch (Exception $e) {
             $code = 500;
             $message = __('voyager::generic.internal_error');
-
-            if ($e->getCode()) {
-                $code = $e->getCode();
-            }
 
             if ($e->getMessage()) {
                 $message = $e->getMessage();
@@ -1274,10 +1251,6 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         } catch (Exception $e) {
             $code = 500;
             $message = __('voyager::generic.internal_error');
-
-            if ($e->getCode()) {
-                $code = $e->getCode();
-            }
 
             if ($e->getMessage()) {
                 $message = $e->getMessage();

@@ -290,7 +290,8 @@
         $(document).ready(function() {
 
             $('.save_mach').click(function(event) {
-
+            
+                event.preventDefault();
 
                 var formData = {
                     'ampere'             : $('input[name=ampere]').val(),
@@ -312,12 +313,12 @@
                 Swal.fire({
                     title: 'Informasi',
                     text: 'Apakah anda ingin menyimpan data mesin & hitung biaya penyusutan?',
-                    // showDenyButton: true,
+                    showDenyButton: true,
                     showCancelButton: true,
-                    confirmButtonText: `ya, simpan mesin sekarang ✓`,
-                    denyButtonText: `batalkan`,
+                    confirmButtonText: `ya, simpan hasil pengakumulasian penyusutan & simpan mesin sekarang ✓`,
+                    denyButtonText: `belum, masih mengakumulasi biaya penyusutan & jangan simpan mesin & penyusutannya`,
+                    cancelButtonText: `jangan simpan mesin dan mengakumulasi mesin`,
                     }).then((result) => {
-                    /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
 
                         const pesanStore = Swal.mixin({
@@ -337,7 +338,6 @@
                                     title: 'Data sedang diproses, tunggu sebentar..'
                                 })
 
-
                         let store = {...formData, 'setTo': result}
 
                         $.ajax({
@@ -349,11 +349,10 @@
                         })
                         .done(function(data) {
                             
-                            // console.log(data)
-                                $("#total_perbulan_p").val("Rp "+formatCurrency(Math.round(data.rumusTotalPenyusutan)));
+                            $("#total_perbulan_p").val("Rp "+formatCurrency(Math.round(data.rumusTotalPenyusutan)));
+
                             if(data.isConfirmed == "true"){
 
-                                // console.log(data)
                                 let curr = '{{ route("voyager.mesin.index") }}';
                                 setTimeout(function(){ 
                                     window.location.href = curr;
@@ -362,15 +361,52 @@
                                     return Swal.fire('Data berhasil disimpan.', 'pastikan jika ingin menambah mesin, lengkapi data di master listrik | penyusutan | labor | MTC', 'success')
                                
                                 }
-
                               
                             }
                         );
 
+                    } if (result.isDenied) {
+
+                        const pesanStore = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 10000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    }
+                                })
+                                          
+                                pesanStore.fire({
+                                    icon: 'info',
+                                    title: 'Data sedang diproses, tunggu sebentar..'
+                                })
+
+                        let Pending = {...formData, 'setTo': result}
+
+                        $.ajax({
+                            type        : 'POST',
+                            url         : "{{ route('mesin.storePlaceEv.master') }}", 
+                            data        : Pending, 
+                            dataType    : 'json', 
+                            encode          : true
+                        })
+                        .done(function(data) {
+                            
+                            $("#total_perbulan_p").val("Rp "+formatCurrency(Math.round(data.rumusTotalPenyusutan)));
+
+                            if(data.isDenied == "true"){
+
+                                    return Swal.fire('#Informasi.', 'jika sudah yakin ingin menyimpan akumulasi biaya penyusutan, tekan tombol simpan & hitung penyusutan. kemudian sistem akan mengakumulasi biaya penyusutan dan sekaligus menyimpan datanya.', 'info')
+                               
+                                }
+                            }
+                        );
                     }
                 })
 
-             event.preventDefault();
             });
 
         });
