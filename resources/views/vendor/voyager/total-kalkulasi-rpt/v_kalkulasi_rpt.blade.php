@@ -108,17 +108,13 @@
                                               </ul>
                                             </div>
                                         </div>
-                                        
-                                          
                                         </div>
-                                      
                                        {{-- <span class="badge badge-success" style="cursor: pointer" id="reset_filters_calc"><i class="voyager-refresh"></i> Reset </span> --}}
                                       </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-
                           </div>
                         </div>
                       </div>
@@ -161,39 +157,56 @@
                             </tbody>
                         </table>
                     </div>
-
-                    <div class="table-responsive TransactionTrRtRt">
-                      <table id="dataTableSearchRange" class="table table-hover" >
-                            <thead>
-                              <tr>
-                                <th>COMPANY</th>
-                                <th>GROUP MESIN</th>
-
-                                <th>TOTAL RATA RATA SEMUA BIAYA</th>
-                                <th>TOTAL RATA RATA SEMUA BIAYA (/JAM)</th>
-                                <th>TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN + MTC</th>
-                                <th>TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN + MTC (/JAM)</th>
-                                <th>TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN</th>
-                                <th>TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN (/JAM)</th>
-                                <th>TOTAL RATA RATA SEMUA BIAYA TANPA MTC</th>
-                                <th>TOTAL RATA RATA SEMUA BIAYA TANPA MTC (/JAM)</th>
-                                {{-- @if(Auth::User()->role->name == "admin" ) --}}
-                                <th>Actions</th>
-
-                                {{-- @endif --}}
-                              </tr>
-                          </thead>
-
-                          <tbody>
-                          </tbody>
-                      </table>
-                  </div>
-
                 </div>
             </div>
         </div>
     </div>
   </div>
+
+  <div class="page-content browse container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-bordered">
+                <div class="panel-body">
+                <div class="panel-heading" style="border-bottom:0;margin-bottom:-4px">
+                </div>
+                <div class="panel panel-bordered">
+                  <div class="panel-body">
+                      <div class="row">
+                        <div class="col-2">
+                          <div class="table-responsive TransactionTrRtRt">
+                            <table id="dataTableSearchRange" class="table table-hover" >
+                                  <thead>
+                                    <tr>
+                                      <th>COMPANY</th>
+                                      <th>GROUP MESIN</th>
+                                      <th>TOTAL RATA RATA SEMUA BIAYA</th>
+                                      <th>TOTAL RATA RATA SEMUA BIAYA (/JAM)</th>
+                                      <th>TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN + MTC</th>
+                                      <th>TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN + MTC (/JAM)</th>
+                                      <th>TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN</th>
+                                      <th>TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN (/JAM)</th>
+                                      <th>TOTAL RATA RATA SEMUA BIAYA TANPA MTC</th>
+                                      <th>TOTAL RATA RATA SEMUA BIAYA TANPA MTC (/JAM)</th>
+                                      {{-- @if(Auth::User()->role->name == "admin" ) --}}
+                                      <th>Actions</th>
+                                      {{-- @endif --}}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                              </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
 @stop
 
 @section('javascript')
@@ -259,6 +272,7 @@ $(document).ready(function(){
             $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
             $("#alltruepnytmtc").hide();
             $(".CustomFilter").focus();
+            $(".TransactionTrRtRt").hide();
             
         }, 1000);
 
@@ -280,8 +294,6 @@ $(document).ready(function(){
 
           $(".Penyusutan").prop("checked", false);
 
-          
-
           setTimeout(function(){ 
             
               $(".calctp").hide(); //tanpa penyusutan
@@ -290,6 +302,8 @@ $(document).ready(function(){
               $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
               $("#alltruepnytmtc").hide();
               $(".CustomFilter").focus();
+              $(".TransactionTrRtRt").show();
+
           
           }, 1000);
 
@@ -391,7 +405,6 @@ $(document).ready(function(){
 
     } 
       else {
-
 
           $(".CustomFilter").focus();
           $("#alltruepnytmtc").show();
@@ -517,6 +530,7 @@ $(document).ready(function(){
                       $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
                       $("#alltruepnytmtc").hide();
                       $(".CustomFilter").focus();
+                      $(".TransactionTrRtRt").show();
 
                     }, 1000);
 
@@ -552,6 +566,8 @@ $(document).ready(function(){
                           $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
                           $("#alltruepnytmtc").hide();
                           $(".CustomFilter").focus();
+                          $(".TransactionTrRtRt").show();
+
 
                         }, 1000);
 
@@ -700,6 +716,7 @@ $(document).ready(function(){
           setTimeout(function(){ 
             
             $(".calctp").hide(); //tanpa penyusutan
+            $(".TransactionTrRtRt").show();
             
             ButtonCalcSmuaBiayaExports()
                     .then(finalResult => finalResult)
@@ -1732,7 +1749,6 @@ $(document).ready(function(){
 
         }
 
-
     async function ButtonexportCalcTanpaMTCnTanpaPenyusutan() {
 
       let env = "{{ config('app.vpn') }}";
@@ -1758,35 +1774,56 @@ $(document).ready(function(){
       }
 
       async function ButtonexportCalcTanpaMTC() {
-      let env = "{{ config('app.vpn') }}";
-          return fetch(`${env}/kalkulasimesin2/public/admin/button-load-ButtonexportCalcTanpaMTC`, {
-                  method: 'GET',
-                  cache: 'no-cache',
-                  credentials: 'same-origin',
-                  redirect: 'follow',
-                  referrer: 'no-referrer',
-                  headers: {
-                              'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                              'Content-Type': 'application/json'
-                          }
-                  }
-              )
-          .then(response => response.json())
-              .catch((error) => {
-                console.log(error);
-            }
-        );
+        let env = "{{ config('app.vpn') }}";
+            return fetch(`${env}/kalkulasimesin2/public/admin/button-load-ButtonexportCalcTanpaMTC`, {
+                    method: 'GET',
+                    cache: 'no-cache',
+                    credentials: 'same-origin',
+                    redirect: 'follow',
+                    referrer: 'no-referrer',
+                    headers: {
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                                'Content-Type': 'application/json'
+                            }
+                    }
+                )
+            .then(response => response.json())
+                .catch((error) => {
+                  console.log(error);
+              }
+          );
 
       }
 
       $(document).ready(function() {
-        $('#dataTableSearchRange').DataTable( {
+        var dataTables = $('#dataTableSearchRange').DataTable( {
             "processing": true,
             "serverSide": true,
             "ajax": "{{ route('tr.total.rt.rt.kalkulasi.all.ready.view.p') }}",
+            language: {
+                  processing: '<span class="text-info">Sedang diproses..</span>',
+                  search: "Cari",
+                  infoEmpty: "Tidak ada data apapun disini..",
+                  info: "tabel ini sudah di groupkan berdasarkan kategori dari masing - masing mesin yang tersedia.",
+                  // info: "menampilkan baris data halaman _PAGE_ dari _PAGES_",
+                  zeroRecords: "Pencarian dalam keyword inputan anda tidak dapat kami temukan..",
+            },
+            serverSide: true,
+            scrollY:        '90vh',
+            scrollX:        '100vh',
+            info:           true,
+            scrollCollapse: true,
+            retrieve: true,
+            order: [[ 1, 'desc' ]],
+            paging: false,
+            deferRender: true,
+            responsive: true,
+            processing: true,
+            stateSave: true,
+            stateDuration: 60 * 24 * 365,
             columns: [
                   {data: 'company_name', name: 'company_name',  width: "50px" },
-                  {data: 'group_mesin', name: 'GROUP MESIN',  width: "170px" },
+                  {data: 'group_mesin', name: 'GROUP MESIN',  width: "230px" },
                   {data: 'rtrt_semua_total_biaya', name: 'TOTAL RATA RATA SEMUA BIAYA', width: "100px"},
                   {data: 'rtrt_semua_total_biaya_perjam', name: 'TOTAL RATA RATA SEMUA BIAYA (/JAM)', width: "100px"},
                   {data: 'rtrt_tanpa_penyusutan_plus_mtc_total', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN + MTC', width: "190px"},
@@ -1797,10 +1834,12 @@ $(document).ready(function(){
                   {data: 'rtrt_tanpa_mtc_total_perjam', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA MTC (/JAM)', width: "150px"},
                   {data: 'action', name: 'action', orderable: false, searchable: false},
 
-              ],
+              ]
         } );
+
+        dataTables.columns.adjust().draw();
+
+
     } );
-
-
   </script>
 @stop
