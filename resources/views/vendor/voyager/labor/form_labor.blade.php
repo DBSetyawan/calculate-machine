@@ -74,14 +74,14 @@
                                         {{-- <input type="text" class="form-control" id="category_bagian_display" name="category_bagian_display" placeholder=""> --}}
                                         <input type="text" class="form-control" id="category_bagian_id" name="category_bagian_id" placeholder="">
                                     {{-- </div> --}}
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label for="program_id">Mesin</label>
                                         <select class="form-control select2" id="code_mesin" name="code_mesin" required>
                                             @foreach ($mesin as $m)
                                         <option value="{{$m->id}}">{{$m->code_mesin}}</option>
                                             @endforeach
                                         </select>
-                                    </div>
+                                    </div> --}}
                                     <div class="form-group"> 
                                         <label for="company">Shift</label>
                                         <input type="text" class="form-control" id="shift_display" name="shift_display" placeholder="">

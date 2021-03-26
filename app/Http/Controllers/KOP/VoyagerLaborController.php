@@ -53,6 +53,7 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
 
     public function HitungAkumulasiLabor(Request $r){
 
+        try{
         /**
          * Hitung Biaya Level
          * @method RumusBiayaGajiUpahSupervisor, RumusBiayaGajiUpahOperator, RumusBiayaGajiUpahHelper
@@ -75,27 +76,56 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
          * Total biaya labor
          */
         $total_biaya_upah_perbulan = $this->RumusTotalBiayaLabor($biayasupervisor, $biayaoperator, $biayahelper);
+        
+        foreach((array)$r->data as $idx => $val){
+            
+            $LaborInstance = New Labor;
 
-        $result_gaji_labor = [
-            'company_parent_id' => $r->company_parent_id,
-            'category_bagian' => $r->category_bagian,
-            'code_mesin' => $r->code_mesin,
-            'shift' => $r->shift,
-            'supervisor' => $r->supervisor,
-            'operator' => $r->operator,
-            'helper' => $r->helper,
-            'supporting' => $r->supporting,
-            'supervisor_level3' => $biayasupervisor,
-            'operator_level2' => $biayaoperator,
-            'helper_level0' => $biayahelper,
-            'support_level0' => 0,
-            'jumlah_mesin_ditanggani' => count($r->data),
-            'total_biaya' => $total_biaya_upah_perbulan,
-        ];
+                $result_gaji_labor = [
+                    'company_parent_id' => $r->company_parent_id,
+                    'category_bagian' => $r->category_bagian,
+                    'code_mesin' => $val,
+                    // 'code_mesin' => $r->code_mesin,
+                    'shift' => $r->shift,
+                    'supervisor' => $r->supervisor,
+                    'operator' => $r->operator,
+                    'helper' => $r->helper,
+                    'supporting' => $r->supporting,
+                    'supervisor_level3' => $biayasupervisor,
+                    'operator_level2' => $biayaoperator,
+                    'helper_level0' => $biayahelper,
+                    'support_level0' => 0,
+                    'jumlah_mesin_ditanggani' => count([$val]),
+                    'total_biaya' => $total_biaya_upah_perbulan,
+                ];
+                   
+                $dt[] = [
+                    'company_parent_id' => $r->company_parent_id,
+                    'category_bagian' => $r->category_bagian,
+                    'code_mesin' => $val,
+                    // 'code_mesin' => $r->code_mesin,
+                    'shift' => $r->shift,
+                    'supervisor' => $r->supervisor,
+                    'operator' => $r->operator,
+                    'helper' => $r->helper,
+                    'supporting' => $r->supporting,
+                    'supervisor_level3' => $biayasupervisor,
+                    'operator_level2' => $biayaoperator,
+                    'helper_level0' => $biayahelper,
+                    'support_level0' => 0,
+                    'jumlah_mesin_ditanggani' => count([$val]),
+                    'total_biaya' => $total_biaya_upah_perbulan,
+                ];
+
+                $index = 'code_mesin';
+        
+                \Batch::update($LaborInstance, $dt, $index);
+
+                $simpanDataBiayaListrik = Labor::UpdateOrCreate(['code_mesin' => $val], $result_gaji_labor);
+
+        }
 
     if($r->setTo["isConfirmed"] == "true"){
-
-        $simpanDataBiayaListrik = Labor::create($result_gaji_labor);
 
         if(!empty($simpanDataBiayaListrik) && $simpanDataBiayaListrik != [] && $simpanDataBiayaListrik != null){
 
@@ -105,16 +135,16 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
                 return sprintf("%.5f", $biaya->sum('total_biaya'));
             });
             
-            $totaltracks = [
+            // $totaltracks = [
 
-                'id_labor' => $simpanDataBiayaListrik->id,
-                'total_labor' => $t,
-                'status' => 1,
-                'changed_by' => Auth::user()->name
+            //     'id_labor' => $simpanDataBiayaListrik->id,
+            //     'total_labor' => $t,
+            //     'status' => 1,
+            //     'changed_by' => Auth::user()->name
 
-            ];
+            // ];
 
-            $total = LaborTotal::create($totaltracks);
+            // $total = LaborTotal::create($totaltracks);
 
                 return response()->json(
                     [
@@ -145,6 +175,22 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
             );
             
         }
+
+    } catch (Exception $e) {
+        $code = 500;
+        $message = __('voyager::generic.internal_error');
+
+        if ($e->getMessage()) {
+            $message = $e->getMessage();
+        }
+
+        return response()->json([
+            'data' => [
+                'status'  => $code,
+                'message' => $message,
+            ],
+        ], $code);
+    }
 
     }
     
