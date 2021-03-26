@@ -1,5 +1,6 @@
 <?php
 
+use App\AllRecalculate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
@@ -94,6 +95,7 @@ Route::group(['prefix' => 'admin'], function () {
     // Route::get('/history-log-recalculate','KOP\VoyagerHIstoryLogCalculateController@index')->name('h.index');
     Route::post('calc-rpts/open-transaction-calc-edp','KOP\VoyagerTotalKalkulasiController@OpenTransactionPenyusutan')->name('tr.open.penyusutan');
     Route::get('total-kalkulasi-rpts/penyusutan','KOP\VoyagerTotalKalkulasiController@detailTransactionPenyusutan')->name('tr.total.kalkulasi.all.ready.view.p');
+    Route::get('total-kalkulasi-rpts/rata-rata-recalculate','KOP\VoyagerTotalKalkulasiController@detailRangeTotalRataRataTransactionRecalculate')->name('tr.total.rt.rt.kalkulasi.all.ready.view.p');
     Route::get('total-kalkulasi-rpts/tanpa-penyusutan','KOP\VoyagerTotalKalkulasiController@detailTransactionTanpaPenyusutan')->name('tr.total.kalkulasi.all.ready.view.tp');
 
     Route::get('total-kalkulasi-rpts/totals-view-tanpa-penyusutan','KOP\VoyagerTotalKalkulasiController@view_totalkalkulasi_tnp_penyusutan')->name('tr.tnp.total.kalkulasi');
@@ -124,6 +126,12 @@ Route::group(['prefix' => 'admin'], function () {
     
         return "Cleared!";
     
+    });
+
+    Route::get('/ds', function() {
+        $new = AllRecalculate::with(['listrik','KategoriBagian','Mesin.GroupMesinTo','Company','GroupMesin'])->groupBy('group_mesin')->selectRaw('*, sum(total_semua_biaya) as total_semua_biayas')->get();
+
+        dd($new);
     });
 });
 

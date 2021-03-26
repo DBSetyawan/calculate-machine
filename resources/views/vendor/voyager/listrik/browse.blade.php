@@ -536,34 +536,35 @@
 
                         // console.log(res.checking)
 
-                        if(res.success.totalRows !== 0 && (res.success.totalRows !== undefined) && (res.success.totalRows !== null) && (res.success.totalRows !== "")){
+                        // if(res.success.totalRows !== 0 && (res.success.totalRows !== undefined) && (res.success.totalRows !== null) && (res.success.totalRows !== "")){
 
-                            const success = Swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                                didOpen: (toast) => {
-                                    $("#loading").hide();
-                                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                                }
-                            })
+                            // const success = Swal.mixin({
+                            //     toast: true,
+                            //     position: 'top-end',
+                            //     showConfirmButton: false,
+                            //     timer: 3000,
+                            //     timerProgressBar: true,
+                            //     didOpen: (toast) => {
+                            //         $("#loading").hide();
+                            //         toast.addEventListener('mouseenter', Swal.stopTimer)
+                            //         toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            //     }
+                            // })
 
-                            success.fire({
-                                icon: 'success',
-                                title: 'Informasi, semua dokumen listrik berhasil ditransfer ke temporary recalculate.\n keterangan detail transfer dokumen:\n total dokumen: '+res.success.totalRows+'\n hasil pencarian data event: '+res.success.totalQuery+'\n batasan yang diperbolehkan untuk transfer: '+res.success.totalBatch +' dokumen mesin',
-                            });
+                            // success.fire({
+                            //     icon: 'success',
+                            //     title: 'Informasi, semua dokumen listrik berhasil ditransfer ke temporary recalculate.\n keterangan detail transfer dokumen:\n total dokumen: '+res.success.totalRows+'\n hasil pencarian data event: '+res.success.totalQuery+'\n batasan yang diperbolehkan untuk transfer: '+res.success.totalBatch +' dokumen mesin',
+                            // });
 
-                            $("#RecalTemporaryRecalculate").html('<i class="voyager-documentation"></i> <i class="voyager-forward"></i> Transfer dokumen');
+                            // $("#RecalTemporaryRecalculate").html('<i class="voyager-documentation"></i> <i class="voyager-forward"></i> Transfer dokumen');
 
-                            let curr = '{{ route("voyager.all-recalculate.index") }}';
-                            setTimeout(function(){ 
-                                window.location.href = curr;
-                            }, 5000);
+                            // let curr = '{{ route("voyager.all-recalculate.index") }}';
+                            // setTimeout(function(){ 
+                            //     window.location.href = curr;
+                            // }, 5000);
 
-                        } else if(res.success == 1){
+                        // } 
+                        if(res.success == 1 ){
 
                             const success = Swal.mixin({
                                 toast: true,

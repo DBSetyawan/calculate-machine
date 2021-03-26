@@ -21,7 +21,6 @@
                     <div class="panel-body">
                     <div class="panel-heading" style="border-bottom:0;margin-bottom:-4px">
                     </div>
-
                     <div class="panel panel-bordered">
                       <div class="panel-body">
                           <div class="row">
@@ -162,6 +161,34 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <div class="table-responsive TransactionTrRtRt">
+                      <table id="dataTableSearchRange" class="table table-hover" >
+                            <thead>
+                              <tr>
+                                <th>COMPANY</th>
+                                <th>GROUP MESIN</th>
+
+                                <th>TOTAL RATA RATA SEMUA BIAYA</th>
+                                <th>TOTAL RATA RATA SEMUA BIAYA (/JAM)</th>
+                                <th>TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN + MTC</th>
+                                <th>TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN + MTC (/JAM)</th>
+                                <th>TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN</th>
+                                <th>TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN (/JAM)</th>
+                                <th>TOTAL RATA RATA SEMUA BIAYA TANPA MTC</th>
+                                <th>TOTAL RATA RATA SEMUA BIAYA TANPA MTC (/JAM)</th>
+                                {{-- @if(Auth::User()->role->name == "admin" ) --}}
+                                <th>Actions</th>
+
+                                {{-- @endif --}}
+                              </tr>
+                          </thead>
+
+                          <tbody>
+                          </tbody>
+                      </table>
+                  </div>
+
                 </div>
             </div>
         </div>
@@ -1751,6 +1778,28 @@ $(document).ready(function(){
         );
 
       }
+
+      $(document).ready(function() {
+        $('#dataTableSearchRange').DataTable( {
+            "processing": true,
+            "serverSide": true,
+            "ajax": "{{ route('tr.total.rt.rt.kalkulasi.all.ready.view.p') }}",
+            columns: [
+                  {data: 'company_name', name: 'company_name',  width: "50px" },
+                  {data: 'group_mesin', name: 'GROUP MESIN',  width: "170px" },
+                  {data: 'rtrt_semua_total_biaya', name: 'TOTAL RATA RATA SEMUA BIAYA', width: "100px"},
+                  {data: 'rtrt_semua_total_biaya_perjam', name: 'TOTAL RATA RATA SEMUA BIAYA (/JAM)', width: "100px"},
+                  {data: 'rtrt_tanpa_penyusutan_plus_mtc_total', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN + MTC', width: "190px"},
+                  {data: 'rtrt_tanpa_penyusutan_plus_mtc_perjam', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN + MTC (/JAM)', width: "190px"},
+                  {data: 'rtrt_tanpa_penyusutan_total', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN (/JAM)', width: "190px"},
+                  {data: 'rtrt_tanpa_penyusutan_total_perjam', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN (/JAM)', width: "190px"},
+                  {data: 'rtrt_tanpa_mtc_total', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA MTC', width: "150px"},
+                  {data: 'rtrt_tanpa_mtc_total_perjam', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA MTC (/JAM)', width: "150px"},
+                  {data: 'action', name: 'action', orderable: false, searchable: false},
+
+              ],
+        } );
+    } );
 
 
   </script>

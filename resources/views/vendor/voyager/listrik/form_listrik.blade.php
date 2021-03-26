@@ -77,7 +77,7 @@
                                     </div>
                              --}}
                                     <div class="form-group">
-                                        <label for="company">Listrik /Jam</label>
+                                        <label for="company">Kapasitas mesin</label>
                                         <input type="text" class="form-control" id="perjam_display" name="perjam_display" placeholder="">
                                         <input type="text" class="form-control" id="perjam" name="perjam" placeholder="">
                                     </div>
@@ -302,13 +302,14 @@
    
 
                 GetFullDataMesin(this.value).then(function(results){
-
+                    
                         $("#code_mesin_id").val(results.detail.id);
                         $("#company_display").val(results.detail.company_to.company_name);
                         $("#company_parent_id").val(results.detail.company_to.id);
                         $("#group_mesin_display").val(results.detail.group_mesin_to.nama_kategori_mesin);
                         $("#group_mesin").val(results.detail.group_mesin_to.id);
-                        $("#perjam_display").val( (results.detail.mesin_listrik_perjam_to.persen * 100 ).toFixed(1) +"%");
+                        $("#perjam_display").val(results.detail.mesin_listrik_perjam_to.output_perjam);
+                        // $("#perjam_display").val( (results.detail.mesin_listrik_perjam_to.persen * 100 ).toFixed(1) +"%");
                         $("#perjam").val(results.detail.mesin_listrik_perjam_to.persen);
                         $("#category_bagian_display").val(results.detail.kbagian_to.nama_bagian);
                         $("#category_bagian").val(results.detail.kbagian_to.id);

@@ -1527,6 +1527,117 @@ trait ModuleCaculates {
       
     }
 
+    public function detailRangeTotalRataRataTransactionRecalculate(Request $request)
+    {
+        // dd($new);
+        if ($request->ajax()) {
+            
+            // if(!empty($request->penyusutan))
+            // {
+                $new = AllRecalculate::with(['listrik','KategoriBagian','Mesin.GroupMesinTo','Company','GroupMesin'])
+                ->groupBy('group_mesin')
+                ->selectRaw('*,
+                sum(total_semua_biaya) as total_semua_biayas,
+                sum(total_semua_biaya_perjam) as total_semua_biaya_perjams,
+                sum(total_tanpa_penyusutan_n_mtc) as total_tanpa_penyusutan_n_mtcs,
+                sum(total_tanpa_penyusutan_n_mtc_perjam) as total_tanpa_penyusutan_n_mtc_perjams,
+                sum(total_tanpa_penyusutan) as total_tanpa_penyusutans,
+                sum(total_tanpa_penyusutan_perjam) as total_tanpa_penyusutan_perjams,
+                sum(total_tanpa_mtc) as total_tanpa_mtcs,
+                sum(total_tanpa_mtc_perjam) as total_tanpa_mtc_perjams')->get();
+                
+                
+                $listrik = DB::table('total_kalkulasi_tanpa_penyusutan')
+                ->leftJoin('mesin', 'total_kalkulasi_tanpa_penyusutan.code_mesin', '=', 'mesin.id')
+                ->rightJoin('lb8_kategori_mesin', 'total_kalkulasi_tanpa_penyusutan.group_mesin', '=', 'lb8_kategori_mesin.id')
+                ->join('kategori_bagian', 'total_kalkulasi_tanpa_penyusutan.category_bagian', '=', 'kategori_bagian.id')
+                ->join('company', 'total_kalkulasi_tanpa_penyusutan.company_parent_id', '=', 'company.id')
+                ->get();
+                
+                // if($request->penyusutan == static::NULLABLE_PENYUSUTAN)
+                // {
+                //     $listrik = [];
+                // }
+
+            // // } 
+            //     else {
+                
+            //         $listrik = [];
+            // }
+          
+        
+            // $listrik = TotalKalkulasiTanpaPenyusutan::with(['mesin','kategori_bagian'])->select('total_kalkulasi.*','mesin.*');
+          
+            // ->leftjoin('kategori_bagian', 'kategori_bagian.id', '=', 'total_kalkulasi.category_bagian')
+            // ->join('mesin as msn', function($join){
+            //     $join->on('tk.code_mesin', '=', 'msn.id');
+            // })
+            // ->join('kategori_bagian as kb', function($join){
+            //     $join->on('total_kalkulasi as tk', 'tk.category_mesin', '=', 'kb.id');
+            // })
+            // ->select(['mesin.*','kategori_bagian.*','total_kalkulasi.*']);
+
+            // dd($listrik);
+
+            return DataTables::of($new)
+                        // ->addColumn('title', function ($squery) {
+                        //     return $squery->map(function($post) {
+                        //         return str_limit($post, 30, '...');
+                        //     })->implode('<br>');
+                        ->editColumn('company_name', function($company) {
+                            // dd($company->Company);
+                            return $company->Company->company_name;
+                        })
+                        ->editColumn('group_mesin', function($lb8_kategori_mesin) {
+                            return $lb8_kategori_mesin->Mesin->GroupMesinTo->nama_kategori_mesin;
+                        })
+                    // ->addIndexColumn()
+                    // ->addColumn('kategori_bagian',function($query){
+                    //     return $query->kategori_bagian->nama_bagian;
+                    //      //return DB::raw("SELECT * FROM 'patients' WHERE 'patients_id' = ?", $action->patient_id);
+                    //  })
+                    // ->editColumn('title', '{!! str_limit($title, 60) !!}')
+                    // ->filter(function ($query) use ($request) {
+                    //     if ($request->has('name')) {
+                    //         $query->where('customer.customer_name', 'like', "%{$request->get('name')}%");
+                    //     }
+                    // })
+                    ->editColumn('rtrt_semua_total_biaya', function($semua_total_biaya) {
+                        return RptCalcMachine::frm_rph($semua_total_biaya->total_semua_biayas);
+                    }) 
+                    ->editColumn('rtrt_semua_total_biaya_perjam', function($semua_total_biaya_perjam) {
+                        return RptCalcMachine::frm_rph($semua_total_biaya_perjam->total_semua_biaya_perjams);
+                    }) 
+                    ->editColumn('rtrt_tanpa_penyusutan_plus_mtc_total', function($tanpa_penyusutan_plus_mtc_total) {
+                        return RptCalcMachine::frm_rph($tanpa_penyusutan_plus_mtc_total->total_tanpa_penyusutan_n_mtcs);
+                    }) 
+                    ->editColumn('rtrt_tanpa_penyusutan_plus_mtc_perjam', function($tanpa_penyusutan_plus_mtc_perjam) {
+                        return RptCalcMachine::frm_rph($tanpa_penyusutan_plus_mtc_perjam->total_tanpa_penyusutan_n_mtc_perjams);
+                    }) 
+                    ->editColumn('rtrt_tanpa_penyusutan_total', function($tanpa_penyusutan_total) {
+                        return RptCalcMachine::frm_rph($tanpa_penyusutan_total->total_tanpa_penyusutans);
+                    }) 
+                    ->editColumn('rtrt_tanpa_penyusutan_total_perjam', function($tanpa_penyusutan_total_perjam) {
+                        return RptCalcMachine::frm_rph($tanpa_penyusutan_total_perjam->total_tanpa_penyusutan_perjams); 
+                    }) 
+                    ->editColumn('rtrt_tanpa_mtc_total', function($tanpa_mtc_total) {
+                        return RptCalcMachine::frm_rph($tanpa_mtc_total->total_tanpa_mtcs);
+                    }) 
+                    ->editColumn('rtrt_tanpa_mtc_total_perjam', function($tanpa_mtc_total_perjam) {
+                        return RptCalcMachine::frm_rph($tanpa_mtc_total_perjam->total_tanpa_mtc_perjams);
+                    }) 
+                    ->addColumn('action', function($row) use($request){
+                        // dd($request->all());
+
+                        $sd ='<div class="col-md-12"><span class="no-sort no-click bread-actions"><a class="btn btn-sm btn-primary pull-right edit"><span class="voyager-edit"> send </span> </a>';
+                    return $sd;
+                    })
+                    ->rawColumns(['action','group_mesin'])
+                    ->escapeColumns()->make(true);
+        }
+      
+    }
+
     public function OpenTransactionPenyusutan(Request $r){
 
         /**

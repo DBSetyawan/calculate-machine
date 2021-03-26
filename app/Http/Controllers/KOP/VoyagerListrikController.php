@@ -28,6 +28,7 @@ use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
 use App\Http\Controllers\KOP\Service\ListrikInterface;
 use App\Http\Controllers\KOP\Repositories\ListrikRepository;
+use App\Http\Controllers\KOP\VoyagerTotalKalkulasiController;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
 class VoyagerListrikController extends BaseVoyagerBaseController implements ListrikInterface
@@ -168,11 +169,12 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
         $Totalakumulasibiayalistrik = [
             'shift' => $r->shift,
-            'listrikperjam' => $r->listrikperjam,
+            'listrikperjam' => $r->perjam,
+            // 'listrikperjam' => $r->listrikperjam,
             'ampere' => $r->ampere,
             'voltase' =>  $r->voltase,
             'company_parent_id' => $r->company_parent_id,
-            'code_mesin' => $r->code_mesin,
+            'code_mesin' => (Int) $r->code_mesin,
             'group_mesin' => $r->group_mesin,
             'code_listrik' => RumusListrik::generateIDListrik(), //not 
             'LWBP_perminggu' => $rumusLWBPerminggu,
@@ -189,11 +191,9 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             'assumption_wbp' => $r->wbp
         ];
 
-        
         if($r->setTo["isConfirmed"] == "true"){
 
-            $simpanBiayaListrik = Listrik::UpdateOrCreate(['code_mesin' => $r->code_mesin],$Totalakumulasibiayalistrik);
-
+            $simpanBiayaListrik = Listrik::UpdateOrCreate(['code_mesin' => (Int) $r->code_mesin], $Totalakumulasibiayalistrik);
             if(!empty($simpanBiayaListrik) && $simpanBiayaListrik != [] && $simpanBiayaListrik != null){
 
                     $total_listrik = Listrik::whereIn('company_parent_id', [3])->get();
@@ -436,37 +436,36 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
     }
 
     public function SendTemporaryRecalculate() {
-
+        /**
+         * progress deploy 
+         */
         try {
 
             $alllstrk = Listrik::all();
             $AllRecalculate = AllRecalculate::all();
             $ListrikInstance = new AllRecalculate;
 
-            // dd($AllRecalculate);
-
             if(! $AllRecalculate->isEmpty()){
 
                 foreach($alllstrk as $datatemp){
-
-                    $data[] = [
+             
+                    $data = [
                         'company' => $datatemp->company_parent_id,
-                        'code_mesin' => $datatemp->code_mesin,
+                        'code_mesin'=> $datatemp->code_mesin,
                         'category_bagian' => $datatemp->category_bagian,
                         'id_listrik' => $datatemp->ncost_bulan_plus_adm,
                         'group_mesin' => $datatemp->group_mesin,
-                        'listrik_fk' => $datatemp->id
+                        'listrik_fk' =>  $datatemp->id
                     ];
-        
-                    $index = 'code_mesin';
-        
-                   $result = \Batch::update($ListrikInstance, $data, $index);
-                   
+
+                    AllRecalculate::updateOrCreate(['code_mesin' => $datatemp->code_mesin], $data);
+                    
+                   app(VoyagerTotalKalkulasiController::class)->recalculate();
+                    
                 }
                 
             } else {
 
-                
                 $columns = [
                     'company',
                     'code_mesin',
@@ -476,25 +475,26 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                     'listrik_fk'
                 ];
                 
-                foreach($alllstrk as $datatemp){
+                        foreach($alllstrk as $datatemp){
+                            
+                            $data[] = [
+                                $datatemp->company_parent_id,
+                                $datatemp->code_mesin,
+                                $datatemp->category_bagian,
+                                $datatemp->ncost_bulan_plus_adm,
+                                $datatemp->group_mesin,
+                                $datatemp->id
+                            ];
+                            
+                        }
+                        
+                        $batchSize = 500;
                     
-                    $data[] = [
-                        $datatemp->company_parent_id,
-                        $datatemp->code_mesin,
-                        $datatemp->category_bagian,
-                        $datatemp->ncost_bulan_plus_adm,
-                        $datatemp->group_mesin,
-                        $datatemp->id
-                    ];
-                    
-                }
-                
-                $batchSize = 500;
-                
-                $result = \Batch::insert($ListrikInstance, $columns, $data, $batchSize);
-                
+                    $result = \Batch::insert($ListrikInstance, $columns, $data, $batchSize);
+               
             }
-            return response()->json(['success' => $result]);
+
+            return response()->json(['success' => 1]);
 
         } catch (Exception $e) {
             $code = 500;

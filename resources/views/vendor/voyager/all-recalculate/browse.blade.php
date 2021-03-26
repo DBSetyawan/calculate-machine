@@ -417,6 +417,32 @@
                     }, 6000);
 
                 }
+                if(res.res == 200){
+                    const success = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    success.fire({
+                        icon: 'success',
+                        title: 'CODE: [200][success], data berhasil disinkronkan ke KOP kalkulasi mesin.'
+                    });
+
+                    $("#sendcalculate").text("Recalculate Machine");
+
+                    let curr = '{{ route("tr.total.kalkulasi") }}';
+                    setTimeout(function(){ 
+                        window.location.href = curr;
+                    }, 6000);
+
+                }
 
             });
         });
