@@ -402,8 +402,12 @@
 
                             if(data.isDenied == "true"){
 
-                                    return Swal.fire('#Informasi.', 'jika sudah yakin ingin menyimpan akumulasi biaya penyusutan, tekan tombol simpan & hitung penyusutan. kemudian sistem akan mengakumulasi biaya penyusutan dan sekaligus menyimpan datanya.', 'info')
-                               
+                                    // return Swal.fire('#Informasi.', 'jika sudah yakin ingin menyimpan akumulasi biaya penyusutan, tekan tombol simpan & hitung penyusutan. kemudian sistem akan mengakumulasi biaya penyusutan dan sekaligus menyimpan datanya.', 'info')
+                                           
+                                    pesanStore.fire({
+                                        icon: 'success',
+                                        title: 'Data berhasil disimpan..'
+                                    })
                                 }
                             }
                         );

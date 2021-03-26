@@ -169,7 +169,11 @@
                                 window.location.href = curr;
                             }, 4000);
 
-                                return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya biaya administrasi umum berhasil diakumulasi & disimpan', 'success')
+                                pesanStore.fire({
+                                    icon: 'success',
+                                    title: 'Data berhasil disimpan..'
+                                })
+                                // return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya biaya administrasi umum berhasil diakumulasi & disimpan', 'success')
                             }
 
                         });

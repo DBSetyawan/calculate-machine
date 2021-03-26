@@ -564,7 +564,7 @@
                             // }, 5000);
 
                         // } 
-                        if(res.success == 1 ){
+                        if(res.success == 1){
 
                             const success = Swal.mixin({
                                 toast: true,
