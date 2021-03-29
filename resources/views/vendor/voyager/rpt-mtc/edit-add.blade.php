@@ -13,6 +13,7 @@
     <div class="page-content container-fluid">
         <form class="form-edit-add" role="form"
               method="POST" enctype="multipart/form-data" autocomplete="off">
+              <input type="hidden" value="" name="dataold" id="dataold"/>
               {{ csrf_field() }}
             <div class="row">
                 <div class="col-md-12">
@@ -211,6 +212,8 @@
             $('.toggleswitch').bootstrapToggle();
 
             $('form').submit(function(event) {
+
+                let data = @json($dataTypeContent);
                 event.preventDefault();
 
                 var formData = {
@@ -227,17 +230,23 @@
                     'sparepart_tahun3'      : $('input[name=sparepart_tahun3]').val(),
 
                     'percent'               : $('select[name=percent]').val(),
+                    // 'x'               :  $('#dataold').val(JSON.stringify(data))
 
                 };
+
+            //    var oldtrack =
+                
+                let trackdata = {...formData, 'dataold' : data}
 
                 $.ajax({
                     type        : 'POST',
                     url         : "{{ route('rpt.mtc.form.EventChangeRptMTC') }}", 
-                    data        : formData, 
+                    data        : trackdata, 
                     dataType    : 'json', 
                     encode          : true
                 })
                 .done(function(data) {
+                    console.log(data)
 
                     if(data.success){
                             Toast.fire({
@@ -246,13 +255,13 @@
                         })
                     }
                     
-                    $(".removeLater").val('');
+                    // $(".removeLater").val('');
 
                 }).catch(function(xhr, ajaxOptions, thrownError) {
                     var responseTitle= $(xhr.responseText).filter('title').get(0);
                     Toast.fire({
                         icon: 'error',
-                        title: "Sedang terjadi kesalahan sistem.."
+                        title: xhr
                     })
                 });
 

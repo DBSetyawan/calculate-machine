@@ -194,6 +194,7 @@ return [
         App\Providers\LapBpenjualanServiceProvider::class,
         App\Providers\LaporabBiayaAdministrasiUmumrServiceProvider::class,
         App\Providers\CalcMachineServiceProvider::class,
+        App\Providers\ModulTrackingDataProvider::class,
     ],
 
     /*
@@ -257,6 +258,7 @@ return [
         'RumusAccountMTC' => App\Http\Controllers\KOP\Helpers\RumusAccountMTC::class,
         'RumusRptMaintenance' => App\Http\Controllers\KOP\Helpers\RumusRptMaintenance::class,
         'RumusListrikOutputPerjam' => App\Http\Controllers\KOP\Helpers\RumusListrikOutputPerjam::class,
+        'KOPmodultrack_data' => App\Http\Controllers\KOP\Helpers\ModulTrackingDataHelpers::class,
         'RumusLapBagPenjualan' => App\Http\Controllers\KOP\Helpers\RumusLapBagPenjualan::class,
         'RumusLaporanBiayaAdministrasiUmum' => App\Http\Controllers\KOP\Helpers\RumusLaporanBiayaAdministrasiUmum::class,
         'RptCalcMachine' => App\Http\Controllers\KOP\Helpers\RptCalcMachine::class,

@@ -27,6 +27,7 @@ use TCG\Voyager\Database\Schema\SchemaManager;
 use App\Http\Controllers\KOP\Service\MTcInterface;
 use App\Http\Controllers\KOP\Service\RptMTcInterface;
 use App\Http\Controllers\KOP\Helpers\RumusRptMaintenance;
+use App\Http\Controllers\KOP\Helpers\ModulTrackingDataHelpers;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
 class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTcInterface
@@ -440,6 +441,7 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
     {
         try {
 
+
             /**
              * Hitung Total Perbaikan Biaya perbulan
              * @param $perbaikanpertahunn.
@@ -532,19 +534,31 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
                     ];
         
                         $code_mesin = 'code_mesin';
-        
 
-                    \Batch::update($AllRecalculateInstance, $dmtc, $code_mesin);
+                    // \Batch::update($AllRecalculateInstance, $dmtc, $code_mesin);
+
 
             //    }
+
+            $ds = ModulTrackingDataHelpers::ModuleTrackingTransactionData($request->dataold, $automatedRecalculateMTC);
             
-            return response()->json(['success' => __('voyager::generic.successfully_updated'), 'data' => $data_success]);
+            return response()->json(['success' => __('voyager::generic.successfully_updated'), 'data' => $data_success, 'track' => $ds]);
             
-         
         } catch (Exception $e) {
 
-            return response()->json(['errors' => $e]);
+            $code = 500;
+            $message = __('voyager::generic.internal_error');
 
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'data' => [
+                    'status'  => $code,
+                    'message' => $message,
+                ],
+            ], $code);
         }
 
     }

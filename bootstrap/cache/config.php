@@ -56,6 +56,7 @@
       38 => 'App\\Providers\\LapBpenjualanServiceProvider',
       39 => 'App\\Providers\\LaporabBiayaAdministrasiUmumrServiceProvider',
       40 => 'App\\Providers\\CalcMachineServiceProvider',
+      41 => 'App\\Providers\\ModulTrackingDataProvider',
     ),
     'aliases' => 
     array (
@@ -105,6 +106,7 @@
       'RumusAccountMTC' => 'App\\Http\\Controllers\\KOP\\Helpers\\RumusAccountMTC',
       'RumusRptMaintenance' => 'App\\Http\\Controllers\\KOP\\Helpers\\RumusRptMaintenance',
       'RumusListrikOutputPerjam' => 'App\\Http\\Controllers\\KOP\\Helpers\\RumusListrikOutputPerjam',
+      'KOPmodultrack_data' => 'App\\Http\\Controllers\\KOP\\Helpers\\ModulTrackingDataHelpers',
       'RumusLapBagPenjualan' => 'App\\Http\\Controllers\\KOP\\Helpers\\RumusLapBagPenjualan',
       'RumusLaporanBiayaAdministrasiUmum' => 'App\\Http\\Controllers\\KOP\\Helpers\\RumusLaporanBiayaAdministrasiUmum',
       'RptCalcMachine' => 'App\\Http\\Controllers\\KOP\\Helpers\\RptCalcMachine',

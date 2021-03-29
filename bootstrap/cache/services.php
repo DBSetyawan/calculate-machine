@@ -61,6 +61,7 @@
     57 => 'App\\Providers\\LapBpenjualanServiceProvider',
     58 => 'App\\Providers\\LaporabBiayaAdministrasiUmumrServiceProvider',
     59 => 'App\\Providers\\CalcMachineServiceProvider',
+    60 => 'App\\Providers\\ModulTrackingDataProvider',
   ),
   'eager' => 
   array (
@@ -110,6 +111,7 @@
     43 => 'App\\Providers\\LapBpenjualanServiceProvider',
     44 => 'App\\Providers\\LaporabBiayaAdministrasiUmumrServiceProvider',
     45 => 'App\\Providers\\CalcMachineServiceProvider',
+    46 => 'App\\Providers\\ModulTrackingDataProvider',
   ),
   'deferred' => 
   array (
