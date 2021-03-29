@@ -5,6 +5,7 @@ namespace App\Http\Controllers\KOP;
 use App\Mesin;
 use Exception;
 use App\Company;
+use Carbon\Carbon;
 use App\AccountMtc;
 use App\RPTMtcTotal;
 use App\AllRecalculate;
@@ -21,6 +22,7 @@ use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
 use App\Http\Controllers\KOP\Helpers\RumusAccountMTC;
+use App\Http\Controllers\KOP\Helpers\ModulTrackingDataHelpers;
 use App\Http\Controllers\KOP\Service\AccountMaintenanceInterface;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
@@ -404,6 +406,24 @@ class VoyagerAccountMtcController extends BaseVoyagerBaseController Implements A
         ];
 
         AccountMtc::UpdateOrCreate(['id' => $id], $data_response_accountmtc);
+
+        $tb = app(AccountMtc::class)->getTable();
+
+        $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $data, $data_response_accountmtc);
+
+        foreach ($md as $key => $val) {
+
+                $pf[] = [
+                    'updated_at' => Carbon::now(),
+                    'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                    'table_column' => $val['tabel_kolom'],
+                    'history_latest' => ceil($val['history']),
+                    'before' => ceil($val['dari']),
+                ];
+                
+            }
+        
+        $d = AccountMtcTotal::insert($pf);
         
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");

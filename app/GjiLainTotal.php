@@ -12,6 +12,11 @@ class GjiLainTotal extends Model
 
     public function Company()
     {
-        return $this->belongsTo('App\Company', 'id');
+        return $this->belongsTo('App\Company', 'company_id');
+    }
+
+    public function KategoriBagian()
+    {
+        return $this->belongsTo('App\KategoriBagian', 'category_id');
     }
 }

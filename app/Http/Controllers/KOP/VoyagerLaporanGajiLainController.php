@@ -6,6 +6,7 @@ use App\Mesin;
 use Exception;
 use App\Company;
 use App\GajiLain;
+use Carbon\Carbon;
 use App\GjiLainTotal;
 use App\ListrikOutput;
 use App\AllRecalculate;
@@ -26,6 +27,7 @@ use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
 use App\Http\Controllers\KOP\Helpers\RptCalcMachine;
 use App\Http\Controllers\KOP\Service\RumusLaporanGajiLain;
+use App\Http\Controllers\KOP\Helpers\ModulTrackingDataHelpers;
 use App\Http\Controllers\KOP\Helpers\RumusLaporanGajiLain as HelpersLaporanGajiLain;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
@@ -512,17 +514,12 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
             
             // $total_biaya_upah_perbulan = $this->RumusTotalLaporanGajiLain($r->tahun1, $r->tahun2, $r->tahun3);
 
-            // $result_gaji_labor = [
-            //     'tahun1' => $r->tahun1,
-            //     'tahun2' => $r->tahun2,
-            //     'tahun3' => $r->tahun3,
-            //     'total_biaya_laporan_periode' => $total_biaya_upah_perbulan
-            // ];
     
             // $simpanDataLaporanGajiLain = LaporanGajiLain::create($result_gaji_labor);
 
-            $jumlah_total = $this->RumusTotalLaporanGajiLain($request->input('tahun1'), $request->input('tahun2'), $request->input('tahun3'));
+            // $jumlah_total = $this->RumusTotalLaporanGajiLain($request->input('tahun1'), $request->input('tahun2'), $request->input('tahun3'));
 
+          
                 // $update_data_lp_gaji_lain = tap(DB::table('laporan_gaji_lain')->where('id', $request->input('id')))
                 // ->update( [
                 //     'tahun1' => $request->input('tahun1'),
@@ -533,7 +530,16 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
                 // ->first();
 
             LaporanGajiLain::whereIn('category_bagian', [$request->input('category_bagian')])->get();
+            $data = LaporanGajiLain::findOrFail((Int)$request->input('id'));
+            $datax = [
+                'tahun1' => $data->tahun1,
+                'tahun2' => $data->tahun2,
+                'tahun3' => $data->tahun3,
+                'total_biaya_laporan_periode' => $data->total_biaya_laporan_periode
+            ];
 
+            // dd($datax);
+          
             $LaporanGajiLain = LaporanGajiLain::all();
             $AllRecalculateInstance = new AllRecalculate;
             $rcl = AllRecalculate::all();
@@ -541,6 +547,12 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
             foreach($rcl as $indexs => $dtlg){
     
                 $jumlah_total = $this->RumusTotalLaporanGajiLain($request->tahun1, $request->tahun2, $request->tahun3);
+                $result_gaji_labor = [
+                    'tahun1' => (Int)$request->tahun1,
+                    'tahun2' =>(Int) $request->tahun2,
+                    'tahun3' => (Int)$request->tahun3,
+                    'total_biaya_laporan_periode' => $jumlah_total
+                ];
     
                 $dpney[] = [
                     'code_mesin' => $dtlg->code_mesin,
@@ -552,7 +564,27 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
                 \Batch::update($AllRecalculateInstance, $dpney, $code_mesin);
     
             }
+
+            $tb = app(LaporanGajiLain::class)->getTable();
+
+            $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $datax, $result_gaji_labor);
     
+            foreach ($md as $key => $val) {
+    
+                    $pf[] = [
+                        'updated_at' => Carbon::now(),
+                        'company_id' => $request->company_parent_id,
+                        'category_id' => $request->category_bagian,
+                        'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                        'table_column' => $val['tabel_kolom'],
+                        'history_latest' => ceil($val['history']),
+                        'before' => ceil($val['dari']),
+                    ];
+                    
+                }
+
+            $d = GjiLainTotal::insert($pf);
+                
 
                 // $hasil_akhir_gj_lain = $this->jumlahAkhirGajiLain($first);
            
@@ -589,7 +621,19 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
          
         } catch (Exception $e) {
 
-            return response()->json(['errors' => $e]);
+            $code = 500;
+            $message = __('voyager::generic.internal_error');
+
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'data' => [
+                    'status'  => $code,
+                    'message' => $message,
+                ],
+            ], $code);
 
         }
 

@@ -5,15 +5,14 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 
-class PenyusutanTotal extends Model
+class LaborTtal extends Model
 {
-
-    protected $table= "penyusutan_total";
+    protected $table= "laborttals";
     protected $guarded = [''];
 
     public function Company()
     {
-        return $this->belongsTo('App\Company', 'company_parent_id');
+        return $this->belongsTo('App\Company', 'company_id');
     }
 
     public function Mesin()
@@ -25,4 +24,5 @@ class PenyusutanTotal extends Model
     {
         return $this->belongsTo('App\KategoriBagian', 'category_id');
     }
+    
 }

@@ -12,7 +12,17 @@ class RPTMtcTotal extends Model
 
     public function Company()
     {
-        return $this->belongsTo('App\Company', 'id');
+        return $this->belongsTo('App\Company', 'company_parent_id');
+    }
+    
+    public function Mesin()
+    {
+        return $this->belongsTo('App\Mesin', 'code_mesin');
+    }
+
+    public function KategoriBagian()
+    {
+        return $this->belongsTo('App\KategoriBagian', 'categori_id');
     }
     
 }

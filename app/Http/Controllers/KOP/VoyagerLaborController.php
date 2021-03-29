@@ -7,6 +7,7 @@ use App\Mesin;
 use Exception;
 use App\Company;
 use App\Listrik;
+use Carbon\Carbon;
 use App\LaborTotal;
 use App\AllRecalculate;
 use App\KategoriBagian;
@@ -22,6 +23,7 @@ use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
 use App\Http\Controllers\KOP\Helpers\RumusLabor;
 use App\Http\Controllers\KOP\Service\LaborInterface;
+use App\Http\Controllers\KOP\Helpers\ModulTrackingDataHelpers;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
 class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborInterface
@@ -573,6 +575,27 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
             \Batch::update($AllRecalculateInstance, $dlbr, $code_mesin);
 
         }
+
+        $tb = app(Labor::class)->getTable();
+
+        $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $data, $result_gaji_labor);
+
+        foreach ($md as $key => $val) {
+
+                $pf[] = [
+                    'updated_at' => Carbon::now(),
+                    'company_id' => $request->company_parent_id,
+                    'category_id' => $request->category_bagian,
+                    'code_mesin' => $request->code_mesin,
+                    'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                    'table_column' => $val['tabel_kolom'],
+                    'history_latest' => ceil($val['history']),
+                    'before' => ceil($val['dari']),
+                ];
+                
+            }
+        
+        $d = LaborTotal::insert($pf);
 
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");

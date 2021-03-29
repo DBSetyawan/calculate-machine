@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LaborTotal extends Model
 {
-    protected $table= "labor_total";
+    protected $table= "laborttals";
     protected $guarded = [''];
 
     public function Company()

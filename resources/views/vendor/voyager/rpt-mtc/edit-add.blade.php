@@ -246,7 +246,6 @@
                     encode          : true
                 })
                 .done(function(data) {
-                    console.log(data)
 
                     if(data.success){
                             Toast.fire({
@@ -255,8 +254,6 @@
                         })
                     }
                     
-                    // $(".removeLater").val('');
-
                 }).catch(function(xhr, ajaxOptions, thrownError) {
                     var responseTitle= $(xhr.responseText).filter('title').get(0);
                     Toast.fire({

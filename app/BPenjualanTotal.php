@@ -12,7 +12,7 @@ class BPenjualanTotal extends Model
 
     public function Company()
     {
-        return $this->belongsTo('App\Company', 'id');
+        return $this->belongsTo('App\Company', 'company_id');
     }
     
 }

@@ -6,6 +6,7 @@ use App\Mesin;
 use Exception;
 use App\Company;
 use App\Listrik;
+use Carbon\Carbon;
 use App\Penyusutan;
 use RumusPenyusutan;
 use App\AllRecalculate;
@@ -22,6 +23,7 @@ use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
 use App\Http\Controllers\KOP\Service\PenyusutanInterface;
+use App\Http\Controllers\KOP\Helpers\ModulTrackingDataHelpers;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
 class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements PenyusutanInterface
@@ -429,6 +431,27 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
             \Batch::update($AllRecalculateInstance, $dpney, $code_mesin);
 
         }
+
+        $tb = app(Penyusutan::class)->getTable();
+
+        $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $data, $automatedTotalakumulasibiayaPenyusutan);
+
+        foreach ($md as $key => $val) {
+
+                $pf[] = [
+                    'updated_at' => Carbon::now(),
+                    'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                    'company_parent_id' => $request->company_parent_id,
+                    'category_id' => $request->category_bagian,
+                    'code_mesin' => $request->code_mesin,
+                    'table_column' => $val['tabel_kolom'],
+                    'history_latest' => ceil($val['history']),
+                    'before' => ceil($val['dari']),
+                ];
+                
+            }
+        
+        $d = PenyusutanTotal::insert($pf);
 
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");

@@ -5,6 +5,9 @@ namespace App\Http\Controllers\KOP;
 use App\Mesin;
 use Exception;
 use App\Company;
+use Carbon\Carbon;
+use App\ListrikTotal;
+use App\ListrikOutput;
 use App\KategoriBagian;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
@@ -18,8 +21,8 @@ use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
 use App\Http\Controllers\KOP\Helpers\RumusAccountMTC;
 use App\Http\Controllers\KOP\Service\ListrikOutputInterface;
+use App\Http\Controllers\KOP\Helpers\ModulTrackingDataHelpers;
 use App\Http\Controllers\KOP\Helpers\RumusListrikOutputPerjam;
-use App\ListrikOutput;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
 class VoyagerListrikOutputPerjamController extends BaseVoyagerBaseController Implements ListrikOutputInterface
@@ -350,6 +353,35 @@ class VoyagerListrikOutputPerjamController extends BaseVoyagerBaseController Imp
         $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
         event(new BreadDataUpdated($dataType, $data));
+
+        $tb = app(ListrikOutput::class)->getTable();
+                 
+        /**
+         * Hitung Total Listrik Output Perjam
+         */
+        $HitungTotalListrikOuputPerjam = $this->RumusPersenOutputPerjam($request->output_perjam);
+        
+        $s = [
+            'company_parent_id' => $request->company_parent_id,
+            'output_perjam' => $request->output_perjam,
+            'persen' => $HitungTotalListrikOuputPerjam
+        ];
+
+        $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $data, $s);
+        foreach ($md as $key => $val) {
+
+                $pf[] = [
+                    'updated_at' => Carbon::now(),
+                    'company_id' => $request->company_parent_id,
+                    'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                    'table_column' => $val['tabel_kolom'],
+                    'history_latest' => $val['history'],
+                    'before' => $val['dari'],
+                ];
+                
+            }
+
+        $d = ListrikTotal::insert($pf);
 
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");

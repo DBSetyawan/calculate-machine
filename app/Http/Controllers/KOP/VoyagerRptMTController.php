@@ -9,6 +9,7 @@ use App\RptMtc;
 use App\Company;
 use Carbon\Carbon;
 use App\AccountMtc;
+use App\RPTMtcTotal;
 use RumusMaintenance;
 use App\ListrikOutput;
 use App\AllRecalculate;
@@ -472,8 +473,11 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
             $TotalBiayaPenyusutanMaintenance = $this->TotalBiayaPenyusutanMaintenance($RataRataPerbaikanPerbulan, $RataRataSparePartPerbulan);
 
                 $automatedRecalculateMTC = [
-                    'company_parent_id' => $request->company_parent_id,
+                    'id' => $request->id,
                     'perbaikan_tahun1' => $request->perbaikan_tahun1,
+                    'code_mesin' => $request->code_mesin,
+                    'category_bagian' => $request->category_bagian,
+                    'company_parent_id' => $request->company_parent_id,
                     'perbaikan_tahun2' => $request->perbaikan_tahun2,
                     'perbaikan_tahun3' => $request->perbaikan_tahun3,
         
@@ -535,14 +539,31 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
         
                         $code_mesin = 'code_mesin';
 
-                    // \Batch::update($AllRecalculateInstance, $dmtc, $code_mesin);
-
+                    \Batch::update($AllRecalculateInstance, $dmtc, $code_mesin);
 
             //    }
+            $tb = app(RptMtc::class)->getTable();
 
-            $ds = ModulTrackingDataHelpers::ModuleTrackingTransactionData($request->dataold, $automatedRecalculateMTC);
+                $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $request->dataold, $automatedRecalculateMTC);
+
+                foreach ($md as $key => $val) {
+
+                        $pf[] = [
+                            'updated_at' => Carbon::now(),
+                            'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                            'company_parent_id' => $request->company_parent_id,
+                            'categori_id' => $request->category_bagian,
+                            'code_mesin' => $request->code_mesin,
+                            'table_coloumn' => $val['tabel_kolom'],
+                            'history_latest' => ceil($val['history']),
+                            'before' => ceil($val['dari']),
+                        ];
+                        
+                    }
+                
+                $d = RPTMtcTotal::insert($pf);
             
-            return response()->json(['success' => __('voyager::generic.successfully_updated'), 'data' => $data_success, 'track' => $ds]);
+            return response()->json(['success' => __('voyager::generic.successfully_updated'), 'data' => '','track' => $pf]);
             
         } catch (Exception $e) {
 

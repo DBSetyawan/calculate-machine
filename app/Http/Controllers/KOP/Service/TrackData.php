@@ -8,6 +8,7 @@ interface TrackData
 {
     
     public static function ModuleTrackingTransactionData(
+                        $table,
                         $datalama,
                         $datanew
                     );

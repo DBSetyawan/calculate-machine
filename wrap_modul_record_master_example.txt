@@ -1,0 +1,83 @@
+{
+    "success": "Berhasil Diperbaharui",
+    "data": true,
+    "track": [{
+        "nid": {
+            "tabel_kolom": "rpt_mtc.perbaikan_tahun1",
+            "history": "24123121",
+            "dari": "2412312"
+        }
+    }, {
+        "nid": {
+            "tabel_kolom": "rpt_mtc.code_mesin",
+            "history": "89",
+            "dari": "64"
+        }
+    }, {
+        "nid": {
+            "tabel_kolom": "rpt_mtc.category_bagian",
+            "history": "5",
+            "dari": "3"
+        }
+    }, {
+        "nid": {
+            "tabel_kolom": "rpt_mtc.company_parent_id",
+            "history": "2",
+            "dari": "3"
+        }
+    }, {
+        "nid": {
+            "tabel_kolom": "rpt_mtc.perbaikan_tahun2",
+            "history": "735634531",
+            "dari": "73563453"
+        }
+    }, {
+        "nid": {
+            "tabel_kolom": "rpt_mtc.perbaikan_tahun3",
+            "history": "5293842981",
+            "dari": "529384298"
+        }
+    }, {
+        "nid": {
+            "tabel_kolom": "rpt_mtc.rata_rata_perbaikan_perbulan",
+            "history": 42038893.284722224,
+            "dari": "4203889.3263889"
+        }
+    }, {
+        "nid": {
+            "tabel_kolom": "rpt_mtc.sparepart_tahun1",
+            "history": "238915191",
+            "dari": "23891519"
+        }
+    }, {
+        "nid": {
+            "tabel_kolom": "rpt_mtc.sparepart_tahun2",
+            "history": "2000001",
+            "dari": "200000"
+        }
+    }, {
+        "nid": {
+            "tabel_kolom": "rpt_mtc.sparepart_tahun3",
+            "history": "12131313131",
+            "dari": "1213131313"
+        }
+    }, {
+        "nid": {
+            "tabel_kolom": "rpt_mtc.rata_rata_sparepart_perbulan",
+            "history": 85918252.24305555,
+            "dari": "8591825.2222222"
+        }
+    }, {
+        "nid": {
+            "tabel_kolom": "rpt_mtc.biaya_produksi_lain",
+            "history": 16053511.204101944,
+            "dari": "16053511.204102"
+        }
+    }, {
+        "nid": {
+            "tabel_kolom": "rpt_mtc.total_biaya_perbulan",
+            "history": 127957145.52777778,
+            "dari": "12795714.548611"
+        }
+    }]
+}

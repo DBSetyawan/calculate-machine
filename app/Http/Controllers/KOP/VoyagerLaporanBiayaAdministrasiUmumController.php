@@ -5,6 +5,7 @@ namespace App\Http\Controllers\KOP;
 use Exception;
 use App\Company;
 use App\BauTotal;
+use Carbon\Carbon;
 use App\AllRecalculate;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
@@ -17,6 +18,7 @@ use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
+use App\Http\Controllers\KOP\Helpers\ModulTrackingDataHelpers;
 use App\Http\Controllers\KOP\Helpers\RumusLaporanBiayaAdministrasiUmum;
 use App\Http\Controllers\KOP\Service\LporanBiayaAdministrasiUmumInterface;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
@@ -416,6 +418,26 @@ class VoyagerLaporanBiayaAdministrasiUmumController extends BaseVoyagerBaseContr
             \Batch::update($AllRecalculateInstance, $dpney, $code_mesin);
 
         }
+        
+        $tb = app(LaporanBiayaAdministrasiUmum::class)->getTable();
+
+        $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $data, $result_badm);
+
+        foreach ($md as $key => $val) {
+
+                $pf[] = [
+                    'updated_at' => Carbon::now(),
+                    'company_id' => $request->company_parent_id,
+                    'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                    'table_column' => $val['tabel_kolom'],
+                    'history_latest' => ceil($val['history']),
+                    'before' => ceil($val['dari']),
+                ];
+                
+            }
+
+        $d = BauTotal::insert($pf);
+            
 
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");
