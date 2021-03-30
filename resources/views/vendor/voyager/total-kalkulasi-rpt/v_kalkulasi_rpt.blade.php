@@ -777,7 +777,7 @@ $(document).ready(function(){
                       <div class="panel panel-bordered col-md-12">
                         <div class="panel-body">
                           <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                             <a onclick="window.open(this.href,'_blank');return false;" href="{!! url('/admin/history-log-recalculate') !!}" class="badge badge-info">History log recalculate</a>
+                             <a onclick="window.open(this.href,'_blank');return false;" href="{!! route('voyager.history-recalculate-temporary.index') !!}" class="badge badge-info">History log recalculate</a>
                              <i class="voyager-file-text"> </i>
                             </div>
                             <div class="col-8">
