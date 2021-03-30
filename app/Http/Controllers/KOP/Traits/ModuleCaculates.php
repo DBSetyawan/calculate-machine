@@ -237,7 +237,7 @@ trait ModuleCaculates {
                 'Company'])->get()->toArray();
 
 
-                foreach($allrecalculate as $index => $tmp){
+                foreach($allrecalculate as $indexs => $tmp){
 
                     // $calc = AllRecalculate::orderby('id','desc')->with('mesin.MesinListrikPerjamTo')->first();
                     // $recRow = AllRecalculate::orderby('created_at','desc')->with(['Listrik.Listrikperjam','KategoriBagian','Mesin','GroupMesin','Company'])->first();
@@ -394,35 +394,36 @@ trait ModuleCaculates {
                                     'total_tanpa_mtc_perjam' => $tmp['total_tanpa_mtc_perjam'],
                 
                                 ];
-                                $md = ModulTrackingDataHelpers::ModuleTrackingTransactionDataRecalculate($tb, $old, $data_recalculate);
-                                
-                                    
-                                foreach ($md as $key => $val) {
-                                    $pf = [
-                                        'updated_at' => Carbon::now(),
-                                        'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
-                                        'company' => $tmp['company']['id'],
-                                        'category_id' => $tmp['kategori_bagian']['id'],
-                                        'group_mesin' => $tmp['group_mesin']['id'],
-                                        'code_mesin' => $tmp['mesin']['id'],
-                                        'table_column' => $val['tabel_kolom'],
-                                        'history_latest' => ceil($val['history']),
-                                        'before' => ceil($val['dari']),
-                                    ];
-                                    
-                                }
-                                $d = HistoryRecalculateTemporary::insert($pf);
-                              
-                         
+                             
                                 $sid = 'id';
-
                    
                                 $bulk_batch = \Batch::update($SendTemporaryCalculateInstance, [$data_recalculate], $sid);
-    
-                            
+
+                                
+                                $md = ModulTrackingDataHelpers::ModuleTrackingTransactionDataRecalculate($tb, $old, $data_recalculate);
+                                        
+                                            
+                                    foreach ($md as $key => $val) {
+                                        $pf[] = [
+                                            'updated_at' => Carbon::now(),
+                                            'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                                            'company' => $tmp['company']['id'],
+                                            'category_id' => $tmp['kategori_bagian']['id'],
+                                            'group_mesin' => $tmp['group_mesin']['id'],
+                                            'code_mesin' => $tmp['mesin']['id'],
+                                            'table_column' => $val['tabel_kolom'],
+                                            'history_latest' => ceil($val['history']),
+                                            'before' => ceil($val['dari']),
+                                        ];
+                                        
+                                    }
+                                
+                                }
+                                                        
                             }
-                                                      
-                        }
+
+
+                        $d = HistoryRecalculateTemporary::insert($pf);
 
                     return response()->json(['res' => 200]);
 
