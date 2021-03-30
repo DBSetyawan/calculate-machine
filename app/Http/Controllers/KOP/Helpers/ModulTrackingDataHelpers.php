@@ -6,12 +6,124 @@ use App\Http\Controllers\KOP\Service\TrackData;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
 class ModulTrackingDataHelpers Extends BaseVoyagerBaseController Implements TrackData{
-    
+	
+	public static function ModuleTrackingTransactionDataREST($table, $old, $new){
+
+		if($table == "listrik"){
+
+			$attrField = array(
+				'persen_cost_perbulan' => 'persen_cost_perbulans',
+				'ncost_bulan_plus_adm' => 'ncost_bulan_plus_adms'
+			);
+
+			$perubahan = [];
+
+				foreach ($attrField as $keys => $vals) {
+					if($old[$keys]!=$new[$keys]) {
+						array_push($perubahan, array(
+							'tabel_kolom' 	=> $table.'.'.$keys,
+							'history' 	=> $new[$keys],
+							'dari' 		=>$old[$keys]
+						));
+					}
+				}
+
+			return $perubahan;
+
+		}
+	}
+
+	public static function ModuleTrackingTransactionDataRecalculate($table, $old, $new){
+
+		if($table == "all_recalculate"){
+
+			$attrField = [
+				'id' => 'idx',
+				'id_labor' => 'idlabor',
+				'id_penyusutan' => 'id penyusutans',
+				'id_mtc' => 'id mtcs',
+				'id_bprodlain_insteadof_mtc' => 'biaya produksi lains',
+				'id_gajilain' => 'lap. gaji lainnyuas',
+				'id_bgoenjualan' => 'bag. penjualans',
+				'id_bau' => 'id biaya administrasi umums',
+				'total_semua_biaya' => 'total semua biayas',
+				'total_semua_biaya_perjam' => 'total semua biaya perjams',
+
+				'total_tanpa_penyusutan_n_mtc' => 'total semua biaya penyusutan + MTCs',
+				'total_tanpa_penyusutan_n_mtc_perjam' => 'total semua biaya penyusutan + MTC perjams',
+
+				'total_tanpa_penyusutan' => 'total tanpa penyusutans',
+				'total_tanpa_penyusutan_perjam' => 'total tanpa penyusutan perjamas',
+
+				'total_tanpa_mtc' => 'total tanpa maintenances',
+				'total_tanpa_mtc_perjam' => 'total tanpa maintenance perjams'
+
+			];
+
+		$perubahan = [];
+
+			foreach ($attrField as $keys => $vals) {
+
+				if($old[$keys]!=$new[$keys]) {
+					array_push($perubahan, array(
+						'tabel_kolom' 	=> $table.'.'.$keys,
+						'history' 	=> $new[$keys],
+						'dari' 		=>$old[$keys]
+					));
+				}
+			}	
+
+			return $perubahan;
+
+		}
+	}
+
     public static function ModuleTrackingTransactionData($table, $old, $new){
 
 
-		// dd($table);die;
+		// dd($table == "all_recalculate");die;
 		
+		if($table == "listrik"){
+
+			$attrField = array(
+				'listrikperjam' => 'listri perjam',
+				'ampere' => 'amperes',
+				'voltase' =>  'voltases',
+				// 'company_parent_id' => $r->company_parent_id,
+				'code_mesin' => 'code_mesins',
+				// 'code_listrik' => RumusListrik::generateIDListrik(), //not 
+				'LWBP_perminggu' => 'lwbp_perminggu',
+				'WBP_perminggu' => 'wbp_perminggu',
+				'nilai_cost_bulan' => 'nilai cost perbulan',
+				// 'category_bagian' => $r->category_bagian,
+				'LWBP_faktorkali' => 'lwbp_faktorkali',
+				'WBP_faktorkali' => 'wbp_faktorkali',
+				'total_biaya_listrik' => 'total biaya listrik',
+				'assumptionshift_lwbp1' => 'asumsi shift lwbp1',
+				'assumptionshift_lwbp2' => 'asumsi shift lwbp2',
+				'assumptionshift_lwbp3' => 'asumsi shift lwbp3',
+				'assumption_itval_perminggu' => 'asumsi perminggu',
+				'assumption_wbp' => 'asumsi wbp',
+				'persen_cost_perbulan' => 'persen cost perbulan',
+				'ncost_bulan_plus_adm' => 'nilai cost perbulan',
+			);
+
+		$perubahan = [];
+
+			foreach ($attrField as $keys => $vals) {
+				if($old[$keys]!=$new[$keys]) {
+					array_push($perubahan, array(
+						'tabel_kolom' 	=> $table.'.'.$keys,
+						'history' 	=> $new[$keys],
+						'dari' 		=> $old[$keys]
+					));
+				}
+			}
+
+			return $perubahan;
+
+		}
+
 		if($table == "listrik_output"){
 
 			$attrField = array(

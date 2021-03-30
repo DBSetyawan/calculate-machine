@@ -1,6 +1,7 @@
 @extends('voyager::master')
-@inject('listrik','App\Listrik')
+
 @section('page_title', __('voyager::generic.viewing').' '.$dataType->getTranslatedAttribute('display_name_plural'))
+
 @section('page_header')
     <div class="container-fluid">
         <h1 class="page-title">
@@ -11,51 +12,9 @@
                 <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }}</span>
             </a> --}}
         @endcan
-        <a href="{{ route('listriks.form.master') }}" class="btn btn-success btn-add-new">
-            <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Listrik</span>
-        </a>
-        @php
-                        
-        $total_listrik = $listrik->whereIn('company_parent_id', [3])->get();
-
-            $persen = collect([$total_listrik])->sum(function ($prsttl){
-
-                $ttlpr = $prsttl->sum('persen_cost_perbulan');
-                    if(is_null($ttlpr)){
-                        $x = 0.0001;
-                    } else {
-                        $x = $ttlpr;
-                    }
-                        if ($x == 0) return 0;
-
-                        $rounded = round($x, 2);
-                        $minValue = 0.0001;
-
-                        if ($rounded < $minValue) {
-                            $prs = number_format($minValue, 0);
-                        } else {
-                            $prs = number_format($rounded * 100, 0);
-                        }
-                        return $prs;
-                });
-
-            $cost_lstrkperbulan = collect([$total_listrik])->sum(function ($region){
-                    return sprintf("%.5f", $region->sum('nilai_cost_bulan'));
-                });
-
-                $chckt = $total_listrik->map(function ($region){
-                    return $region->ncost_bulan_plus_adm;
-                });
-
-                $fetchdata = isset($chckt) ? $chckt : [];
-
-            $totalPPJ = ( ($cost_lstrkperbulan) + ($cost_lstrkperbulan*0.03) + 6000 );
-
-            $totalcostadm = collect([$total_listrik])->sum(function ($region){
-                    return sprintf("%.5f", $region->sum('ncost_bulan_plus_adm'));
-                });
-
-        @endphp
+        {{-- <a href="{{ route('penyusutans.form.master') }}" class="btn btn-success btn-add-new">
+            <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Penyusutan</span>
+        </a> --}}
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
         @endcan
@@ -118,64 +77,6 @@
                                 @endif
                             </form>
                         @endif
-                        <div class="alert alert-warning" role="alert"> <i class="voyager-info-circled"></i> <span >Pastikan terlebih dahulu dokumen biaya akumulasi listrik sudah sesuai, sebelum mentransfer data ke temporary KOP kalkulasi mesin.</div>
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                  <h3 class="panel-title">KOP Kalkulasi mesin perhitungan listrik & transfer dokumen temporary:</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="float-right"> <a class="btn btn-success btn-small" id="RecalALLdocument">
-                                        <i class="voyager-refresh"></i> <span class="protip"
-                                        data-pt-position="left"
-                                        data-pt-gravity="false"
-                                        data-pt-title="Fungsi ini untuk mengakumulasi ulang biaya % & cost + ADM"
-                                        data-pt-trigger="hover"
-                                        data-pt-size="normal"
-                                        data-pt-scheme="leaf"
-                                        data-pt-offset-left="1">{{ __('Kalkulasi % cost & cost + ADM') }}</span>
-                                    </a></div><br><br/>
-                                    <div class="float-right">   <a class="btn btn-small btn-info" id="RecalTemporaryRecalculate">
-                                        <i class="voyager-documentation"></i> <i class="voyager-forward"></i> <span class="protip"
-                                        data-pt-position="left"
-                                        data-pt-gravity="false"
-                                        data-pt-title="Fungsi ini untuk mentransfer dokumen ke temporary KOP kalkulasi mesin."
-                                        data-pt-trigger="hover"
-                                        data-pt-size="normal"
-                                        data-pt-scheme="leaf"
-                                        data-pt-offset-left="1">{{ __('Transfer data') }}</span>
-                                    </a></div><br>
-                                </div>
-                                <div class="panel panel-bordered">
-                                    <div class="panel-body">
-                                        <div class="pull-left">
-                                            <div class="col-2">
-                                                <label for="total PPJ" class="badge badge-success">Total semua % cost :</label> <span class="">{{$persen}} %</span>
-                                            </div>
-                                            <div class="col-2">
-                                                <label for="total PPJ" class="badge badge-success">Total cost + ADM :</label> <span class="">Rp {{number_format($totalcostadm, 0, ".", ".")}}</span>
-                                            </div>
-                                            <div class="col-2">
-                                                <label for="total PPJ" class="badge badge-success">Total semua cost perbulannya :</label> <span class="">Rp {{number_format($cost_lstrkperbulan, 0, ".", ".")}}</span>
-                                            </div>
-                                            <div class="col-2">
-                                                <label for="total PPJ" class="badge badge-success">Total PPJ :</label> <span class="">Rp {{number_format($totalPPJ, 0, ".", ".")}}</span>
-                                                <code>
-                                                    seluruh total cost perbulan*(seluruh total cost perbulan * 0.03(3%)) + MATERAI 3000
-                                                </code>
-                                            </div>
-                                            <div class="col-2">
-                                                {{-- <label for="total PPJ" class="badge badge-success"></label> <span class="">Rp {{number_format($totalcostadm, 0, ".", ".")}}</span> --}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                              </div>
-                              <div class="float-right">
-                                  <div id='loading'>
-                                  </div>
-                              </div>
-                            </div>
-                        </div>
                         <div class="table-responsive">
                             <table id="dataTable" class="table table-hover">
                                 <thead>
@@ -349,40 +250,12 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     <span>{{ $data->{$row->field} }}</span>
-                                                    @if ($row->display_name == 'TOTAL LISTRIK')
-                                                        <span>{{ "Rp " . number_format($data->total_biaya_listrik,0,',','.') }}</span>
+                                                    @if ($row->display_name == 'Purchase Value')
+                                                        <span>{{ "Rp " . number_format($data->purchaseorder_value,0,',','.') }}</span>
                                                     @endif
-                                                    @if ($row->display_name == 'NILAI COST/BLN + BIAYA ADM')
-                                                        <span>{{ "Rp " . number_format($data->ncost_bulan_plus_adm,0,',','.') }}</span>
-                                                    @endif
-                                                    @if ($row->display_name == 'NILAI COST/BLN')
-                                                        <span>{{ "Rp " . number_format($data->nilai_cost_bulan,0,',','.') }}</span>
-                                                    @endif
-                                                    @php
-                                                    // dd($data->persen_cost_perbulan);
-
-                                                    
-                                                    if(is_null($data->persen_cost_perbulan)){
-                                                        $x = 0.0001;
-                                                    } else {
-                                                        $x = $data->persen_cost_perbulan;
-                                                    }
-                                                     if ($x == 0) return 0;
-
-                                                        $rounded = round($x, 2);
-                                                        $minValue = 0.0001;
-
-                                                        
-                                                        if ($rounded < $minValue) {
-                                                            $dd=  number_format($minValue, 0);
-                                                        } else {
-                                                            $dd = number_format($rounded * 100, 0);
-                                                        }
-                                                        
-                                                    @endphp
-                                                    @if ($row->display_name == '%')
-                                                        <span>{{ $dd . '%' }}</span>
-                                                    @endif
+                                                    @if ($row->display_name == 'Peny. PerBulan')
+                                                    <span>{{ "Rp " . number_format($data->penyusutan_perbulan,0,',','.') }}</span>
+                                                @endif
                                                 @endif
                                             </td>
                                         @endforeach
@@ -398,7 +271,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        @if ($isServerSide && isset($dataType->server_side) && $dataType->server_side)
+                        @if ($isServerSide)
                             <div class="pull-left">
                                 <div role="status" class="show-res" aria-live="polite">{{ trans_choice(
                                     'voyager::generic.showing_entries', $dataTypeContent->total(), [
@@ -408,7 +281,6 @@
                                     ]) }}</div>
                             </div>
                             <div class="pull-right">
-                                {{-- {{dd($sortOrder)}} --}}
                                 {{ $dataTypeContent->appends([
                                     's' => $search->value,
                                     'filter' => $search->filter,
@@ -420,13 +292,22 @@
                             </div>
                         </div>
                         @endif
+                        @inject('penyusutan','App\Penyusutan')
+                        @php
+                            $total_listrik = $penyusutan->whereIn('company_parent_id', [3])->get();
+
+                            $x = collect([$total_listrik])->sum(function ($region){
+                                    return $region->sum('penyusutan_perbulan');
+                                });
+                        @endphp
                         <br/>
-                      
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
     {{-- Single delete modal --}}
     <div class="modal modal-danger fade" tabindex="-1" id="delete_modal" role="dialog">
         <div class="modal-dialog">
@@ -460,258 +341,6 @@
         <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
     @endif
     <script>
-
-    function isEmpty(obj) {
-        for(var prop in obj) {
-            if(obj.hasOwnProperty(prop))
-                return false;
-        }
-
-        return true;
-    }
-        let cost = @json($fetchdata)
-      
-        if(isEmpty(cost)){
-            
-            $('#RecalTemporaryRecalculate').hide();
-            $('#RecalALLdocument').hide();
-
-        } 
-            else {
-
-                    for (var i = 0; i < cost.length; i++) {
-                        
-                        if(cost[i] == null){
-                                $('#RecalTemporaryRecalculate').hide()
-                            break;            
-                        }
-                            else{
-
-                                $('#RecalTemporaryRecalculate').show();
-                                $('#RecalALLdocument').show();
-
-                        }
-
-                    };
-
-        }
-            var timeout;
-
-            function LoadingRecalculate() {
-                $('#loading').html('<img style="width:24px" src="{{ asset("public/spinning-arrows.gif")}}"/>');
-                clearTimeout(timeout);
-            }
-
-            function LoadingTransfersTempKOPmachine() {
-                $('#loading').html('<img style="width:30px" src="{{ asset("public/circles-menu-1.gif")}}"/>');
-                clearTimeout(timeout);
-            }
-
-        $('#RecalTemporaryRecalculate').on('click', function(e) {
-
-            Swal.fire({
-                title: 'Informasi',
-                text: "Apakah anda ingin melanjutkan, aksi ini akan mentransfer seluruh dokumen ini ke KOP kalkulasi mesin?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Transfer dokumen sekarang',
-                cancelButtonText: 'Batalkan'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire(
-                    'Informasi',
-                    'Data anda sedang diproses, tunggu sebentar..',
-                    'warning'
-                    );
-                    
-                LoadingTransfersTempKOPmachine();
-
-                setTimeout(() => {
-                        $("#RecalTemporaryRecalculate").html('Sedang ditransfer ke KOP kalkulasi mesin');
-                    }, 1000);
-                    
-                    sendTemporaryCalculates(true).then(function(res){
-
-                        // console.log(res.checking)
-
-                        // if(res.success.totalRows !== 0 && (res.success.totalRows !== undefined) && (res.success.totalRows !== null) && (res.success.totalRows !== "")){
-
-                            // const success = Swal.mixin({
-                            //     toast: true,
-                            //     position: 'top-end',
-                            //     showConfirmButton: false,
-                            //     timer: 3000,
-                            //     timerProgressBar: true,
-                            //     didOpen: (toast) => {
-                            //         $("#loading").hide();
-                            //         toast.addEventListener('mouseenter', Swal.stopTimer)
-                            //         toast.addEventListener('mouseleave', Swal.resumeTimer)
-                            //     }
-                            // })
-
-                            // success.fire({
-                            //     icon: 'success',
-                            //     title: 'Informasi, semua dokumen listrik berhasil ditransfer ke temporary recalculate.\n keterangan detail transfer dokumen:\n total dokumen: '+res.success.totalRows+'\n hasil pencarian data event: '+res.success.totalQuery+'\n batasan yang diperbolehkan untuk transfer: '+res.success.totalBatch +' dokumen mesin',
-                            // });
-
-                            // $("#RecalTemporaryRecalculate").html('<i class="voyager-documentation"></i> <i class="voyager-forward"></i> Transfer dokumen');
-
-                            // let curr = '{{ route("voyager.all-recalculate.index") }}';
-                            // setTimeout(function(){ 
-                            //     window.location.href = curr;
-                            // }, 5000);
-
-                        // } 
-                        if(res.success == 1){
-
-                            const success = Swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                                didOpen: (toast) => {
-                                    $("#loading").hide();
-                                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                                }
-                            })
-
-                            success.fire({
-                                icon: 'success',
-                                title: 'Informasi, semua dokumen listrik berhasil ditransfer ke temporary recalculate.\n keterangan detail transfer dokumen:\n total dokumen: '+res.success.totalRows+'\n hasil pencarian data event: '+res.success.totalQuery+'\n batasan yang diperbolehkan untuk transfer: '+res.success.totalBatch +' dokumen mesin',
-                            });
-
-                            $("#RecalTemporaryRecalculate").html('<i class="voyager-documentation"></i> <i class="voyager-forward"></i> Transfer dokumen');
-
-                            let curr = '{{ route("voyager.all-recalculate.index") }}';
-                            setTimeout(function(){ 
-                                window.location.href = curr;
-                            }, 5000);
-
-                        }
-
-                    });
-
-                }
-            })
-         
-        });
-
-        $('#RecalALLdocument').on('click', function(e) {
-
-            Swal.fire({
-                title: 'Informasi',
-                text: "Apakah anda ingin melanjutkan, aksi ini akan merekalkulasi seluruh dokumen ini?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Rekalkulasi biaya',
-                cancelButtonText: 'Batalkan'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire(
-                    'Informasi',
-                    'Data anda sedang diproses, tunggu sebentar..',
-                    'warning'
-                    );
-
-            LoadingRecalculate();
-                setTimeout(() => {
-                     $("#RecalALLdocument").text("Sedang diakumulasikan..");
-                }, 1000);
-                
-                recalculate_modules(true).then(function(res){
-
-                    if(res.ref = 200){
-
-                        const success = Swal.mixin({
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                $("#loading").hide();
-                                toast.addEventListener('mouseenter', Swal.stopTimer)
-                                toast.addEventListener('mouseleave', Swal.resumeTimer)
-                            }
-                        })
-
-                        success.fire({
-                            icon: 'success',
-                            title: 'Informasi, % cost perbulan | cost perbulan + ADM, telah diakumulasikan.'
-                        });
-
-                        // $("#RecalALLdocument").html('<i class="voyager-refresh"></i> Kalkulasi % cost & cost + ADM');
-                        $("#RecalALLdocument").html('<i class="voyager-refresh"></i> Kalkulasi % cost & cost + ADM');
-
-                        let curr = '{{ route("voyager.listrik.index") }}';
-                        setTimeout(function(){ 
-
-                                window.location.href = curr;
-                            }, 3000);
-
-                        }
-
-                    });
-                }
-            });
-        });
-
-        async function recalculate_modules(mesinid
-                ) {
-                            let datamesinid = {
-                                    mesinid:mesinid
-                                }
-                        const apiDataMesin = "{{ route('voyager.listrik.recalculate.all_recalculate') }}";
-                                
-                            const settings = {
-                                        method: 'POST',
-                                        headers: {
-                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                                            'Content-Type': 'application/json;charset=utf-8'
-                                            },
-                                        body: JSON.stringify(datamesinid)
-                                }
-                        try {
-                                
-                                const fetchResponse = await fetch(`${apiDataMesin}`, settings);
-                                const data = await fetchResponse.json();
-                                return data;
-                            } catch (error) {
-                            return error
-                            }    
-                    }
-
-            async function sendTemporaryCalculates(mesinid
-                ) {
-                            let datatemp = {
-                                    mesinid:mesinid
-                                }
-
-                        const apiDataMesin = "{{ route('voyager.listrik.recalculate.temporary.recall.all') }}";
-                                
-                            const settings = {
-                                        method: 'POST',
-                                        headers: {
-                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                                            'Content-Type': 'application/json;charset=utf-8'
-                                            },
-                                        body: JSON.stringify(datatemp)
-                                }
-                        try {
-                                
-                                const fetchResponse = await fetch(`${apiDataMesin}`, settings);
-                                const data = await fetchResponse.json();
-                                return data;
-                            } catch (error) {
-                                return JSON.parse(error)
-                            }    
-                    }
         $(document).ready(function () {
             @if (!$dataType->server_side)
                 var table = $('#dataTable').DataTable({!! json_encode(
@@ -741,6 +370,7 @@
                 $('input[name="row_id"]').prop('checked', $(this).prop('checked')).trigger('change');
             });
         });
+
 
         var deleteFormAction;
         $('td').on('click', '.delete', function (e) {

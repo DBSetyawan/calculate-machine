@@ -5,15 +5,16 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 
-class HistoryLogRecalculate extends Model
+class HistoryRecalculateTemporary extends Model
 {
-    protected $table= "hlogs_listriks";
+    
+    protected $table= "history_recalculate_temporary";
 
     protected $guarded = [''];
-    
+
     public function Company()
     {
-        return $this->belongsTo('App\Company', 'company_id');
+        return $this->belongsTo('App\Company', 'company');
     }
 
     public function Mesin()

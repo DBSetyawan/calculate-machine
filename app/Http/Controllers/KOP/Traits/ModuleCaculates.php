@@ -7,12 +7,13 @@ use App\Mesin;
 use Exception;
 use App\RptMtc;
 use DataTables;
-use RumusPenyusutan;
 use App\Company;
 use App\Listrik;
 use App\TotalCalc;
+use Carbon\Carbon;
 use App\Penyusutan;
 use RptCalcMachine;
+use RumusPenyusutan;
 use App\AllRecalculate;
 use App\KategoriBagian;
 use App\LaporanGajiLain;
@@ -22,6 +23,7 @@ use App\HistoryLogRecalculate;
 use App\LaporanBagianPenjualan;
 use Illuminate\Support\Facades\DB;
 use App\Exports\CalcsMachineExport;
+use App\HistoryRecalculateTemporary;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CalcSmuaBiayaExports;
@@ -31,6 +33,7 @@ use App\TotalKalkulasiTanpaPenyusutan;
 use App\Http\Controllers\KOP\Helpers\RumusRptMaintenance;
 use App\Http\Controllers\KOP\Helpers\RumusLapBagPenjualan;
 use App\Exports\CalcMachineTanpaMTCnTanpaPenyusutanExports;
+use App\Http\Controllers\KOP\Helpers\ModulTrackingDataHelpers;
 use App\Http\Controllers\KOP\Helpers\RumusListrikOutputPerjam;
 use App\Http\Controllers\KOP\VoyagerLaporanGajiLainController;
 
@@ -228,7 +231,12 @@ trait ModuleCaculates {
                 $allrecalculate = AllRecalculate::with(['Listrik.Listrikperjam',
                 'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
                 'Company'])->get();
-            
+
+                $allrecalculates = AllRecalculate::with(['Listrik.Listrikperjam',
+                'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
+                'Company'])->get()->toArray();
+
+
                 foreach($allrecalculate as $index => $tmp){
 
                     // $calc = AllRecalculate::orderby('id','desc')->with('mesin.MesinListrikPerjamTo')->first();
@@ -334,7 +342,7 @@ trait ModuleCaculates {
 
                         // return RptCalcMachine::InstanceOfCalcTotalTanpaPenyusutanPerbulan();
                         // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
-                            $data_recalculate[] = [
+                            $data_recalculate = [
                                 // 'id_labor' => $totallbr,
                                 'id' => $tmp->id,
                                 'id_labor' => $laborsfn->total_biaya,
@@ -360,11 +368,60 @@ trait ModuleCaculates {
                                 'total_tanpa_mtc_perjam' => $tanpa_mtc_total_perjam,
 
                             ];
+                            $tb = app(AllRecalculate::class)->getTable();
 
-                            $sid = 'id';
+                            foreach($allrecalculates as $index => $tmp){
+
+                                $old = [
+                                    'id' => $tmp['id'],
+                                    'id_labor' => $tmp['id_labor'],
+                                    'id_penyusutan' => $tmp['id_penyusutan'],
+                                    'id_mtc' => $tmp['id_mtc'],
+                                    'id_bprodlain_insteadof_mtc' => $tmp['id_bprodlain_insteadof_mtc'],
+                                    'id_gajilain' => $tmp['id_gajilain'],
+                                    'id_bgoenjualan' => $tmp['id_bgoenjualan'],
+                                    'id_bau' => $tmp['id_bau'],
+                                    'total_semua_biaya' => $tmp['total_semua_biaya'],
+                                    'total_semua_biaya_perjam' => $tmp['total_semua_biaya_perjam'],
+                
+                                    'total_tanpa_penyusutan_n_mtc' => $tmp['total_tanpa_penyusutan_n_mtc'],
+                                    'total_tanpa_penyusutan_n_mtc_perjam' => $tmp['total_tanpa_penyusutan_n_mtc_perjam'],
+                
+                                    'total_tanpa_penyusutan' => $tmp['total_tanpa_penyusutan'],
+                                    'total_tanpa_penyusutan_perjam' => $tmp['total_tanpa_penyusutan_perjam'],
+                
+                                    'total_tanpa_mtc' => $tmp['total_tanpa_mtc'],
+                                    'total_tanpa_mtc_perjam' => $tmp['total_tanpa_mtc_perjam'],
+                
+                                ];
+                                $md = ModulTrackingDataHelpers::ModuleTrackingTransactionDataRecalculate($tb, $old, $data_recalculate);
+                                
+                                    
+                                foreach ($md as $key => $val) {
+                                    $pf = [
+                                        'updated_at' => Carbon::now(),
+                                        'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                                        'company' => $tmp['company']['id'],
+                                        'category_id' => $tmp['kategori_bagian']['id'],
+                                        'group_mesin' => $tmp['group_mesin']['id'],
+                                        'code_mesin' => $tmp['mesin']['id'],
+                                        'table_column' => $val['tabel_kolom'],
+                                        'history_latest' => ceil($val['history']),
+                                        'before' => ceil($val['dari']),
+                                    ];
+                                    
+                                }
+                                $d = HistoryRecalculateTemporary::insert($pf);
+                              
+                         
+                                $sid = 'id';
+
+                   
+                                $bulk_batch = \Batch::update($SendTemporaryCalculateInstance, [$data_recalculate], $sid);
+    
                             
-                            $bulk_batch = \Batch::update($SendTemporaryCalculateInstance, $data_recalculate, $sid);
-
+                            }
+                                                      
                         }
 
                     return response()->json(['res' => 200]);
@@ -380,6 +437,7 @@ trait ModuleCaculates {
                     return response()->json([
                         'data' => [
                             'message' => $message,
+                            'line' => $e->getLine(),
                         ],
                     ], $code);
                 }
