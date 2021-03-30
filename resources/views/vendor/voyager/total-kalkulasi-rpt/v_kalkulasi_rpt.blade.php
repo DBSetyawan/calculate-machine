@@ -499,6 +499,7 @@ $(document).ready(function(){
 
               $("#alltruepnytmtc").show();
               $(".CustomFilter").focus();
+              $(".TransactionTrRtRt").show();
 
             }, 1000);
 
@@ -606,6 +607,7 @@ $(document).ready(function(){
                       $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
                       $("#alltruepnytmtc").hide();
                       $(".CustomFilter").focus();
+                      $(".TransactionTrRtRt").show();
 
                 }, 1000);
 
@@ -1153,6 +1155,7 @@ $(document).ready(function(){
                     // )     
 
                     $(".calctp").show();
+                    $(".TransactionTrRtRt").show();
 
                     $('.TransactionTr').focus();
                     $(".csbe").hide(); //smua biaya
@@ -1349,6 +1352,7 @@ $(document).ready(function(){
                     $(".calcmtc").show(); //smua biaya
                     $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
                     $(".CustomFilter").focus();
+                    $(".TransactionTrRtRt").show();
                   
                 }, 1000);
 
