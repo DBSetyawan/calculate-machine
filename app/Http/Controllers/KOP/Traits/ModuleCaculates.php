@@ -417,13 +417,14 @@ trait ModuleCaculates {
                                         ];
                                         
                                     }
+                                    continue 2;
                                 
                                 }
-                                                        
+
                             }
 
-
                         $d = HistoryRecalculateTemporary::insert($pf);
+
 
                     return response()->json(['res' => 200]);
 
