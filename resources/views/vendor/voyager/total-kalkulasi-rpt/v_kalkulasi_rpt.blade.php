@@ -36,13 +36,19 @@
                                       </button>
                                     </h2>
                                   </div>
-                              
+
                                   <div id="collapseOne" class="collapse " aria-labelledby="headingOne" data-parent="#accordionExample">
                                     <div class="card-body">
                                       <div class="container" id="penyesuaian">
                                         <div class="card" style="width: auto;">
                                           <div class="row">
                                             <div class="col-md-8">
+                                              <div class="panel-heading">
+                                                <h3 class="panel-title panel-icon"><i class="voyager-settings"></i>  {{ __('Setting kalkulasi') }}</h3>
+                                                <div class="panel-actions">
+                                                    {{-- <a class="panel-action voyager-angle-up" data-toggle="panel-collapse" aria-hidden="true"></a> --}}
+                                                </div>
+                                            </div>
                                             <li class="list-group-item">Fitur Menu</li>
                                               <ul class="list-group list-group-flush">
                                                 <li class="list-group-item">
