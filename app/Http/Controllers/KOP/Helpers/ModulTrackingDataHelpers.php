@@ -83,6 +83,78 @@ class ModulTrackingDataHelpers Extends BaseVoyagerBaseController Implements Trac
 
 		// dd($table);die;
 
+		if($table == "job_level"){
+
+			$attrField = array(
+				'jabatan' => 'jabatan karyawan',
+				'LV' => 'level',
+				'upah_terkecil' => 'upah terkecil karyawan',
+				'upah_tengah' => 'upah tengah karyawan',
+				'updah_atas' => 'upah atas karyawan'
+			);
+
+		$perubahan = [];
+
+			foreach ($attrField as $keys => $vals) {
+				if($old[$keys]!=$new[$keys]) {
+					array_push($perubahan, array(
+						'tabel_kolom' 	=> $table.'.'.$keys,
+						'history' 	=> $new[$keys],
+						'dari' 		=> $old[$keys]
+					));
+				}
+			}
+
+			return $perubahan;
+
+		}
+
+		
+		if($table == "kategori_bagian"){
+
+			$attrField = array(
+				'nama_bagian' =>  'nama group mesin'
+			);
+
+		$perubahan = [];
+
+			foreach ($attrField as $keys => $vals) {
+				if($old[$keys]!=$new[$keys]) {
+					array_push($perubahan, array(
+						'tabel_kolom' 	=> $table.'.'.$keys,
+						'history' 	=> $new[$keys],
+						'dari' 		=> $old[$keys]
+					));
+				}
+			}
+
+			return $perubahan;
+
+		}
+
+		if($table == "lb8_kategori_mesin"){
+
+			$attrField = array(
+				'nama_kategori_mesin' =>  'nama group mesin',
+				'company_parent_id' =>  'company parent',
+			);
+
+		$perubahan = [];
+
+			foreach ($attrField as $keys => $vals) {
+				if($old[$keys]!=$new[$keys]) {
+					array_push($perubahan, array(
+						'tabel_kolom' 	=> $table.'.'.$keys,
+						'history' 	=> $new[$keys],
+						'dari' 		=> $old[$keys]
+					));
+				}
+			}
+
+			return $perubahan;
+
+		}
+
 		if($table == "mesin"){
 
 			$attrField = array(

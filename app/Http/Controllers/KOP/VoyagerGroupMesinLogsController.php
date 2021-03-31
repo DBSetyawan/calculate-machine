@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\KOP;
 
 use Exception;
-use App\JobLevel;
 use Carbon\Carbon;
-use App\GajiKaryawanLog;
+use App\GroupMesinLog;
 use Mavinoo\Batch\Batch;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
@@ -17,10 +16,9 @@ use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
-use App\Http\Controllers\KOP\Helpers\ModulTrackingDataHelpers;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
-class VoyagerJobLevelController extends BaseVoyagerBaseController
+class VoyagerGroupMesinLogsController extends BaseVoyagerBaseController
 {
  
     public function index(Request $request)
@@ -30,7 +28,7 @@ class VoyagerJobLevelController extends BaseVoyagerBaseController
 
         // GET THE DataType based on the slug
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
-
+        
         // Check permission
         $this->authorize('browse', app($dataType->model_name));
 
@@ -303,35 +301,6 @@ class VoyagerJobLevelController extends BaseVoyagerBaseController
             $data = $model->findOrFail($id);
         }
 
-        $kl = [
-            'jabatan' => $request->jabatan,
-            'LV' => $request->LV,
-            'upah_terkecil' => $request->upah_terkecil,
-            'upah_tengah' => $request->upah_tengah,
-            'updah_atas' => $request->updah_atas
-        ];
-
-        $tb = app(JobLevel::class)->getTable();
-
-        $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $data, $kl);
-
-        foreach ($md as $key => $val) {
-
-                $pf[] = [
-                    'updated_at' => Carbon::now(),
-                    'created_at' => Carbon::now(),
-                    'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
-                    'table_column' => $val['tabel_kolom'],
-                    'history_latest' =>  $val['history'],
-                    'before' => $val['dari']
-                ];
-                
-            }
-
-        if(isset($pf)){
-            $d = GajiKaryawanLog::insert($pf);
-        }
-
         // Check permission
         $this->authorize('edit', $data);
 
@@ -417,33 +386,9 @@ class VoyagerJobLevelController extends BaseVoyagerBaseController
         // Check permission
         $this->authorize('add', app($dataType->model_name));
 
-        // Validate fields with ajax 
+        // Validate fields with ajax
         $val = $this->validateBread($request->all(), $dataType->addRows)->validate();
         $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
-
-        $columns = [
-            'updated_at',
-            'created_at', 
-            'created_by', 
-            'table_column',
-            'history_latest',
-            'before',
-        ];
-            
-            $dmach[] = [
-                'updated_at' => Carbon::now(),
-                'created_at' => Carbon::now(),
-                'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
-                'table_column' => 'job_level.added.event',
-                'history_latest' =>  $request->jabatan,
-                'before' => $request->jabatan
-            ];
-            
-        $GajiKaryawanLog = new GajiKaryawanLog;
-            
-            $batchSize = 500;
-                
-        $result = \Batch::insert($GajiKaryawanLog, $columns, $dmach, $batchSize);
 
         event(new BreadDataAdded($dataType, $data));
 

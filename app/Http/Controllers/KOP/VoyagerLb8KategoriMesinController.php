@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\KOP;
 
 use Exception;
+use Carbon\Carbon;
+use App\GroupMesinLog;
+use App\Lb8KategoriMesin;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +16,7 @@ use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
+use App\Http\Controllers\KOP\Helpers\ModulTrackingDataHelpers;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
 class VoyagerLb8KategoriMesinController extends BaseVoyagerBaseController
@@ -298,6 +302,33 @@ class VoyagerLb8KategoriMesinController extends BaseVoyagerBaseController
             $data = $model->findOrFail($id);
         }
 
+        $datamesin = [
+            'nama_kategori_mesin' =>  $request->nama_kategori_mesin,
+            'company_parent_id' =>  $request->company_parent_id,
+        ];
+        
+        $tb = app(Lb8KategoriMesin::class)->getTable();
+
+        $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $data, $datamesin);
+
+        foreach ($md as $key => $val) {
+
+                $pf[] = [
+                    'updated_at' => Carbon::now(),
+                    'created_at' => Carbon::now(),
+                    'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                    'company_id' => $request->company_parent_id,
+                    'table_column' => $val['tabel_kolom'],
+                    'column_afr_group_mesin' => $val['history'],
+                    'column_bfr_group_mesin' => $val['dari'],
+                    'history_latest' => $val['history'],
+                    'before' => $val['dari'],
+                ];
+                
+            }
+            
+            $d = GroupMesinLog::insert($pf);
+
         // Check permission
         $this->authorize('edit', $data);
 
@@ -386,6 +417,32 @@ class VoyagerLb8KategoriMesinController extends BaseVoyagerBaseController
         // Validate fields with ajax
         $val = $this->validateBread($request->all(), $dataType->addRows)->validate();
         $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
+        
+        $columns = [
+            'updated_at',
+            'created_at', 
+            'created_by', 
+            'company_id',
+            'table_column',
+            'history_latest',
+            'before',
+        ];
+        
+        $dmach[] = [
+            'updated_at' => Carbon::now(),
+            'created_at' => Carbon::now(),
+            'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+            'company_id' => $data->company_parent_id,
+            'table_column' => 'group_mesin.added.event',
+            'history_latest' =>  $data->id,
+            'before' => $data->id
+        ];
+        
+    $GroupMesinLog = new GroupMesinLog;
+        
+        $batchSize = 500;
+            
+    $result = \Batch::insert($GroupMesinLog, $columns, $dmach, $batchSize);
 
         event(new BreadDataAdded($dataType, $data));
 
