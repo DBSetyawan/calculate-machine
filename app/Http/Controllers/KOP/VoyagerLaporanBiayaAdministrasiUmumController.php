@@ -67,16 +67,42 @@ class VoyagerLaporanBiayaAdministrasiUmumController extends BaseVoyagerBaseContr
                 return sprintf("%.5f", $biaya->sum('total_biaya_lp_adm'));
             });
             
-            $totaltracks = [
+            // $totaltracks = [
 
-                'id_bau' => $simpanDataLaporanLBAU->id,
-                'total_bau' => $t,
-                'status' => 1,
-                'changed_by' => Auth::user()->name
+            //     'id_bau' => $simpanDataLaporanLBAU->id,
+            //     'total_bau' => $t,
+            //     'status' => 1,
+            //     'changed_by' => Auth::user()->name
 
+            // ];
+
+            // $total = BauTotal::create($totaltracks);
+
+            $data[] = [
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                'company_id' => $r->company_parent_id,
+                'table_column' => 'laporan_biaya_administrasi_umum.added.event',
+                'history_latest' => ceil($total_biaya_lp_adm),
+                'before' => ceil($total_biaya_lp_adm),
             ];
 
-            $total = BauTotal::create($totaltracks);
+            $columns = [
+                'created_at', 
+                'updated_at',
+                'created_by', 
+                'company_id',
+                'table_column',
+                'history_latest',
+                'before',
+            ];
+    
+        $BauTotal = new BauTotal;
+            
+            $batchSize = 500;
+                
+                $result = \Batch::insert($BauTotal, $columns, $data, $batchSize);
 
                 return response()->json(
                     [

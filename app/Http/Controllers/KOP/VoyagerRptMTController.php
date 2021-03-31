@@ -121,16 +121,35 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
                 return sprintf("%.5f", $biaya->sum('total_biaya_perbulan'));
             });
                 
-                $totaltracks = [
+            $columns = [
+                'updated_at',
+                'created_at', 
+                'created_by', 
+                'company_parent_id',
+                'categori_id',
+                'code_mesin',
+                'table_coloumn',
+                'history_latest',
+                'before',
+            ];
+            
+            $datas[] = [
+                'updated_at' => Carbon::now(),
+                'created_at' => Carbon::now(),
+                'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                'company_parent_id' => $r->company_parent_id,
+                'categori_id' => $r->category_bagian,
+                'code_mesin' => $r->code_mesin,
+                'table_coloumn' => 'rpt_mtc.added.event',
+                'history_latest' => ceil($TotalBiayaPenyusutanMaintenance),
+                'before' => ceil($TotalBiayaPenyusutanMaintenance),
+            ];
 
-                    'id_tr_mtc' => $simpanDataRpTMTC->id,
-                    'total_tr_mtc_total' => $total_penyusutan_perbulan,
-                    'status' => 1,
-                    'changed_by' => Auth::user()->name
-
-                ];
+        $RPTMtcTotal = new RPTMtcTotal;
+            
+            $batchSize = 500;
                 
-            $total = TransaksiMtcTotal::create($totaltracks);
+        $result = \Batch::insert($RPTMtcTotal, $columns, $datas, $batchSize);
 
             return response()->json(
                 [

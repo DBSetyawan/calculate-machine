@@ -75,19 +75,37 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
                 return sprintf("%.5f", $biaya->sum('penyusutan_perbulan'));
             });
             
-            $totaltracks = [
-
-                'id_penyusutan' => $simpanBiayaListrik->id,
-                'total_penyusutan' => $total_penyusutan_perbulan,
-                'status' => 1,
-                'changed_by' => Auth::user()->name
-
+            $columns = [
+                'updated_at',
+                'created_at', 
+                'created_by', 
+                'company_parent_id',
+                'category_id',
+                'code_mesin',
+                'table_column',
+                'history_latest',
+                'before',
             ];
             
-            PenyusutanTotal::create($totaltracks);
+            $datas[] = [
+                'updated_at' => Carbon::now(),
+                'created_at' => Carbon::now(),
+                'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                'company_parent_id' => $r->company_parent_id,
+                'category_id' => $r->category_bagian,
+                'code_mesin' => $r->code_mesin,
+                'table_column' => 'penyusutan.added.event',
+                'history_latest' => ceil($total_penyusutan_perbulan),
+                'before' => ceil($total_penyusutan_perbulan),
+            ];
+
+        $PenyusutanTotal = new PenyusutanTotal;
+            
+            $batchSize = 500;
+                
+        $result = \Batch::insert($PenyusutanTotal, $columns, $datas, $batchSize);
 
         }
-
                 return response()->json(
                     [
                         'd' => $simpanBiayaListrik->penyusutan_perbulan,
@@ -98,14 +116,14 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
             } 
                 else {
                 
-                    return response()->json(
-                        [
-                            'd' => $rumusTotalPenyusutan,
-                            'isDenied' => $r->setTo["isDenied"],
+                return response()->json(
+                    [
+                        'd' => $rumusTotalPenyusutan,
+                        'isDenied' => $r->setTo["isDenied"],
 
-                        ]
-                );
-            }
+                    ]
+            );
+        }
     }
  
     public function index(Request $request)

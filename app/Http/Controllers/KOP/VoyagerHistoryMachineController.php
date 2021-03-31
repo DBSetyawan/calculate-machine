@@ -2,14 +2,9 @@
 
 namespace App\Http\Controllers\KOP;
 
+use App\BiayaAdministrasiUmum;
 use Exception;
-use App\Company;
-use Carbon\Carbon;
-use App\AllRecalculate;
-use App\BPenjualanTotal;
-use Mavinoo\Batch\Batch;
 use Illuminate\Http\Request;
-use App\LaporanBagianPenjualan;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -19,112 +14,13 @@ use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
-use App\Http\Controllers\KOP\Helpers\RumusLapBagPenjualan;
-use App\Http\Controllers\KOP\Helpers\ModulTrackingDataHelpers;
-use App\Http\Controllers\KOP\Service\LBagianPenjualanInterface;
+use App\Http\Controllers\KOP\Service\BiayaAdministrasiUmumInterface;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
+use App\Http\Controllers\KOP\Helpers\RumusBiayaAdministrasiUmum as HelpersRumusBiayaAdministrasiUmum;
 
-class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController Implements LBagianPenjualanInterface
+class VoyagerHistoryMachineController extends BaseVoyagerBaseController
 {
 
-    public function RumusLapBagianPenjualanPerbulan($t1, $t2, $t3, $nama_biayacheck)
-    {
-        return RumusLapBagPenjualan::TotalLPenjualanBagianPenjualan($t1, $t2, $t3, $nama_biayacheck);
-    }
-
-    public function HitungAkumulasiLBagianPenjualan(Request $r){
-        /**
-         * Total biaya laporan bag. penjualan
-         */
-        $total_biaya_upah_lpperbulan = $this->RumusLapBagianPenjualanPerbulan($r->tahun1, $r->tahun2, $r->tahun3, $r->nama_biaya);
-
-        $result_lbpnjualan = [
-            'company_parent_id' => $r->company_parent_id,
-            'code_laporan_penjualan' => RumusLapBagPenjualan::generateIDBLPenjualan(),
-            'nama_biaya' => $r->nama_biaya,
-            'tahun1' => $r->tahun1,
-            'tahun2' => $r->tahun2,
-            'tahun3' => $r->tahun3,
-            'biaya_perbulan_bag_penjualan' => $total_biaya_upah_lpperbulan,
-        ];
-
-    if($r->setTo["isConfirmed"] == "true"){
-
-        $simpanDataLaporanLapBagPenjualan = LaporanBagianPenjualan::create($result_lbpnjualan);
-
-        if(!empty($simpanDataLaporanLapBagPenjualan) && $simpanDataLaporanLapBagPenjualan != [] && $simpanDataLaporanLapBagPenjualan != null){
-
-            $xbgpenj = LaporanBagianPenjualan::whereIn('company_parent_id', [3])->get();
-
-            $t = collect([$xbgpenj])->sum(function ($biaya){
-                return sprintf("%.5f", $biaya->sum('biaya_perbulan_bag_penjualan'));
-            });
-            
-            // $totaltracks = [
-
-            //     'id_bgpenj' => $simpanDataLaporanLapBagPenjualan->id,
-            //     'total_bgpenjualan' => $t,
-            //     'status' => 1,
-            //     'changed_by' => Auth::user()->name
-
-            // ];
-
-            // $total = BPenjualanTotal::create($totaltracks);
-
-            $data[] = [
-                'updated_at' => Carbon::now(),
-                'created_at' => Carbon::now(),
-                'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
-                'company_id' => $r->company_parent_id,
-                'table_column' => 'laporan_bagian_penjualan.added.event',
-                'history_latest' => ceil($total_biaya_upah_lpperbulan),
-                'before' => ceil($total_biaya_upah_lpperbulan),
-            ];
-
-            $columns = [
-                'updated_at',
-                'created_at', 
-                'created_by', 
-                'company_id',
-                'table_column',
-                'history_latest',
-                'before',
-            ];
-    
-        $BPenjualanTotal = new BPenjualanTotal;
-            
-            $batchSize = 500;
-                
-                $result = \Batch::insert($BPenjualanTotal, $columns, $data, $batchSize);
-
-                return response()->json(
-                    [
-                        'total_biaya_perbulan_lbpenjualan' => $simpanDataLaporanLapBagPenjualan->biaya_perbulan_bag_penjualan,
-                        'isConfirmed' => $r->setTo["isConfirmed"],
-                    ]
-                );
-            }
-
-        } else {
-
-            return response()->json(
-                [
-                    'total_biaya_perbulan_lbpenjualan' => $total_biaya_upah_lpperbulan,
-                    'isDenied' => $r->setTo["isDenied"],
-                ]
-            );
-
-        }
-
-    }
-
-    public function formLBagPenjualanAction(Request $request)
-    {
-        $company = Company::all();
-
-        return view('vendor.voyager.laporan-bagian-penjualan.forms_lppenj', compact('company'));
-    }
- 
     public function index(Request $request)
     {
         // GET THE SLUG, ex. 'posts', 'pages', etc.
@@ -410,58 +306,9 @@ class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController 
 
         // Validate fields with ajax
         $val = $this->validateBread($request->all(), $dataType->editRows, $dataType->name, $id)->validate();
-        // $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
+        $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
-        // event(new BreadDataUpdated($dataType, $data));
-        $total_biaya_upah_lpperbulan = $this->RumusLapBagianPenjualanPerbulan($request->tahun1, $request->tahun2, $request->tahun3, $request->nama_biaya);
-
-        $result_lbpnjualan = [
-            'company_parent_id' => $request->company_parent_id,
-            'tahun1' => $request->tahun1,
-            'tahun2' => $request->tahun2,
-            'tahun3' => $request->tahun3,
-            'biaya_perbulan_bag_penjualan' => $total_biaya_upah_lpperbulan,
-        ];
-
-        LaporanBagianPenjualan::UpdateOrCreate(['id'=> $id], $result_lbpnjualan);
-
-        $AllRecalculateInstance = new AllRecalculate;
-        $rcl = AllRecalculate::all();
-
-        foreach($rcl as $indexs => $dtlg){
-    
-          // event(new BreadDataUpdated($dataType, $data));
-          $total_biaya_upah_lpperbulan = $this->RumusLapBagianPenjualanPerbulan($request->tahun1, $request->tahun2, $request->tahun3, $request->nama_biaya);
-
-            $dpney[] = [
-                'code_mesin' => $dtlg->code_mesin,
-                'id_bgoenjualan' => $total_biaya_upah_lpperbulan
-            ];
-
-            $code_mesin = 'code_mesin';
-
-            \Batch::update($AllRecalculateInstance, $dpney, $code_mesin);
-
-        }
-
-        $tb = app(LaporanBagianPenjualan::class)->getTable();
-
-        $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $data, $result_lbpnjualan);
-
-        foreach ($md as $key => $val) {
-
-                $pf[] = [
-                    'updated_at' => Carbon::now(),
-                    'company_id' => $request->company_parent_id,
-                    'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
-                    'table_column' => $val['tabel_kolom'],
-                    'history_latest' => ceil($val['history']),
-                    'before' => ceil($val['dari']),
-                ];
-                
-            }
-
-        $d = BPenjualanTotal::insert($pf);
+        event(new BreadDataUpdated($dataType, $data));
 
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");
@@ -470,7 +317,7 @@ class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController 
         }
 
         return $redirect->with([
-            'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}"."Silahkan mengakumulasi ulang total biaya pada nama akun biaya $data->nama_biaya.",
+            'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}",
             'alert-type' => 'success',
         ]);
     }

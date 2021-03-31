@@ -119,6 +119,18 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
                     'total_biaya' => $total_biaya_upah_perbulan,
                 ];
 
+                $datas[] = [
+                    'updated_at' => Carbon::now(),
+                    'created_at' => Carbon::now(),
+                    'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                    'company_id' => $r->company_parent_id,
+                    'category_id' => $r->category_bagian,
+                    'code_mesin' => $val,
+                    'table_column' => 'labor.added.event',
+                    'history_latest' => ceil( $total_biaya_upah_perbulan),
+                    'before' => ceil($total_biaya_upah_perbulan),
+                ];
+
                 $index = 'code_mesin';
         
                 \Batch::update($LaborInstance, $dt, $index);
@@ -128,6 +140,24 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
         }
 
     if($r->setTo["isConfirmed"] == "true"){
+
+            $columns = [
+                'updated_at',
+                'created_at', 
+                'created_by', 
+                'company_id',
+                'category_id',
+                'code_mesin',
+                'table_column',
+                'history_latest',
+                'before',
+            ];
+
+        $LaborTotal = new LaborTotal;
+        
+        $batchSize = 500;
+            
+    $result = \Batch::insert($LaborTotal, $columns, $datas, $batchSize);
 
         if(!empty($simpanDataBiayaListrik) && $simpanDataBiayaListrik != [] && $simpanDataBiayaListrik != null){
 

@@ -216,27 +216,60 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
                     $tb = app(Listrik::class)->getTable();
 
-                $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $old, $Totalakumulasibiayalistrik);
+                // $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $old, $Totalakumulasibiayalistrik);
             
-                    foreach ($md as $key => $val) {
+                //     foreach ($md as $key => $val) {
             
-                            $pf[] = [
-                                'updated_at' => Carbon::now(),
-                                'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
-                                'company_id' => $r->company_parent_id,
-                                'category_id' => $r->category_bagian,
-                                'group_mesin' => $r->group_mesin,
-                                'code_mesin' => $r->code_mesin,
-                                'table_column' => $val['tabel_kolom'],
-                                'history_latest' => ceil($val['history']),
-                                'before' => ceil($val['dari']),
-                            ];
+                //             $pf[] = [
+                //                 'updated_at' => Carbon::now(),
+                //                 'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                //                 'company_id' => $r->company_parent_id,
+                //                 'category_id' => $r->category_bagian,
+                //                 'group_mesin' => $r->group_mesin,
+                //                 'code_mesin' => $r->code_mesin,
+                //                 'table_column' => $val['tabel_kolom'],
+                //                 'history_latest' => ceil($val['history']),
+                //                 'before' => ceil($val['dari']),
+                //             ];
                             
-                        }
+                //         }
                         
-                    HistoryLogRecalculate::insert($pf);
+                //     HistoryLogRecalculate::insert($pf);
                     
                 $this->resetFunc($old, $Totalakumulasibiayalistrik, $r->company_parent_id,  $r->category_bagian, $r->group_mesin, $r->code_mesin);
+
+                $columns = [
+                    'updated_at',
+                    'created_at', 
+                    'created_by', 
+                    'company_id',
+                    'category_id',
+                    'group_mesin',
+                    'code_mesin',
+                    'table_column',
+                    'history_latest',
+                    'before',
+                ];
+                
+                $datas[] = [
+                    'updated_at' => Carbon::now(),
+                    'created_at' => Carbon::now(),
+                    'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                    'company_id' => $r->company_parent_id,
+                    'category_id' => $r->category_bagian,
+                    'group_mesin' => $r->group_mesin,
+                    'code_mesin' => $r->code_mesin,
+                    'table_column' => $tb,
+                    'history_latest' => ceil($costADM),
+                    'before' => ceil($costADM),
+                ];
+                
+
+            $ListrikInstance = new HistoryLogRecalculate;
+                
+                $batchSize = 500;
+                    
+            $result = \Batch::insert($ListrikInstance, $columns, $datas, $batchSize);
 
             return response()->json(
                 [

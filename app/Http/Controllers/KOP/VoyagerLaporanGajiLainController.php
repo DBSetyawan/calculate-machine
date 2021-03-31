@@ -77,17 +77,35 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
             $t = collect([$x])->sum(function ($biaya){
                 return sprintf("%.5f", $biaya->sum('total_biaya_laporan_periode'));
             });
-            
-            $totaltracks = [
 
-                'id_lp_gaji_lain' => $simpanDataLaporanGajiLain->id,
-                'total_gj_lain' => $t,
-                'status' => 1,
-                'changed_by' => Auth::user()->name
-
+            $data[] = [
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                'company_id' => $r->company_parent_id,
+                'category_id' => $r->category_bagian,
+                'table_column' => 'laporan_gaji_lain.added.event',
+                'before' => ceil($total_biaya_upah_perbulan),
+                'history_latest' => ceil($total_biaya_upah_perbulan),
             ];
 
-            $total = GjiLainTotal::create($totaltracks);
+            $columns = [
+                'updated_at',
+                'created_at', 
+                'created_by', 
+                'company_id',
+                'category_id',
+                'table_column',
+                'before',
+                'history_latest',
+            ];
+    
+        $GjiLainTotal = new GjiLainTotal;
+            
+            $batchSize = 500;
+                
+                $result = \Batch::insert($GjiLainTotal, $columns, $data, $batchSize);
+                
                 return response()->json(
                     [
                         'total_biaya_gj_periode' => $simpanDataLaporanGajiLain->total_biaya_laporan_periode,

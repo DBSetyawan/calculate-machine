@@ -73,17 +73,31 @@ class VoyagerAccountMtcController extends BaseVoyagerBaseController Implements A
                     return sprintf("%.5f", $biaya->sum('biaya_perbulan'));
                 });
                 
-                $totaltracks = [
-
-                    'id_acc_mtc' => $simpanBiayaTotalAccountMTC->id,
-                    'acc_mtc_total' => $t,
-                    'status' => 1,
-                    'changed_by' => Auth::user()->name
-
+                $columns = [
+                    'updated_at',
+                    'created_at', 
+                    'created_by', 
+                    'company_parent_id',
+                    'table_column',
+                    'history_latest',
+                    'before',
                 ];
-
-                $total = AccountMtcTotal::create($totaltracks);
-
+                
+                $datas[] = [
+                    'updated_at' => Carbon::now(),
+                    'created_at' => Carbon::now(),
+                    'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                    'company_parent_id' => $r->company_parent_id,
+                    'table_column' => 'account_mtc.added.event',
+                    'history_latest' => ceil($HitungTotalBiayaLuarMesinProduksi),
+                    'before' => ceil($HitungTotalBiayaLuarMesinProduksi),
+                ];
+    
+            $AccountMtcTotal = new AccountMtcTotal;
+                
+                $batchSize = 500;
+                    
+            $result = \Batch::insert($AccountMtcTotal, $columns, $datas, $batchSize);
 
                 return response()->json(
                     [

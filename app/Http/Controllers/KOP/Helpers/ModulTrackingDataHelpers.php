@@ -81,7 +81,40 @@ class ModulTrackingDataHelpers Extends BaseVoyagerBaseController Implements Trac
     public static function ModuleTrackingTransactionData($table, $old, $new){
 
 
-		// dd($table == "all_recalculate");die;
+		// dd($table);die;
+
+		if($table == "mesin"){
+
+			$attrField = array(
+				'ampere' => 'ampere',
+				'faktor_kali_lwbp' => 'f kali lwbp',
+				'faktor_kali_wbp' =>  'f kali wbp',
+				'voltase' =>  'voltase',
+				'deskripsi' =>  'desk',
+				'code_mesin' => 'id',
+				'asumsi_id' => 'asusmsi',
+				'on_off' => 'oniff',
+				'group_mesin' => 'group mesin',
+				'company_id' => 'company',
+				'category_bagian' => 'bagian kategori',
+				'listrik_perjam_id' => 'listrik_perjam id',
+			);
+
+		$perubahan = [];
+
+			foreach ($attrField as $keys => $vals) {
+				if($old[$keys]!=$new[$keys]) {
+					array_push($perubahan, array(
+						'tabel_kolom' 	=> $table.'.'.$keys,
+						'history' 	=> $new[$keys],
+						'dari' 		=> $old[$keys]
+					));
+				}
+			}
+
+			return $perubahan;
+
+		}
 		
 		if($table == "listrik"){
 

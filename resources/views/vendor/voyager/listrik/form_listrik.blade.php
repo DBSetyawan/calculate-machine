@@ -302,7 +302,6 @@
    
 
                 GetFullDataMesin(this.value).then(function(results){
-                    
                         $("#code_mesin_id").val(results.detail.id);
                         $("#company_display").val(results.detail.company_to.company_name);
                         $("#company_parent_id").val(results.detail.company_to.id);
@@ -546,6 +545,7 @@
                             encode          : true
                         })
                         .done(function(data) {
+                            
                             $("#totalcostperbulanadm").val("Rp "+formatCurrency(Math.round(data.ncost_bulan_plus_adm)));
                             $("#persenlistriks").val("Rp "+formatCurrency(Math.round(data.persen_listrik)));
                             $("#lwbp_").val(Math.round(data.lwbp_perminggu)); 

@@ -5,11 +5,14 @@ namespace App\Http\Controllers\KOP;
 use App\Mesin;
 use Exception;
 use App\Company;
+use Carbon\Carbon;
 use App\LwbpMaster;
-use RumusPenyusutan;
+use App\MesinTotal;
 use App\Penyusutan;
+use RumusPenyusutan;
 use App\ListrikOutput;
 use App\KategoriBagian;
+use App\PenyusutanTotal;
 use App\Lb8KategoriMesin;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
@@ -22,6 +25,7 @@ use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use TCG\Voyager\Database\Schema\SchemaManager;
+use App\Http\Controllers\KOP\Helpers\ModulTrackingDataHelpers;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
 class VoyagerMachineController extends BaseVoyagerBaseController
@@ -221,6 +225,41 @@ class VoyagerMachineController extends BaseVoyagerBaseController
             
             if(!empty($simpanMesin) && $simpanMesin != [] && $simpanMesin != null){
 
+                $columns = [
+                    'updated_at',
+                    'created_at', 
+                    'created_by', 
+                    'company_id',
+                    'group_mesin',
+                    'code_mesin',
+                    'table_column',
+                    'history_latest',
+                    'before',
+                    'history_group_mesin',
+                    'before_group_mesin',
+                ];
+                
+                $dmach[] = [
+                    'updated_at' => Carbon::now(),
+                    'created_at' => Carbon::now(),
+                    'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                    'company_id' => $r->company_id,
+                    'group_mesin' => $r->group_mesin_id,
+                    'code_mesin' => $simpanMesin->id,
+                    'table_column' => 'mesin.added.event',
+                    'history_latest' => 'first event',
+                    'before' => '',
+                    'history_group_mesin' => 'second event',
+                    'before_group_mesin' => ''
+                ];
+                
+            $MesinTotal = new MesinTotal;
+                
+                $batchSize = 500;
+                    
+            $result = \Batch::insert($MesinTotal, $columns, $dmach, $batchSize);
+
+
                 $TotalakumulasibiayaPenyusutan = [
                     'company_parent_id' => $dtmesin->company_id,
                     'category_bagian' => $dtmesin->category_bagian_id,
@@ -231,6 +270,37 @@ class VoyagerMachineController extends BaseVoyagerBaseController
                     'umur' => $r->umur,
                     'nama_sim' => $r->nama_sim
                 ];
+
+                $columns = [
+                    'updated_at',
+                    'created_at', 
+                    'created_by', 
+                    'company_parent_id',
+                    'category_id',
+                    'code_mesin',
+                    'table_column',
+                    'history_latest',
+                    'before',
+                ];
+                
+                $datas[] = [
+                    'updated_at' => Carbon::now(),
+                    'created_at' => Carbon::now(),
+                    'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                    'company_parent_id' => $dtmesin->company_id,
+                    'category_id' => $dtmesin->category_bagian_id,
+                    'code_mesin' => $dtmesin->id,
+                    'table_column' => 'penyusutan.added.event',
+                    'history_latest' => ceil($rumusTotalPenyusutan),
+                    'before' => ceil($rumusTotalPenyusutan),
+                ];
+    
+            $PenyusutanTotal = new PenyusutanTotal;
+                
+                $batchSize = 500;
+                    
+            $result = \Batch::insert($PenyusutanTotal, $columns, $datas, $batchSize);
+    
 
                 $simpanBiayaListrik = Penyusutan::create($TotalakumulasibiayaPenyusutan);
 
@@ -413,6 +483,45 @@ class VoyagerMachineController extends BaseVoyagerBaseController
         } else {
             $data = $model->findOrFail($id);
         }
+        
+        $tb = app(Mesin::class)->getTable();
+           
+        $datamesin = [
+            'ampere' => $request->ampere,
+            'faktor_kali_lwbp' =>  $request->faktor_kali_lwbp,
+            'faktor_kali_wbp' =>  $request->faktor_kali_wbp,
+            'voltase' =>  $request->voltase,
+            'deskripsi' =>  $request->deskripsi,
+            'code_mesin' => $request->code_mesin,
+            'asumsi_id' => $request->asumsi_id,
+            'on_off' => $request->on_off,
+            'group_mesin' => $request->group_mesin_id,
+            'company_id' => $request->company_id,
+            'category_bagian' => $request->category_bagian_id,
+            'listrik_perjam_id' => $request->listrik_perjam_id
+        ];
+
+        $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $data, $datamesin);
+
+        foreach ($md as $key => $val) {
+
+                $pf[] = [
+                    'updated_at' => Carbon::now(),
+                    'created_at' => Carbon::now(),
+                    'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                    'company_id' => $request->company_id,
+                    'group_mesin' => $request->group_mesin_id,
+                    'code_mesin' => $request->id,
+                    'table_column' => $val['tabel_kolom'],
+                    'history_latest' => $val['history'],
+                    'before' => $val['dari'],
+                    'history_group_mesin' => $val['history'],
+                    'before_group_mesin' => $val['dari'],
+                ];
+                
+            }
+            
+            $d = MesinTotal::insert($pf);
 
         // Check permission
         $this->authorize('edit', $data);

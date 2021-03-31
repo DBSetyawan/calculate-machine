@@ -10,6 +10,7 @@ use App\ListrikTotal;
 use App\ListrikOutput;
 use App\KategoriBagian;
 use Illuminate\Http\Request;
+use App\HistoryLogRecalculate;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -56,13 +57,39 @@ class VoyagerListrikOutputPerjamController extends BaseVoyagerBaseController Imp
             'persen' => $HitungTotalListrikOuputPerjam
         ];
 
-        $simpanBiayaTotalListrikOuputPerjam = ListrikOutput::create($data_response);
+        $data[] = [
+            "updated_at" =>  date('Y-m-d H:i:s'),
+            "created_at" => date('Y-m-d H:i:s'),
+            'company_id' => $r->company_parent_id,
+            'create_by_with' => Auth::user()->name, 
+            'table_column' => 'listrik_output.added.event',
+            'before' => $HitungTotalListrikOuputPerjam,
+            'history_latest' => $HitungTotalListrikOuputPerjam
+        ];
+        
+    $simpanBiayaTotalListrikOuputPerjam = ListrikOutput::create($data_response);
 
-        return response()->json(
-            [
-                'total_perbulan' => $simpanBiayaTotalListrikOuputPerjam->persen
-            ]
-        );
+        $columns = [
+            'updated_at',
+            'created_at', 
+            'company_id',
+            'create_by_with', 
+            'table_column',
+            'before',
+            'history_latest',
+        ];
+
+    $ListrikInstance = new ListrikTotal;
+        
+        $batchSize = 500;
+            
+            $result = \Batch::insert($ListrikInstance, $columns, $data, $batchSize);
+
+            return response()->json(
+                [
+                    'total_perbulan' => $simpanBiayaTotalListrikOuputPerjam->persen
+                ]
+            );
 
     }
  
