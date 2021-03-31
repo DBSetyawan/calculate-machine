@@ -415,15 +415,16 @@ trait ModuleCaculates {
                                             'history_latest' => ceil($val['history']),
                                             'before' => ceil($val['dari']),
                                         ];
-                                        
+
                                     }
-                                    continue 2;
-                                
+                                    
                                 }
-
+                                
+                                break 1;
+                                
                             }
-
-                        $d = HistoryRecalculateTemporary::insert($pf);
+                            
+                            $d = HistoryRecalculateTemporary::insert($pf);
 
 
                     return response()->json(['res' => 200]);

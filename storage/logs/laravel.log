@@ -13485,3 +13485,79 @@ Did you mean one of these?
 #58 /var/www/html/kalkulasimesin2/public/index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle()
 #59 {main}
 "} 
+[2021-03-31 15:23:49] local.ERROR: Cannot 'continue' 2 levels {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot 'continue' 2 levels at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:424)
+[stacktrace]
+#0 {main}
+"} 
+[2021-03-31 15:25:05] local.ERROR: Cannot 'continue' 3 levels {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot 'continue' 3 levels at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:420)
+[stacktrace]
+#0 {main}
+"} 
+[2021-03-31 15:25:15] local.ERROR: Cannot 'continue' 3 levels {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot 'continue' 3 levels at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:420)
+[stacktrace]
+#0 {main}
+"} 
+[2021-03-31 15:31:59] local.ERROR: Cannot 'continue' 2 levels {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot 'continue' 2 levels at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:425)
+[stacktrace]
+#0 {main}
+"} 
+[2021-03-31 15:31:59] local.ERROR: Cannot 'continue' 2 levels {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot 'continue' 2 levels at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:425)
+[stacktrace]
+#0 {main}
+"} 
+[2021-03-31 15:31:59] local.ERROR: Cannot 'continue' 2 levels {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot 'continue' 2 levels at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:425)
+[stacktrace]
+#0 {main}
+"} 
+[2021-03-31 15:32:00] local.ERROR: Cannot 'continue' 2 levels {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot 'continue' 2 levels at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:425)
+[stacktrace]
+#0 {main}
+"} 
+[2021-03-31 15:32:00] local.ERROR: Cannot 'continue' 2 levels {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot 'continue' 2 levels at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:425)
+[stacktrace]
+#0 {main}
+"} 
+[2021-03-31 15:32:00] local.ERROR: Cannot 'continue' 2 levels {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot 'continue' 2 levels at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:425)
+[stacktrace]
+#0 {main}
+"} 
+[2021-03-31 15:32:02] local.ERROR: Cannot 'continue' 2 levels {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot 'continue' 2 levels at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:425)
+[stacktrace]
+#0 {main}
+"} 
+[2021-03-31 15:40:59] local.ERROR: 'break' operator accepts only positive integers {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): 'break' operator accepts only positive integers at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:419)
+[stacktrace]
+#0 {main}
+"} 
+[2021-03-31 15:40:59] local.ERROR: 'break' operator accepts only positive integers {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): 'break' operator accepts only positive integers at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:419)
+[stacktrace]
+#0 {main}
+"} 
+[2021-03-31 15:40:59] local.ERROR: 'break' operator accepts only positive integers {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): 'break' operator accepts only positive integers at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:419)
+[stacktrace]
+#0 {main}
+"} 
+[2021-03-31 15:41:00] local.ERROR: 'break' operator accepts only positive integers {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): 'break' operator accepts only positive integers at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:419)
+[stacktrace]
+#0 {main}
+"} 
+[2021-03-31 15:41:00] local.ERROR: 'break' operator accepts only positive integers {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): 'break' operator accepts only positive integers at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:419)
+[stacktrace]
+#0 {main}
+"} 
+[2021-03-31 15:49:59] local.ERROR: Cannot 'continue' 2 levels {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot 'continue' 2 levels at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:423)
+[stacktrace]
+#0 {main}
+"} 
+[2021-03-31 15:51:15] local.ERROR: Cannot 'continue' 2 levels {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot 'continue' 2 levels at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:424)
+[stacktrace]
+#0 {main}
+"} 
+[2021-03-31 15:51:15] local.ERROR: Cannot 'continue' 2 levels {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot 'continue' 2 levels at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:424)
+[stacktrace]
+#0 {main}
+"} 
+[2021-03-31 15:51:15] local.ERROR: Cannot 'continue' 2 levels {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot 'continue' 2 levels at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:424)
+[stacktrace]
+#0 {main}
+"} 
