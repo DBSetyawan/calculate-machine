@@ -5,6 +5,7 @@ namespace App\Http\Controllers\KOP;
 use App\Mesin;
 use Exception;
 use App\Company;
+use App\Listrik;
 use Carbon\Carbon;
 use App\LwbpMaster;
 use App\MesinTotal;
@@ -673,21 +674,61 @@ class VoyagerMachineController extends BaseVoyagerBaseController
             }
         }
 
-        $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
+        $checklistrik = Listrik::all();
 
-        $res = $data->destroy($ids);
-        $data = $res
-            ? [
-                'message'    => __('voyager::generic.successfully_deleted')." {$displayName}",
-                'alert-type' => 'success',
-            ]
-            : [
-                'message'    => __('voyager::generic.error_deleting')." {$displayName}",
-                'alert-type' => 'error',
-            ];
+        foreach($checklistrik as $value){
 
-        if ($res) {
-            event(new BreadDataDeleted($dataType, $data));
+            $mesin[] = $value->code_mesin;
+            
+            $r = in_array((Int)$mesin, $ids);
+        }
+
+        $merged = collect($ids)->map(function ($value) use ($mesin) {
+
+            foreach($mesin as $array){
+                if($value==$array){
+                    $val = false;
+                } else {
+                    $val = true;
+                }
+            }
+        
+            return $val;
+        });
+
+        foreach($merged as $key_search){
+
+            if($key_search == false){
+                
+                $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
+
+                $data = [
+                    'message'    => __('Maaf tidak bisa dihapus, karena mesin sudah melakukan transaksi'),
+                    'alert-type' => 'error',
+                ];
+    
+            } else if($key_search == true) {
+
+                $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
+
+                $res = $data->destroy($ids);
+
+                $data = $res
+                    ? [
+                        'message'    => __('voyager::generic.successfully_deleted')." {$displayName}",
+                        'alert-type' => 'success',
+                    ]
+                    : [
+                        'message'    => __('voyager::generic.error_deleting')." {$displayName}",
+                        'alert-type' => 'error',
+                    ];
+
+                if ($res) {
+                    event(new BreadDataDeleted($dataType, $data));
+                }
+
+            }
+
         }
 
         return redirect()->route("voyager.{$dataType->slug}.index")->with($data);
