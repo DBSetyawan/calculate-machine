@@ -416,11 +416,16 @@ trait ModuleCaculates {
                                             'before' => ceil($val['dari']),
                                         ];
 
+                                        continue 2;
+
                                     }
                                     
                                 }
                                 
-                                break 1;
+                                /**
+                                 * Recalculate not working fine.
+                                 */
+                                // break 1;
                                 
                             }
                             
