@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use App\LaborTotal;
 use App\AllRecalculate;
 use App\KategoriBagian;
+use App\Lb8KategoriMesin;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
@@ -55,109 +56,112 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
 
     public function HitungAkumulasiLabor(Request $r){
 
-        try{
-        /**
-         * Hitung Biaya Level
-         * @method RumusBiayaGajiUpahSupervisor, RumusBiayaGajiUpahOperator, RumusBiayaGajiUpahHelper
-         *
-         * Total biaya level Supervisor
-         */
-        $biayasupervisor = $this->RumusBiayaGajiUpahSupervisor($r->shift, count($r->data), $r->code_mesin);
-        
-        /**
-         * Total biaya level Operator
-         */
-        $biayaoperator = $this->RumusBiayaGajiUpahOperator($r->shift, $r->operator);
-         
-        /**
-         * Total biaya level helper
-         */
-        $biayahelper = $this->RumusBiayaGajiUpahHelper($r->shift, $r->helper);
+        try
+            {
 
-        /**
-         * Total biaya labor
-         */
-        $total_biaya_upah_perbulan = $this->RumusTotalBiayaLabor($biayasupervisor, $biayaoperator, $biayahelper);
-        
-        foreach((array)$r->data as $idx => $val){
+            /**
+             * Hitung Biaya Level
+             * @method RumusBiayaGajiUpahSupervisor, RumusBiayaGajiUpahOperator, RumusBiayaGajiUpahHelper
+             *
+             * Total biaya level Supervisor
+             */
+            $biayasupervisor = $this->RumusBiayaGajiUpahSupervisor($r->shift, count($r->data), $r->code_mesin);
             
-            $LaborInstance = New Labor;
-
-                $result_gaji_labor = [
-                    'company_parent_id' => $r->company_parent_id,
-                    'category_bagian' => $r->category_bagian,
-                    'code_mesin' => $val,
-                    // 'code_mesin' => $r->code_mesin,
-                    'shift' => $r->shift,
-                    'supervisor' => $r->supervisor,
-                    'operator' => $r->operator,
-                    'helper' => $r->helper,
-                    'supporting' => $r->supporting,
-                    'supervisor_level3' => $biayasupervisor,
-                    'operator_level2' => $biayaoperator,
-                    'helper_level0' => $biayahelper,
-                    'support_level0' => 0,
-                    'jumlah_mesin_ditanggani' => count([$val]),
-                    'total_biaya' => $total_biaya_upah_perbulan,
-                ];
-                   
-                $dt[] = [
-                    'company_parent_id' => $r->company_parent_id,
-                    'category_bagian' => $r->category_bagian,
-                    'code_mesin' => $val,
-                    // 'code_mesin' => $r->code_mesin,
-                    'shift' => $r->shift,
-                    'supervisor' => $r->supervisor,
-                    'operator' => $r->operator,
-                    'helper' => $r->helper,
-                    'supporting' => $r->supporting,
-                    'supervisor_level3' => $biayasupervisor,
-                    'operator_level2' => $biayaoperator,
-                    'helper_level0' => $biayahelper,
-                    'support_level0' => 0,
-                    'jumlah_mesin_ditanggani' => count([$val]),
-                    'total_biaya' => $total_biaya_upah_perbulan,
-                ];
-
-                $datas[] = [
-                    'updated_at' => Carbon::now(),
-                    'created_at' => Carbon::now(),
-                    'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
-                    'company_id' => $r->company_parent_id,
-                    'category_id' => $r->category_bagian,
-                    'code_mesin' => $val,
-                    'table_column' => 'labor.added.event',
-                    'history_latest' => ceil( $total_biaya_upah_perbulan),
-                    'before' => ceil($total_biaya_upah_perbulan),
-                ];
-
-                $index = 'code_mesin';
-        
-                \Batch::update($LaborInstance, $dt, $index);
-
-                $simpanDataBiayaListrik = Labor::UpdateOrCreate(['code_mesin' => $val], $result_gaji_labor);
-
-        }
-
-    if($r->setTo["isConfirmed"] == "true"){
-
-            $columns = [
-                'updated_at',
-                'created_at', 
-                'created_by', 
-                'company_id',
-                'category_id',
-                'code_mesin',
-                'table_column',
-                'history_latest',
-                'before',
-            ];
-
-        $LaborTotal = new LaborTotal;
-        
-        $batchSize = 500;
+            /**
+             * Total biaya level Operator
+             */
+            $biayaoperator = $this->RumusBiayaGajiUpahOperator($r->shift, $r->operator);
             
-    $result = \Batch::insert($LaborTotal, $columns, $datas, $batchSize);
+            /**
+             * Total biaya level helper
+             */
+            $biayahelper = $this->RumusBiayaGajiUpahHelper($r->shift, $r->helper);
+
+            /**
+             * Total biaya labor
+             */
+            $total_biaya_upah_perbulan = $this->RumusTotalBiayaLabor($biayasupervisor, $biayaoperator, $biayahelper);
+
+                if($r->setTo["isConfirmed"] == "true"){
+                
+                    foreach((array)$r->data as $idx => $val){
+                        
+                        $LaborInstance = New Labor;
+
+                            $result_gaji_labor = [
+                                'company_parent_id' => $r->company_parent_id,
+                                'category_bagian' => $r->category_bagian,
+                                'code_mesin' => $val,
+                                // 'code_mesin' => $r->code_mesin,
+                                'shift' => $r->shift,
+                                'supervisor' => $r->supervisor,
+                                'operator' => $r->operator,
+                                'helper' => $r->helper,
+                                'supporting' => $r->supporting,
+                                'supervisor_level3' => $biayasupervisor,
+                                'operator_level2' => $biayaoperator,
+                                'helper_level0' => $biayahelper,
+                                'support_level0' => 0,
+                                'jumlah_mesin_ditanggani' => count([$val]),
+                                'total_biaya' => $total_biaya_upah_perbulan,
+                            ];
+                            
+                            $dt[] = [
+                                'company_parent_id' => $r->company_parent_id,
+                                'category_bagian' => $r->category_bagian,
+                                'code_mesin' => $val,
+                                // 'code_mesin' => $r->code_mesin,
+                                'shift' => $r->shift,
+                                'supervisor' => $r->supervisor,
+                                'operator' => $r->operator,
+                                'helper' => $r->helper,
+                                'supporting' => $r->supporting,
+                                'supervisor_level3' => $biayasupervisor,
+                                'operator_level2' => $biayaoperator,
+                                'helper_level0' => $biayahelper,
+                                'support_level0' => 0,
+                                'jumlah_mesin_ditanggani' => count([$val]),
+                                'total_biaya' => $total_biaya_upah_perbulan,
+                            ];
+
+                            $datas[] = [
+                                'updated_at' => Carbon::now(),
+                                'created_at' => Carbon::now(),
+                                'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                                'company_id' => $r->company_parent_id,
+                                'category_id' => $r->category_bagian,
+                                'code_mesin' => $val,
+                                'table_column' => 'labor.added.event',
+                                'history_latest' => ceil( $total_biaya_upah_perbulan),
+                                'before' => ceil($total_biaya_upah_perbulan),
+                            ];
+
+                            $index = 'code_mesin';
+                    
+                            \Batch::update($LaborInstance, $dt, $index);
+
+                            $simpanDataBiayaListrik = Labor::UpdateOrCreate(['code_mesin' => $val], $result_gaji_labor);
+
+                    }
+
+
+                        $columns = [
+                            'updated_at',
+                            'created_at', 
+                            'created_by', 
+                            'company_id',
+                            'category_id',
+                            'code_mesin',
+                            'table_column',
+                            'history_latest',
+                            'before',
+                        ];
+
+                    $LaborTotal = new LaborTotal;
+                    
+                    $batchSize = 500;
+                        
+      $result = \Batch::insert($LaborTotal, $columns, $datas, $batchSize);
 
         if(!empty($simpanDataBiayaListrik) && $simpanDataBiayaListrik != [] && $simpanDataBiayaListrik != null){
 
@@ -167,17 +171,6 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
                 return sprintf("%.5f", $biaya->sum('total_biaya'));
             });
             
-            // $totaltracks = [
-
-            //     'id_labor' => $simpanDataBiayaListrik->id,
-            //     'total_labor' => $t,
-            //     'status' => 1,
-            //     'changed_by' => Auth::user()->name
-
-            // ];
-
-            // $total = LaborTotal::create($totaltracks);
-
                 return response()->json(
                     [
                         'set_default_mesin' => $r->jumlah_penangganan_mesin,
@@ -194,35 +187,35 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
        
         } else {
             
-            return response()->json(
-                [
-                    'set_default_mesin' => $r->jumlah_penangganan_mesin,
-                    'spv' => $biayasupervisor,
-                    'isDenied' => $r->setTo["isDenied"],
-                    'mesin' => count($r->data),
-                    'opt' => $biayaoperator,
-                    'help' => $biayahelper,
-                    'total_biaya_levels' => $total_biaya_upah_perbulan,
-                ]
-            );
-            
+                return response()->json(
+                    [
+                        'set_default_mesin' => $r->jumlah_penangganan_mesin,
+                        'spv' => $biayasupervisor,
+                        'isDenied' => $r->setTo["isDenied"],
+                        'mesin' => count($r->data),
+                        'opt' => $biayaoperator,
+                        'help' => $biayahelper,
+                        'total_biaya_levels' => $total_biaya_upah_perbulan,
+                    ]
+                );
+                
+            }
+
+        } catch (Exception $e) {
+            $code = 500;
+            $message = __('voyager::generic.internal_error');
+
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'data' => [
+                    'status'  => $code,
+                    'message' => $message,
+                ],
+            ], $code);
         }
-
-    } catch (Exception $e) {
-        $code = 500;
-        $message = __('voyager::generic.internal_error');
-
-        if ($e->getMessage()) {
-            $message = $e->getMessage();
-        }
-
-        return response()->json([
-            'data' => [
-                'status'  => $code,
-                'message' => $message,
-            ],
-        ], $code);
-    }
 
     }
     
@@ -231,9 +224,10 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
         $company = Company::all();
         $mesin = Mesin::all();
         $cbagian = KategoriBagian::all();
+        $Lb8KategoriMesin = Lb8KategoriMesin::all();
         $listrikShift = Listrik::with('Mesin')->get();
 
-        return view('vendor.voyager.labor.form_labor', compact('company','mesin','cbagian','listrikShift'));
+        return view('vendor.voyager.labor.form_labor', compact('company','mesin','cbagian','Lb8KategoriMesin','listrikShift'));
     }
  
     public function index(Request $request)

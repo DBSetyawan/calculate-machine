@@ -259,7 +259,7 @@
                         $("#company_parent_id").val(results.detail.company_to.id);
                         $("#category_bagian_display").val(results.detail.kbagian_to.nama_bagian);
                         $("#category_bagian").val(results.detail.kbagian_to.id);
-                        $("#perjam_display").val(parseFloat(results.detail.mesin_listrik_perjam_to.persen).toFixed(2)+"%");
+                        $("#perjam_display").val(Math.round(parseFloat(results.detail.mesin_listrik_perjam_to.persen).toFixed(2) * 100)+"%");
                         $("#perjam").val(results.detail.mesin_listrik_perjam_to.persen);
                                 
                     });

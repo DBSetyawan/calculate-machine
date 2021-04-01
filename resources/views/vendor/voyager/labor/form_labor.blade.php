@@ -29,10 +29,10 @@
 
                                   
                                     <div class="form-group">
-                                        <label for="program_id">Kategori bagian</label>
-                                            <select class="form-control select2" id="category_bagian" name="category_bagian" required>
-                                            @foreach ($cbagian as $m)
-                                        <option value="{{$m->id}}">{{$m->nama_bagian}}</option>
+                                        <label for="program_id">Group mesin</label>
+                                            <select class="form-control select2" id="group_mesin_id" name="group_mesin_id" required>
+                                            @foreach ($Lb8KategoriMesin as $m)
+                                        <option value="{{$m->id}}">{{$m->nama_kategori_mesin}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -47,6 +47,12 @@
                                         </select>
                                     </div>
                              --}}
+                             <div class="form-group">
+                                <label for="company">kategori bagian group mesin</label>
+                                <input type="text" class="form-control" id="category_bagian_display" name="category_bagian_display" placeholder="">
+                                <input type="text" class="form-control" id="category_bagian_id" name="category_bagian_id" placeholder="">
+
+                            </div>
                              <div class="form-group">
                                 <label for="company">Company</label>
                                 <input type="text" class="form-control" id="company_display" name="company_display" placeholder="">
@@ -72,7 +78,6 @@
                                     {{-- <div class="form-group">
                                         <label for="company">Kategori Bagian</label> --}}
                                         {{-- <input type="text" class="form-control" id="category_bagian_display" name="category_bagian_display" placeholder=""> --}}
-                                        <input type="text" class="form-control" id="category_bagian_id" name="category_bagian_id" placeholder="">
                                     {{-- </div> --}}
                                     {{-- <div class="form-group">
                                         <label for="program_id">Mesin</label>
@@ -228,7 +233,8 @@
         async function GetFullDataMesin(mesinid
                 ) {
                     let datamesinid = {
-                            ctgId:mesinid
+                            // ctgId:mesinid,
+                            group_mesin_id:mesinid
                         }
                 const apiDataMesin = "{{ route('detail.data.mesin') }}";
                         
@@ -289,7 +295,7 @@
             $("#code_mesin_id").val($(this).val());
         });
 
-            $('#category_bagian').on('change', function() {
+            $('#group_mesin_id').on('change', function() {
                 GetFullDataMesin(this.value).then(function(results){
 
                         if(isEmpty(results.detail) == false){
@@ -303,6 +309,7 @@
                                 $("#company_display").val(eval.company_to.company_name);
                                 $("#company_parent_id").val(eval.company_to.id);
                                 // $("#category_bagian_display").val(eval.kbagian_to.nama_bagian);
+                                $("#category_bagian_display").val(eval.kbagian_to.nama_bagian);
                                 $("#category_bagian_id").val(eval.kbagian_to.id);
                                 $("#shift_display").val("Mesin shift ke "+eval.asumsi_to.shift);
                                 $("#shift").val(eval.asumsi_to.shift);

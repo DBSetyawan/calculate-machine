@@ -66,14 +66,21 @@
                                             @endforeach
                                         </select>   
                                     </div>
-                                    <div class="form-group">
+
+
+                                    {{-- ini diganti field REC 1.1 <div class="form-group">
                                         <label for="program_id">Kapasitas mesin</label>
                                         <select class="form-control select2" id="listrik_perjam_id" name="listrik_perjam_id" required>
                                             @foreach ($LsOutputPerjam as $c)
                                             <option value="{{$c->id}}">{{ $c->output_perjam }}</option>
                                         {{-- <option value="{{$c->id}}">{{ RumusListrikOutputPerjam::percent($c->persen)}} - {{ $c->output_perjam }}</option> --}}
-                                            @endforeach
-                                        </select>
+                                            {{-- @endforeach
+                                        </select> --}}
+                                    {{-- </div> --}}
+
+                                    <div class="form-group">
+                                        <label for="url_instagram">Kapasitas mesin</label>
+                                        <input type="text" class="form-control" data-validate-length-range="6" data-validate-words="2" id="listrik_perjam_id" name="listrik_perjam_id" placeholder="Jumlah kapasitas mein">
                                     </div>
                                   
                                 <div class="form-group">
@@ -302,7 +309,8 @@
                     'code_mesin'    : $('input[name=code_mesin]').val(),
                     'group_mesin_id'   : $('select[name=group_mesin_id]').val(),
                     'category_bagian_id'     : $('select[name=category_bagian_id]').val(),
-                    'listrik_perjam_id'        : $('select[name=listrik_perjam_id]').val(),
+                    // 'listrik_perjam_id'        : $('select[name=listrik_perjam_id]').val(),
+                    'listrik_perjam_id'        : $('input[name=listrik_perjam_id]').val(),
                     'asumsi_id'             : $('select[name=asumsi_id]').val(),
                     'company_id'    : $('select[name=company_id]').val(),
                     'nama_sim'    : $('input[name=nama_sim]').val(),

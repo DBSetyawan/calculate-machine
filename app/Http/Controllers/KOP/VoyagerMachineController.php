@@ -183,7 +183,11 @@ class VoyagerMachineController extends BaseVoyagerBaseController
     
     public function detailcodemesin(Request $req){
 
-        $mesin = Mesin::whereIn('category_bagian_id', [(Int) $req->ctgId])->where('on_off', '!=', 0)
+        /**group mesin dari kategori bagian id
+         * revisi mengganti 
+         */
+        // $mesin = Mesin::whereIn('category_bagian_id', [(Int) $req->ctgId])->where('on_off', '!=', 0)
+        $mesin = Mesin::whereIn('group_mesin_id', [(Int) $req->group_mesin_id])->where('on_off', '!=', 0)
         ->with('KbagianTo','CompanyTo','GroupMesinTo','MesinListrikPerjamTo','AsumsiTo')->get();
         return response()->json(['detail'=> $mesin]);
     }
