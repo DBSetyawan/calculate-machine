@@ -242,234 +242,251 @@ trait ModuleCaculates {
                     // $calc = AllRecalculate::orderby('id','desc')->with('mesin.MesinListrikPerjamTo')->first();
                     // $recRow = AllRecalculate::orderby('created_at','desc')->with(['Listrik.Listrikperjam','KategoriBagian','Mesin','GroupMesin','Company'])->first();
                     
-                    $ambil_listrik_dari_mesin = $tmp->mesin->MesinListrikPerjamTo->persen;
+                
+                    // $penyusutanfefn = Penyusutan::where('code_mesin', $tmp->code_mesin)->first();
+                    // $laborsfn = Labor::where('code_mesin', $tmp->code_mesin)->first();
+                    // $mtcsfefn =  RptMtc::where('code_mesin', $tmp->code_mesin)->first();
 
-                    $mtcsfe = RptMtc::where('code_mesin', $tmp->code_mesin)->first()->total_biaya_perbulan;
-                    $penyusutanfe = Penyusutan::where('code_mesin', $tmp->code_mesin)->first()->penyusutan_perbulan;
+                    // $ambil_listrik_dari_mesin = $tmp->mesin->MesinListrikPerjamTo->persen;
 
-                    $labors = Labor::where('code_mesin', $tmp->code_mesin)->first()->total_biaya;
+                    // $mtcsfe = RptMtc::where('code_mesin', $tmp->code_mesin)->first()->total_biaya_perbulan;
+                    // $penyusutanfe = Penyusutan::where('code_mesin', $tmp->code_mesin)->first()->penyusutan_perbulan;
+
+                    // $labors = Labor::where('code_mesin', $tmp->code_mesin)->first()->total_biaya;
 
                     $penyusutanfefn = Penyusutan::where('code_mesin', $tmp->code_mesin)->first();
                     $laborsfn = Labor::where('code_mesin', $tmp->code_mesin)->first();
                     $mtcsfefn = RptMtc::where('code_mesin', $tmp->code_mesin)->first();
-
                     
-                    if(!isset($ambil_listrik_dari_mesin) || !isset($penyusutanfe) || !isset($mtcsfe) || !isset($labors) || !isset($penyusutanfefn) || !isset($laborsfn) || !isset($mtcsfefn)){
-
-
-                        $laporangajilain_bagianREPRO = LaporanGajiLain::whereIn('category_bagian', [9])->get();
-                        $totalREPRO = collect([$laporangajilain_bagianREPRO])->sum(function ($REPRO){
-                            return $REPRO->sum('total_biaya_laporan_periode');
-                        });
-                        
-                        $laporanMTC = LaporanGajiLain::whereIn('category_bagian', [11])->get();
-                        $totalMTC = collect([$laporanMTC])->sum(function ($MTC){
-                            return $MTC->sum('total_biaya_laporan_periode');
-                        });
-
-                        $UMUM = LaporanGajiLain::whereIn('category_bagian', [12])->get();
-                        $totalUMUM = collect([$UMUM])->sum(function ($um){
-                            return $um->sum('total_biaya_laporan_periode');
-                        });
-
-                        $qcl = laporangajilain::whereIn('category_bagian', [13])->get();
-                        $totalQC = collect([$qcl])->sum(function ($qc){
-                            return $qc->sum('total_biaya_laporan_periode');
-                        });
-
-                        $LaporanBiayaAdministrasiUmum = LaporanBiayaAdministrasiUmum::whereIn('company_parent_id', [3])->get();
-                        $totalbau = collect([$LaporanBiayaAdministrasiUmum])->sum(function ($bau){
-                            return $bau->sum('total_biaya_lp_adm');
-                        });
-
-                        $penyusutan = Penyusutan::whereIn('company_parent_id', [3])->get();
-                        $totalpeny = collect([$penyusutan])->sum(function ($bau){
-                            return $bau->sum('penyusutan_perbulan');
-                        });
-
-                        $labor = Labor::whereIn('company_parent_id', [3])->get();
-                        $totallbr = collect([$labor])->sum(function ($bau){
-                            return $bau->sum('total_biaya');
-                        });
-
-                        $mtc = RptMtc::whereIn('company_parent_id', [3])->get();
-                        $totalmtmct = collect([$mtc])->sum(function ($bau){
-                            return $bau->sum('total_biaya_perbulan');
-                        });
-                        
-                        /**
-                         * @menghitung gaji_lainnya. fix.
-                         */
-                        $gaji_lainnya = $this->CalcBiayaGajiLainInstaceOfKalkulasi($totalREPRO, $totalMTC, $totalUMUM, $totalQC, $ambil_listrik_dari_mesin);
-
-                        /**
-                         * @menghitung bagian_penjualan. fix
-                         */
-                        $b_penjualan = $this->CalcBiayaBagPenjualanInstaceOfKalkulasi(RumusLapBagPenjualan::TotalSeluruhLPenjualanBagianPenjualan(), $ambil_listrik_dari_mesin);
-
-                        /**
-                         * @menghitung total BAU. fix.
-                         */
-
-                        $bau = $this->CalcBiayaAdministrasiUmumInstaceOfKalkulasi($totalbau, $ambil_listrik_dari_mesin);
-
-                        /**
-                         * @menghitung total. fix.
-                         */
-                        $total = RptCalcMachine::InstanceOfCalcTotalTanpaPenyusutanPerbulan($tmp->id_listrik, $penyusutanfe, $labors, $mtcsfe, $mtcsfefn->biaya_produksi_lain, $gaji_lainnya, $b_penjualan, $bau);
-                        
-                        /**
-                         * @menghitung total semua biaya perjam. fix.
-                         */
-                        $semua_total_biaya_perjam = $this->ITnpenyusutanTotalPerjam($tmp->Listrik->shift, $total);
-
-                        /**
-                         * @menghitung total tanpa_penyusutan + tanpa mtc. fix.
-                         */
-                        $tanpa_penyusutan_plus_mtc_total = $this->TotalTanpaPenyusutanPlusMTC($penyusutanfe, $mtcsfe, $total);
-
-                        /**
-                         * @menghitung total tnp penyusutan + tnp mtc perjam. 
-                         */
-                        $tanpa_penyusutan_plus_mtc_perjam = $this->ITnpenyusutanTotalPerjamPlusMTC($tmp->Listrik->shift, $tanpa_penyusutan_plus_mtc_total);
-                        
-                        /**
-                         * @menghitung total tanpa penyusutan + perjamnya. fix.
-                         */
-                        $tanpa_penyusutan_total = $this->TotTnpaPenyusutanATT($total, $penyusutanfe);
-                        $tanpa_penyusutan_total_perjam = $this->TotalTanpaPenyusutanPerjamnya($tmp->Listrik->shift, $tanpa_penyusutan_total);
-
-                        /**
-                         * @menghitung total tanpa mtc + perjamnya. fix.
-                         */
-
-                        $tanpa_mtc_total = $this->TotalTanpaPenyusutanTanpaMTC($total, $mtcsfe);
-                        $tanpa_mtc_total_perjam = $this->TotalPenyusutanTanpaMTCPerjamnya($tmp->Listrik->shift, $tanpa_mtc_total);
-
-                        // return RptCalcMachine::InstanceOfCalcTotalTanpaPenyusutanPerbulan();
-                        // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
-                            $data_recalculate = [
-                                // 'id_labor' => $totallbr,
-                                'id' => $tmp->id,
-                                'id_labor' => $laborsfn->total_biaya,
-                                'id_penyusutan' => $penyusutanfefn->penyusutan_perbulan,
-                                // 'id_penyusutan' => $totalpeny,
-                                'id_mtc' => $mtcsfefn->total_biaya_perbulan,
-                                // 'id_mtc' => $totalmtmct,
-                                'id_bprodlain_insteadof_mtc' => $mtcsfefn->biaya_produksi_lain,
-                                'id_gajilain' => $gaji_lainnya,
-                                // 'id_bgoenjualan' => $bagianpenjualanfe->biaya_perbulan_bag_penjualan,
-                                'id_bgoenjualan' => $b_penjualan,
-                                'id_bau' => $bau,
-                                'total_semua_biaya' => $total,
-                                'total_semua_biaya_perjam' => $semua_total_biaya_perjam,
-
-                                'total_tanpa_penyusutan_n_mtc' => $tanpa_penyusutan_plus_mtc_total,
-                                'total_tanpa_penyusutan_n_mtc_perjam' => $tanpa_penyusutan_plus_mtc_perjam,
-
-                                'total_tanpa_penyusutan' => $tanpa_penyusutan_total,
-                                'total_tanpa_penyusutan_perjam' => $tanpa_penyusutan_total_perjam,
-
-                                'total_tanpa_mtc' => $tanpa_penyusutan_plus_mtc_total,
-                                'total_tanpa_mtc_perjam' => $tanpa_mtc_total_perjam,
-
-                            ];
-                            $tb = app(AllRecalculate::class)->getTable();
-
-                            foreach($allrecalculates as $index => $tmp){
-
-                                $old = [
-                                    'id' => $tmp['id'],
-                                    'id_labor' => $tmp['id_labor'],
-                                    'id_penyusutan' => $tmp['id_penyusutan'],
-                                    'id_mtc' => $tmp['id_mtc'],
-                                    'id_bprodlain_insteadof_mtc' => $tmp['id_bprodlain_insteadof_mtc'],
-                                    'id_gajilain' => $tmp['id_gajilain'],
-                                    'id_bgoenjualan' => $tmp['id_bgoenjualan'],
-                                    'id_bau' => $tmp['id_bau'],
-                                    'total_semua_biaya' => $tmp['total_semua_biaya'],
-                                    'total_semua_biaya_perjam' => $tmp['total_semua_biaya_perjam'],
-                
-                                    'total_tanpa_penyusutan_n_mtc' => $tmp['total_tanpa_penyusutan_n_mtc'],
-                                    'total_tanpa_penyusutan_n_mtc_perjam' => $tmp['total_tanpa_penyusutan_n_mtc_perjam'],
-                
-                                    'total_tanpa_penyusutan' => $tmp['total_tanpa_penyusutan'],
-                                    'total_tanpa_penyusutan_perjam' => $tmp['total_tanpa_penyusutan_perjam'],
-                
-                                    'total_tanpa_mtc' => $tmp['total_tanpa_mtc'],
-                                    'total_tanpa_mtc_perjam' => $tmp['total_tanpa_mtc_perjam'],
-                
+                    if( isset(Labor::where('code_mesin', $tmp->code_mesin)->first()->total_biaya) === false && isset($tmp->mesin->MesinListrikPerjamTo->persen) === false && isset($mtcsfefn) === false && isset($laborsfn) === false && isset($penyusutanfe) === false && isset(RptMtc::where('code_mesin', $tmp->code_mesin)->first()->total_biaya_perbulan) === false ){
+                   
+                                $dt = [
+                                    'message'  => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, biaya total dari beberapa master masih ada yang belum diisi.'),
+                                    'alertype' => 'error'
                                 ];
 
-                                $sid = 'id';
-                   
-                                $bulk_batch = \Batch::update($SendTemporaryCalculateInstance, [$data_recalculate], $sid);
+                                return response()->json([
+                                    'data' => [
+                                        'message' => $dt,
+                                    ],
+                                ], 500);
 
-                                
-                                $md = ModulTrackingDataHelpers::ModuleTrackingTransactionDataRecalculate($tb, $old, $data_recalculate);
-                                        
-                                            
-                                    foreach ($md as $key => $val) {
+                      
+                            } else {
 
-                                        if(!isset($tmp['mesin']['id']) || !isset($tmp['kategori_bagian']['id']) || !isset($tmp['company']['id']) || !isset($tmp['group_mesin']['id']) ){
-                                            
-                                            $pf[] = [
-                                                'updated_at' => Carbon::now(),
-                                                'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
-                                                'company' => $tmp['company']['id'],
-                                                'category_id' => $tmp['kategori_bagian']['id'],
-                                                'group_mesin' => $tmp['group_mesin']['id'],
-                                                'code_mesin' => $tmp['mesin']['id'],
-                                                'table_column' => $val['tabel_kolom'],
-                                                'history_latest' => ceil($val['history']),
-                                                'before' => ceil($val['dari']),
-                                            ];
+                                $ambil_listrik_dari_mesin = $tmp->mesin->MesinListrikPerjamTo->persen;
 
-                                        } 
-                                            else {
-
-                                            $dt = [
-                                                    'message'    => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, ada data yang kosong'),
-                                                    'alertype' => 'error'
-                                                ];
-
-                                                return response()->json([
-                                                    'data' => [
-                                                        'message' => $dt,
-                                                    ],
-                                                ], 500);
-
-                                        }
-
-                                        continue 2;
-
-                                    }
-
-                                    
-                                }
-                                
-                                /**
-                                 * Recalculate not working fine.
-                                 */
-                                // break 1;
-
-                                    } else {
-
-                                        $dt = [
-                                            'message'  => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, biaya total dari beberapa master masih ada yang belum diisi.'),
-                                            'alertype' => 'error'
-                                        ];
+                                $mtcsfe = RptMtc::where('code_mesin', $tmp->code_mesin)->first()->total_biaya_perbulan;
+                                $penyusutanfe = Penyusutan::where('code_mesin', $tmp->code_mesin)->first()->penyusutan_perbulan;
             
-                                        return response()->json([
-                                            'data' => [
-                                                'message' => $dt,
-                                            ],
-                                        ], 500);
+                                $labors = Labor::where('code_mesin', $tmp->code_mesin)->first()->total_biaya;
+            
+                                $penyusutanfefn = Penyusutan::where('code_mesin', $tmp->code_mesin)->first();
+                                $laborsfn = Labor::where('code_mesin', $tmp->code_mesin)->first();
+                                $mtcsfefn =  RptMtc::where('code_mesin', $tmp->code_mesin)->first();
+
+                                        $laporangajilain_bagianREPRO = LaporanGajiLain::whereIn('category_bagian', [9])->get();
+                                        $totalREPRO = collect([$laporangajilain_bagianREPRO])->sum(function ($REPRO){
+                                            return $REPRO->sum('total_biaya_laporan_periode');
+                                        });
+                                        
+                                        $laporanMTC = LaporanGajiLain::whereIn('category_bagian', [11])->get();
+                                        $totalMTC = collect([$laporanMTC])->sum(function ($MTC){
+                                            return $MTC->sum('total_biaya_laporan_periode');
+                                        });
+                
+                                        $UMUM = LaporanGajiLain::whereIn('category_bagian', [12])->get();
+                                        $totalUMUM = collect([$UMUM])->sum(function ($um){
+                                            return $um->sum('total_biaya_laporan_periode');
+                                        });
+                
+                                        $qcl = laporangajilain::whereIn('category_bagian', [13])->get();
+                                        $totalQC = collect([$qcl])->sum(function ($qc){
+                                            return $qc->sum('total_biaya_laporan_periode');
+                                        });
+                
+                                        $LaporanBiayaAdministrasiUmum = LaporanBiayaAdministrasiUmum::whereIn('company_parent_id', [3])->get();
+                                        $totalbau = collect([$LaporanBiayaAdministrasiUmum])->sum(function ($bau){
+                                            return $bau->sum('total_biaya_lp_adm');
+                                        });
+                
+                                        $penyusutan = Penyusutan::whereIn('company_parent_id', [3])->get();
+                                        $totalpeny = collect([$penyusutan])->sum(function ($bau){
+                                            return $bau->sum('penyusutan_perbulan');
+                                        });
+                
+                                        $labor = Labor::whereIn('company_parent_id', [3])->get();
+                                        $totallbr = collect([$labor])->sum(function ($bau){
+                                            return $bau->sum('total_biaya');
+                                        });
+                
+                                        $mtc = RptMtc::whereIn('company_parent_id', [3])->get();
+                                        $totalmtmct = collect([$mtc])->sum(function ($bau){
+                                            return $bau->sum('total_biaya_perbulan');
+                                        });
+                                        
+                                        /**
+                                         * @menghitung gaji_lainnya. fix.
+                                         */
+                                        $gaji_lainnya = $this->CalcBiayaGajiLainInstaceOfKalkulasi($totalREPRO, $totalMTC, $totalUMUM, $totalQC, $ambil_listrik_dari_mesin);
+                
+                                        /**
+                                         * @menghitung bagian_penjualan. fix
+                                         */
+                                        $b_penjualan = $this->CalcBiayaBagPenjualanInstaceOfKalkulasi(RumusLapBagPenjualan::TotalSeluruhLPenjualanBagianPenjualan(), $ambil_listrik_dari_mesin);
+                
+                                        /**
+                                         * @menghitung total BAU. fix.
+                                         */
+                
+                                        $bau = $this->CalcBiayaAdministrasiUmumInstaceOfKalkulasi($totalbau, $ambil_listrik_dari_mesin);
+                
+                                        /**
+                                         * @menghitung total. fix.
+                                         */
+                                        $total = RptCalcMachine::InstanceOfCalcTotalTanpaPenyusutanPerbulan($tmp->id_listrik, $penyusutanfe, $labors, $mtcsfe, $mtcsfefn->biaya_produksi_lain, $gaji_lainnya, $b_penjualan, $bau);
+                                        
+                                        /**
+                                         * @menghitung total semua biaya perjam. fix.
+                                         */
+                                        $semua_total_biaya_perjam = $this->ITnpenyusutanTotalPerjam($tmp->Listrik->shift, $total);
+                
+                                        /**
+                                         * @menghitung total tanpa_penyusutan + tanpa mtc. fix.
+                                         */
+                                        $tanpa_penyusutan_plus_mtc_total = $this->TotalTanpaPenyusutanPlusMTC($penyusutanfe, $mtcsfe, $total);
+                
+                                        /**
+                                         * @menghitung total tnp penyusutan + tnp mtc perjam. 
+                                         */
+                                        $tanpa_penyusutan_plus_mtc_perjam = $this->ITnpenyusutanTotalPerjamPlusMTC($tmp->Listrik->shift, $tanpa_penyusutan_plus_mtc_total);
+                                        
+                                        /**
+                                         * @menghitung total tanpa penyusutan + perjamnya. fix.
+                                         */
+                                        $tanpa_penyusutan_total = $this->TotTnpaPenyusutanATT($total, $penyusutanfe);
+                                        $tanpa_penyusutan_total_perjam = $this->TotalTanpaPenyusutanPerjamnya($tmp->Listrik->shift, $tanpa_penyusutan_total);
+                
+                                        /**
+                                         * @menghitung total tanpa mtc + perjamnya. fix.
+                                         */
+                
+                                        $tanpa_mtc_total = $this->TotalTanpaPenyusutanTanpaMTC($total, $mtcsfe);
+                                        $tanpa_mtc_total_perjam = $this->TotalPenyusutanTanpaMTCPerjamnya($tmp->Listrik->shift, $tanpa_mtc_total);
+                
+                                        // return RptCalcMachine::InstanceOfCalcTotalTanpaPenyusutanPerbulan();
+                                        // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
+                                            $data_recalculate = [
+                                                // 'id_labor' => $totallbr,
+                                                'id' => $tmp->id,
+                                                'id_labor' => $laborsfn->total_biaya,
+                                                'id_penyusutan' => $penyusutanfefn->penyusutan_perbulan,
+                                                // 'id_penyusutan' => $totalpeny,
+                                                'id_mtc' => $mtcsfefn->total_biaya_perbulan,
+                                                // 'id_mtc' => $totalmtmct,
+                                                'id_bprodlain_insteadof_mtc' => $mtcsfefn->biaya_produksi_lain,
+                                                'id_gajilain' => $gaji_lainnya,
+                                                // 'id_bgoenjualan' => $bagianpenjualanfe->biaya_perbulan_bag_penjualan,
+                                                'id_bgoenjualan' => $b_penjualan,
+                                                'id_bau' => $bau,
+                                                'total_semua_biaya' => $total,
+                                                'total_semua_biaya_perjam' => $semua_total_biaya_perjam,
+                
+                                                'total_tanpa_penyusutan_n_mtc' => $tanpa_penyusutan_plus_mtc_total,
+                                                'total_tanpa_penyusutan_n_mtc_perjam' => $tanpa_penyusutan_plus_mtc_perjam,
+                
+                                                'total_tanpa_penyusutan' => $tanpa_penyusutan_total,
+                                                'total_tanpa_penyusutan_perjam' => $tanpa_penyusutan_total_perjam,
+                
+                                                'total_tanpa_mtc' => $tanpa_penyusutan_plus_mtc_total,
+                                                'total_tanpa_mtc_perjam' => $tanpa_mtc_total_perjam,
+                
+                                            ];
+                                            $tb = app(AllRecalculate::class)->getTable();
+                
+                                            foreach($allrecalculates as $index => $tmp){
+                
+                                                $old = [
+                                                    'id' => $tmp['id'],
+                                                    'id_labor' => $tmp['id_labor'],
+                                                    'id_penyusutan' => $tmp['id_penyusutan'],
+                                                    'id_mtc' => $tmp['id_mtc'],
+                                                    'id_bprodlain_insteadof_mtc' => $tmp['id_bprodlain_insteadof_mtc'],
+                                                    'id_gajilain' => $tmp['id_gajilain'],
+                                                    'id_bgoenjualan' => $tmp['id_bgoenjualan'],
+                                                    'id_bau' => $tmp['id_bau'],
+                                                    'total_semua_biaya' => $tmp['total_semua_biaya'],
+                                                    'total_semua_biaya_perjam' => $tmp['total_semua_biaya_perjam'],
+                                
+                                                    'total_tanpa_penyusutan_n_mtc' => $tmp['total_tanpa_penyusutan_n_mtc'],
+                                                    'total_tanpa_penyusutan_n_mtc_perjam' => $tmp['total_tanpa_penyusutan_n_mtc_perjam'],
+                                
+                                                    'total_tanpa_penyusutan' => $tmp['total_tanpa_penyusutan'],
+                                                    'total_tanpa_penyusutan_perjam' => $tmp['total_tanpa_penyusutan_perjam'],
+                                
+                                                    'total_tanpa_mtc' => $tmp['total_tanpa_mtc'],
+                                                    'total_tanpa_mtc_perjam' => $tmp['total_tanpa_mtc_perjam'],
+                                
+                                                ];
+                
+                                                $sid = 'id';
+                                   
+                                                $bulk_batch = \Batch::update($SendTemporaryCalculateInstance, [$data_recalculate], $sid);
+                
+                                                
+                                                $md = ModulTrackingDataHelpers::ModuleTrackingTransactionDataRecalculate($tb, $old, $data_recalculate);
+                                                        
+                                                            
+                                                    foreach ($md as $key => $val) {
+                
+                                                        if( isset($tmp['mesin']['id']) === false && isset($tmp['kategori_bagian']['id']) === false && isset($tmp['company']['id']) === false && isset($tmp['group_mesin']['id']) === false){
+                                                            
+                                                            $dt = [
+                                                                'message'    => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, ada data yang kosong'),
+                                                                'alertype' => 'error'
+                                                            ];
+                
+                                                            return response()->json([
+                                                                'data' => [
+                                                                    'message' => $dt,
+                                                                ],
+                                                            ], 500);
+                
+                                                        } 
+                                                            else {
+                
+                                                                $pf[] = [
+                                                                    'updated_at' => Carbon::now(),
+                                                                    'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                                                                    'company' => $tmp['company']['id'],
+                                                                    'category_id' => $tmp['kategori_bagian']['id'],
+                                                                    'group_mesin' => $tmp['group_mesin']['id'],
+                                                                    'code_mesin' => $tmp['mesin']['id'],
+                                                                    'table_column' => $val['tabel_kolom'],
+                                                                    'history_latest' => ceil($val['history']),
+                                                                    'before' => ceil($val['dari']),
+                                                                ];
+                
+                                                        }
+                
+                                                        continue 2;
+                
+                                                    }
+                
+                                                    
+                                                }
+                                                
+                                        /**
+                                         * Recalculate not working fine.
+                                         */
+                                        // break 1;
+                
+                                        $d = HistoryRecalculateTemporary::insert($pf);
                                 }
+
+
                                             
-                            }
-                            
-                            $d = HistoryRecalculateTemporary::insert($pf);
+                        }
 
 
                     return response()->json(['res' => 200]);

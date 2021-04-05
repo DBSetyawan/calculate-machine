@@ -14912,3 +14912,51 @@ Stack trace:
 #58 /var/www/html/kalkulasimesin2/public/index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle()
 #59 {main}
 "} 
+[2021-04-05 14:15:10] local.ERROR: During class fetch: Uncaught ParseError: syntax error, unexpected 'catch' (T_CATCH) in /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:477
+Stack trace:
+#0 /var/www/html/kalkulasimesin2/vendor/composer/ClassLoader.php(344): Composer\Autoload\includeFile()
+#1 [internal function]: Composer\Autoload\ClassLoader->loadClass()
+#2 /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/VoyagerTotalKalkulasiController.php(22): spl_autoload_call()
+#3 /var/www/html/kalkulasimesin2/vendor/composer/ClassLoader.php(476): include('/var/www/html/k...')
+#4 /var/www/html/kalkulasimesin2/vendor/composer/ClassLoader.php(344): Composer\Autoload\includeFile()
+#5 [internal function]: Composer\Autoload\ClassLoader->loadClass()
+#6 [internal function]: spl_autoload_call()
+#7 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(830): ReflectionClass->__construct()
+#8 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(712 {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): During class fetch: Uncaught ParseError: syntax error, unexpected 'catch' (T_CATCH) in /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:477
+Stack trace:
+#0 /var/www/html/kalkulasimesin2/vendor/composer/ClassLoader.php(344): Composer\\Autoload\\includeFile()
+#1 [internal function]: Composer\\Autoload\\ClassLoader->loadClass()
+#2 /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/VoyagerTotalKalkulasiController.php(22): spl_autoload_call()
+#3 /var/www/html/kalkulasimesin2/vendor/composer/ClassLoader.php(476): include('/var/www/html/k...')
+#4 /var/www/html/kalkulasimesin2/vendor/composer/ClassLoader.php(344): Composer\\Autoload\\includeFile()
+#5 [internal function]: Composer\\Autoload\\ClassLoader->loadClass()
+#6 [internal function]: spl_autoload_call()
+#7 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(830): ReflectionClass->__construct()
+#8 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(712 at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/VoyagerTotalKalkulasiController.php:22)
+[stacktrace]
+#0 {main}
+"} 
+[2021-04-05 14:18:36] local.ERROR: During class fetch: Uncaught ParseError: syntax error, unexpected 'catch' (T_CATCH) in /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:477
+Stack trace:
+#0 /var/www/html/kalkulasimesin2/vendor/composer/ClassLoader.php(344): Composer\Autoload\includeFile()
+#1 [internal function]: Composer\Autoload\ClassLoader->loadClass()
+#2 /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/VoyagerTotalKalkulasiController.php(22): spl_autoload_call()
+#3 /var/www/html/kalkulasimesin2/vendor/composer/ClassLoader.php(476): include('/var/www/html/k...')
+#4 /var/www/html/kalkulasimesin2/vendor/composer/ClassLoader.php(344): Composer\Autoload\includeFile()
+#5 [internal function]: Composer\Autoload\ClassLoader->loadClass()
+#6 [internal function]: spl_autoload_call()
+#7 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(830): ReflectionClass->__construct()
+#8 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(712 {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): During class fetch: Uncaught ParseError: syntax error, unexpected 'catch' (T_CATCH) in /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/Traits/ModuleCaculates.php:477
+Stack trace:
+#0 /var/www/html/kalkulasimesin2/vendor/composer/ClassLoader.php(344): Composer\\Autoload\\includeFile()
+#1 [internal function]: Composer\\Autoload\\ClassLoader->loadClass()
+#2 /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/VoyagerTotalKalkulasiController.php(22): spl_autoload_call()
+#3 /var/www/html/kalkulasimesin2/vendor/composer/ClassLoader.php(476): include('/var/www/html/k...')
+#4 /var/www/html/kalkulasimesin2/vendor/composer/ClassLoader.php(344): Composer\\Autoload\\includeFile()
+#5 [internal function]: Composer\\Autoload\\ClassLoader->loadClass()
+#6 [internal function]: spl_autoload_call()
+#7 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(830): ReflectionClass->__construct()
+#8 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(712 at /var/www/html/kalkulasimesin2/app/Http/Controllers/KOP/VoyagerTotalKalkulasiController.php:22)
+[stacktrace]
+#0 {main}
+"} 

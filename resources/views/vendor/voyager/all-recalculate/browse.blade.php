@@ -390,63 +390,9 @@
             }, 500);
 
             sendingrecalculate(true).then(function(res){
-                        console.log(res)
-                if(res.data.message.alertype == 'error'){
 
-                    const err = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 4000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    })
+                // console.log(res)
 
-                        err.fire({
-                            icon: 'error',
-                            title: res.data.message.message
-                        });
-
-                    $("#sendcalculate").text("Recalculate Machine");
-
-                    // let curr = '{{ route("voyager.all-recalculate.index") }}';
-                    // setTimeout(function(){ 
-                    //     window.location.href = curr;
-                    // }, 6000);
-
-                }
-
-                // }
-                if(res.json == 1){
-
-                    const success = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 4000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    })
-
-                    success.fire({
-                        icon: 'success',
-                        title: 'CODE: [200][success], data berhasil disinkronkan ke KOP kalkulasi mesin.'
-                    });
-
-                    $("#sendcalculate").text("Recalculate Machine");
-
-                    let curr = '{{ route("tr.total.kalkulasi") }}';
-                    setTimeout(function(){ 
-                        window.location.href = curr;
-                    }, 6000);
-
-                }
                 if(res.res == 200){
                     const success = Swal.mixin({
                         toast: true,
@@ -472,7 +418,67 @@
                         window.location.href = curr;
                     }, 6000);
 
-                }
+                } 
+                    else {
+
+                        // if(res.json == 1){
+
+                        //     const success = Swal.mixin({
+                        //         toast: true,
+                        //         position: 'top-end',
+                        //         showConfirmButton: false,
+                        //         timer: 4000,
+                        //         timerProgressBar: true,
+                        //         didOpen: (toast) => {
+                        //             toast.addEventListener('mouseenter', Swal.stopTimer)
+                        //             toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        //         }
+                        //     })
+
+                        //     success.fire({
+                        //         icon: 'success',
+                        //         title: 'CODE: [200][success], data berhasil disinkronkan ke KOP kalkulasi mesin.'
+                        //     });
+
+                        //     $("#sendcalculate").text("Recalculate Machine");
+
+                        //     let curr = '{{ route("tr.total.kalkulasi") }}';
+                        //     setTimeout(function(){ 
+                        //         window.location.href = curr;
+                        //     }, 6000);
+
+                        // }
+
+
+                    }
+
+                    if(res.data.message.alertype == 'error'){
+
+                        const err = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 4000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        })
+
+                            err.fire({
+                                icon: 'error',
+                                title: res.data.message.message
+                            });
+
+                        $("#sendcalculate").text("Recalculate Machine");
+
+                        // let curr = '{{ route("voyager.all-recalculate.index") }}';
+                        // setTimeout(function(){ 
+                        //     window.location.href = curr;
+                        // }, 6000);
+
+                        }
 
             });
         });
