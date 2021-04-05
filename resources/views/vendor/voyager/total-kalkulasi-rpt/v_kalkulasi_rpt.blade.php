@@ -30,7 +30,7 @@
                                <div class="accordion" id="accordionExample">
                                 <div class="card">
                                   <div class="countdown">
-                                    <div class="text-right col-md-10">
+                                    <div class="text-right col-md-9">
                                     Penutupan transaksi dalam periode tahunan :
                                     </div>
                                     <span id="clock"></span>
@@ -238,21 +238,54 @@ const isEmpty = (obj) => {
 // documentation http://hilios.github.io/jQuery.countdown/documentation.html
 // http://hilios.github.io/jQuery.countdown/examples/advanced-coupon-site.html
 
-$('#clock').countdown('2022/01/01 16:43:00')
+$('#clock').countdown('2021/07/06 00:00:00')
   .on('update.countdown', function(event) {
     var format = '%H:%M:%S';
-    if(event.offset.totalDays > 0) {
-      format = '%-d day%!d ' + format;
-    }
-    if(event.offset.weeks > 0) {
-      format = '%-w week%!w ' + format;
-    }
-    $(this).html(event.strftime(format));
+    // if(event.offset.totalDays > 0) {
+    //   format = '%-d day%!d ' + format;
+    // }
+    // if(event.offset.weeks > 0) {
+    //   format = '%-w week%!w ' + format;
+    // }
+    var $this = $(this).html(event.strftime(''
+    + '<span>%-w</span> Minggu '
+    + '<span>%-d</span> Hari '
+    + '<span>%H</span> Jam '
+    + '<span>%M</span> Menit '
+    + '<span>%S</span> Detik'));
+
+    // $(this).html(event.strftime(format));
   })
   .on('finish.countdown', function(event) {
     $(this).html('This offer has expired!')
       .parent().addClass('disabled');
-});
+      function disableF5(e) { if ((e.which || e.keyCode) == 116 || (e.which || e.keyCode) == 82) e.preventDefault(); };
+      $(document).on("keydown", disableF5);
+          // jika waktu sudah expired, maka tampilkan sistem untuk memproses penutupan transaksi periode tahunan.
+           Swal.fire({
+                title: 'Pemberitahuan sistem KOP',
+                allowOutsideClick: false,
+                text: 'sistem akan melakukan penutupan transaksi otomatis dalam penutupan periode tahunan, transaksi sebelumnya akan dikunci. dan akan mengenerate transaksi berikutnya.',
+                // showDenyButton: true,
+                // showCancelButton: true,
+                confirmButtonText: `Baik, tutup transaksi periode tahun ini`,
+                cancelButtonText: `Pendingkan`,
+                denyButtonText: `batalkan`,
+              }).then((result) => {
+                            if (result.isConfirmed) {
+
+                        alert("ne")
+                        } else if (result.isDenied) {
+                          alert("no")
+                  }
+            });
+      });
+
+function extractContent(s) {
+  var span = document.createElement('span');
+  span.innerHTML = s;
+  return span.textContent || span.innerText;
+};
 
 $(document).ready(function(){
 
