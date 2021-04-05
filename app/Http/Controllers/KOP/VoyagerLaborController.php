@@ -493,6 +493,8 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
     // POST BR(E)AD
     public function update(Request $request, $id)
     {
+
+        // dd($request->all());
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -548,6 +550,8 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
         $result_gaji_labor = [
             'company_parent_id' => $request->company_parent_id,
             'shift' => $request->shift,
+            'code_mesin' => $request->code_mesin,
+            'category_bagian' => $request->category_bagian,
             'supervisor' => $request->supervisor,
             'operator' => $request->operator,
             'helper' => $request->helper,
@@ -627,10 +631,10 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
             $redirect = redirect()->back();
         }
 
-        $mesin = isset(Mesin::findOrFail($data->code_mesin)->code_mesin) ? Mesin::findOrFail($data->code_mesin)->code_mesin : "mesin tidak diketahui";
+        // $mesin = isset(Mesin::findOrFail($data->code_mesin)->code_mesin) ? Mesin::findOrFail($data->code_mesin)->code_mesin : "mesin tidak diketahui";
 
         return $redirect->with([
-            'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}"."Silahkan mengakumulasi ulang biaya persen cost perbulan pada mesin $mesin.",
+            'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}"."Silahkan mengakumulasi ulang biaya persen cost perbulan.",
             'alert-type' => 'success',
         ]);
     }

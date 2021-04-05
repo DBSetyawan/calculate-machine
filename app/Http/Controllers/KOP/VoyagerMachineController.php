@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\KOP;
 
+use App\Labor;
 use App\Mesin;
 use Exception;
+use App\RptMtc;
 use App\Company;
 use App\Listrik;
 use Carbon\Carbon;
@@ -26,6 +28,7 @@ use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use TCG\Voyager\Database\Schema\SchemaManager;
+use App\Http\Controllers\KOP\VoyagerLaborController;
 use App\Http\Controllers\KOP\Helpers\ModulTrackingDataHelpers;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
@@ -665,6 +668,18 @@ class VoyagerMachineController extends BaseVoyagerBaseController
         foreach ($ids as $id) {
             $data = call_user_func([$dataType->model_name, 'findOrFail'], $id);
 
+            // listrik
+            $dataListrik = call_user_func([$dataType->model_name, 'findOrFail'], $id);
+
+            // penyusutan
+            $dataPenyusutan = call_user_func([$dataType->model_name, 'findOrFail'], $id);
+
+            // Rpt mtc
+            $dataRptMtc = call_user_func([$dataType->model_name, 'findOrFail'], $id);
+
+            // Labor
+            $dataLabors = call_user_func([$dataType->model_name, 'findOrFail'], $id);
+
             // Check permission
             $this->authorize('delete', $data);
 
@@ -702,36 +717,227 @@ class VoyagerMachineController extends BaseVoyagerBaseController
                 
                 $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
 
-                $data = [
-                    'message'    => __('Maaf tidak bisa dihapus, karena mesin sudah melakukan transaksi'),
+                $dataListrik = [
+                    'message'    => __('Maaf tidak bisa dihapus, karena mesin sudah melakukan transaksi di listrik'),
                     'alert-type' => 'error',
                 ];
     
             } else if($key_search == true) {
 
-                $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
+                // $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
 
-                $res = $data->destroy($ids);
+                // $resLIstrik = $dataListrik->destroy($ids);
 
-                $data = $res
-                    ? [
-                        'message'    => __('voyager::generic.successfully_deleted')." {$displayName}",
-                        'alert-type' => 'success',
-                    ]
-                    : [
-                        'message'    => __('voyager::generic.error_deleting')." {$displayName}",
-                        'alert-type' => 'error',
-                    ];
+                // $dataListrik = $resLIstrik
+                //     ? [
+                //         'message'    => __('voyager::generic.successfully_deleted')." {$displayName}",
+                //         'alert-type' => 'success',
+                //     ]
+                //     : [
+                //         'message'    => __('voyager::generic.error_deleting')." {$displayName}",
+                //         'alert-type' => 'error',
+                //     ];
 
-                if ($res) {
-                    event(new BreadDataDeleted($dataType, $data));
-                }
+                // if ($resLIstrik) {
+                //     event(new BreadDataDeleted($dataType, $dataListrik));
+                // }
+
+                 /**
+                     * @Penyusutan
+                     */
+                    $checkpenyusutan = Penyusutan::all();
+
+                    foreach($checkpenyusutan as $pnystanloops){
+
+                        $mesin_insteadof_penyusutan[] = $pnystanloops->code_mesin;
+                        
+                        $r = in_array((Int)$mesin_insteadof_penyusutan, $ids);
+                    }
+
+                    $merge_insteadofpenyusutan = collect($ids)->map(function ($pnystanloops) use ($mesin_insteadof_penyusutan) {
+
+                        foreach($mesin_insteadof_penyusutan as $array){
+                            if($pnystanloops==$array){
+                                $valpeny = false;
+                            } else {
+                                $valpeny = true;
+                            }
+                        }
+                    
+                        return $valpeny;
+                    });
+
+                    foreach($merge_insteadofpenyusutan as $key_search_mesin_insteadof_penyusutan){
+
+                        if($key_search_mesin_insteadof_penyusutan == false){
+                            
+                            $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
+
+                            $dataPenyusutan = [
+                                'message'    => __('Maaf tidak bisa dihapus, karena mesin sudah melakukan transaksi dipenyusutan'),
+                                'alert-type' => 'error',
+                            ];
+                
+                        } else if($key_search_mesin_insteadof_penyusutan == true) {
+
+                            // $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
+
+                            // $resPenyusutan = $dataPenyusutan->destroy($ids);
+
+                            // $dataPenyusutan = $resPenyusutan
+                            //     ? [
+                            //         'message'    => __('voyager::generic.successfully_deleted')." {$displayName}",
+                            //         'alert-type' => 'success',
+                            //     ]
+                            //     : [
+                            //         'message'    => __('voyager::generic.error_deleting')." {$displayName}",
+                            //         'alert-type' => 'error',
+                            //     ];
+
+                            // if ($resPenyusutan) {
+                            //     event(new BreadDataDeleted($dataType, $dataPenyusutan));
+                            // }
+
+                                    /**
+                                 * @RptMtc
+                                 */
+                                $checkRptMtc = RptMtc::all();
+
+                                foreach($checkRptMtc as $vals_insteadofRptMtc){
+
+                                    $mesin_insteadof_RotMtc[] = $vals_insteadofRptMtc->code_mesin;
+                                    
+                                    $r = in_array((Int)$mesin_insteadof_RotMtc, $ids);
+                                }
+
+                                $merge_insteadof_rpt_mtc = collect($ids)->map(function ($vals_insteadofRptMtc) use ($mesin_insteadof_RotMtc) {
+
+                                    foreach($mesin_insteadof_RotMtc as $sssss){
+                                        if((Int)$vals_insteadofRptMtc==$sssss){
+                                            $rslt_rpt_mtc = false;
+                                        } else {
+                                            $rslt_rpt_mtc = true;
+                                        }
+                                    }
+                                
+                                    return $rslt_rpt_mtc;
+                                });
+
+                                foreach($merge_insteadof_rpt_mtc as $key_searchRpt_Mtc){
+
+                                    if($key_searchRpt_Mtc == false){
+                                        
+                                        $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
+
+                                        $dataRptMtc = [
+                                            'message'    => __('Maaf tidak bisa dihapus, karena mesin sudah melakukan transaksi MTC'),
+                                            'alert-type' => 'error',
+                                        ];
+                            
+                                    } else if($key_searchRpt_Mtc == true) {
+
+                                        // $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
+
+                                        // $resMtc = $dataRptMtc->destroy($ids);
+
+                                        // $dataRptMtc = $resMtc
+                                        //     ? [
+                                        //         'message'    => __('voyager::generic.successfully_deleted')." {$displayName}",
+                                        //         'alert-type' => 'success',
+                                        //     ]
+                                        //     : [
+                                        //         'message'    => __('voyager::generic.error_deleting')." {$displayName}",
+                                        //         'alert-type' => 'error',
+                                        //     ];
+
+                                        // if ($resMtc) {
+                                        //     event(new BreadDataDeleted($dataType, $dataRptMtc));
+                                        // }
+
+                                            /**
+                                             * @Labors
+                                             */
+                                            $checkLabor = Labor::all();
+
+                                            foreach($checkLabor as $vals_insteadofLabor){
+
+                                                $mesin_insteadof_Labors[] = $vals_insteadofLabor->code_mesin;
+                                                
+                                                // $r = in_array((Int)$mesin_insteadof_Labors, $ids);
+                                            }
+
+                                            $merge_insteadof_Labor = collect($ids)->map(function ($mesin_labor) use ($mesin_insteadof_Labors) {
+
+                                                foreach($mesin_insteadof_Labors as $blob_array){
+                                                    if($mesin_labor==$blob_array){
+                                                        $rstLabors = false;
+                                                    } else {
+                                                        $rstLabor = true;
+                                                    }
+                                                }
+                                            
+                                                return isset($rstLabors) ? $rstLabors : $rstLabor;
+                                            });
+
+                                            // dd($merge_insteadof_Labor);
+
+                                            
+                                            foreach($merge_insteadof_Labor as $s => $Keys_searchLabors){
+                                                
+                                                if($Keys_searchLabors == false){
+                                                    
+                                                    $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
+
+                                                    $dataLabors = [
+                                                        'message'    => __('Maaf tidak bisa dihapus, karena mesin sudah melakukan transaksi diLabor'),
+                                                        'alert-type' => 'error',
+                                                    ];
+                                                    
+                                                } else if($Keys_searchLabors == true) {
+
+                                                    // app(VoyagerLaborController::class)->destroy($request, $ids);
+                                                    $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
+
+                                                    $resLabors = $dataLabors->destroy($ids);
+
+                                                    $dataLabors = $resLabors
+                                                        ? [
+                                                            'message'    => __('voyager::generic.successfully_deleted')." {$displayName}",
+                                                            'alert-type' => 'success',
+                                                        ]
+                                                        : [
+                                                            'message'    => __('voyager::generic.error_deleting')." {$displayName}",
+                                                            'alert-type' => 'error',
+                                                        ];
+
+                                                    if ($resLabors) {
+                                                        event(new BreadDataDeleted($dataType, $dataLabors));
+                                                    }
+
+                                                }
+
+                                                return redirect()->route("voyager.{$dataType->slug}.index")->with($dataLabors);
+
+                                            }
+
+                                    }
+
+                                    return redirect()->route("voyager.{$dataType->slug}.index")->with($dataRptMtc);
+
+                                }
+
+                        }
+
+                        return redirect()->route("voyager.{$dataType->slug}.index")->with($dataPenyusutan);
+
+                    }
 
             }
 
+            return redirect()->route("voyager.{$dataType->slug}.index")->with($dataListrik);
+
         }
 
-        return redirect()->route("voyager.{$dataType->slug}.index")->with($data);
     }
 
     public function restore(Request $request, $id)
