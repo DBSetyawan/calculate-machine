@@ -390,6 +390,36 @@
             }, 500);
 
             sendingrecalculate(true).then(function(res){
+                    
+                if(res.data.message.alertype == 'error'){
+
+                    const err = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                        err.fire({
+                            icon: 'error',
+                            title: res.data.message.message
+                        });
+
+                    $("#sendcalculate").text("Recalculate Machine");
+
+                    let curr = '{{ route("voyager.all-recalculate.index") }}';
+                    setTimeout(function(){ 
+                        window.location.href = curr;
+                    }, 6000);
+
+                }
+
+                // }
                 if(res.json == 1){
 
                     const success = Swal.mixin({
@@ -466,13 +496,50 @@
                         
                         const fetchResponse = await fetch(`${apiDataMesin}`, settings);
                         const data = await fetchResponse.json();
+
                         return data;
+
                     } catch (objError) {
-                        if (objError instanceof SyntaxError) {
-                                console.error(JSON.stringify(objError));
-                            } else {
-                                console.error(objError);
-                            }
+
+                        return objError;
+                        // if(objError.data.alert-type == 'error'){
+
+                        // const success = Swal.mixin({
+                        //     toast: true,
+                        //     position: 'top-end',
+                        //     showConfirmButton: false,
+                        //     timer: 4000,
+                        //     timerProgressBar: true,
+                        //     didOpen: (toast) => {
+                        //         toast.addEventListener('mouseenter', Swal.stopTimer)
+                        //         toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        //     }
+                        // })
+
+                        // success.fire({
+                        //     icon: 'error',
+                        //     title: objError.data.message.message
+                        // });
+                        // if (objError instanceof SyntaxError) {
+                        //         // console.error(objError);
+
+                        //         const success = Swal.mixin({
+                        //             toast: true,
+                        //             position: 'top-end',
+                        //             showConfirmButton: false,
+                        //             timer: 4000,
+                        //             timerProgressBar: true,
+                        //             didOpen: (toast) => {
+                        //                 toast.addEventListener('mouseenter', Swal.stopTimer)
+                        //                 toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        //             }
+                        //         })
+
+                        //         success.fire({
+                        //             icon: 'error',
+                        //             title: JSON.stringify(objError)
+                        //         });
+                        //     }
                 }    
             }
 
