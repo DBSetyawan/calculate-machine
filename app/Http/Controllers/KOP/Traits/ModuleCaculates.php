@@ -254,7 +254,7 @@ trait ModuleCaculates {
                     $mtcsfefn = RptMtc::where('code_mesin', $tmp->code_mesin)->first();
 
                     
-                    if(!isset($penyusutanfe) || !isset($mtcsfe) || !isset($labors) || !isset($penyusutanfefn) || !isset($laborsfn) || !isset($mtcsfefn)){
+                    if(!isset($ambil_listrik_dari_mesin) || !isset($penyusutanfe) || !isset($mtcsfe) || !isset($labors) || !isset($penyusutanfefn) || !isset($laborsfn) || !isset($mtcsfefn)){
 
 
                         $laporangajilain_bagianREPRO = LaporanGajiLain::whereIn('category_bagian', [9])->get();
@@ -400,7 +400,7 @@ trait ModuleCaculates {
                                     'total_tanpa_mtc_perjam' => $tmp['total_tanpa_mtc_perjam'],
                 
                                 ];
-                             
+
                                 $sid = 'id';
                    
                                 $bulk_batch = \Batch::update($SendTemporaryCalculateInstance, [$data_recalculate], $sid);
@@ -438,13 +438,13 @@ trait ModuleCaculates {
                                                         'message' => $dt,
                                                     ],
                                                 ], 500);
-                                                // return redirect()->route("voyager.all-recalculate.index")->with($dt);
 
                                         }
 
                                         continue 2;
 
                                     }
+
                                     
                                 }
                                 

@@ -390,7 +390,7 @@
             }, 500);
 
             sendingrecalculate(true).then(function(res){
-                    
+                        console.log(res)
                 if(res.data.message.alertype == 'error'){
 
                     const err = Swal.mixin({
@@ -412,10 +412,10 @@
 
                     $("#sendcalculate").text("Recalculate Machine");
 
-                    let curr = '{{ route("voyager.all-recalculate.index") }}';
-                    setTimeout(function(){ 
-                        window.location.href = curr;
-                    }, 6000);
+                    // let curr = '{{ route("voyager.all-recalculate.index") }}';
+                    // setTimeout(function(){ 
+                    //     window.location.href = curr;
+                    // }, 6000);
 
                 }
 
