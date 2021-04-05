@@ -132,6 +132,8 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 {{-- <script src="{{ ('http://192.168.88.113/kalkulasimesin2/public/js/app.js') }}"></script> --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
 <script type="text/javascript" src="{{ asset('public/js/protip.min.js') }}"></script>
+<script src="{{ ('https://vpn.krisanthium.com:7070/kalkulasimesin2/public/js/jquery.countdown.js') }}"></script>
+<script src="{{ ('https://vpn.krisanthium.com:7070/kalkulasimesin2/public/js/jquery.countdown.min.js') }}"></script>
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
                 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

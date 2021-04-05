@@ -37,6 +37,11 @@
                                     </h2>
                                   </div>
 
+                                  <div class="countdown">
+                                    Limited Time Only!
+                                    <span id="clock"></span>
+                                  </div>
+
                                   <div id="collapseOne" class="collapse " aria-labelledby="headingOne" data-parent="#accordionExample">
                                     <div class="card-body">
                                       <div class="container" id="penyesuaian">
@@ -228,6 +233,25 @@ const isEmpty = (obj) => {
     }
     return Object.getOwnPropertyNames(obj[0]).length === 0;
 };
+
+// documentation http://hilios.github.io/jQuery.countdown/documentation.html
+// http://hilios.github.io/jQuery.countdown/examples/advanced-coupon-site.html
+
+$('#clock').countdown('2022/01/01 16:43:00')
+  .on('update.countdown', function(event) {
+    var format = '%H:%M:%S';
+    if(event.offset.totalDays > 0) {
+      format = '%-d day%!d ' + format;
+    }
+    if(event.offset.weeks > 0) {
+      format = '%-w week%!w ' + format;
+    }
+    $(this).html(event.strftime(format));
+  })
+  .on('finish.countdown', function(event) {
+    $(this).html('This offer has expired!')
+      .parent().addClass('disabled');
+});
 
 $(document).ready(function(){
 

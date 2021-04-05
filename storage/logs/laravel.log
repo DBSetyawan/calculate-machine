@@ -14960,3 +14960,80 @@ Stack trace:
 [stacktrace]
 #0 {main}
 "} 
+[2021-04-05 16:40:45] local.ERROR: The /var/www/html/kalkulasimesin2/bootstrap/cache directory must be present and writable. {"exception":"[object] (Exception(code: 0): The /var/www/html/kalkulasimesin2/bootstrap/cache directory must be present and writable. at /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php:177)
+[stacktrace]
+#0 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php(136): Illuminate\\Foundation\\PackageManifest->write()
+#1 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php(106): Illuminate\\Foundation\\PackageManifest->build()
+#2 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php(89): Illuminate\\Foundation\\PackageManifest->getManifest()
+#3 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php(78): Illuminate\\Foundation\\PackageManifest->config()
+#4 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterFacades.php(26): Illuminate\\Foundation\\PackageManifest->aliases()
+#5 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(237): Illuminate\\Foundation\\Bootstrap\\RegisterFacades->bootstrap()
+#6 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(152): Illuminate\\Foundation\\Application->bootstrapWith()
+#7 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(136): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#8 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(110): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter()
+#9 /var/www/html/kalkulasimesin2/public/index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle()
+#10 {main}
+"} 
+[2021-04-05 16:40:45] local.ERROR: Target class [view] does not exist. {"exception":"[object] (Illuminate\\Contracts\\Container\\BindingResolutionException(code: 0): Target class [view] does not exist. at /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php:832)
+[stacktrace]
+#0 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(712): Illuminate\\Container\\Container->build()
+#1 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(841): Illuminate\\Container\\Container->resolve()
+#2 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(651): Illuminate\\Foundation\\Application->resolve()
+#3 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(826): Illuminate\\Container\\Container->make()
+#4 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(1358): Illuminate\\Foundation\\Application->make()
+#5 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php(168): Illuminate\\Container\\Container->offsetGet()
+#6 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(826): Illuminate\\Routing\\RoutingServiceProvider->Illuminate\\Routing\\{closure}()
+#7 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(712): Illuminate\\Container\\Container->build()
+#8 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(841): Illuminate\\Container\\Container->resolve()
+#9 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(651): Illuminate\\Foundation\\Application->resolve()
+#10 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(826): Illuminate\\Container\\Container->make()
+#11 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php(119): Illuminate\\Foundation\\Application->make()
+#12 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php(687): app()
+#13 /var/www/html/kalkulasimesin2/app/Exceptions/Handler.php(82): response()
+#14 /var/www/html/kalkulasimesin2/app/Exceptions/Handler.php(115): App\\Exceptions\\Handler->KOPAPIResponse()
+#15 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(416): App\\Exceptions\\Handler->render()
+#16 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(114): Illuminate\\Foundation\\Http\\Kernel->renderException()
+#17 /var/www/html/kalkulasimesin2/public/index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle()
+#18 {main}
+
+[previous exception] [object] (ReflectionException(code: -1): Class view does not exist at /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php:830)
+[stacktrace]
+#0 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(830): ReflectionClass->__construct()
+#1 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(712): Illuminate\\Container\\Container->build()
+#2 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(841): Illuminate\\Container\\Container->resolve()
+#3 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(651): Illuminate\\Foundation\\Application->resolve()
+#4 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(826): Illuminate\\Container\\Container->make()
+#5 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(1358): Illuminate\\Foundation\\Application->make()
+#6 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php(168): Illuminate\\Container\\Container->offsetGet()
+#7 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(826): Illuminate\\Routing\\RoutingServiceProvider->Illuminate\\Routing\\{closure}()
+#8 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(712): Illuminate\\Container\\Container->build()
+#9 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(841): Illuminate\\Container\\Container->resolve()
+#10 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(651): Illuminate\\Foundation\\Application->resolve()
+#11 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(826): Illuminate\\Container\\Container->make()
+#12 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php(119): Illuminate\\Foundation\\Application->make()
+#13 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php(687): app()
+#14 /var/www/html/kalkulasimesin2/app/Exceptions/Handler.php(82): response()
+#15 /var/www/html/kalkulasimesin2/app/Exceptions/Handler.php(115): App\\Exceptions\\Handler->KOPAPIResponse()
+#16 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(416): App\\Exceptions\\Handler->render()
+#17 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(114): Illuminate\\Foundation\\Http\\Kernel->renderException()
+#18 /var/www/html/kalkulasimesin2/public/index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle()
+#19 {main}
+"} 
+[2021-04-05 16:40:45] local.ERROR: Uncaught ReflectionException: Class view does not exist in /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php:830
+Stack trace:
+#0 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(830): ReflectionClass->__construct()
+#1 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(712): Illuminate\Container\Container->build()
+#2 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(841): Illuminate\Container\Container->resolve()
+#3 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(651): Illuminate\Foundation\Application->resolve()
+#4 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(826): Illuminate\Container\Container->make()
+#5 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(1358): Illuminate\Foundation\Applicatio {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Uncaught ReflectionException: Class view does not exist in /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php:830
+Stack trace:
+#0 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(830): ReflectionClass->__construct()
+#1 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(712): Illuminate\\Container\\Container->build()
+#2 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(841): Illuminate\\Container\\Container->resolve()
+#3 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(651): Illuminate\\Foundation\\Application->resolve()
+#4 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(826): Illuminate\\Container\\Container->make()
+#5 /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php(1358): Illuminate\\Foundation\\Applicatio at /var/www/html/kalkulasimesin2/vendor/laravel/framework/src/Illuminate/Container/Container.php:832)
+[stacktrace]
+#0 {main}
+"} 
