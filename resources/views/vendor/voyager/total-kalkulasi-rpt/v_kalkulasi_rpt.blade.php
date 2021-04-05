@@ -29,17 +29,18 @@
                                <span class="badge badge-success hidden" style="cursor: pointer" id="resets"><i class="voyager-refresh"></i> Refresh data </span>
                                <div class="accordion" id="accordionExample">
                                 <div class="card">
+                                  <div class="countdown">
+                                    <div class="text-right col-md-10">
+                                    Penutupan transaksi dalam periode tahunan :
+                                    </div>
+                                    <span id="clock"></span>
+                                  </div>
                                   <div class="card-header" id="headingOne">
                                     <h2 class="mb-0">
                                       <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                        <span style="font-family: Quicksand"><h5 class="mb-1 btn btn-success"><i class="voyager-settings"></i> Settings Calculate <i class="voyager-double-down"></i> </span></h5>
                                       </button>
                                     </h2>
-                                  </div>
-
-                                  <div class="countdown">
-                                    Limited Time Only!
-                                    <span id="clock"></span>
                                   </div>
 
                                   <div id="collapseOne" class="collapse " aria-labelledby="headingOne" data-parent="#accordionExample">

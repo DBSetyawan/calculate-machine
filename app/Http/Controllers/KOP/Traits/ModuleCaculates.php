@@ -481,9 +481,9 @@ trait ModuleCaculates {
                                          */
                                         // break 1;
                 
-                                        $d = HistoryRecalculateTemporary::insert($pf);
-                                }
-
+                                    }
+                                    
+                            $d = HistoryRecalculateTemporary::insert($pf);
 
                                             
                         }
