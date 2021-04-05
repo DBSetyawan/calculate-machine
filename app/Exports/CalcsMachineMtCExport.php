@@ -40,11 +40,11 @@ class CalcsMachineMtCExport implements FromCollection, WithProperties, WithMappi
             $calcs->Mesin->code_mesin,
             (String) $calcs->id_mtc,
             $calcs->id_listrik,
-            $calcs->id_penyusutan,
             $calcs->id_labor,
-            $calcs->id_bprodlain_insteadof_mtc,
+            $calcs->id_penyusutan,
             $calcs->id_gajilain,
             $calcs->id_bgoenjualan,
+            $calcs->id_bprodlain_insteadof_mtc,
             $calcs->id_bau,
             $calcs->total_tanpa_mtc,
             $calcs->total_tanpa_mtc_perjam
@@ -58,13 +58,12 @@ class CalcsMachineMtCExport implements FromCollection, WithProperties, WithMappi
             'E' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'F' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'G' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
-            // 'H' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'H' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'I' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'J' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'K' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
             'L' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
-            'M' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE
+            'M' => NumberFormat::FORMAT_CURRENCY_IDR_SIMPLE,
         ];
     }
 
@@ -76,11 +75,11 @@ class CalcsMachineMtCExport implements FromCollection, WithProperties, WithMappi
             'MESIN',
             'MAINTENANCE',
             'LISTRIK',
-            // 'PENYUSUTAN',
             'LABOR',
-            'BIAYA PRODUKSI LAIN',
+            'PENYUSUTAN',
             'GAJI LAINNYA',
             'BAGIAN PENJUALAN',
+            'BIAYA PRODUKSI LAIN',
             'BIAYA ADMINISTRASI UMUM',
             'TOTAL SEMUA BIAYA TANPA MTC',
             'TOTAL SEMUA BIAYA TANPA MTC(/JAM)',
