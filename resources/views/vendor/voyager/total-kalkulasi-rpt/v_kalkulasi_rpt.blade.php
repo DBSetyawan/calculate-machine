@@ -184,6 +184,11 @@
                 </div>
                 <div class="panel panel-bordered">
                   <div class="panel-body">
+
+                    <button class="btn btn-link" type="button">
+                      <span style="font-family: Quicksand"><h5 class="mb-1 btn btn-success"><i class="voyager-settings"></i> Sending KOP machine <i class="voyager-double-down"></i> </span></h5>
+                     </button>
+
                       <div class="row">
                         <div class="col-2">
                           <div class="table-responsive TransactionTrRtRt">
@@ -201,7 +206,7 @@
                                       <th>TOTAL RATA RATA SEMUA BIAYA TANPA MTC</th>
                                       <th>TOTAL RATA RATA SEMUA BIAYA TANPA MTC (/JAM)</th>
                                       {{-- @if(Auth::User()->role->name == "admin" ) --}}
-                                      <th>Actions</th>
+                                      <th>TOTAL RATA RATA</th>
                                       {{-- @endif --}}
                                     </tr>
                                 </thead>

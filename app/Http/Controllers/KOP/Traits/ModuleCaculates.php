@@ -1725,7 +1725,8 @@ trait ModuleCaculates {
                 sum(total_tanpa_penyusutan) as total_tanpa_penyusutans,
                 sum(total_tanpa_penyusutan_perjam) as total_tanpa_penyusutan_perjams,
                 sum(total_tanpa_mtc) as total_tanpa_mtcs,
-                sum(total_tanpa_mtc_perjam) as total_tanpa_mtc_perjams')->get();
+                sum(total_tanpa_mtc_perjam) as total_tanpa_mtc_perjams,
+                avg(total_semua_biaya+total_semua_biaya_perjam+total_tanpa_penyusutan_n_mtc+total_tanpa_penyusutan_n_mtc_perjam+total_tanpa_penyusutan+total_tanpa_penyusutan_perjam+total_tanpa_mtc+total_tanpa_mtc_perjam) as avg_grp')->get();
                 
                 
                 $listrik = DB::table('total_kalkulasi_tanpa_penyusutan')
@@ -1807,11 +1808,11 @@ trait ModuleCaculates {
                     ->editColumn('rtrt_tanpa_mtc_total_perjam', function($tanpa_mtc_total_perjam) {
                         return RptCalcMachine::frm_rph($tanpa_mtc_total_perjam->total_tanpa_mtc_perjams);
                     }) 
-                    ->addColumn('action', function($row) use($request){
+                    ->addColumn('action', function($avg_grp){
                         // dd($request->all());
-
-                        $sd ='<div class="col-md-12"><span class="no-sort no-click bread-actions"><a class="btn btn-sm btn-primary pull-right edit"><span class="voyager-edit"> send </span> </a>';
-                    return $sd;
+                        return $avg_grp->avg_grp;
+                        // $sd ='<div class="col-md-12"><span class="no-sort no-click bread-actions"><a class="btn btn-sm btn-primary pull-right edit"><span class="voyager-edit"> send </span> </a>';
+                    // return $sd;
                     })
                     ->rawColumns(['action','group_mesin'])
                     ->escapeColumns()->make(true);
