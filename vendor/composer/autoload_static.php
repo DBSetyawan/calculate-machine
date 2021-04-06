@@ -964,6 +964,7 @@ class ComposerStaticInitbf9caa84afbd10586b93936e6de03628
         'App\\MesinTotal' => __DIR__ . '/../..' . '/app/MesinTotal.php',
         'App\\Models\\Admin' => __DIR__ . '/../..' . '/app/Models/Admin.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
+        'App\\Models\\tb_mesin' => __DIR__ . '/../..' . '/app/Models/tb_mesin.php',
         'App\\Mtc' => __DIR__ . '/../..' . '/app/Mtc.php',
         'App\\Penyusutan' => __DIR__ . '/../..' . '/app/Penyusutan.php',
         'App\\PenyusutanTotal' => __DIR__ . '/../..' . '/app/PenyusutanTotal.php',

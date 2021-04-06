@@ -500,7 +500,8 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                         'category_bagian' => $datatemp->category_bagian,
                         'id_listrik' => $datatemp->ncost_bulan_plus_adm,
                         'group_mesin' => $datatemp->group_mesin,
-                        'listrik_fk' =>  $datatemp->id
+                        'listrik_fk' =>  $datatemp->id,
+                        'begin_at' => Carbon::now()
                     ];
 
                     AllRecalculate::updateOrCreate(['code_mesin' => $datatemp->code_mesin], $data);

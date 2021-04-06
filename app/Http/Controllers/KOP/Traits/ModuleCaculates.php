@@ -17,7 +17,9 @@ use RumusPenyusutan;
 use App\AllRecalculate;
 use App\KategoriBagian;
 use App\LaporanGajiLain;
+use App\Models\tb_mesin;
 use Mavinoo\Batch\Batch;
+use App\Models\KOP_mesin;
 use Illuminate\Http\Request;
 use App\HistoryLogRecalculate;
 use App\LaporanBagianPenjualan;
@@ -213,6 +215,62 @@ trait ModuleCaculates {
             ], $code);
         }
 
+    }
+
+    public function ConnectionKOPkalkulasi(Request $req)
+    {
+        $KOP = new tb_mesin;
+
+        $KOP->setConnection('KOP_kalkulasi');
+
+        $t = $KOP->whereNotNull('id_mesin')->get();
+
+        dd($t);
+    }
+
+
+    public function closingtransactionkop(){
+
+        try
+            {
+                $SendTemporaryCalculateInstance = new AllRecalculate;
+                
+                $allrecalculates = AllRecalculate::with(['Listrik.Listrikperjam',
+                'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
+                'Company'])->get()->toArray();
+
+                            foreach($allrecalculates as $index => $tmp){
+
+                                $d[] = [
+                                    'id' => $tmp['id'],
+                                    'ended_at' => Carbon::now(), //testing closed
+                                    // 'ended_at' => NULL, //testing opened
+
+                                ];
+
+                            }
+
+                    $id = 'id';
+
+                \Batch::update($SendTemporaryCalculateInstance, $d, $id);
+
+            return response()->json(['res' => 200]);
+                
+        } catch (Exception $e) {
+            $code = 500;
+            $message = __('voyager::generic.internal_error');
+
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'data' => [
+                    'message' => $message,
+                    'line' => $e->getLine(),
+                ],
+            ], $code);
+        }
     }
 
     public function rclluncheckpnyt(){

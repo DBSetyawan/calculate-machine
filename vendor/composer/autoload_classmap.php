@@ -163,6 +163,7 @@ return array(
     'App\\MesinTotal' => $baseDir . '/app/MesinTotal.php',
     'App\\Models\\Admin' => $baseDir . '/app/Models/Admin.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
+    'App\\Models\\tb_mesin' => $baseDir . '/app/Models/tb_mesin.php',
     'App\\Mtc' => $baseDir . '/app/Mtc.php',
     'App\\Penyusutan' => $baseDir . '/app/Penyusutan.php',
     'App\\PenyusutanTotal' => $baseDir . '/app/PenyusutanTotal.php',

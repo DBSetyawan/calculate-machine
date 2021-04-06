@@ -131,7 +131,7 @@
                         </div>
                       </div>
                     </div>
-                    <button id="btn-show-all-children" class="btn btn-small btn-warning" type="button">show/hide detail data</button>
+                    {{-- <button id="btn-show-all-children" class="btn btn-small btn-warning" type="button">show/hide detail data</button> --}}
                     <div class="table-responsive TransactionTr">
                         <table id="dataTablePenyusutan" class="table table-hover" >
                               <thead>
@@ -856,6 +856,8 @@ $(document).ready(function(){
     function mesin_calc_table(penyusutan)
         {
 
+        // <a onclick="window.open(this.href,'_blank');return false;" href="{!! route('voyager.history-recalculate-temporary.index') !!}" class="badge badge-info">History log recalculate</a>
+
           let total_rows = `<span class="label label-info">Open Transaction (Total semua data( 
                                   <span class="badge badge-success">
                                         {{ count($TotalKalkulasiTanpaPenyusutan->get()) }}
@@ -867,7 +869,6 @@ $(document).ready(function(){
                       <div class="panel panel-bordered col-md-12">
                         <div class="panel-body">
                           <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                             <a onclick="window.open(this.href,'_blank');return false;" href="{!! route('voyager.history-recalculate-temporary.index') !!}" class="badge badge-info">History log recalculate</a>
                              <i class="voyager-file-text"> </i>
                             </div>
                             <div class="col-8">

@@ -63,6 +63,20 @@ return [
             ]) : [],
         ],
 
+        'KOP_kalkulasi' => array(
+            'driver'    => 'mysql',
+            'host'      => '192.168.88.99',
+            'database'  => 'db_kalkulasi_tes',
+            'username'  => 'maria',
+            'password'  => 'maria123',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'prefix_indexes' => true,
+            'strict' => false,
+            'engine' => null,
+        ),
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

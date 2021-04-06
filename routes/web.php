@@ -91,6 +91,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('calc-rpts/form-transaction-machine-calc','KOP\VoyagerTotalKalkulasiController@form_tr_kakulasi')->name('tr.mch.store.tr.sc.edp');
     Route::get('recalculate-machine/received-cost/{id}','KOP\VoyagerRecalController@SendRecalculate')->name('var.recalculate.edp');
     Route::get('calc-rpts/form-test/','KOP\VoyagerTotalKalkulasiController@ListrikInstanceOfPenyusutan')->name('tr.test');
+    Route::post('calc-kop/closing-transaction/','KOP\VoyagerTotalKalkulasiController@closingtransactionkop')->name('kop.closing');
     Route::get('calc-rpts/rpts/','KOP\VoyagerListrikController@rpts')->name('rpts');
     // Route::get('/history-log-recalculate','KOP\VoyagerHIstoryLogCalculateController@index')->name('h.index');
     Route::post('calc-rpts/open-transaction-calc-edp','KOP\VoyagerTotalKalkulasiController@OpenTransactionPenyusutan')->name('tr.open.penyusutan');
@@ -103,6 +104,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('dashboard','KOP\VoyagerController@index')->name('voyager.dashboard.index');
     Route::get('button-load-ButtonexportCalcTanpaPenyusutan','KOP\VoyagerTotalKalkulasiController@ButtonexportCalcTanpaPenyusutan')->name('voyager.ButtonexportCalcTanpaPenyusutan');
     Route::post('button-load-relcalculate','KOP\VoyagerTotalKalkulasiController@recalculate')->name('voyager.recalculate');
+    Route::get('kop-kalkulasi','KOP\VoyagerTotalKalkulasiController@ConnectionKOPkalkulasi')->name('kop.kalkulasi');
     Route::get('button-load-ButtonCalcSmuaBiayaExports','KOP\VoyagerTotalKalkulasiController@ButtonCalcSmuaBiayaExports')->name('voyager.ButtonCalcSmuaBiayaExports');
     Route::get('button-load-ButtonexportCalcTanpaMTC','KOP\VoyagerTotalKalkulasiController@ButtonexportCalcTanpaMTC')->name('voyager.ButtonexportCalcTanpaMTC');
     Route::post('button-load-recalculateTanpaPenyusutan','KOP\VoyagerTotalKalkulasiController@recalculateTanpaPenyusutan')->name('voyager.recalculateTanpaPenyusutan');
