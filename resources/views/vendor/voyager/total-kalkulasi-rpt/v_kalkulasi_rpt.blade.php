@@ -354,6 +354,7 @@ $(document).ready(function(){
             recalculateTanpaPenyusutan().then(value => {
                     if(value.res == 200){
                       $('#dataTablePenyusutan').DataTable().draw()
+                      $('#dataTableSearchRange').DataTable().draw()
                     }
                   }
                 );
@@ -411,6 +412,7 @@ $(document).ready(function(){
               recalcc_tanpapenyusutan().then(value => {
                       if(value.res == 200){
                         $('#dataTablePenyusutan').DataTable().draw()
+                        $('#dataTableSearchRange').DataTable().draw()
                       }
                   });
               
@@ -452,6 +454,7 @@ $(document).ready(function(){
                recuncheck_tnppnystan().then(value => {
                     if(value.res == 200){
                       $('#dataTablePenyusutan').DataTable().draw()
+                      $('#dataTableSearchRange').DataTable().draw()
                     }
                   }
                 );
@@ -547,6 +550,7 @@ $(document).ready(function(){
                         recalcc_recalculateTanpaPenyusutanNtanpaMTC().then(value => {
                         if(value.res == 200){
                           $('#dataTablePenyusutan').DataTable().draw()
+                          $('#dataTableSearchRange').DataTable().draw()
                         }
                       })
 
@@ -664,6 +668,7 @@ $(document).ready(function(){
                       //set recallculate
                       recuncheck_tnppnystan().then(value => {
                             if(value.res == 200){
+                              $('#dataTableSearchRange').DataTable().draw()
                               $('#dataTablePenyusutan').DataTable().draw()
                             }
                           }
@@ -761,6 +766,7 @@ $(document).ready(function(){
                recuncheck_tnppnystan().then(value => {
                     if(value.res == 200){
                       $('#dataTablePenyusutan').DataTable().draw()
+                      $('#dataTableSearchRange').DataTable().draw()
                     }
                   }
                 );
@@ -813,6 +819,7 @@ $(document).ready(function(){
                recuncheck_tnppnystan().then(value => {
                     if(value.res == 200){
                       $('#dataTablePenyusutan').DataTable().draw()
+                      $('#dataTableSearchRange').DataTable().draw()
                     }
                   }
                 );
@@ -1144,6 +1151,7 @@ $(document).ready(function(){
 
                             recalcc_tanpapenyusutan().then(value => {
                               if(value.res == 200){
+                                $('#dataTableSearchRange').DataTable().draw()
                                 $('#dataTablePenyusutan').DataTable().draw()
                               }
                             });
@@ -1151,6 +1159,7 @@ $(document).ready(function(){
                             recalcc_tanpamtcs().then(value => {
                                 if(value.res == 200){
                                   $('#dataTablePenyusutan').DataTable().draw()
+                                  $('#dataTableSearchRange').DataTable().draw()
                                 }
                             });
 
@@ -1345,6 +1354,7 @@ $(document).ready(function(){
                                   recalcc_PenyusutanRecalculateOnly().then(value => {
                                     if(value.res == 200){
                                       $('#dataTablePenyusutan').DataTable().draw()
+                                      $('#dataTableSearchRange').DataTable().draw()
                                     }
                                   });
 
@@ -1414,6 +1424,7 @@ $(document).ready(function(){
                                 recuncheck_tnppnystan().then(value => {
                                     if(value.res == 200){
                                       $('#dataTablePenyusutan').DataTable().draw()
+                                      $('#dataTableSearchRange').DataTable().draw()
                                     }
                                   }
                                 );
@@ -1556,9 +1567,16 @@ $(document).ready(function(){
                               
                               ) 
                                
+                               //progress adjust
                                 recalculateTanpaPenyusutan().then(value => {
                                   if(value.res == 200){
                                     $('#dataTablePenyusutan').DataTable().draw()
+                                    // $('#dataTableSearchRange').DataTable().draw()
+                                    let pnytvsbles = $('#dataTableSearchRange').DataTable();
+                                    // alert("asda")
+                                    pnytvsbles.columns.adjust().draw();
+                                    // return recalulate();
+
                                   }
                                 });
                               
@@ -1620,6 +1638,7 @@ $(document).ready(function(){
                               recalcc_mtconly().then(value => {
                                 if(value.res == 200){
                                   $('#dataTablePenyusutan').DataTable().draw()
+                                  $('#dataTableSearchRange').DataTable().draw()
                                 }
                               });
 
@@ -2038,16 +2057,16 @@ $(document).ready(function(){
                       }
                 },
             columns: [
-                  {data: 'company_name', name: 'company_name',  width: "50px" },
-                  {data: 'group_mesin', name: 'GROUP MESIN',  width: "230px" },
-                  {data: 'rtrt_semua_total_biaya', name: 'TOTAL RATA RATA SEMUA BIAYA', width: "100px"},
-                  {data: 'rtrt_semua_total_biaya_perjam', name: 'TOTAL RATA RATA SEMUA BIAYA (/JAM)', width: "100px"},
-                  {data: 'rtrt_tanpa_penyusutan_plus_mtc_total', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN + MTC', width: "190px"},
-                  {data: 'rtrt_tanpa_penyusutan_plus_mtc_perjam', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN + MTC (/JAM)', width: "190px"},
-                  {data: 'rtrt_tanpa_penyusutan_total', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN (/JAM)', width: "190px"},
-                  {data: 'rtrt_tanpa_penyusutan_total_perjam', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN (/JAM)', width: "190px"},
-                  {data: 'rtrt_tanpa_mtc_total', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA MTC', width: "150px"},
-                  {data: 'rtrt_tanpa_mtc_total_perjam', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA MTC (/JAM)', width: "150px"},
+                  {data: 'company_name', name: 'company_name' },
+                  {data: 'group_mesin', name: 'GROUP MESIN'},
+                  {data: 'rtrt_semua_total_biaya', name: 'TOTAL RATA RATA SEMUA BIAYA'},
+                  {data: 'rtrt_semua_total_biaya_perjam', name: 'TOTAL RATA RATA SEMUA BIAYA (/JAM)'},
+                  {data: 'rtrt_tanpa_penyusutan_plus_mtc_total', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN + MTC'},
+                  {data: 'rtrt_tanpa_penyusutan_plus_mtc_perjam', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN + MTC (/JAM)'},
+                  {data: 'rtrt_tanpa_penyusutan_total', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN (/JAM)'},
+                  {data: 'rtrt_tanpa_penyusutan_total_perjam', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN (/JAM)'},
+                  {data: 'rtrt_tanpa_mtc_total', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA MTC'},
+                  {data: 'rtrt_tanpa_mtc_total_perjam', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA MTC (/JAM)'},
                   {data: 'action', name: 'action', orderable: false, searchable: false},
 
               ]
