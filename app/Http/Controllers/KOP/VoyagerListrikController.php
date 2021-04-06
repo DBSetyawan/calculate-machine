@@ -173,6 +173,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
         $Totalakumulasibiayalistrik = [
             'shift' => $r->shift,
+            'begin_at' => Carbon::now(),
             'listrikperjam' => $r->perjam,
             // 'listrikperjam' => $r->listrikperjam,
             'ampere' => $r->ampere,
@@ -321,7 +322,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
     {
         $company = Company::all();
         $group_mesin = Lb8KategoriMesin::all();
-        $mesin = Mesin::all();
+        $mesin = Mesin::where('on_off', '!=', 0)->with('KbagianTo','CompanyTo','GroupMesinTo','MesinListrikPerjamTo','AsumsiTo')->get();
         $cbagian = KategoriBagian::all();
         $LsOutputPerjam = ListrikOutput::all();
         $LwbpMaster = LwbpMaster::all();

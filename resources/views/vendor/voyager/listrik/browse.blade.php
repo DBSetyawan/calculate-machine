@@ -349,6 +349,13 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     <span>{{ $data->{$row->field} }}</span>
+                                                    @if ($row->display_name == 'TRANSACTION STATUS')
+                                                        @if(!empty($data->ended_at))
+                                                                <span class="badge badge-danger">closed</span>
+                                                            @else
+                                                                <span class="badge badge-success">opened</span>
+                                                        @endif
+                                                    @endif
                                                     @if ($row->display_name == 'TOTAL LISTRIK')
                                                         <span>{{ "Rp " . number_format($data->total_biaya_listrik,0,',','.') }}</span>
                                                     @endif

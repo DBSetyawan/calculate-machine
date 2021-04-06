@@ -286,20 +286,18 @@ trait ModuleCaculates {
             {
 
                 $SendTemporaryCalculateInstance = new AllRecalculate;
-                $allrecalculate = AllRecalculate::with(['Listrik.Listrikperjam',
+                $allrecalculate = AllRecalculate::whereNull('ended_at')->with(['Listrik.Listrikperjam',
                 'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
                 'Company'])->get();
 
-                $allrecalculates = AllRecalculate::with(['Listrik.Listrikperjam',
+                $allrecalculates = AllRecalculate::whereNull('ended_at')->with(['Listrik.Listrikperjam',
                 'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
                 'Company'])->get()->toArray();
-
 
                 foreach($allrecalculate as $indexs => $tmp){
 
                     // $calc = AllRecalculate::orderby('id','desc')->with('mesin.MesinListrikPerjamTo')->first();
                     // $recRow = AllRecalculate::orderby('created_at','desc')->with(['Listrik.Listrikperjam','KategoriBagian','Mesin','GroupMesin','Company'])->first();
-                    
                 
                     // $penyusutanfefn = Penyusutan::where('code_mesin', $tmp->code_mesin)->first();
                     // $laborsfn = Labor::where('code_mesin', $tmp->code_mesin)->first();
@@ -315,11 +313,34 @@ trait ModuleCaculates {
                     $penyusutanfefn = Penyusutan::where('code_mesin', $tmp->code_mesin)->first();
                     $laborsfn = Labor::where('code_mesin', $tmp->code_mesin)->first();
                     $mtcsfefn = RptMtc::where('code_mesin', $tmp->code_mesin)->first();
-                    
-                    if( isset(Labor::where('code_mesin', $tmp->code_mesin)->first()->total_biaya) === false && isset($tmp->mesin->MesinListrikPerjamTo->persen) === false && isset($mtcsfefn) === false && isset($laborsfn) === false && isset($penyusutanfe) === false && isset(RptMtc::where('code_mesin', $tmp->code_mesin)->first()->total_biaya_perbulan) === false ){
+
+                    for ($i=0; $i < count($allrecalculate->toArray()); $i++){
+
+                        $ambillistrik[] = isset($allrecalculate->toArray()[$i]['mesin']['mesin_listrik_perjam_to']['persen']) 
+                        ? $allrecalculate->toArray()[$i]['mesin']['mesin_listrik_perjam_to']['persen']
+                        : "kosong";
+
+                        $checklab[] = isset(Labor::where('code_mesin', $allrecalculate->toArray()[$i]['code_mesin'])->first()->total_biaya) 
+                            ? Labor::where('code_mesin', $allrecalculate->toArray()[$i]['code_mesin'])->first()->total_biaya 
+                            : "kosong";
+
+                        $checkpenyusutan[] = isset(Penyusutan::where('code_mesin', $allrecalculate->toArray()[$i]['code_mesin'])->first()->penyusutan_perbulan) 
+                            ? Penyusutan::where('code_mesin', $allrecalculate->toArray()[$i]['code_mesin'])->first()->penyusutan_perbulan 
+                            : "kosong";
+
+                        $checkrpt[] = isset(RptMtc::where('code_mesin', $allrecalculate->toArray()[$i]['code_mesin'])->first()->total_biaya_perbulan) 
+                            ? RptMtc::where('code_mesin', $allrecalculate->toArray()[$i]['code_mesin'])->first()->total_biaya_perbulan 
+                            : "kosong";
+                    // $mtcsfe = RptMtc::where('code_mesin', $tmp->code_mesin)->first()->total_biaya_perbulan;
+                    // $penyusutanfe = Penyusutan::where('code_mesin', $tmp->code_mesin)->first()->penyusutan_perbulan;
+                    // dd(Penyusutan::where('code_mesin', $dd)->first()->penyusutan_perbulan);
+                    // $labors = Labor::where('code_mesin', $tmp->code_mesin)->first()->total_biaya;
+                    if( $checkpenyusutan[$i] == "kosong" || $checklab[$i] == "kosong" || $checkrpt[$i] == "kosong" || !isset($tmp->mesin->MesinListrikPerjamTo->persen) ){
                    
+                            if($checkpenyusutan[$i] == "kosong"){
+
                                 $dt = [
-                                    'message'  => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, biaya total dari beberapa master masih ada yang belum diisi.'),
+                                    'message'  => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, biaya total dari beberapa master masih ada yang belum diisi di Master Penyusutan'),
                                     'alertype' => 'error'
                                 ];
 
@@ -328,11 +349,56 @@ trait ModuleCaculates {
                                         'message' => $dt,
                                     ],
                                 ], 500);
+                              
+                            }
 
-                      
+                            if($ambillistrik[$i] == "kosong"){
+
+                                $dt = [
+                                    'message'  => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, biaya total dari beberapa master masih ada yang belum lengkap dari listrik output perjam belum diisi.'),
+                                    'alertype' => 'error'
+                                ];
+
+                                return response()->json([
+                                    'data' => [
+                                        'message' => $dt,
+                                    ],
+                                ], 500);
+                              
+                            }
+
+                                    if($checklab[$i] == "kosong"){
+
+                                        $dt = [
+                                            'message'  => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, biaya total dari beberapa master masih ada yang belum diisi di Master Labor'),
+                                            'alertype' => 'error'
+                                        ];
+
+                                        return response()->json([
+                                            'data' => [
+                                                'message' => $dt,
+                                            ],
+                                        ], 500);
+                                    }
+
+                                    if($checkrpt[$i] == "kosong"){
+
+                                        $dt = [
+                                            'message'  => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, biaya total dari beberapa master masih ada yang belum diisi di Master MTC / Biaya Produksi Lain'),
+                                            'alertype' => 'error'
+                                        ];
+
+                                        return response()->json([
+                                            'data' => [
+                                                'message' => $dt,
+                                            ],
+                                        ], 500);
+                                    }
+
                             } else {
-
-                                $ambil_listrik_dari_mesin = $tmp->mesin->MesinListrikPerjamTo->persen;
+                                // dd($tmp->mesin->MesinListrikPerjamTo);
+                                $ambil_listrik_dari_mesin = $ambillistrik[$i];
+                                // $ambil_listrik_dari_mesin = $tmp->mesin->MesinListrikPerjamTo->persen;
 
                                 $mtcsfe = RptMtc::where('code_mesin', $tmp->code_mesin)->first()->total_biaya_perbulan;
                                 $penyusutanfe = Penyusutan::where('code_mesin', $tmp->code_mesin)->first()->penyusutan_perbulan;
@@ -497,7 +563,7 @@ trait ModuleCaculates {
                                                             
                                                     foreach ($md as $key => $val) {
                 
-                                                        if( isset($tmp['mesin']['id']) === false && isset($tmp['kategori_bagian']['id']) === false && isset($tmp['company']['id']) === false && isset($tmp['group_mesin']['id']) === false){
+                                                        if( !isset($tmp['mesin']['id']) || !isset($tmp['kategori_bagian']['id']) || !isset($tmp['company']['id']) || !isset($tmp['group_mesin']['id'])){
                                                             
                                                             $dt = [
                                                                 'message'    => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, ada data yang kosong'),
@@ -535,11 +601,12 @@ trait ModuleCaculates {
                                             }
 
                                             
-                                    /**
-                                     * Recalculate not working fine.
-                                     */
-                                    // break 1;
-            
+                                        /**
+                                         * Recalculate not working fine.
+                                         */
+                                        // break 1;
+                
+                                    }
                                 }
 
                             }
@@ -1583,7 +1650,7 @@ trait ModuleCaculates {
             
             if(!empty($request->penyusutan))
             {
-        $new = AllRecalculate::with(['listrik','KategoriBagian','Mesin.GroupMesinTo','GroupMesin','Company'])->get();
+        $new = AllRecalculate::whereNull('ended_at')->with(['listrik','KategoriBagian','Mesin.GroupMesinTo','GroupMesin','Company'])->get();
                 
                
                 $listrik = DB::table('total_kalkulasi_tanpa_penyusutan')
@@ -1715,7 +1782,7 @@ trait ModuleCaculates {
             
             // if(!empty($request->penyusutan))
             // {
-                $new = AllRecalculate::with(['listrik','KategoriBagian','Mesin.GroupMesinTo','Company','GroupMesin'])
+                $new = AllRecalculate::whereNull('ended_at')->with(['listrik','KategoriBagian','Mesin.GroupMesinTo','Company','GroupMesin'])
                 ->groupBy('group_mesin')
                 ->selectRaw('*,
                 sum(total_semua_biaya) as total_semua_biayas,
@@ -1808,13 +1875,13 @@ trait ModuleCaculates {
                     ->editColumn('rtrt_tanpa_mtc_total_perjam', function($tanpa_mtc_total_perjam) {
                         return RptCalcMachine::frm_rph($tanpa_mtc_total_perjam->total_tanpa_mtc_perjams);
                     }) 
-                    ->addColumn('action', function($avg_grp){
+                    ->addColumn('avg_grp', function($avg_grp){
                         // dd($request->all());
                         return $avg_grp->avg_grp;
                         // $sd ='<div class="col-md-12"><span class="no-sort no-click bread-actions"><a class="btn btn-sm btn-primary pull-right edit"><span class="voyager-edit"> send </span> </a>';
                     // return $sd;
                     })
-                    ->rawColumns(['action','group_mesin'])
+                    ->rawColumns(['avg_grp','group_mesin'])
                     ->escapeColumns()->make(true);
         }
       

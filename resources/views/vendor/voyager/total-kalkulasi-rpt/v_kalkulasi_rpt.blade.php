@@ -2073,7 +2073,8 @@ $(document).ready(function(){
                   {data: 'rtrt_tanpa_penyusutan_total_perjam', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN (/JAM)'},
                   {data: 'rtrt_tanpa_mtc_total', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA MTC'},
                   {data: 'rtrt_tanpa_mtc_total_perjam', name: 'TOTAL RATA RATA SEMUA BIAYA TANPA MTC (/JAM)'},
-                  {data: 'action', name: 'action', orderable: false, searchable: false},
+                  {data: 'avg_grp', name: 'RATA RATA'},
+                  // {data: 'action', name: 'action', orderable: false, searchable: false},
 
               ]
         } );
