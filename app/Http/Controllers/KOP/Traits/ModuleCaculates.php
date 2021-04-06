@@ -396,7 +396,7 @@ trait ModuleCaculates {
                                     }
 
                             } else {
-                                
+
                                 $ambil_listrik_dari_mesin = $ambillistrik[$i];
                                 // $ambil_listrik_dari_mesin = $tmp->mesin->MesinListrikPerjamTo->persen;
 
@@ -596,7 +596,7 @@ trait ModuleCaculates {
                 
                                                     }
 
-                                            continue 1;
+                                            // continue 2;
                                                     
                                         }
 
