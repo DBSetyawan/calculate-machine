@@ -180,7 +180,7 @@
         <div class="col-md-12">
             <div class="panel panel-bordered">
                 <div class="panel-body">
-                <div class="panel-heading" style="border-bottom:0;margin-bottom:-4px">
+                <div class="panel-heading">
                 </div>
                 <div class="panel panel-bordered">
                   <div class="panel-body">
@@ -288,6 +288,10 @@ function extractContent(s) {
 };
 
 $(document).ready(function(){
+
+  $(window).on( 'resize', function () {
+  console.log( 'Resize', $(window).width(), $(window).height() );
+} );
 
   let donlod_tanpa_mtc = "{!! route('voyager.excell.export.calc.exportCalcTanpaMTC') !!}";
   let download_tanpa_mtc = donlod_tanpa_mtc.replace("%7B")
@@ -726,6 +730,19 @@ $(document).ready(function(){
       reset.column([14]).visible(true);
       reset.column([17]).visible(false);
       reset.column([16]).visible(false);
+      
+      let jkosmuabiaya = $('#dataTableSearchRange').DataTable().draw();
+      jkosmuabiaya.column([0]).visible(true);
+      jkosmuabiaya.column([1]).visible(true);
+      jkosmuabiaya.column([2]).visible(true);
+      jkosmuabiaya.column([3]).visible(true);
+      jkosmuabiaya.column([4]).visible(true);
+      jkosmuabiaya.column([5]).visible(true);
+      jkosmuabiaya.column([6]).visible(true);
+      jkosmuabiaya.column([7]).visible(true);
+      jkosmuabiaya.column([8]).visible(true);
+      jkosmuabiaya.column([9]).visible(true);
+      jkosmuabiaya.column([10]).visible(false);
 
       $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
       $("#setall").hide();
@@ -967,6 +984,7 @@ $(document).ready(function(){
             
             dataTable.columns.adjust().draw();
 
+
             $('#dataTablePenyusutan tbody').on('click', 'td.details-control', function () {
                 var tr = $(this).closest('tr');
                 var row = dataTable.row( tr );
@@ -1096,6 +1114,19 @@ $(document).ready(function(){
                       $("#pnyt").attr('disabled', 'disabled'); 
                       $("#mtcs").attr('disabled', 'disabled'); 
 
+                      let sRangex = $('#dataTableSearchRange').DataTable().draw();
+                        sRangex.column([0]).visible(true);
+                        sRangex.column([1]).visible(true);
+                        sRangex.column([2]).visible(false);
+                        sRangex.column([3]).visible(false);
+                        sRangex.column([4]).visible(false);
+                        sRangex.column([5]).visible(false);
+                        sRangex.column([6]).visible(true);
+                        sRangex.column([7]).visible(true);
+                        sRangex.column([8]).visible(true);
+                        sRangex.column([9]).visible(true);
+                        sRangex.column([10]).visible(false);
+
                       setTimeout(function(){ 
           
                           $(".calctp").hide(); //tanpa penyusutan
@@ -1192,9 +1223,25 @@ $(document).ready(function(){
                       dataTable.column([16]).visible(false);
                       dataTable.column([17]).visible(true);
 
+                      // check for table recalcualte avg
+                      let dataTableSearchRange_vsble = $('#dataTableSearchRange').DataTable().draw();
+                      dataTableSearchRange_vsble.column([0]).visible(true);
+                      dataTableSearchRange_vsble.column([1]).visible(true);
+                      dataTableSearchRange_vsble.column([2]).visible(false);
+                      dataTableSearchRange_vsble.column([3]).visible(false);
+                      dataTableSearchRange_vsble.column([4]).visible(false);
+                      dataTableSearchRange_vsble.column([5]).visible(false);
+                      dataTableSearchRange_vsble.column([6]).visible(true);
+                      dataTableSearchRange_vsble.column([7]).visible(true);
+                      dataTableSearchRange_vsble.column([8]).visible(false);
+                      dataTableSearchRange_vsble.column([9]).visible(false);
+                      dataTableSearchRange_vsble.column([10]).visible(false);
+
+
                       recalcc_tanpapenyusutan().then(value => {
                         if(value.res == 200){
                           $('#dataTablePenyusutan').DataTable().draw()
+
                         }
                       });
 
@@ -1261,6 +1308,21 @@ $(document).ready(function(){
                           db_temp.column(8).visible(true);
                           // db_temp.column(5).visible(true);
 
+                          let sRange = $('#dataTableSearchRange').DataTable().draw();
+                            sRange.column([0]).visible(true);
+                            sRange.column([1]).visible(true);
+                            sRange.column([2]).visible(false);
+                            sRange.column([3]).visible(false);
+                            sRange.column([4]).visible(false);
+                            sRange.column([5]).visible(false);
+                            sRange.column([6]).visible(false);
+                            sRange.column([7]).visible(false);
+                            sRange.column([8]).visible(true);
+                            sRange.column([9]).visible(true);
+                            sRange.column([10]).visible(false);
+                            
+                            // return recalulate();
+
                           setTimeout(function(){ 
           
                               $(".calctp").hide(); //tanpa penyusutan
@@ -1320,6 +1382,21 @@ $(document).ready(function(){
                             db_temp.column(7).visible(true);
                             db_temp.column(8).visible(true);
                             // db_temp.column(6).visible(true);
+
+                            let dfeze = $('#dataTableSearchRange').DataTable().draw();
+                            dfeze.column([0]).visible(true);
+                            dfeze.column([1]).visible(true);
+                            dfeze.column([2]).visible(true);
+                            dfeze.column([3]).visible(true);
+                            dfeze.column([4]).visible(true);
+                            dfeze.column([5]).visible(true);
+                            dfeze.column([6]).visible(true);
+                            dfeze.column([7]).visible(true);
+                            dfeze.column([8]).visible(true);
+                            dfeze.column([9]).visible(true);
+                            dfeze.column([10]).visible(true);
+                            // dfeze.columns.adjust().draw();
+
 
                           setTimeout(function(){ 
           
@@ -1385,6 +1462,19 @@ $(document).ready(function(){
                       dataTable.column([19]).visible(true);
                       dataTable.column([20]).visible(true);
 
+                      let sRangexs = $('#dataTableSearchRange').DataTable().draw();
+                        sRangexs.column([0]).visible(true);
+                        sRangexs.column([1]).visible(true);
+                        sRangexs.column([2]).visible(false);
+                        sRangexs.column([3]).visible(false);
+                        sRangexs.column([4]).visible(false);
+                        sRangexs.column([5]).visible(false);
+                        sRangexs.column([6]).visible(false);
+                        sRangexs.column([7]).visible(false);
+                        sRangexs.column([8]).visible(true);
+                        sRangexs.column([9]).visible(true);
+                        sRangexs.column([10]).visible(false);
+
                       recalcc_tanpamtcs().then(value => {
                         if(value.res == 200){
                           $('#dataTablePenyusutan').DataTable().draw()
@@ -1443,6 +1533,19 @@ $(document).ready(function(){
                           dataTable.column([8]).visible(true);
                           dataTable.column([6]).visible(true);
 
+                          let pnytvsble = $('#dataTableSearchRange').DataTable().draw();
+                          pnytvsble.column([0]).visible(true);
+                          pnytvsble.column([1]).visible(true);
+                          pnytvsble.column([2]).visible(false);
+                          pnytvsble.column([3]).visible(false);
+                          pnytvsble.column([4]).visible(false);
+                          pnytvsble.column([5]).visible(false);
+                          pnytvsble.column([6]).visible(true);
+                          pnytvsble.column([7]).visible(true);
+                          pnytvsble.column([8]).visible(false);
+                          pnytvsble.column([9]).visible(false);
+                          pnytvsble.column([10]).visible(false);
+
                           setTimeout(function(){ 
           
                               ButtonexportCalcTanpaPenyusutan()
@@ -1488,10 +1591,23 @@ $(document).ready(function(){
                           dataTable.column([12]).visible(true);
                           dataTable.column([13]).visible(true);
 
+                          let pnytvsble = $('#dataTableSearchRange').DataTable().draw();
+                          pnytvsble.column([0]).visible(true);
+                          pnytvsble.column([1]).visible(true);
+                          pnytvsble.column([2]).visible(true);
+                          pnytvsble.column([3]).visible(true);
+                          pnytvsble.column([4]).visible(true);
+                          pnytvsble.column([5]).visible(true);
+                          pnytvsble.column([6]).visible(true);
+                          pnytvsble.column([7]).visible(true);
+                          pnytvsble.column([8]).visible(true);
+                          pnytvsble.column([9]).visible(true);
+                          pnytvsble.column([10]).visible(false);
+
                               setTimeout(function(){ 
 
                                   $(".calctp").hide(); //tanpa penyusutan
-                                  
+                              
                               ButtonCalcSmuaBiayaExports()
                               .then(finalResult => finalResult)
                               .then(sd => 
@@ -1556,13 +1672,17 @@ $(document).ready(function(){
                     if($(this).val() != '')
                     {
                         $(".TransactionTr").show();
+                        $(".TransactionTrRtRt").show();
                         $('#dataTablePenyusutan').DataTable().destroy();
+                        $('#dataTableSearchRange').DataTable().destroy();
                         mesin_calc_table($(this).val());
                         $(".CustomFilter").focus();
                         //set recallculate
                         recuncheck_tnppnystan().then(value => {
                               if(value.res == 200){
                                 $('#dataTablePenyusutan').DataTable().draw()
+                                $('#dataTableSearchRange').DataTable().draw()
+
                               }
                             }
                           );
@@ -1576,6 +1696,7 @@ $(document).ready(function(){
               }
                 if(!$(this).is(':checked')){
                     $('#tanpapenyusutan').prop('disabled', false);
+                    $('#dataTableSearchRange').DataTable().destroy();
                     $('#dataTablePenyusutan').DataTable().destroy();
                     mesin_calc_table(0);
                     $(".CustomFilter").focus();
@@ -1863,11 +1984,23 @@ $(document).ready(function(){
 
       }
 
-      $(document).ready(function() {
+      function recalculate(){
+
+
         var dataTables = $('#dataTableSearchRange').DataTable( {
-            "processing": true,
-            "serverSide": true,
-            "ajax": "{{ route('tr.total.rt.rt.kalkulasi.all.ready.view.p') }}",
+            paging: false,
+            deferRender: true,
+            responsive: true,
+            processing: true,
+            stateSave: true,
+            stateDuration: -1,
+            serverSide: true,
+            scrollY:        '90vh',
+            scrollX:        '100vh',
+            info:           true,
+            scrollCollapse: true,
+            retrieve: true,
+            ajax: "{{ route('tr.total.rt.rt.kalkulasi.all.ready.view.p') }}",
             language: {
                   processing: '<span class="text-info">Sedang diproses..</span>',
                   search: "Cari",
@@ -1876,19 +2009,34 @@ $(document).ready(function(){
                   // info: "menampilkan baris data halaman _PAGE_ dari _PAGES_",
                   zeroRecords: "Pencarian dalam keyword inputan anda tidak dapat kami temukan..",
             },
-            serverSide: true,
-            scrollY:        '90vh',
-            scrollX:        '100vh',
-            info:           true,
-            scrollCollapse: true,
-            retrieve: true,
+        
+            fixedHeader: {
+                  header: true,
+                  footer: true
+                },
+                colReorder: {
+                  allowReorder: true
+                },
             order: [[ 1, 'desc' ]],
-            paging: false,
-            deferRender: true,
-            responsive: true,
-            processing: true,
-            stateSave: true,
-            stateDuration: 60 * 24 * 365,
+            stateSaveCallback: function ( settings, data ) {
+                        
+                        // ini menyimpan state pada table aktivitas terakhir
+                        localStorage.setItem( 'Resultmachineaverage.data', JSON.stringify( data ) );
+
+                        //ini menyimpan data dTrow pada table pada sisi server
+                        localStorage.setItem( 'Resultmachinestorage.settings', JSON.stringify( settings ) );
+                },
+                stateLoadCallback: function ( ) {
+                        try {
+
+                            //panggil callback data yang tersimpan pada localStorage
+                            return JSON.parse( localStorage.getItem( 'Resultmachinestorage.data' ) );
+                        
+                        } catch (e) {
+                          
+                            console.log(e)
+                      }
+                },
             columns: [
                   {data: 'company_name', name: 'company_name',  width: "50px" },
                   {data: 'group_mesin', name: 'GROUP MESIN',  width: "230px" },
@@ -1906,6 +2054,15 @@ $(document).ready(function(){
         } );
 
         dataTables.columns.adjust().draw();
+        
+      }
+
+      $(document).ready(function() {
+        
+
+        // var rng = $('#dataTableSearchRange').DataTable().draw();
+        // rng.columns.adjust().draw();
+        return recalculate();
 
 
     } );
