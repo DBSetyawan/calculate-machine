@@ -396,7 +396,7 @@ trait ModuleCaculates {
                                     }
 
                             } else {
-                                // dd($tmp->mesin->MesinListrikPerjamTo);
+                                
                                 $ambil_listrik_dari_mesin = $ambillistrik[$i];
                                 // $ambil_listrik_dari_mesin = $tmp->mesin->MesinListrikPerjamTo->persen;
 
@@ -596,23 +596,17 @@ trait ModuleCaculates {
                 
                                                     }
 
-                                                continue 1;
+                                            continue 1;
                                                     
-                                            }
+                                        }
 
-                                            
-                                        /**
-                                         * Recalculate not working fine.
-                                         */
-                                        // break 1;
-                
                                     }
+
                                 }
 
                             }
                             
                         HistoryRecalculateTemporary::insert($pf);
-
 
                     return response()->json(['res' => 200]);
 
