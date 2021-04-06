@@ -466,27 +466,27 @@ trait ModuleCaculates {
                                                                     'history_latest' => ceil($val['history']),
                                                                     'before' => ceil($val['dari']),
                                                                 ];
-                
+
                                                         }
                 
-                                                        continue 2;
                 
                                                     }
-                
+
+                                                continue 1;
                                                     
-                                                }
-                                                
-                                        /**
-                                         * Recalculate not working fine.
-                                         */
-                                        // break 1;
-                
-                                    }
-                                    
-                            $d = HistoryRecalculateTemporary::insert($pf);
+                                            }
 
                                             
-                        }
+                                    /**
+                                     * Recalculate not working fine.
+                                     */
+                                    // break 1;
+            
+                                }
+
+                            }
+                            
+                        HistoryRecalculateTemporary::insert($pf);
 
 
                     return response()->json(['res' => 200]);
