@@ -372,7 +372,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
                 $query = $model->{$dataType->scope}();
             } else {
-                $query = $model::select('*');
+                $query = $model::whereNull('ended_at')->select('*');
             }
 
             // dd($query->get());
@@ -655,81 +655,107 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
         try 
             {
-                    
-                $saldo_akhir_cost_perbulan = $this->total_cost_perbulan();
-                $alllstrk = Listrik::all();
-                $ListrikInstance = New Listrik;
-                $AllRecalculateInstance = New AllRecalculate;
-                $collectInsteadALLRECALL = AllRecalculate::all();
+                
+                $alllstrk = Listrik::whereNull('ended_at')->get();
 
-                foreach($alllstrk as $sd => $tmp){
-                    $old = [
-                        'persen_cost_perbulan' => $tmp->persen_cost_perbulan,
-                        'ncost_bulan_plus_adm' => $tmp->ncost_bulan_plus_adm
-                    ];
+                if($alllstrk->isEmpty()){
 
-                    $persen_costperbulans = $this->RumusPersenListrik($tmp->nilai_cost_bulan, $saldo_akhir_cost_perbulan);
-                    $persen_costperbulan = $this->RumusPersenListrik($tmp->nilai_cost_bulan, $saldo_akhir_cost_perbulan);
-            
-                    $PPJ = RumusListrik::HitungPPJ($saldo_akhir_cost_perbulan);
-            
-                    $costADM = $this->RumusBiayaCostADM($PPJ, $persen_costperbulan);
-                    $costADMs = $this->RumusBiayaCostADM($PPJ, $persen_costperbulans);
-                    
-                    $new = [
-                        'persen_cost_perbulan' => $persen_costperbulans,
-                        'ncost_bulan_plus_adm' => $costADMs
-                    ];
+                    return response()->json([
+                        'data' => [
+                            'status'  => 500,
+                            'message'    => __('Gagal mengkalkulasi listrik, karna semua transaksi sudah close.'),
+                        ],
+                    ], 500);
 
-                    $tb = app(Listrik::class)->getTable();
-
-                        $md = ModulTrackingDataHelpers::ModuleTrackingTransactionDataREST($tb, $old, $new);
-                        
-                        foreach ($md as $key => $val) {
-
-                                $pf = [
-                                    'updated_at' => Carbon::now(),
-                                    'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
-                                    'company_id' => $tmp->company_parent_id,
-                                    'category_id' => $tmp->category_bagian,
-                                    'group_mesin' => $tmp->group_mesin,
-                                    'code_mesin' => $tmp->code_mesin,
-                                    'table_column' => $val['tabel_kolom'],
-                                    'history_latest' => ceil($val['history']),
-                                    'before' => ceil($val['dari']),
-                                ];
-                                
-                            }
-                        
-                        $d = HistoryLogRecalculate::insert($pf);
-
-                    $data[] = [
-                        'id' => $tmp->id,
-                        'persen_cost_perbulan' => $persen_costperbulan,
-                        'ncost_bulan_plus_adm' => $costADM
-                    ];
-
-                    $index = 'id';
-
-                    \Batch::update($ListrikInstance, $data, $index);
-
-                    if($collectInsteadALLRECALL !== []){
-                        /**
-                         * sync to recalculate;
-                         */
-                        $dlstrik[] = [
-                            'code_mesin' => $tmp->code_mesin,
-                            'id_listrik' => $costADM
-                        ];
-    
-                        $code_mesin = 'code_mesin';
-    
-                        $bulk_batch = \Batch::update($AllRecalculateInstance, $dlstrik, $code_mesin);
-                    }
-                    
                 }
 
-            return response()->json(['json'=> $data, 'ref' => '200', 'success' => $bulk_batch]);
+                else {
+
+                    $alllstrk = Listrik::whereNull('ended_at')->get();
+
+                    // dd($alllstrk);
+                    $saldo_akhir_cost_perbulan = $this->total_cost_perbulan();
+                    $ListrikInstance = New Listrik;
+                    $AllRecalculateInstance = New AllRecalculate;
+                    $collectInsteadALLRECALL = AllRecalculate::whereNull('ended_at')->get();
+
+                    foreach($alllstrk as $sd => $tmp){
+                        $old = [
+                            'persen_cost_perbulan' => $tmp->persen_cost_perbulan,
+                            'ncost_bulan_plus_adm' => $tmp->ncost_bulan_plus_adm
+                        ];
+
+
+                        $persen_costperbulans = $this->RumusPersenListrik($tmp->nilai_cost_bulan, $saldo_akhir_cost_perbulan);
+                        $persen_costperbulan = $this->RumusPersenListrik($tmp->nilai_cost_bulan, $saldo_akhir_cost_perbulan);
+                
+                        $PPJ = RumusListrik::HitungPPJ($saldo_akhir_cost_perbulan);
+                
+                        $costADM = $this->RumusBiayaCostADM($PPJ, $persen_costperbulan);
+                        $costADMs = $this->RumusBiayaCostADM($PPJ, $persen_costperbulans);
+                        
+                        $new = [
+                            'persen_cost_perbulan' => $persen_costperbulans,
+                            'ncost_bulan_plus_adm' => $costADMs
+                        ];
+
+                        $tb = app(Listrik::class)->getTable();
+
+                            $md = ModulTrackingDataHelpers::ModuleTrackingTransactionDataREST($tb, $old, $new);
+                            
+                            foreach ($md as $key => $val) {
+
+                                    $pf = [
+                                        'updated_at' => Carbon::now(),
+                                        'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                                        'company_id' => $tmp->company_parent_id,
+                                        'category_id' => $tmp->category_bagian,
+                                        'group_mesin' => $tmp->group_mesin,
+                                        'code_mesin' => $tmp->code_mesin,
+                                        'table_column' => $val['tabel_kolom'],
+                                        'history_latest' => ceil($val['history']),
+                                        'before' => ceil($val['dari']),
+                                    ];
+                                    
+                                }
+                        // dd($pf);
+                            
+                            $d = HistoryLogRecalculate::insert($pf);
+
+                        $data[] = [
+                            'id' => $tmp->id,
+                            'persen_cost_perbulan' => $persen_costperbulan,
+                            'ncost_bulan_plus_adm' => $costADM
+                        ];
+
+                        $index = 'id';
+
+                        \Batch::update($ListrikInstance, $data, $index);
+
+                        if($collectInsteadALLRECALL !== []){
+                            /**
+                             * sync to recalculate;
+                             */
+                            $dlstrik[] = [
+                                'code_mesin' => $tmp->code_mesin,
+                                'id_listrik' => $costADM
+                            ];
+        
+                            $code_mesin = 'code_mesin';
+        
+                            $bulk_batch = \Batch::update($AllRecalculateInstance, $dlstrik, $code_mesin);
+                        }
+                        
+                    }
+                    return response()->json([
+                        'data' => [
+                            'status'  => 200,
+                            'message'    => $bulk_batch
+                        ],
+                    ], 200);
+                    // return response()->json(['json'=> $data, 'ref' => '200', 'success' => $bulk_batch]);
+                }
+
 
         } catch (Exception $e) {
             $code = 500;

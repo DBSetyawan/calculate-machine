@@ -228,6 +228,49 @@ trait ModuleCaculates {
         dd($t);
     }
 
+    
+
+    public function closingtransactionkoplistrik(){
+
+        try
+            {
+                $SendTemporaryCalculateInstance = new Listrik;
+                
+                $allrecalculates = Listrik::get()->toArray();
+
+                            foreach($allrecalculates as $index => $tmp){
+
+                                $d[] = [
+                                    'id' => $tmp['id'],
+                                    'ended_at' => Carbon::now(), //testing closed
+                                    // 'ended_at' => NULL, //testing opened
+
+                                ];
+
+                            }
+
+                    $id = 'id';
+
+                \Batch::update($SendTemporaryCalculateInstance, $d, $id);
+
+            return response()->json(['res' => 200]);
+                
+        } catch (Exception $e) {
+            $code = 500;
+            $message = __('voyager::generic.internal_error');
+
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'data' => [
+                    'message' => $message,
+                    'line' => $e->getLine(),
+                ],
+            ], $code);
+        }
+    }
 
     public function closingtransactionkop(){
 

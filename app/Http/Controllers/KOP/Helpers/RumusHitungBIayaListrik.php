@@ -120,7 +120,6 @@ class RumusHitungBIayaListrik {
 
    public static function HitungPersenListrik($CostPerbulan, $totalSeluruhCostPerbulan) {
         //=+M6/$M$24
-
             if($totalSeluruhCostPerbulan != 0):
 
                     $result_percent = ($CostPerbulan / $totalSeluruhCostPerbulan);

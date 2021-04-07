@@ -11,6 +11,10 @@
                 <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }}</span>
             </a> --}}
         @endcan
+        <a id="closerecalculatesendlistrik" class="btn btn-primary btn-add-new">
+            {{-- <a href="{{ route('voyager.recalculate') }}" class="btn btn-success btn-add-new"> --}}
+            <i class="voyager-double-right"></i> <span>{{ __('Close Recalculate Listrik') }} </span>
+        </a>
         <a href="{{ route('listriks.form.master') }}" class="btn btn-success btn-add-new">
             <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Listrik</span>
         </a>
@@ -468,6 +472,101 @@
     @endif
     <script>
 
+    $('#closerecalculatesendlistrik').on('click', function(e) {
+
+        setTimeout(() => {
+            $("#closerecalculatesend").text("Closing recalculate transaksi, tunggu sebentar..");
+        }, 500);
+
+        closingrecalculate(true).then(function(res){
+
+            if(res.res == 200){
+                const success = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                success.fire({
+                    icon: 'success',
+                    title: 'Data berhasil menutup transaksi periode tahunan.'
+                });
+
+                $("#sendcalculate").text("Close Recalculate");
+
+                let curr = '{{ route("tr.total.kalkulasi") }}';
+                setTimeout(function(){ 
+                    window.location.href = curr;
+                }, 6000);
+
+            } 
+
+            if(res.data.message.alertype == 'error'){
+
+                const err = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                    err.fire({
+                        icon: 'error',
+                        title: res.data.message.message
+                    });
+
+                    $("#sendcalculate").text("Recalculate Machine");
+
+                    let curr = '{{ route("voyager.all-recalculate.index") }}';
+                    setTimeout(function(){ 
+                        window.location.href = curr;
+                    }, 6000);
+
+                }
+
+            });
+    });
+
+    async function closingrecalculate(mesinid) {
+
+    let datafix = {
+            mesinid:mesinid
+        }
+        
+        const apiDataMesin = "{{ route('kop.closing.listrik') }}";
+                
+            const settings = {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            'Content-Type': 'application/json;charset=utf-8'
+                        },
+                        body: JSON.stringify(datafix)
+                }
+        try {
+                
+                const fetchResponse = await fetch(`${apiDataMesin}`, settings);
+                const data = await fetchResponse.json();
+
+                return data;
+
+            } catch (objError) {
+
+                return objError;
+        }    
+    }
+
     function isEmpty(obj) {
         for(var prop in obj) {
             if(obj.hasOwnProperty(prop))
@@ -633,35 +732,62 @@
                 
                 recalculate_modules(true).then(function(res){
 
-                    if(res.ref = 200){
+                    if(res.data.status == 500){
 
-                        const success = Swal.mixin({
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                $("#loading").hide();
-                                toast.addEventListener('mouseenter', Swal.stopTimer)
-                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            const success = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        $("#loading").hide();
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    }
+                                })
+
+                            success.fire({
+                                icon: 'error',
+                                title: res.data.message
                             }
-                        })
+                        );
 
-                        success.fire({
-                            icon: 'success',
-                            title: 'Informasi, % cost perbulan | cost perbulan + ADM, telah diakumulasikan.'
-                        });
+                            $("#RecalALLdocument").html('<i class="voyager-refresh"></i> Kalkulasi % cost & cost + ADM');
 
-                        // $("#RecalALLdocument").html('<i class="voyager-refresh"></i> Kalkulasi % cost & cost + ADM');
-                        $("#RecalALLdocument").html('<i class="voyager-refresh"></i> Kalkulasi % cost & cost + ADM');
+                    }
+                        else {
 
-                        let curr = '{{ route("voyager.listrik.index") }}';
-                        setTimeout(function(){ 
+                            
+                            if(res.data.status == 200){
 
-                                window.location.href = curr;
-                            }, 3000);
+                                const success = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        $("#loading").hide();
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    }
+                                })
 
+                                success.fire({
+                                    icon: 'success',
+                                    title: 'Informasi, % cost perbulan | cost perbulan + ADM, telah diakumulasikan.'
+                                });
+
+                                $("#RecalALLdocument").html('<i class="voyager-refresh"></i> Kalkulasi % cost & cost + ADM');
+
+                                    let curr = '{{ route("voyager.listrik.index") }}';
+                                    setTimeout(function(){ 
+
+                                            window.location.href = curr;
+                                    }, 3000);
+
+                                }
                         }
 
                     });
