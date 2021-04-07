@@ -186,7 +186,22 @@
                   <div class="panel-body">
 
                     <button class="btn btn-link" type="button">
+                      <span id="tanpa_penyusutan_n_tanpa_mtc" style="font-family: Quicksand"><h5 class="mb-1 btn btn-success"><i class="voyager-settings"></i> Sending KOP machine TP PYT & MTC <i class="voyager-double-down"></i> </span></h5>
+                      {{-- <span style="font-family: Quicksand"><h5 class="mb-1 btn btn-success"><i class="voyager-settings"></i> Sending KOP machine <i class="voyager-double-down"></i> </span></h5>
                       <span style="font-family: Quicksand"><h5 class="mb-1 btn btn-success"><i class="voyager-settings"></i> Sending KOP machine <i class="voyager-double-down"></i> </span></h5>
+                      <span style="font-family: Quicksand"><h5 class="mb-1 btn btn-success"><i class="voyager-settings"></i> Sending KOP machine <i class="voyager-double-down"></i> </span></h5> --}}
+                     </button>
+
+                     <button class="btn btn-link" type="button">
+                      <span id="tanpa_penyusutan_v" style="font-family: Quicksand"><h5 class="mb-1 btn btn-warning"><i class="voyager-settings"></i> Sending KOP machine Tanpa Penyusutan <i class="voyager-double-down"></i> </span></h5>
+                     </button>
+
+                     <button class="btn btn-link" type="button">
+                      <span id="tanpa_mtc_v" style="font-family: Quicksand"><h5 class="mb-1 btn btn-primary"><i class="voyager-settings"></i> Sending KOP machine Tanpa MTC <i class="voyager-double-down"></i> </span></h5>
+                     </button>
+
+                     <button class="btn btn-link" type="button">
+                      <span id="semua_biaya_v" style="font-family: Quicksand"><h5 class="mb-1 btn btn-danger"><i class="voyager-settings"></i> Sending KOP machine Semua Biaya <i class="voyager-double-down"></i> </span></h5>
                      </button>
 
                       <div class="row">
@@ -292,7 +307,16 @@ function extractContent(s) {
   return span.textContent || span.innerText;
 };
 
+$(function(){
+  $('#tanpa_penyusutan_n_tanpa_mtc').hide();
+  $('#tanpa_penyusutan_v').hide();
+  $('#tanpa_mtc_v').hide();
+  $('#semua_biaya_v').hide();
+});
+
 $(document).ready(function(){
+
+
 
   $(window).on( 'resize', function () {
   console.log( 'Resize', $(window).width(), $(window).height() );
@@ -552,7 +576,7 @@ $(document).ready(function(){
                   
                       
                   )  
-                        recalcc_recalculateTanpaPenyusutanNtanpaMTC().then(value => {
+                      recalcc_recalculateTanpaPenyusutanNtanpaMTC().then(value => {
                         if(value.res == 200){
                           $('#dataTablePenyusutan').DataTable().draw()
                           $('#dataTableSearchRange').DataTable().draw()
@@ -754,12 +778,23 @@ $(document).ready(function(){
       jkosmuabiaya.column([9]).visible(true);
       jkosmuabiaya.column([10]).visible(false);
 
+      //profs
+
+      SendButtonCalcSmuaBiayaExports().then(value => {
+        if(value.SendButtonCalcSmuaBiayaExports == 200){
+          $('#semua_biaya_v').show();
+          $('#tanpa_penyusutan_v').hide();
+          $('#tanpa_mtc_v').hide();
+          $('#tanpa_penyusutan_n_tanpa_mtc').hide();
+        }
+      })
+                            
       $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
       $("#setall").hide();
       $("#alltruepnytmtc").hide();
       $(".CustomFilter").focus();
       
-      ButtonCalcSmuaBiayaExports()
+              ButtonCalcSmuaBiayaExports()
                     .then(finalResult => finalResult)
                     .then(sd => 
                           
@@ -856,6 +891,446 @@ $(document).ready(function(){
 
   });
 
+         async function sendtnpmtcpnytrecalculate_modules(mesinid
+                ) {
+                            let datamesinid = {
+                                    mesinid:mesinid
+                                }
+                        const apiDataMesin = "{{ route('kop.kalkulasi.tnp.pnyt.mtc') }}";
+                                
+                            const settings = {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                            'Content-Type': 'application/json;charset=utf-8'
+                                            },
+                                        body: JSON.stringify(datamesinid)
+                                }
+                        try {
+                                
+                                const fetchResponse = await fetch(`${apiDataMesin}`, settings);
+                                const data = await fetchResponse.json();
+                                return data;
+                            } catch (error) {
+                            return error
+                            }    
+                    }
+
+
+              async function sendtanpapenyusutanrecalculate_modules(mesinid
+                ) {
+                            let datamesinid = {
+                                    mesinid:mesinid
+                                }
+                        const apiDataMesin = "{{ route('kop.kalkulasi.ConnectionKOPkalkulasiTanpaPenyusutan') }}";
+                                
+                            const settings = {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                            'Content-Type': 'application/json;charset=utf-8'
+                                            },
+                                        body: JSON.stringify(datamesinid)
+                                }
+                        try {
+                                
+                                const fetchResponse = await fetch(`${apiDataMesin}`, settings);
+                                const data = await fetchResponse.json();
+                                return data;
+                            } catch (error) {
+                            return error
+                            }    
+                    }
+
+              async function sendtanpamtcrecalculate_modules(mesinid
+                ) {
+                            let datamesinid = {
+                                    mesinid:mesinid
+                                }
+                        const apiDataMesin = "{{ route('kop.kalkulasi.ConnectionKOPkalkulasiTanpaMTC') }}";
+                                
+                            const settings = {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                            'Content-Type': 'application/json;charset=utf-8'
+                                            },
+                                        body: JSON.stringify(datamesinid)
+                                }
+                        try {
+                                
+                                const fetchResponse = await fetch(`${apiDataMesin}`, settings);
+                                const data = await fetchResponse.json();
+                                return data;
+                            } catch (error) {
+                            return error
+                            }    
+                    }
+
+                    async function sendsemuabiayarecalculate_modules(mesinid
+                    ) {
+                                let datamesinid = {
+                                        mesinid:mesinid
+                                    }
+                            const apiDataMesin = "{{ route('kop.kalkulasi.ConnectionKOPkalkulasiSemuaBiaya') }}";
+                                    
+                                const settings = {
+                                            method: 'POST',
+                                            headers: {
+                                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                                'Content-Type': 'application/json;charset=utf-8'
+                                                },
+                                            body: JSON.stringify(datamesinid)
+                                    }
+                            try {
+                                    
+                                    const fetchResponse = await fetch(`${apiDataMesin}`, settings);
+                                    const data = await fetchResponse.json();
+                                    return data;
+                                } catch (error) {
+                                return error
+                                }    
+                        }
+
+    $('#tanpa_penyusutan_n_tanpa_mtc').on('click', function(e) {
+
+        Swal.fire({
+            title: 'Informasi',
+            text: "Apakah anda ingin melanjutkan, aksi ini akan merekalkulasi seluruh data ini, ke server KOP kalkulasi ?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Rekalkulasi biaya',
+            cancelButtonText: 'Batalkan'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                'Informasi',
+                'Data anda sedang diproses, tunggu sebentar..',
+                'warning'
+                );
+
+            sendtnpmtcpnytrecalculate_modules(true).then(function(res){
+
+
+              console.log(res)
+                // if(res.data.status == 500){
+
+                //         const success = Swal.mixin({
+                //                 toast: true,
+                //                 position: 'top-end',
+                //                 showConfirmButton: false,
+                //                 timer: 3000,
+                //                 timerProgressBar: true,
+                //                 didOpen: (toast) => {
+                //                     $("#loading").hide();
+                //                     toast.addEventListener('mouseenter', Swal.stopTimer)
+                //                     toast.addEventListener('mouseleave', Swal.resumeTimer)
+                //                 }
+                //             })
+
+                //         success.fire({
+                //             icon: 'error',
+                //             title: res.data.message
+                //         }
+                //     );
+
+                //         $("#RecalALLdocument").html('<i class="voyager-refresh"></i> Kalkulasi % cost & cost + ADM');
+
+                // }
+                //     else {
+
+                        
+                //         if(res.data.status == 200){
+
+                //             const success = Swal.mixin({
+                //                 toast: true,
+                //                 position: 'top-end',
+                //                 showConfirmButton: false,
+                //                 timer: 3000,
+                //                 timerProgressBar: true,
+                //                 didOpen: (toast) => {
+                //                     $("#loading").hide();
+                //                     toast.addEventListener('mouseenter', Swal.stopTimer)
+                //                     toast.addEventListener('mouseleave', Swal.resumeTimer)
+                //                 }
+                //             })
+
+                //             success.fire({
+                //                 icon: 'success',
+                //                 title: 'Informasi, % cost perbulan | cost perbulan + ADM, telah diakumulasikan.'
+                //             });
+
+                //             $("#RecalALLdocument").html('<i class="voyager-refresh"></i> Kalkulasi % cost & cost + ADM');
+
+                //                 let curr = '{{ route("voyager.listrik.index") }}';
+                //                 setTimeout(function(){ 
+
+                //                         window.location.href = curr;
+                //                 }, 3000);
+
+                //               }
+                //       }
+
+                  });
+              }
+          });
+        });
+
+        $('#tanpa_penyusutan_v').on('click', function(e) {
+
+          Swal.fire({
+              title: 'Informasi',
+              text: "Apakah anda ingin melanjutkan, aksi ini akan merekalkulasi seluruh data ini, ke server KOP kalkulasi [TANPA PENYUSUTAN]?",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Rekalkulasi biaya',
+              cancelButtonText: 'Batalkan'
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  Swal.fire(
+                  'Informasi',
+                  'Data anda sedang diproses, tunggu sebentar..',
+                  'warning'
+                  );
+
+              sendtanpapenyusutanrecalculate_modules(true).then(function(res){
+                console.log(res)
+                  // if(res.data.status == 500){
+
+                  //         const success = Swal.mixin({
+                  //                 toast: true,
+                  //                 position: 'top-end',
+                  //                 showConfirmButton: false,
+                  //                 timer: 3000,
+                  //                 timerProgressBar: true,
+                  //                 didOpen: (toast) => {
+                  //                     $("#loading").hide();
+                  //                     toast.addEventListener('mouseenter', Swal.stopTimer)
+                  //                     toast.addEventListener('mouseleave', Swal.resumeTimer)
+                  //                 }
+                  //             })
+
+                  //         success.fire({
+                  //             icon: 'error',
+                  //             title: res.data.message
+                  //         }
+                  //     );
+
+                  //         $("#RecalALLdocument").html('<i class="voyager-refresh"></i> Kalkulasi % cost & cost + ADM');
+
+                  // }
+                  //     else {
+
+                          
+                  //         if(res.data.status == 200){
+
+                  //             const success = Swal.mixin({
+                  //                 toast: true,
+                  //                 position: 'top-end',
+                  //                 showConfirmButton: false,
+                  //                 timer: 3000,
+                  //                 timerProgressBar: true,
+                  //                 didOpen: (toast) => {
+                  //                     $("#loading").hide();
+                  //                     toast.addEventListener('mouseenter', Swal.stopTimer)
+                  //                     toast.addEventListener('mouseleave', Swal.resumeTimer)
+                  //                 }
+                  //             })
+
+                  //             success.fire({
+                  //                 icon: 'success',
+                  //                 title: 'Informasi, % cost perbulan | cost perbulan + ADM, telah diakumulasikan.'
+                  //             });
+
+                  //             $("#RecalALLdocument").html('<i class="voyager-refresh"></i> Kalkulasi % cost & cost + ADM');
+
+                  //                 let curr = '{{ route("voyager.listrik.index") }}';
+                  //                 setTimeout(function(){ 
+
+                  //                         window.location.href = curr;
+                  //                 }, 3000);
+
+                  //               }
+                  //       }
+
+                    });
+                }
+            });
+          });
+
+
+          $('#tanpa_mtc_v').on('click', function(e) {
+
+            Swal.fire({
+                title: 'Informasi',
+                text: "Apakah anda ingin melanjutkan, aksi ini akan merekalkulasi seluruh data ini, ke server KOP kalkulasi [TANPA MTC]?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Rekalkulasi biaya',
+                cancelButtonText: 'Batalkan'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                    'Informasi',
+                    'Data anda sedang diproses, tunggu sebentar..',
+                    'warning'
+                    );
+
+                sendtanpamtcrecalculate_modules(true).then(function(res){
+                  console.log(res)
+                    // if(res.data.status == 500){
+
+                    //         const success = Swal.mixin({
+                    //                 toast: true,
+                    //                 position: 'top-end',
+                    //                 showConfirmButton: false,
+                    //                 timer: 3000,
+                    //                 timerProgressBar: true,
+                    //                 didOpen: (toast) => {
+                    //                     $("#loading").hide();
+                    //                     toast.addEventListener('mouseenter', Swal.stopTimer)
+                    //                     toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    //                 }
+                    //             })
+
+                    //         success.fire({
+                    //             icon: 'error',
+                    //             title: res.data.message
+                    //         }
+                    //     );
+
+                    //         $("#RecalALLdocument").html('<i class="voyager-refresh"></i> Kalkulasi % cost & cost + ADM');
+
+                    // }
+                    //     else {
+
+                            
+                    //         if(res.data.status == 200){
+
+                    //             const success = Swal.mixin({
+                    //                 toast: true,
+                    //                 position: 'top-end',
+                    //                 showConfirmButton: false,
+                    //                 timer: 3000,
+                    //                 timerProgressBar: true,
+                    //                 didOpen: (toast) => {
+                    //                     $("#loading").hide();
+                    //                     toast.addEventListener('mouseenter', Swal.stopTimer)
+                    //                     toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    //                 }
+                    //             })
+
+                    //             success.fire({
+                    //                 icon: 'success',
+                    //                 title: 'Informasi, % cost perbulan | cost perbulan + ADM, telah diakumulasikan.'
+                    //             });
+
+                    //             $("#RecalALLdocument").html('<i class="voyager-refresh"></i> Kalkulasi % cost & cost + ADM');
+
+                    //                 let curr = '{{ route("voyager.listrik.index") }}';
+                    //                 setTimeout(function(){ 
+
+                    //                         window.location.href = curr;
+                    //                 }, 3000);
+
+                    //               }
+                    //       }
+
+                      });
+                  }
+              });
+            });
+
+
+            $('#semua_biaya_v').on('click', function(e) {
+
+              Swal.fire({
+                  title: 'Informasi',
+                  text: "Apakah anda ingin melanjutkan, aksi ini akan merekalkulasi seluruh data ini, ke server KOP kalkulasi [SEMUA BIAYA]?",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Rekalkulasi biaya',
+                  cancelButtonText: 'Batalkan'
+              }).then((result) => {
+                  if (result.isConfirmed) {
+                      Swal.fire(
+                      'Informasi',
+                      'Data anda sedang diproses, tunggu sebentar..',
+                      'warning'
+                      );
+
+                  sendsemuabiayarecalculate_modules(true).then(function(res){
+                    console.log(res)
+                      // if(res.data.status == 500){
+
+                      //         const success = Swal.mixin({
+                      //                 toast: true,
+                      //                 position: 'top-end',
+                      //                 showConfirmButton: false,
+                      //                 timer: 3000,
+                      //                 timerProgressBar: true,
+                      //                 didOpen: (toast) => {
+                      //                     $("#loading").hide();
+                      //                     toast.addEventListener('mouseenter', Swal.stopTimer)
+                      //                     toast.addEventListener('mouseleave', Swal.resumeTimer)
+                      //                 }
+                      //             })
+
+                      //         success.fire({
+                      //             icon: 'error',
+                      //             title: res.data.message
+                      //         }
+                      //     );
+
+                      //         $("#RecalALLdocument").html('<i class="voyager-refresh"></i> Kalkulasi % cost & cost + ADM');
+
+                      // }
+                      //     else {
+
+                              
+                      //         if(res.data.status == 200){
+
+                      //             const success = Swal.mixin({
+                      //                 toast: true,
+                      //                 position: 'top-end',
+                      //                 showConfirmButton: false,
+                      //                 timer: 3000,
+                      //                 timerProgressBar: true,
+                      //                 didOpen: (toast) => {
+                      //                     $("#loading").hide();
+                      //                     toast.addEventListener('mouseenter', Swal.stopTimer)
+                      //                     toast.addEventListener('mouseleave', Swal.resumeTimer)
+                      //                 }
+                      //             })
+
+                      //             success.fire({
+                      //                 icon: 'success',
+                      //                 title: 'Informasi, % cost perbulan | cost perbulan + ADM, telah diakumulasikan.'
+                      //             });
+
+                      //             $("#RecalALLdocument").html('<i class="voyager-refresh"></i> Kalkulasi % cost & cost + ADM');
+
+                      //                 let curr = '{{ route("voyager.listrik.index") }}';
+                      //                 setTimeout(function(){ 
+
+                      //                         window.location.href = curr;
+                      //                 }, 3000);
+
+                      //               }
+                      //       }
+
+                        });
+                    }
+                });
+              });
 
 
     function mesin_calc_table(penyusutan)
@@ -1140,6 +1615,18 @@ $(document).ready(function(){
                         sRangex.column([9]).visible(true);
                         sRangex.column([10]).visible(false);
 
+                      SendButtonexportCalcTanpaMTCnTanpaPenyusutan().then(value => {
+                        if(value.SendexportCalcTanpaMTCnTanpaPenyusutan == "200"){
+                          $('#tanpa_penyusutan_n_tanpa_mtc').show();
+                          $('#semua_biaya_v').hide();
+                          $('#tanpa_mtc_v').hide();
+                          $('#tanpa_penyusutan_v').hide();
+                        } else {
+                          $('#tanpa_penyusutan_n_tanpa_mtc').hide();
+
+                        }
+                      })
+
                       setTimeout(function(){ 
           
                           $(".calctp").hide(); //tanpa penyusutan
@@ -1252,15 +1739,28 @@ $(document).ready(function(){
                       dataTableSearchRange_vsble.column([9]).visible(false);
                       dataTableSearchRange_vsble.column([10]).visible(false);
 
-
-                      recalcc_tanpapenyusutan().then(value => {
-                        if(value.res == 200){
-                          $('#dataTablePenyusutan').DataTable().draw()
-
-                        }
-                      });
-
                 });
+
+                SendButtonexportCalcTanpaPenyusutan().then(values => {
+                  // console.log(values.SendButtonexportCalcTanpaPenyusutan)
+                  if(values.SendButtonexportCalcTanpaPenyusutan == 200){
+                    $('#tanpa_penyusutan_v').show();
+                    $('#tanpa_mtc_v').hide();
+                    $('#semua_biaya_v').hide();
+                    $('#tanpa_penyusutan_n_tanpa_mtc').hide();
+
+                    } else {
+                      $('#tanpa_penyusutan_v').hide();
+
+                    }
+                  })
+
+                  recalcc_tanpapenyusutan().then(value => {
+                    if(value.res == 200){
+                      $('#dataTablePenyusutan').DataTable().draw()
+
+                    }
+                  });
 
                 setTimeout(function(){ 
 
@@ -1413,6 +1913,16 @@ $(document).ready(function(){
                             dfeze.column([10]).visible(true);
                             // dfeze.columns.adjust().draw();
 
+                            SendButtonCalcSmuaBiayaExports().then(value => {
+                              if(value.SendButtonCalcSmuaBiayaExports == 200){
+                                $('#semua_biaya_v').show();
+                                $('#tanpa_penyusutan_v').hide();
+
+                              } else {
+                                $('#semua_biaya_v').hide();
+
+                              }
+                            })
 
                           setTimeout(function(){ 
           
@@ -1499,6 +2009,20 @@ $(document).ready(function(){
                       });
 
                 });
+
+                SendButtonexportCalcTanpaMTC().then(values => {
+
+                  if(values.SendButtonexportCalcTanpaMTC == 200){
+                    $('#tanpa_mtc_v').show();
+                    $('#tanpa_penyusutan_v').hide();
+                    $('#semua_biaya_v').hide();
+                    $('#tanpa_penyusutan_n_tanpa_mtc').hide();
+
+                    } else {
+                      $('#tanpa_mtc_v').hide();
+
+                    }
+                  })
 
                 setTimeout(function(){ 
           
@@ -1639,6 +2163,20 @@ $(document).ready(function(){
                                       $(".csbe").html(sd.button_ButtonCalcSmuaBiayaExports)
                                     
                                   )
+
+                            SendButtonCalcSmuaBiayaExports().then(value => {
+                              if(value.SendButtonCalcSmuaBiayaExports == 200){
+                                $('#semua_biaya_v').show();
+                                $('#tanpa_mtc_v').hide();
+                                $('#tanpa_penyusutan_n_tanpa_mtc').hide();
+                                $('#tanpa_mtc_v').hide();
+
+                              } else {
+                                $('#semua_biaya_v').hide();
+
+                              }
+                            })
+
 
                               //this only setting recalulate mtc only
                               recalcc_mtconly().then(value => {
@@ -2084,13 +2622,109 @@ $(document).ready(function(){
       }
 
       $(document).ready(function() {
-        
 
-        // var rng = $('#dataTableSearchRange').DataTable().draw();
-        // rng.columns.adjust().draw();
         return recalculate();
 
-
     } );
+
+    //Async Promise wait send KOP kalkulasi mesin
+    async function SendButtonexportCalcTanpaMTCnTanpaPenyusutan() {
+
+      let env = "{{ config('app.vpn') }}";
+
+          return fetch(`${env}/kalkulasimesin2/public/admin/button-load-SendButtonexportCalcTanpaMTCnTanpaPenyusutan`, {
+                  method: 'POST',
+                  cache: 'no-cache',
+                  credentials: 'same-origin',
+                  redirect: 'follow',
+                  referrer: 'no-referrer',
+                  headers: {
+                              'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                              'Content-Type': 'application/json'
+                          }
+                  }
+              )
+          .then(response => response.json())
+              .catch((error) => {
+                console.log(error);
+            }
+        );
+
+      }
+
+      async function SendButtonexportCalcTanpaPenyusutan() {
+
+        let env = "{{ config('app.vpn') }}";
+
+            return fetch(`${env}/kalkulasimesin2/public/admin/button-load-SendButtonexportCalcTanpaPenyusutan`, {
+                    method: 'POST',
+                    cache: 'no-cache',
+                    credentials: 'same-origin',
+                    redirect: 'follow',
+                    referrer: 'no-referrer',
+                    headers: {
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                                'Content-Type': 'application/json'
+                            }
+                    }
+                )
+            .then(response => response.json())
+                .catch((error) => {
+                  console.log(error);
+              }
+          );
+
+        }
+
+      async function SendButtonexportCalcTanpaMTC() {
+
+        let env = "{{ config('app.vpn') }}";
+
+            return fetch(`${env}/kalkulasimesin2/public/admin/button-load-SendButtonexportCalcTanpaMTC`, {
+                    method: 'POST',
+                    cache: 'no-cache',
+                    credentials: 'same-origin',
+                    redirect: 'follow',
+                    referrer: 'no-referrer',
+                    headers: {
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                                'Content-Type': 'application/json'
+                            }
+                    }
+                )
+            .then(response => response.json())
+                .catch((error) => {
+                  console.log(error);
+              }
+          );
+
+        }
+
+
+        async function SendButtonCalcSmuaBiayaExports() {
+
+          let env = "{{ config('app.vpn') }}";
+
+              return fetch(`${env}/kalkulasimesin2/public/admin/button-load-SendButtonCalcSmuaBiayaExports`, {
+                      method: 'POST',
+                      cache: 'no-cache',
+                      credentials: 'same-origin',
+                      redirect: 'follow',
+                      referrer: 'no-referrer',
+                      headers: {
+                                  'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                                  'Content-Type': 'application/json'
+                              }
+                      }
+                  )
+              .then(response => response.json())
+                  .catch((error) => {
+                    console.log(error);
+                }
+            );
+
+          }
+
+
   </script>
 @stop

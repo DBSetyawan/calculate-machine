@@ -20,7 +20,7 @@
         </a>
         @php
                         
-        $total_listrik = $listrik->whereIn('company_parent_id', [3])->get();
+        $total_listrik = $listrik->whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
 
             $persen = collect([$total_listrik])->sum(function ($prsttl){
 
@@ -617,12 +617,12 @@
 
             Swal.fire({
                 title: 'Informasi',
-                text: "Apakah anda ingin melanjutkan, aksi ini akan mentransfer seluruh dokumen ini ke KOP kalkulasi mesin?",
+                text: "Apakah anda ingin melanjutkan, aksi ini akan mentransfer seluruh data ini ke KOP kalkulasi mesin?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Transfer dokumen sekarang',
+                confirmButtonText: 'Transfer data sekarang',
                 cancelButtonText: 'Batalkan'
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -710,7 +710,7 @@
 
             Swal.fire({
                 title: 'Informasi',
-                text: "Apakah anda ingin melanjutkan, aksi ini akan merekalkulasi seluruh dokumen ini?",
+                text: "Apakah anda ingin melanjutkan, aksi ini akan merekalkulasi seluruh data ini ?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

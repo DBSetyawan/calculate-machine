@@ -151,7 +151,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
          * Cari prosentase Biaya Cost Perbulan.
          * @store append field Cost Biaya Listrik perminggu.
          */
-        $total_listrik = Listrik::whereIn('company_parent_id', [3])->get();
+        $total_listrik = Listrik::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
 
         $total_seluruh_biaya_listrik_cost_perbulan = collect([$total_listrik])->sum(function ($biaya){
             return sprintf("%.5f", $biaya->sum('nilai_cost_bulan'));
@@ -203,7 +203,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
             if(!empty($simpanBiayaListrik) && $simpanBiayaListrik != [] && $simpanBiayaListrik != null){
 
-                    $total_listrik = Listrik::whereIn('company_parent_id', [3])->get();
+                    $total_listrik = Listrik::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
 
                     if(!empty($total_listrik) || $total_listrik != null || $total_listrik != []){
 
@@ -307,7 +307,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
     protected function total_cost_perbulan(){
 
-        $total_listrik = Listrik::whereIn('company_parent_id', [3])->get();
+        $total_listrik = Listrik::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
 
             $tcostmonth = collect([$total_listrik])->sum(function ($biaya){
                 return sprintf("%.5f", $biaya->sum('nilai_cost_bulan'));
@@ -487,8 +487,8 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         
         try {
 
-            $alllstrk = Listrik::all();
-            $AllRecalculate = AllRecalculate::all();
+            $alllstrk = Listrik::whereNull('ended_at')->get();
+            $AllRecalculate = AllRecalculate::whereNull('ended_at')->get();
             $ListrikInstance = new AllRecalculate;
 
             if(! $AllRecalculate->isEmpty()){
@@ -1054,7 +1054,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
          * Cari prosentase Biaya Cost Perbulan.
          * @store append field Cost Biaya Listrik perminggu.
          */
-        $total_listrik = Listrik::whereIn('company_parent_id', [3])->get();
+        $total_listrik = Listrik::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
 
         $total_seluruh_biaya_listrik_cost_perbulan = collect([$total_listrik])->sum(function ($biaya){
             return sprintf("%.5f", $biaya->sum('nilai_cost_bulan'));
@@ -1085,7 +1085,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             'LWBP_perminggu' => $rumusLWBPerminggu,
             'WBP_perminggu' => $rumusWBPerminggu,
             'nilai_cost_bulan' => (float) $totalbiayacostperbulan,
-            // 'category_bagian' => $r->category_bagian,
+            'category_bagian' => $r->category_bagian,
             'LWBP_faktorkali' => $r->LWBP_faktorkali,
             'WBP_faktorkali' => $r->WBP_faktorkali,
             'total_biaya_listrik' => $totalbiayaListrikperminggu,

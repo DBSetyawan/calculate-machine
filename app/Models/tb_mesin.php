@@ -11,4 +11,6 @@ class tb_mesin extends Model
 
     protected $table = "db_kalkulasi_tes.tb_mesin";
     protected $connection = 'KOP_kalkulasi';
+
+    public $timestamps = false;
 }

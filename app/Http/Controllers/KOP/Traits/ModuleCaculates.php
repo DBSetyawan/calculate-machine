@@ -216,18 +216,283 @@ trait ModuleCaculates {
         }
 
     }
-
+    
+    /**
+     * @send recalculate tanpa penyusutan + tanpa MTC
+     */
     public function ConnectionKOPkalkulasi(Request $req)
     {
-        $KOP = new tb_mesin;
 
-        $KOP->setConnection('KOP_kalkulasi');
+        try
+            {
 
-        $t = $KOP->whereNotNull('id_mesin')->get();
+                $Recalculate = AllRecalculate::whereNull('ended_at')->with(['listrik','KategoriBagian','Mesin.GroupMesinTo','Company','GroupMesin'])
+                ->groupBy('id')
+                ->selectRaw('*,
+                sum(total_semua_biaya) as total_semua_biayas,
+                sum(total_semua_biaya_perjam) as total_semua_biaya_perjams,
+                sum(total_tanpa_penyusutan_n_mtc) as total_tanpa_penyusutan_n_mtcs,
+                sum(total_tanpa_penyusutan_n_mtc_perjam) as total_tanpa_penyusutan_n_mtc_perjams,
+                sum(total_tanpa_penyusutan) as total_tanpa_penyusutans,
+                sum(total_tanpa_penyusutan_perjam) as total_tanpa_penyusutan_perjams,
+                sum(total_tanpa_mtc) as total_tanpa_mtcs,
+                sum(total_tanpa_mtc_perjam) as total_tanpa_mtc_perjams')->get();
 
-        dd($t);
+                $rsl = 0;
+                
+                foreach($Recalculate as $d => $kopmesin){
+
+                    $fetchD[] = $kopmesin->mesin->code_mesin;
+                    $count_group_machine[] = $kopmesin->GroupMesin;
+                    $harga_akhir_total[] = $kopmesin->total_tanpa_penyusutan_n_mtcs / count($count_group_machine);
+                    $harga_akhir_perjam[] = $kopmesin->total_tanpa_penyusutan_n_mtc_perjams / count($count_group_machine);
+
+                    
+                }
+
+                // dd($rsl);
+                // die;
+                $KOP = new tb_mesin;
+
+                $KOP->setConnection('KOP_kalkulasi');
+
+
+                for($i = 0; $i < count($fetchD); $i++){
+                    $rsl = ($harga_akhir_total[$i] + $harga_akhir_perjam[$i]);
+
+                    $t = $KOP->whereIn('name_mesin', [$fetchD[$i]])
+                        ->update(['harga_p_jam' => $rsl]);
+
+                        // dd($rsl);
+                }
+
+
+            return response()->json(['data_KOP' => $t]);
+
+        } catch (Exception $e) {
+            $code = 500;
+            $message = __('voyager::generic.internal_error');
+
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'data' => [
+                    'message' => $message,
+                    'line' => $e->getLine(),
+                ],
+            ], $code);
+        }
     }
 
+    /**
+     * @send recalculate semua biaya
+     */
+    public function ConnectionKOPkalkulasiSemuaBiaya(Request $req)
+    {
+
+        try
+            {
+
+                $Recalculate = AllRecalculate::whereNull('ended_at')->with(['listrik','KategoriBagian','Mesin.GroupMesinTo','Company','GroupMesin'])
+                ->groupBy('id')
+                ->selectRaw('*,
+                sum(total_semua_biaya) as total_semua_biayas,
+                sum(total_semua_biaya_perjam) as total_semua_biaya_perjams,
+                sum(total_tanpa_penyusutan_n_mtc) as total_tanpa_penyusutan_n_mtcs,
+                sum(total_tanpa_penyusutan_n_mtc_perjam) as total_tanpa_penyusutan_n_mtc_perjams,
+                sum(total_tanpa_penyusutan) as total_tanpa_penyusutans,
+                sum(total_tanpa_penyusutan_perjam) as total_tanpa_penyusutan_perjams,
+                sum(total_tanpa_mtc) as total_tanpa_mtcs,
+                sum(total_tanpa_mtc_perjam) as total_tanpa_mtc_perjams')->get();
+
+                $rsl = 0;
+                
+                foreach($Recalculate as $d => $kopmesin){
+
+                    $fetchD[] = $kopmesin->mesin->code_mesin;
+                    $count_group_machine[] = $kopmesin->GroupMesin;
+                    $harga_akhir_total[] = $kopmesin->total_semua_biayas / count($count_group_machine);
+                    $harga_akhir_perjam[] = $kopmesin->total_semua_biaya_perjams / count($count_group_machine);
+
+                    
+                }
+
+                $KOP = new tb_mesin;
+
+                $KOP->setConnection('KOP_kalkulasi');
+
+
+                for($i = 0; $i < count($fetchD); $i++){
+                    $rsl = ($harga_akhir_total[$i] + $harga_akhir_perjam[$i]);
+
+                    $t = $KOP->whereIn('name_mesin', [$fetchD[$i]])
+                        ->update(['harga_p_jam' => $rsl]);
+
+                }
+
+
+            return response()->json(['data_KOP' => $t]);
+
+        } catch (Exception $e) {
+            $code = 500;
+            $message = __('voyager::generic.internal_error');
+
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'data' => [
+                    'message' => $message,
+                    'line' => $e->getLine(),
+                ],
+            ], $code);
+        }
+    }
+
+
+    /**
+     * @send recalculate tanpa penyusutan
+     */
+
+       /**
+     * @send recalculate tanpa penyusutan
+     */
+    public function ConnectionKOPkalkulasiTanpaPenyusutan(Request $req)
+    {
+
+        try
+            {
+
+                $Recalculate = AllRecalculate::whereNull('ended_at')->with(['listrik','KategoriBagian','Mesin.GroupMesinTo','Company','GroupMesin'])
+                ->groupBy('id')
+                ->selectRaw('*,
+                sum(total_semua_biaya) as total_semua_biayas,
+                sum(total_semua_biaya_perjam) as total_semua_biaya_perjams,
+                sum(total_tanpa_penyusutan_n_mtc) as total_tanpa_penyusutan_n_mtcs,
+                sum(total_tanpa_penyusutan_n_mtc_perjam) as total_tanpa_penyusutan_n_mtc_perjams,
+                sum(total_tanpa_penyusutan) as total_tanpa_penyusutans,
+                sum(total_tanpa_penyusutan_perjam) as total_tanpa_penyusutan_perjams,
+                sum(total_tanpa_mtc) as total_tanpa_mtcs,
+                sum(total_tanpa_mtc_perjam) as total_tanpa_mtc_perjams')->get();
+
+                $rsl = 0;
+                
+                foreach($Recalculate as $d => $kopmesin){
+
+                    $fetchD[] = $kopmesin->mesin->code_mesin;
+                    $count_group_machine[] = $kopmesin->GroupMesin;
+                    $harga_akhir_total[] = $kopmesin->total_tanpa_penyusutans / count($count_group_machine);
+                    $harga_akhir_perjam[] = $kopmesin->total_tanpa_penyusutan_perjams / count($count_group_machine);
+
+                    
+                }
+
+                // dd($rsl);
+                // die;
+                $KOP = new tb_mesin;
+
+                $KOP->setConnection('KOP_kalkulasi');
+
+
+                for($i = 0; $i < count($fetchD); $i++){
+                    $rsl = ($harga_akhir_total[$i] + $harga_akhir_perjam[$i]);
+
+                    $t = $KOP->whereIn('name_mesin', [$fetchD[$i]])
+                        ->update(['harga_p_jam' => $rsl]);
+
+                        // dd($rsl);
+                }
+
+
+            return response()->json(['data_KOP' => $t]);
+
+        } catch (Exception $e) {
+            $code = 500;
+            $message = __('voyager::generic.internal_error');
+
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'data' => [
+                    'message' => $message,
+                    'line' => $e->getLine(),
+                ],
+            ], $code);
+        }
+    }
+
+    /**
+     * @send recalculate tanpa MTC
+     */
+    public function ConnectionKOPkalkulasiTanpaMTC(Request $req)
+    {
+
+        try
+            {
+
+                $Recalculate = AllRecalculate::whereNull('ended_at')->with(['listrik','KategoriBagian','Mesin.GroupMesinTo','Company','GroupMesin'])
+                ->groupBy('id')
+                ->selectRaw('*,
+                sum(total_semua_biaya) as total_semua_biayas,
+                sum(total_semua_biaya_perjam) as total_semua_biaya_perjams,
+                sum(total_tanpa_penyusutan_n_mtc) as total_tanpa_penyusutan_n_mtcs,
+                sum(total_tanpa_penyusutan_n_mtc_perjam) as total_tanpa_penyusutan_n_mtc_perjams,
+                sum(total_tanpa_penyusutan) as total_tanpa_penyusutans,
+                sum(total_tanpa_penyusutan_perjam) as total_tanpa_penyusutan_perjams,
+                sum(total_tanpa_mtc) as total_tanpa_mtcs,
+                sum(total_tanpa_mtc_perjam) as total_tanpa_mtc_perjams')->get();
+
+                $rsl = 0;
+                
+                foreach($Recalculate as $d => $kopmesin){
+
+                    $fetchD[] = $kopmesin->mesin->code_mesin;
+                    $count_group_machine[] = $kopmesin->GroupMesin;
+                    $harga_akhir_total[] = $kopmesin->total_tanpa_mtcs / count($count_group_machine);
+                    $harga_akhir_perjam[] = $kopmesin->total_tanpa_mtc_perjams / count($count_group_machine);
+
+                    
+                }
+
+                // dd($fetchD);
+
+                $KOP = new tb_mesin;
+
+                $KOP->setConnection('KOP_kalkulasi');
+
+
+                for($i = 0; $i < count($fetchD); $i++){
+                    $rsl = ($harga_akhir_total[$i] + $harga_akhir_perjam[$i]);
+
+                    $t = $KOP->whereIn('name_mesin', [$fetchD[$i]])
+                        ->update(['harga_p_jam' => $rsl]);
+
+                }
+
+
+            return response()->json(['data_KOP' => $t]);
+
+        } catch (Exception $e) {
+            $code = 500;
+            $message = __('voyager::generic.internal_error');
+
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'data' => [
+                    'message' => $message,
+                    'line' => $e->getLine(),
+                ],
+            ], $code);
+        }
+    }
     
 
     public function closingtransactionkoplistrik(){
@@ -929,7 +1194,7 @@ trait ModuleCaculates {
             {
 
                 $SendTemporaryCalculateInstance = new AllRecalculate;
-                $allrecalculate = AllRecalculate::with(['Listrik.Listrikperjam',
+                $allrecalculate = AllRecalculate::whereNull('ended_at')->with(['Listrik.Listrikperjam',
                 'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
                 'Company'])->get();
             
@@ -1084,6 +1349,7 @@ trait ModuleCaculates {
                     return response()->json([
                         'data' => [
                             'message' => $message,
+                            'line' => $e->getLine(),
                         ],
                     ], $code);
                 }
@@ -1097,7 +1363,7 @@ trait ModuleCaculates {
             {
 
                 $SendTemporaryCalculateInstance = new AllRecalculate;
-                $allrecalculate = AllRecalculate::with(['Listrik.Listrikperjam',
+                $allrecalculate = AllRecalculate::whereNull('ended_at')->with(['Listrik.Listrikperjam',
                 'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
                 'Company'])->get();
             
@@ -1252,6 +1518,7 @@ trait ModuleCaculates {
                     return response()->json([
                         'data' => [
                             'message' => $message,
+                            'line' => $e->getLine(),
                         ],
                     ], $code);
                 }
@@ -1499,6 +1766,26 @@ trait ModuleCaculates {
         return response(['button_ButtonexportCalcTanpaMTCnTanpaPenyusutan' => static::exportCalcTanpaMTCnTanpaPenyusutan]);
     }
 
+    /**
+     * Send KOP kalkulasi mesin
+     */
+    public function SendButtonexportCalcTanpaPenyusutan(){
+        return response(['SendButtonexportCalcTanpaPenyusutan' => 200]);
+    }
+
+    public function SendButtonCalcSmuaBiayaExports(){
+        return response(['SendButtonCalcSmuaBiayaExports' => 200]);
+    }
+
+    public function SendButtonexportCalcTanpaMTC(){
+        return response(['SendButtonexportCalcTanpaMTC' => 200]);
+    }
+
+    public function SendButtonexportCalcTanpaMTCnTanpaPenyusutan(){
+        return response(['SendexportCalcTanpaMTCnTanpaPenyusutan' => "200"]);
+    }
+     // >>>
+
     public function TotalTanpaPenyusutanPlusMTC($penyusutan, $mtc, $totalsemuabiayapenyusutan){
 
         return RptCalcMachine::InstanceOfCalcTotalTanpaPenyusutanplusMTC($penyusutan, $mtc, $totalsemuabiayapenyusutan);
@@ -1729,7 +2016,7 @@ trait ModuleCaculates {
                         //     })->implode('<br>');
                         // })
                         ->editColumn('fungsi_mesin', function($fungsimesin) {
-                            return $fungsimesin->mesin->code_mesin;
+                            return $fungsimesin->KategoriBagian->nama_bagian;
                         })
                         ->editColumn('company_name', function($company) {
                             // dd($company->Company);

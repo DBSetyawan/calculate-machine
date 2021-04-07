@@ -105,7 +105,10 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('dashboard','KOP\VoyagerController@index')->name('voyager.dashboard.index');
     Route::get('button-load-ButtonexportCalcTanpaPenyusutan','KOP\VoyagerTotalKalkulasiController@ButtonexportCalcTanpaPenyusutan')->name('voyager.ButtonexportCalcTanpaPenyusutan');
     Route::post('button-load-relcalculate','KOP\VoyagerTotalKalkulasiController@recalculate')->name('voyager.recalculate');
-    Route::get('kop-kalkulasi','KOP\VoyagerTotalKalkulasiController@ConnectionKOPkalkulasi')->name('kop.kalkulasi');
+    Route::post('kop-kalkulasi-tanpa-penyusutan-tanpa-mtc','KOP\VoyagerTotalKalkulasiController@ConnectionKOPkalkulasi')->name('kop.kalkulasi.tnp.pnyt.mtc');
+    Route::post('kop-kalkulasi-tanpa-penyusutan','KOP\VoyagerTotalKalkulasiController@ConnectionKOPkalkulasiTanpaPenyusutan')->name('kop.kalkulasi.ConnectionKOPkalkulasiTanpaPenyusutan');
+    Route::post('kop-kalkulasi-tanpa-mtc','KOP\VoyagerTotalKalkulasiController@ConnectionKOPkalkulasiTanpaMTC')->name('kop.kalkulasi.ConnectionKOPkalkulasiTanpaMTC');
+    Route::post('kop-kalkulasi-semua-biaya','KOP\VoyagerTotalKalkulasiController@ConnectionKOPkalkulasiSemuaBiaya')->name('kop.kalkulasi.ConnectionKOPkalkulasiSemuaBiaya');
     Route::get('button-load-ButtonCalcSmuaBiayaExports','KOP\VoyagerTotalKalkulasiController@ButtonCalcSmuaBiayaExports')->name('voyager.ButtonCalcSmuaBiayaExports');
     Route::get('button-load-ButtonexportCalcTanpaMTC','KOP\VoyagerTotalKalkulasiController@ButtonexportCalcTanpaMTC')->name('voyager.ButtonexportCalcTanpaMTC');
     Route::post('button-load-recalculateTanpaPenyusutan','KOP\VoyagerTotalKalkulasiController@recalculateTanpaPenyusutan')->name('voyager.recalculateTanpaPenyusutan');
@@ -118,7 +121,15 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('reset-total-tanpa-mtcs','KOP\VoyagerTotalKalkulasiController@rcllunchecktnpmtcs')->name('mesin.rclluncheckpnyt.tnp.mtcs');
     Route::post('reset-total-tanpa-MtcRecalculateOnly','KOP\VoyagerTotalKalkulasiController@MtcRecalculateOnly')->name('mesin.rclluncheckpnyt.tnp.MtcRecalculateOnly');
     Route::post('reset-total-tanpa-PenyusutanRecalculateOnly','KOP\VoyagerTotalKalkulasiController@PenyusutanRecalculateOnly')->name('mesin.rclluncheckpnyt.tnp.PenyusutanRecalculateOnly');
-    
+
+    /**
+     * @send KOP kalkulasi mesin
+     */
+    Route::post('button-load-SendButtonexportCalcTanpaPenyusutan','KOP\VoyagerTotalKalkulasiController@SendButtonexportCalcTanpaPenyusutan')->name('voyager.SendButtonexportCalcTanpaPenyusutan');
+    Route::post('button-load-SendButtonCalcSmuaBiayaExports','KOP\VoyagerTotalKalkulasiController@SendButtonCalcSmuaBiayaExports')->name('voyager.SendButtonCalcSmuaBiayaExports');
+    Route::post('button-load-SendButtonexportCalcTanpaMTC','KOP\VoyagerTotalKalkulasiController@SendButtonexportCalcTanpaMTC')->name('voyager.SendButtonexportCalcTanpaMTC');
+    Route::post('button-load-SendButtonexportCalcTanpaMTCnTanpaPenyusutan','KOP\VoyagerTotalKalkulasiController@SendButtonexportCalcTanpaMTCnTanpaPenyusutan')->name('voyager.SendButtonexportCalcTanpaMTCnTanpaPenyusutan');
+
     Route::get('/clear', function() {
 
         Artisan::call('cache:clear');

@@ -1,0 +1,297 @@
+{
+    "detail": [{
+        "id": 21,
+        "code_mesin": "HOCK",
+        "deskripsi": "HOCK UNIT 19",
+        "fungsi_mesin": "Coating",
+        "ampere": 43,
+        "voltase": 400,
+        "created_at": "2021-01-20T02:19:50.000000Z",
+        "updated_at": "2021-04-05T06:56:03.000000Z",
+        "group_mesin_id": 2,
+        "listrik_perjam_id": 19,
+        "category_bagian_id": 4,
+        "company_id": null,
+        "asumsi_id": 1,
+        "on_off": 1,
+        "display_on_off_machine": null,
+        "faktor_kali_lwbp": 1231,
+        "faktor_kali_wbp": 4220,
+        "kbagian_to": {
+            "id": 4,
+            "code_ctgry_bgn": "ctg-b-004",
+            "nama_bagian": "plong",
+            "created_at": "2021-01-20T01:35:22.000000Z",
+            "updated_at": "2021-01-20T01:35:22.000000Z"
+        },
+        "company_to": null,
+        "group_mesin_to": {
+            "id": 2,
+            "nama_kategori_mesin": "Mesin Cetak 6 Warna",
+            "created_at": "2021-02-24T04:58:00.000000Z",
+            "updated_at": "2021-02-24T07:22:09.000000Z",
+            "changed_by": null,
+            "company_parent_id": 3
+        },
+        "mesin_listrik_perjam_to": {
+            "id": 19,
+            "output_perjam": 6000,
+            "persen": 0.082380239726498,
+            "created_at": "2021-03-07T18:15:07.000000Z",
+            "updated_at": "2021-03-07T18:15:07.000000Z",
+            "code_lop": "LSPJy5TR03210019",
+            "company_parent_id": 3,
+            "prcn_view0": null,
+            "totalpjam_view1": null
+        },
+        "asumsi_to": {
+            "id": 1,
+            "lwbp": 17,
+            "wbp": 4,
+            "Intervalmingguan": 6,
+            "created_at": "2021-03-08T01:49:50.000000Z",
+            "updated_at": "2021-03-16T03:00:26.000000Z",
+            "shift": 3
+        }
+    }, {
+        "id": 46,
+        "code_mesin": "Pol 420200",
+        "deskripsi": null,
+        "fungsi_mesin": null,
+        "ampere": 2310,
+        "voltase": 1231,
+        "created_at": "2021-01-20T19:02:49.000000Z",
+        "updated_at": "2021-04-05T06:47:07.000000Z",
+        "group_mesin_id": 2,
+        "listrik_perjam_id": 27,
+        "category_bagian_id": 1,
+        "company_id": 3,
+        "asumsi_id": 2,
+        "on_off": 1,
+        "display_on_off_machine": null,
+        "faktor_kali_lwbp": 1244,
+        "faktor_kali_wbp": 2141,
+        "kbagian_to": {
+            "id": 1,
+            "code_ctgry_bgn": "ctg-b-001",
+            "nama_bagian": "potong",
+            "created_at": "2021-01-20T01:34:38.000000Z",
+            "updated_at": "2021-01-20T01:34:38.000000Z"
+        },
+        "company_to": {
+            "id": 3,
+            "company_name": "KOP",
+            "created_at": "2021-01-19T19:11:00.000000Z",
+            "updated_at": "2021-02-16T03:51:07.000000Z",
+            "deleted_at": null
+        },
+        "group_mesin_to": {
+            "id": 2,
+            "nama_kategori_mesin": "Mesin Cetak 6 Warna",
+            "created_at": "2021-02-24T04:58:00.000000Z",
+            "updated_at": "2021-02-24T07:22:09.000000Z",
+            "changed_by": null,
+            "company_parent_id": 3
+        },
+        "mesin_listrik_perjam_to": {
+            "id": 27,
+            "output_perjam": 3750,
+            "persen": 0.051487649829061,
+            "created_at": "2021-03-07T18:16:05.000000Z",
+            "updated_at": "2021-03-07T18:16:05.000000Z",
+            "code_lop": "LSPJ9RTR03210027",
+            "company_parent_id": 3,
+            "prcn_view0": null,
+            "totalpjam_view1": null
+        },
+        "asumsi_to": {
+            "id": 2,
+            "lwbp": 10,
+            "wbp": 4,
+            "Intervalmingguan": 6,
+            "created_at": "2021-03-08T02:20:35.000000Z",
+            "updated_at": "2021-03-16T03:02:13.000000Z",
+            "shift": 2
+        }
+    }, {
+        "id": 88,
+        "code_mesin": "OPPP",
+        "deskripsi": "sadasd",
+        "fungsi_mesin": null,
+        "ampere": 1321,
+        "voltase": 234,
+        "created_at": "2021-03-25T01:05:53.000000Z",
+        "updated_at": "2021-04-07T01:40:17.000000Z",
+        "group_mesin_id": 2,
+        "listrik_perjam_id": 18,
+        "category_bagian_id": 3,
+        "company_id": 3,
+        "asumsi_id": 1,
+        "on_off": 1,
+        "display_on_off_machine": null,
+        "faktor_kali_lwbp": 234,
+        "faktor_kali_wbp": 342,
+        "kbagian_to": {
+            "id": 3,
+            "code_ctgry_bgn": "ctg-b-003",
+            "nama_bagian": "hotprint",
+            "created_at": "2021-01-20T01:35:14.000000Z",
+            "updated_at": "2021-01-20T01:35:14.000000Z"
+        },
+        "company_to": {
+            "id": 3,
+            "company_name": "KOP",
+            "created_at": "2021-01-19T19:11:00.000000Z",
+            "updated_at": "2021-02-16T03:51:07.000000Z",
+            "deleted_at": null
+        },
+        "group_mesin_to": {
+            "id": 2,
+            "nama_kategori_mesin": "Mesin Cetak 6 Warna",
+            "created_at": "2021-02-24T04:58:00.000000Z",
+            "updated_at": "2021-02-24T07:22:09.000000Z",
+            "changed_by": null,
+            "company_parent_id": 3
+        },
+        "mesin_listrik_perjam_to": {
+            "id": 18,
+            "output_perjam": 6000,
+            "persen": 0.082380239726498,
+            "created_at": "2021-03-07T14:07:00.000000Z",
+            "updated_at": "2021-03-07T14:07:00.000000Z",
+            "code_lop": "LSPJe5TR0321001",
+            "company_parent_id": 3,
+            "prcn_view0": null,
+            "totalpjam_view1": null
+        },
+        "asumsi_to": {
+            "id": 1,
+            "lwbp": 17,
+            "wbp": 4,
+            "Intervalmingguan": 6,
+            "created_at": "2021-03-08T01:49:50.000000Z",
+            "updated_at": "2021-03-16T03:00:26.000000Z",
+            "shift": 3
+        }
+    }, {
+        "id": 99,
+        "code_mesin": "CD 6",
+        "deskripsi": "Test CD 6",
+        "fungsi_mesin": null,
+        "ampere": 1387,
+        "voltase": 380,
+        "created_at": "2021-04-07T03:29:24.000000Z",
+        "updated_at": "2021-04-07T03:29:55.000000Z",
+        "group_mesin_id": 2,
+        "listrik_perjam_id": 22,
+        "category_bagian_id": 1,
+        "company_id": 3,
+        "asumsi_id": 1,
+        "on_off": 1,
+        "display_on_off_machine": null,
+        "faktor_kali_lwbp": 3329,
+        "faktor_kali_wbp": 2911,
+        "kbagian_to": {
+            "id": 1,
+            "code_ctgry_bgn": "ctg-b-001",
+            "nama_bagian": "potong",
+            "created_at": "2021-01-20T01:34:38.000000Z",
+            "updated_at": "2021-01-20T01:34:38.000000Z"
+        },
+        "company_to": {
+            "id": 3,
+            "company_name": "KOP",
+            "created_at": "2021-01-19T19:11:00.000000Z",
+            "updated_at": "2021-02-16T03:51:07.000000Z",
+            "deleted_at": null
+        },
+        "group_mesin_to": {
+            "id": 2,
+            "nama_kategori_mesin": "Mesin Cetak 6 Warna",
+            "created_at": "2021-02-24T04:58:00.000000Z",
+            "updated_at": "2021-02-24T07:22:09.000000Z",
+            "changed_by": null,
+            "company_parent_id": 3
+        },
+        "mesin_listrik_perjam_to": {
+            "id": 22,
+            "output_perjam": 3750,
+            "persen": 0.051487649829061,
+            "created_at": "2021-03-07T18:15:29.000000Z",
+            "updated_at": "2021-03-07T18:15:29.000000Z",
+            "code_lop": "LSPJUITR03210022",
+            "company_parent_id": 3,
+            "prcn_view0": null,
+            "totalpjam_view1": null
+        },
+        "asumsi_to": {
+            "id": 1,
+            "lwbp": 17,
+            "wbp": 4,
+            "Intervalmingguan": 6,
+            "created_at": "2021-03-08T01:49:50.000000Z",
+            "updated_at": "2021-03-16T03:00:26.000000Z",
+            "shift": 3
+        }
+    }, {
+        "id": 100,
+        "code_mesin": "CD 4",
+        "deskripsi": "Test CD 4",
+        "fungsi_mesin": null,
+        "ampere": 1380,
+        "voltase": 380,
+        "created_at": "2021-04-07T03:31:51.000000Z",
+        "updated_at": "2021-04-07T03:33:00.000000Z",
+        "group_mesin_id": 2,
+        "listrik_perjam_id": 33,
+        "category_bagian_id": 2,
+        "company_id": 3,
+        "asumsi_id": 1,
+        "on_off": 1,
+        "display_on_off_machine": null,
+        "faktor_kali_lwbp": 2311,
+        "faktor_kali_wbp": 1231,
+        "kbagian_to": {
+            "id": 2,
+            "code_ctgry_bgn": "ctg-b-002",
+            "nama_bagian": "cetak",
+            "created_at": "2021-01-20T01:34:58.000000Z",
+            "updated_at": "2021-01-20T01:34:58.000000Z"
+        },
+        "company_to": {
+            "id": 3,
+            "company_name": "KOP",
+            "created_at": "2021-01-19T19:11:00.000000Z",
+            "updated_at": "2021-02-16T03:51:07.000000Z",
+            "deleted_at": null
+        },
+        "group_mesin_to": {
+            "id": 2,
+            "nama_kategori_mesin": "Mesin Cetak 6 Warna",
+            "created_at": "2021-02-24T04:58:00.000000Z",
+            "updated_at": "2021-02-24T07:22:09.000000Z",
+            "changed_by": null,
+            "company_parent_id": 3
+        },
+        "mesin_listrik_perjam_to": {
+            "id": 33,
+            "output_perjam": 4500,
+            "persen": 0.061785179794873,
+            "created_at": "2021-03-07T18:16:53.000000Z",
+            "updated_at": "2021-03-07T18:16:53.000000Z",
+            "code_lop": "LSPJKOTR03210033",
+            "company_parent_id": 3,
+            "prcn_view0": null,
+            "totalpjam_view1": null
+        },
+        "asumsi_to": {
+            "id": 1,
+            "lwbp": 17,
+            "wbp": 4,
+            "Intervalmingguan": 6,
+            "created_at": "2021-03-08T01:49:50.000000Z",
+            "updated_at": "2021-03-16T03:00:26.000000Z",
+            "shift": 3
+        }
+    }]
+}
