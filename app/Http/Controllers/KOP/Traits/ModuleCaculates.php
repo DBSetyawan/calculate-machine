@@ -258,10 +258,11 @@ trait ModuleCaculates {
 
 
                 for($i = 0; $i < count($fetchD); $i++){
-                    $rsl = ($harga_akhir_total[$i] + $harga_akhir_perjam[$i]);
+                    // $rsl = ($harga_akhir_total[$i] + $harga_akhir_perjam[$i]);
+                    // $rsl = ($harga_akhir_total[$i] + );
 
                     $t = $KOP->whereIn('name_mesin', [$fetchD[$i]])
-                        ->update(['harga_p_jam' => $rsl]);
+                        ->update(['harga_p_jam' => $harga_akhir_perjam[$i]]);
 
                         // dd($rsl);
                 }
@@ -325,10 +326,11 @@ trait ModuleCaculates {
 
 
                 for($i = 0; $i < count($fetchD); $i++){
-                    $rsl = ($harga_akhir_total[$i] + $harga_akhir_perjam[$i]);
+                    // $rsl = ($harga_akhir_total[$i] + $harga_akhir_perjam[$i]);
+                    // $rsl = ($harga_akhir_total[$i] + );
 
                     $t = $KOP->whereIn('name_mesin', [$fetchD[$i]])
-                        ->update(['harga_p_jam' => $rsl]);
+                        ->update(['harga_p_jam' => $harga_akhir_perjam[$i]]);
 
                 }
 
@@ -467,10 +469,10 @@ trait ModuleCaculates {
 
 
                 for($i = 0; $i < count($fetchD); $i++){
-                    $rsl = ($harga_akhir_total[$i] + $harga_akhir_perjam[$i]);
+                    // $rsl = ($harga_akhir_total[$i] + $harga_akhir_perjam[$i]);
 
                     $t = $KOP->whereIn('name_mesin', [$fetchD[$i]])
-                        ->update(['harga_p_jam' => $rsl]);
+                        ->update(['harga_p_jam' => $harga_akhir_perjam[$i]]);
 
                 }
 
