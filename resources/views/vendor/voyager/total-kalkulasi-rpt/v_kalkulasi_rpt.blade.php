@@ -31,7 +31,7 @@
                                 <div class="card">
                                   <div class="countdown">
                                     <div class="text-right col-md-9">
-                                    Penutupan transaksi dalam periode tahunan :
+                                      <i class="voyager-alarm-clock"></i> Penutupan transaksi dalam periode tahunan :
                                     </div>
                                     <span id="clock"></span>
                                   </div>
@@ -193,15 +193,15 @@
                      </button>
 
                      <button class="btn btn-link" type="button">
-                      <span id="tanpa_penyusutan_v" style="font-family: Quicksand"><h5 class="mb-1 btn btn-warning"><i class="voyager-settings"></i> Sending KOP machine Tanpa Penyusutan <i class="voyager-double-down"></i> </span></h5>
+                      <span id="tanpa_penyusutan_v" style="font-family: Quicksand"><h5 class="mb-1 btn btn-warning"><i class="voyager-paper-plane"></i> Kirim KOP machine | TANPA PENYUSUTAN </span></h5>
                      </button>
 
                      <button class="btn btn-link" type="button">
-                      <span id="tanpa_mtc_v" style="font-family: Quicksand"><h5 class="mb-1 btn btn-primary"><i class="voyager-settings"></i> Sending KOP machine Tanpa MTC <i class="voyager-double-down"></i> </span></h5>
+                      <span id="tanpa_mtc_v" style="font-family: Quicksand"><h5 class="mb-1 btn btn-primary"><i class="voyager-paper-plane"></i> Kirim KOP machine | TANPA MTC </span></h5>
                      </button>
 
                      <button class="btn btn-link" type="button">
-                      <span id="semua_biaya_v" style="font-family: Quicksand"><h5 class="mb-1 btn btn-danger"><i class="voyager-settings"></i> Sending KOP machine Semua Biaya <i class="voyager-double-down"></i> </span></h5>
+                      <span id="semua_biaya_v" style="font-family: Quicksand"><h5 class="mb-1 btn btn-danger"><i class="voyager-paper-plane"></i> Kirim KOP machine | SEMUA BIAYA </span></h5>
                      </button>
 
                       <div class="row">
@@ -212,16 +212,16 @@
                                     <tr>
                                       <th>COMPANY</th>
                                       <th>GROUP MESIN</th>
-                                      <th>TOTAL RATA RATA SEMUA BIAYA</th>
-                                      <th>TOTAL RATA RATA SEMUA BIAYA (/JAM)</th>
-                                      <th>TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN + MTC</th>
-                                      <th>TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN + MTC (/JAM)</th>
-                                      <th>TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN</th>
-                                      <th>TOTAL RATA RATA SEMUA BIAYA TANPA PENYUSUTAN (/JAM)</th>
-                                      <th>TOTAL RATA RATA SEMUA BIAYA TANPA MTC</th>
-                                      <th>TOTAL RATA RATA SEMUA BIAYA TANPA MTC (/JAM)</th>
+                                      <th>TOTAL AVERAGE SEMUA BIAYA</th>
+                                      <th>TOTAL AVERAGE SEMUA BIAYA (/JAM)</th>
+                                      <th>TOTAL AVERAGE SEMUA BIAYA TANPA PENYUSUTAN + MTC</th>
+                                      <th>TOTAL AVERAGE SEMUA BIAYA TANPA PENYUSUTAN + MTC (/JAM)</th>
+                                      <th>TOTAL AVERAGE SEMUA BIAYA TANPA PENYUSUTAN</th>
+                                      <th>TOTAL AVERAGE SEMUA BIAYA TANPA PENYUSUTAN (/JAM)</th>
+                                      <th>TOTAL AVERAGE SEMUA BIAYA TANPA MTC</th>
+                                      <th>TOTAL AVERAGE SEMUA BIAYA TANPA MTC (/JAM)</th>
                                       {{-- @if(Auth::User()->role->name == "admin" ) --}}
-                                      <th>TOTAL RATA RATA</th>
+                                      <th>TOTAL AVERAGE ALL MODE</th>
                                       {{-- @endif --}}
                                     </tr>
                                 </thead>
@@ -388,6 +388,18 @@ $(document).ready(function(){
                   }
                 );
 
+                SendButtonexportCalcTanpaPenyusutan().then(values => {
+                    if(values.SendButtonexportCalcTanpaPenyusutan == 200){
+                      $('#tanpa_penyusutan_v').show();
+                      $('#tanpa_mtc_v').hide();
+                      $('#semua_biaya_v').hide();
+                      $('#tanpa_penyusutan_n_tanpa_mtc').hide();
+
+                      } else {
+                        $('#tanpa_penyusutan_v').hide();
+                      }
+                  })
+
           } else {
 
           $(".Penyusutan").prop("checked", false);
@@ -479,6 +491,15 @@ $(document).ready(function(){
                     
                     )
 
+                    SendButtonCalcSmuaBiayaExports().then(value => {
+                    if(value.SendButtonCalcSmuaBiayaExports == 200){
+                      $('#semua_biaya_v').show();
+                      $('#tanpa_penyusutan_v').hide();
+                      $('#tanpa_mtc_v').hide();
+                      $('#tanpa_penyusutan_n_tanpa_mtc').hide();
+                    }
+                  })
+
               //set recallculate
                recuncheck_tnppnystan().then(value => {
                     if(value.res == 200){
@@ -536,6 +557,15 @@ $(document).ready(function(){
                           
                         )
 
+      SendButtonCalcSmuaBiayaExports().then(value => {
+        if(value.SendButtonCalcSmuaBiayaExports == 200){
+          $('#semua_biaya_v').show();
+          $('#tanpa_penyusutan_v').hide();
+          $('#tanpa_mtc_v').hide();
+          $('#tanpa_penyusutan_n_tanpa_mtc').hide();
+        }
+      })
+
               //set recallculate
                recuncheck_tnppnystan().then(value => {
                     if(value.res == 200){
@@ -583,6 +613,14 @@ $(document).ready(function(){
                         }
                       })
 
+                      SendButtonexportCalcTanpaMTCnTanpaPenyusutan().then(value => {
+                        if(value.SendexportCalcTanpaMTCnTanpaPenyusutan == "200"){
+                          $('#tanpa_penyusutan_v').hide();
+                          $('#tanpa_penyusutan_n_tanpa_mtc').show();
+                          $('#semua_biaya_v').hide();
+                          $('#tanpa_mtc_v').hide();
+                        }
+                      })
                   // recalcc_tanpapenyusutan().then(value => {
                   //       if(value.res == 200){
                   //         $('#dataTablePenyusutan').DataTable().draw()
@@ -621,6 +659,19 @@ $(document).ready(function(){
                             
                           )
 
+                          SendButtonexportCalcTanpaMTC().then(values => {
+                            if(values.SendButtonexportCalcTanpaMTC == 200){
+                              $('#tanpa_mtc_v').show();
+                              $('#tanpa_penyusutan_v').hide();
+                              $('#semua_biaya_v').hide();
+                              $('#tanpa_penyusutan_n_tanpa_mtc').hide();
+
+                              } else {
+                                $('#tanpa_mtc_v').hide();
+
+                              }
+                          })
+
                   // recalcc_tanpamtcs().then(value => {
                   //     if(value.res == 200){
                   //       $('#dataTablePenyusutan').DataTable().draw()
@@ -653,6 +704,20 @@ $(document).ready(function(){
                                 
                               $(".calctp").html(sd.button_ButtonexportCalcTanpaPenyusutan)
                           )     
+
+                          SendButtonexportCalcTanpaPenyusutan().then(values => {
+                          // console.log(values.SendButtonexportCalcTanpaPenyusutan)
+                          if(values.SendButtonexportCalcTanpaPenyusutan == 200){
+                            $('#tanpa_penyusutan_v').show();
+                            $('#tanpa_mtc_v').hide();
+                            $('#semua_biaya_v').hide();
+                            $('#tanpa_penyusutan_n_tanpa_mtc').hide();
+
+                            } else {
+                              $('#tanpa_penyusutan_v').hide();
+
+                            }
+                          })
 
                           // recalcc_tanpapenyusutan().then(value => {
                           //   if(value.res == 200){
@@ -693,6 +758,15 @@ $(document).ready(function(){
                                 $(".csbe").html(sd.button_ButtonCalcSmuaBiayaExports)
                               
                             )
+
+                            SendButtonCalcSmuaBiayaExports().then(value => {
+                              if(value.SendButtonCalcSmuaBiayaExports == 200){
+                                $('#semua_biaya_v').show();
+                                $('#tanpa_penyusutan_v').hide();
+                                $('#tanpa_mtc_v').hide();
+                                $('#tanpa_penyusutan_n_tanpa_mtc').hide();
+                              }
+                            })
 
                       //set recallculate
                       recuncheck_tnppnystan().then(value => {
@@ -1327,7 +1401,7 @@ $(document).ready(function(){
                             <div class="col-8">
                                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-secondary active">
-                                  Data excell sudah disesuaikan, dengan tabel yang tampil dibawah. <i class="bi bi-file-spreadsheet"></i>  <i class="voyager-book-download"></i>
+                                  Data excell sudah disesuaikan, dengan tabel yang tampil dibawah. <i class="bi bi-file-spreadsheet"></i>  <i class="voyager-cloud-download"></i>  <i class="voyager-book-download"></i>
                                 </label>
                               </div>
                                 <a class="calctp"></a>
@@ -1824,6 +1898,19 @@ $(document).ready(function(){
                                       
                                     )
 
+                                    SendButtonexportCalcTanpaMTC().then(values => {
+                                      if(values.SendButtonexportCalcTanpaMTC == 200){
+                                        $('#tanpa_mtc_v').show();
+                                        $('#tanpa_penyusutan_v').hide();
+                                        $('#semua_biaya_v').hide();
+                                        $('#tanpa_penyusutan_n_tanpa_mtc').hide();
+
+                                        } else {
+                                          $('#tanpa_mtc_v').hide();
+
+                                        }
+                                    })
+
                                     // recalcc_tanpapenyusutan().then(value => {
                                     //   if(value.res == 200){
                                     //     $('#dataTablePenyusutan').DataTable().draw()
@@ -2071,17 +2158,19 @@ $(document).ready(function(){
                               ) 
                                
                                //progress adjust
-                                recalculateTanpaPenyusutan().then(value => {
-                                  if(value.res == 200){
-                                    $('#dataTablePenyusutan').DataTable().draw()
-                                    // $('#dataTableSearchRange').DataTable().draw()
-                                    let pnytvsbles = $('#dataTableSearchRange').DataTable();
-                                    // alert("asda")
-                                    pnytvsbles.columns.adjust().draw();
-                                    // return recalulate();
+                               SendButtonexportCalcTanpaPenyusutan().then(values => {
+                              // console.log(values.SendButtonexportCalcTanpaPenyusutan)
+                              if(values.SendButtonexportCalcTanpaPenyusutan == 200){
+                                $('#tanpa_penyusutan_v').show();
+                                $('#tanpa_mtc_v').hide();
+                                $('#semua_biaya_v').hide();
+                                $('#tanpa_penyusutan_n_tanpa_mtc').hide();
 
-                                  }
-                                });
+                                } else {
+                                  $('#tanpa_penyusutan_v').hide();
+
+                                }
+                              })
                               
                               $(".calctp").show();
 

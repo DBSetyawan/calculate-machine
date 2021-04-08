@@ -27,10 +27,10 @@ class VoyagerTotalKalkulasiController extends BaseVoyagerBaseController Implemen
     const ButtonexportCalcTanpaMTC = "<a href='https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/export/all-calculate-machine-xlsx-tanpa-maintenance' id='caltanpa_mtc' class='btn btn-info calcmtc'><i class='voyager-news'></i> Download Tanpa MTC</a>";
     const exportCalcTanpaMTCnTanpaPenyusutan = "<a href='https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/export/all-calculate-machine-xlsx-tanpa-maintenance-dan-tanpa-penyusutan' id='caltpmtctpc' class='btn btn-success calctnpmtctp'><i class='voyager-news'></i> Download Tanpa MTC & tanpa Penyusutan</a>";
 
-    const SendButtonexportCalcTanpaPenyusutan = "<a href='https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/send-tanpa-penyusutan' id='sendtanpa_penyusutan' class='btn btn-warning'><i class='voyager-news'></i> Send Tanpa Penyusutan</a>";
-    const SendButtonCalcSmuaBiayaExports = "<a href='https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/send-total-semua-biaya' id='send_totalsemuabiaya' class='btn btn-secondary' style='background-color: brown;color:white'><i class='voyager-news'></i> Send Semua Biaya</a>";
-    const SendButtonexportCalcTanpaMTC = "<a href='https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/send-tanpa-mtc' id='sendtanpa_mtc' class='btn btn-info'><i class='voyager-news'></i> Send Tanpa MTC</a>";
-    const SendexportCalcTanpaMTCnTanpaPenyusutan = "<a href='https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/send-tanpa-penyusutan-tanpa-mtc' id='sendtanpa_penyusutan_n_tanpa_mtc' class='btn btn-success'><i class='voyager-news'></i> Send Tanpa Penyusutan & MTC</a>";
+    const SendButtonexportCalcTanpaPenyusutan = "<a href='https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/send-tanpa-penyusutan' id='sendtanpa_penyusutan' class='btn btn-warning'><i class='voyager-news'></i> Kirim KOP machine | TANPA PENYUSUTAN </a>";
+    const SendButtonCalcSmuaBiayaExports = "<a href='https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/send-total-semua-biaya' id='send_totalsemuabiaya' class='btn btn-secondary' style='background-color: brown;color:white'><i class='voyager-news'></i> Kirim KOP machine | SEMUA BIAYA </a>";
+    const SendButtonexportCalcTanpaMTC = "<a href='https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/send-tanpa-mtc' id='sendtanpa_mtc' class='btn btn-info'><i class='voyager-news'></i> Kirim KOP machine | TANPA MTC </a>";
+    const SendexportCalcTanpaMTCnTanpaPenyusutan = "<a href='https://vpn.krisanthium.com:7070/kalkulasimesin2/public/admin/send-tanpa-penyusutan-tanpa-mtc' id='sendtanpa_penyusutan_n_tanpa_mtc' class='btn btn-success'><i class='voyager-news'></i> Kirim KOP machine | TANPA PENYUSUTAN & TANPA MTC</a>";
     
     use ModuleCaculates;
  

@@ -372,7 +372,8 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
                 $query = $model->{$dataType->scope}();
             } else {
-                $query = $model::whereNull('ended_at')->select('*');
+                // $query = $model::whereNull('ended_at')->select('*');
+                $query = $model::select('*');
             }
 
             // dd($query->get());
