@@ -494,6 +494,8 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
             if(! $AllRecalculate->isEmpty()){
 
+                // AllRecalculate::whereNull('ended_at')->delete();
+
                 foreach($alllstrk as $datatemp){
              
                     $data = [
@@ -505,42 +507,61 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                         'listrik_fk' =>  $datatemp->id,
                         'begin_at' => Carbon::now()
                     ];
-
-                    AllRecalculate::updateOrCreate(['code_mesin' => $datatemp->code_mesin], $data);
                     
+                    AllRecalculate::UpdateOrCreate(['code_mesin' => $datatemp->code_mesin], $data);\
+
                    app(VoyagerTotalKalkulasiController::class)->recalculate();
                     
                 }
-                
+
             } else {
 
-                $columns = [
-                    'company',
-                    'code_mesin',
-                    'category_bagian',
-                    'id_listrik',
-                    'group_mesin',
-                    'listrik_fk'
-                ];
-                
-                        foreach($alllstrk as $datatemp){
-                            
-                            $data[] = [
-                                $datatemp->company_parent_id,
-                                $datatemp->code_mesin,
-                                $datatemp->category_bagian,
-                                $datatemp->ncost_bulan_plus_adm,
-                                $datatemp->group_mesin,
-                                $datatemp->id
-                            ];
-                            
-                        }
-                        
-                        $batchSize = 500;
+                foreach($alllstrk as $datatemp){
+             
+                    $data = [
+                        'company' => $datatemp->company_parent_id,
+                        'code_mesin'=> $datatemp->code_mesin,
+                        'category_bagian' => $datatemp->category_bagian,
+                        'id_listrik' => $datatemp->ncost_bulan_plus_adm,
+                        'group_mesin' => $datatemp->group_mesin,
+                        'listrik_fk' =>  $datatemp->id,
+                        'begin_at' => Carbon::now()
+                    ];
                     
-                    $result = \Batch::insert($ListrikInstance, $columns, $data, $batchSize);
-               
+                    AllRecalculate::create($data);
+
+                }
+
             }
+            // } else {
+
+                // $columns = [
+                //     'company',
+                //     'code_mesin',
+                //     'category_bagian',
+                //     'id_listrik',
+                //     'group_mesin',
+                //     'listrik_fk'
+                // ];
+                
+                //         foreach($alllstrk as $datatemp){
+                            
+                //             $data[] = [
+                //                 $datatemp->company_parent_id,
+                //                 $datatemp->code_mesin,
+                //                 $datatemp->category_bagian,
+                //                 $datatemp->ncost_bulan_plus_adm,
+                //                 $datatemp->group_mesin,
+                //                 $datatemp->id
+                //             ];
+                            
+                //         }
+                        
+                //         $batchSize = 500;
+                    
+                //     $result = \Batch::insert($ListrikInstance, $columns, $data, $batchSize);
+               
+            // }
 
             return response()->json(['success' => 1]);
 

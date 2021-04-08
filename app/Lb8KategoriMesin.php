@@ -18,5 +18,5 @@ class Lb8KategoriMesin extends Model
     {
         return $this->belongsTo('App\KategoriBagian', 'id');
     }
-    
+
 }

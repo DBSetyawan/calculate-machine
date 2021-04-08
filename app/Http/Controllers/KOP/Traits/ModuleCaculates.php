@@ -238,33 +238,38 @@ trait ModuleCaculates {
                 sum(total_tanpa_mtc) as total_tanpa_mtcs,
                 sum(total_tanpa_mtc_perjam) as total_tanpa_mtc_perjams')->get();
 
-                $rsl = 0;
-                
                 foreach($Recalculate as $d => $kopmesin){
 
+                    $callback = function($key, $value) {
+                        return $value;
+                    };
+                     
                     $fetchD[] = $kopmesin->mesin->code_mesin;
-                    $count_group_machine[] = $kopmesin->GroupMesin;
-                    $harga_akhir_total[] = $kopmesin->total_tanpa_penyusutan_n_mtcs / count($count_group_machine);
-                    $harga_akhir_perjam[] = $kopmesin->total_tanpa_penyusutan_n_mtc_perjams / count($count_group_machine);
+                    $count_group_machine[] = $kopmesin->GroupMesin->id;
 
+                    $ctes[] = Mesin::whereIn('group_mesin_id', $count_group_machine)->groupBy('group_mesin_id')->orderBy('group_mesin_id','DESC')->get()->toArray()[0]['group_mesin_id'];
+                    
+                    /**
+                     * @method function mencari mesin group mesin
+                     */
+                    $jumlah_permesin_insteadof_group_mesin = array_count_values($ctes);
+                    $res = array_map($callback, array_keys($ctes), $jumlah_permesin_insteadof_group_mesin);
+                    $arr = array_filter($res, 'strlen');
+
+                    $harga_akhir_total[] = $kopmesin->total_tanpa_penyusutan_n_mtcs / count($arr);
+                    $harga_akhir_perjam[] = $kopmesin->total_tanpa_penyusutan_n_mtc_perjams / count($arr);
                     
                 }
-
-                // dd($rsl);
-                // die;
+             
                 $KOP = new tb_mesin;
 
                 $KOP->setConnection('KOP_kalkulasi');
 
-
                 for($i = 0; $i < count($fetchD); $i++){
-                    // $rsl = ($harga_akhir_total[$i] + $harga_akhir_perjam[$i]);
-                    // $rsl = ($harga_akhir_total[$i] + );
 
                     $t = $KOP->whereIn('name_mesin', [$fetchD[$i]])
                         ->update(['harga_p_jam' => $harga_akhir_perjam[$i]]);
 
-                        // dd($rsl);
                 }
 
 
@@ -308,32 +313,39 @@ trait ModuleCaculates {
                 sum(total_tanpa_mtc) as total_tanpa_mtcs,
                 sum(total_tanpa_mtc_perjam) as total_tanpa_mtc_perjams')->get();
 
-                $rsl = 0;
-                
                 foreach($Recalculate as $d => $kopmesin){
 
+                    $callback = function($key, $value) {
+                        return $value;
+                    };
+                     
                     $fetchD[] = $kopmesin->mesin->code_mesin;
-                    $count_group_machine[] = $kopmesin->GroupMesin;
-                    $harga_akhir_total[] = $kopmesin->total_semua_biayas / count($count_group_machine);
-                    $harga_akhir_perjam[] = $kopmesin->total_semua_biaya_perjams / count($count_group_machine);
+                    $count_group_machine[] = $kopmesin->GroupMesin->id;
 
+                    $ctes[] = Mesin::whereIn('group_mesin_id', $count_group_machine)->groupBy('group_mesin_id')->orderBy('group_mesin_id','DESC')->get()->toArray()[0]['group_mesin_id'];
+                    
+                    /**
+                     * @method function mencari mesin group mesin
+                     */
+                    $jumlah_permesin_insteadof_group_mesin = array_count_values($ctes);
+                    $res = array_map($callback, array_keys($ctes), $jumlah_permesin_insteadof_group_mesin);
+                    $arr = array_filter($res, 'strlen');
+
+                    $harga_akhir_total[] = $kopmesin->total_semua_biayas / count($arr);
+                    $harga_akhir_perjam[] = $kopmesin->total_semua_biaya_perjams / count($arr);
                     
                 }
-
+             
                 $KOP = new tb_mesin;
 
                 $KOP->setConnection('KOP_kalkulasi');
 
-
                 for($i = 0; $i < count($fetchD); $i++){
-                    // $rsl = ($harga_akhir_total[$i] + $harga_akhir_perjam[$i]);
-                    // $rsl = ($harga_akhir_total[$i] + );
 
                     $t = $KOP->whereIn('name_mesin', [$fetchD[$i]])
                         ->update(['harga_p_jam' => $harga_akhir_perjam[$i]]);
 
                 }
-
 
             return response()->json(['data_KOP' => $t]);
 
@@ -379,33 +391,39 @@ trait ModuleCaculates {
                 sum(total_tanpa_penyusutan_perjam) as total_tanpa_penyusutan_perjams,
                 sum(total_tanpa_mtc) as total_tanpa_mtcs,
                 sum(total_tanpa_mtc_perjam) as total_tanpa_mtc_perjams')->get();
-
-                $rsl = 0;
                 
                 foreach($Recalculate as $d => $kopmesin){
 
+                    $callback = function($key, $value) {
+                        return $value;
+                    };
+                     
                     $fetchD[] = $kopmesin->mesin->code_mesin;
-                    $count_group_machine[] = $kopmesin->GroupMesin;
-                    $harga_akhir_total[] = $kopmesin->total_tanpa_penyusutans / count($count_group_machine);
-                    $harga_akhir_perjam[] = $kopmesin->total_tanpa_penyusutan_perjams / count($count_group_machine);
+                    $count_group_machine[] = $kopmesin->GroupMesin->id;
 
+                    $ctes[] = Mesin::whereIn('group_mesin_id', $count_group_machine)->groupBy('group_mesin_id')->orderBy('group_mesin_id','DESC')->get()->toArray()[0]['group_mesin_id'];
+                    
+                    /**
+                     * @method function mencari mesin group mesin
+                     */
+                    $jumlah_permesin_insteadof_group_mesin = array_count_values($ctes);
+                    $res = array_map($callback, array_keys($ctes), $jumlah_permesin_insteadof_group_mesin);
+                    $arr = array_filter($res, 'strlen');
+
+                    $harga_akhir_total[] = $kopmesin->total_tanpa_penyusutans / count($arr);
+                    $harga_akhir_perjam[] = $kopmesin->total_tanpa_penyusutan_perjams / count($arr);
                     
                 }
-
-                // dd($rsl);
-                // die;
+             
                 $KOP = new tb_mesin;
 
                 $KOP->setConnection('KOP_kalkulasi');
 
-
                 for($i = 0; $i < count($fetchD); $i++){
-                    $rsl = ($harga_akhir_total[$i] + $harga_akhir_perjam[$i]);
 
                     $t = $KOP->whereIn('name_mesin', [$fetchD[$i]])
-                        ->update(['harga_p_jam' => $rsl]);
+                        ->update(['harga_p_jam' => $harga_akhir_perjam[$i]]);
 
-                        // dd($rsl);
                 }
 
 
@@ -453,23 +471,32 @@ trait ModuleCaculates {
                 
                 foreach($Recalculate as $d => $kopmesin){
 
+                    $callback = function($key, $value) {
+                        return $value;
+                    };
+                     
                     $fetchD[] = $kopmesin->mesin->code_mesin;
-                    $count_group_machine[] = $kopmesin->GroupMesin;
-                    $harga_akhir_total[] = $kopmesin->total_tanpa_mtcs / count($count_group_machine);
-                    $harga_akhir_perjam[] = $kopmesin->total_tanpa_mtc_perjams / count($count_group_machine);
+                    $count_group_machine[] = $kopmesin->GroupMesin->id;
 
+                    $ctes[] = Mesin::whereIn('group_mesin_id', $count_group_machine)->groupBy('group_mesin_id')->orderBy('group_mesin_id','DESC')->get()->toArray()[0]['group_mesin_id'];
+                    
+                    /**
+                     * @method function mencari mesin group mesin
+                     */
+                    $jumlah_permesin_insteadof_group_mesin = array_count_values($ctes);
+                    $res = array_map($callback, array_keys($ctes), $jumlah_permesin_insteadof_group_mesin);
+                    $arr = array_filter($res, 'strlen');
+
+                    $harga_akhir_total[] = $kopmesin->total_tanpa_mtcs / count($arr);
+                    $harga_akhir_perjam[] = $kopmesin->total_tanpa_mtc_perjams / count($arr);
                     
                 }
-
-                // dd($fetchD);
-
+             
                 $KOP = new tb_mesin;
 
                 $KOP->setConnection('KOP_kalkulasi');
 
-
                 for($i = 0; $i < count($fetchD); $i++){
-                    // $rsl = ($harga_akhir_total[$i] + $harga_akhir_perjam[$i]);
 
                     $t = $KOP->whereIn('name_mesin', [$fetchD[$i]])
                         ->update(['harga_p_jam' => $harga_akhir_perjam[$i]]);
@@ -709,15 +736,15 @@ trait ModuleCaculates {
 
                                 $ambil_listrik_dari_mesin = $ambillistrik[$i];
                                 // $ambil_listrik_dari_mesin = $tmp->mesin->MesinListrikPerjamTo->persen;
-
-                                $mtcsfe = RptMtc::where('code_mesin', $allrecalculate->toArray()[$i]['code_mesin'])->first()->total_biaya_perbulan;
-                                $penyusutanfe = Penyusutan::where('code_mesin', $allrecalculate->toArray()[$i]['code_mesin'])->first()->penyusutan_perbulan;
+                                // dd( $tmp['code_mesin']);
+                                $mtcsfe = RptMtc::where('code_mesin', $tmp['code_mesin'])->first()->total_biaya_perbulan;
+                                $penyusutanfe = Penyusutan::where('code_mesin', $tmp['code_mesin'])->first()->penyusutan_perbulan;
             
-                                $labors = Labor::where('code_mesin', $allrecalculate->toArray()[$i]['code_mesin'])->first()->total_biaya;
+                                $labors = Labor::where('code_mesin', $tmp['code_mesin'])->first()->total_biaya;
             
-                                $penyusutanfefn = Penyusutan::where('code_mesin', $allrecalculate->toArray()[$i]['code_mesin'])->first();
-                                $laborsfn = Labor::where('code_mesin', $allrecalculate->toArray()[$i]['code_mesin'])->first();
-                                $mtcsfefn =  RptMtc::where('code_mesin', $allrecalculate->toArray()[$i]['code_mesin'])->first();
+                                $penyusutanfefn = Penyusutan::where('code_mesin', $tmp['code_mesin'])->first();
+                                $laborsfn = Labor::where('code_mesin', $tmp['code_mesin'])->first();
+                                $mtcsfefn =  RptMtc::where('code_mesin', $tmp['code_mesin'])->first();
 
                                         $laporangajilain_bagianREPRO = LaporanGajiLain::whereIn('category_bagian', [9])->get();
                                         $totalREPRO = collect([$laporangajilain_bagianREPRO])->sum(function ($REPRO){
@@ -778,12 +805,12 @@ trait ModuleCaculates {
                                         /**
                                          * @menghitung total. fix.
                                          */
-                                        $total = RptCalcMachine::InstanceOfCalcTotalTanpaPenyusutanPerbulan($allrecalculate->toArray()[$i]['id_listrik'], $penyusutanfe, $labors, $mtcsfe, $mtcsfefn->biaya_produksi_lain, $gaji_lainnya, $b_penjualan, $bau);
+                                        $total = RptCalcMachine::InstanceOfCalcTotalTanpaPenyusutanPerbulan($tmp['id_listrik'], $penyusutanfe, $labors, $mtcsfe, $mtcsfefn->biaya_produksi_lain, $gaji_lainnya, $b_penjualan, $bau);
                                         
                                         /**
                                          * @menghitung total semua biaya perjam. fix.
                                          */
-                                        $semua_total_biaya_perjam = $this->ITnpenyusutanTotalPerjam($allrecalculate->toArray()[$i]['listrik']['shift'], $total);
+                                        $semua_total_biaya_perjam = $this->ITnpenyusutanTotalPerjam($tmp['listrik']['shift'], $total);
                 
                                         /**
                                          * @menghitung total tanpa_penyusutan + tanpa mtc. fix.
@@ -793,26 +820,26 @@ trait ModuleCaculates {
                                         /**
                                          * @menghitung total tnp penyusutan + tnp mtc perjam. 
                                          */
-                                        $tanpa_penyusutan_plus_mtc_perjam = $this->ITnpenyusutanTotalPerjamPlusMTC($allrecalculate->toArray()[$i]['listrik']['shift'], $tanpa_penyusutan_plus_mtc_total);
+                                        $tanpa_penyusutan_plus_mtc_perjam = $this->ITnpenyusutanTotalPerjamPlusMTC($tmp['listrik']['shift'], $tanpa_penyusutan_plus_mtc_total);
                                         
                                         /**
                                          * @menghitung total tanpa penyusutan + perjamnya. fix.
                                          */
                                         $tanpa_penyusutan_total = $this->TotTnpaPenyusutanATT($total, $penyusutanfe);
-                                        $tanpa_penyusutan_total_perjam = $this->TotalTanpaPenyusutanPerjamnya($allrecalculate->toArray()[$i]['listrik']['shift'], $tanpa_penyusutan_total);
+                                        $tanpa_penyusutan_total_perjam = $this->TotalTanpaPenyusutanPerjamnya($tmp['listrik']['shift'], $tanpa_penyusutan_total);
                 
                                         /**
                                          * @menghitung total tanpa mtc + perjamnya. fix.
                                          */
                 
                                         $tanpa_mtc_total = $this->TotalTanpaPenyusutanTanpaMTC($total, $mtcsfe);
-                                        $tanpa_mtc_total_perjam = $this->TotalPenyusutanTanpaMTCPerjamnya($allrecalculate->toArray()[$i]['listrik']['shift'], $tanpa_mtc_total);
+                                        $tanpa_mtc_total_perjam = $this->TotalPenyusutanTanpaMTCPerjamnya($tmp['listrik']['shift'], $tanpa_mtc_total);
                 
                                         // return RptCalcMachine::InstanceOfCalcTotalTanpaPenyusutanPerbulan();
                                         // $recall = AllRecalculate::orderBy('created_at', 'desc')->first();
                                             $data_recalculate = [
                                                 // 'id_labor' => $totallbr,
-                                                'id' => $allrecalculate->toArray()[$i]['id'],
+                                                'id' => $tmp['id'],
                                                 'id_labor' => $laborsfn->total_biaya,
                                                 'id_penyusutan' => $penyusutanfefn->penyusutan_perbulan,
                                                 // 'id_penyusutan' => $totalpeny,
@@ -871,51 +898,51 @@ trait ModuleCaculates {
                                                 $md = ModulTrackingDataHelpers::ModuleTrackingTransactionDataRecalculate($tb, $old, $data_recalculate);
                                                         
                                                             
-                                                foreach ($md as $key => $val) {
-            
-                                                    if( !isset($tmp['mesin']['id']) || !isset($tmp['kategori_bagian']['id']) || !isset($tmp['company']['id']) || !isset($tmp['group_mesin']['id'])){
-                                                        
-                                                        $dt = [
-                                                            'message'    => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, ada data yang kosong'),
-                                                            'alertype' => 'error'
-                                                        ];
-            
-                                                        return response()->json([
-                                                            'data' => [
-                                                                'message' => $dt,
-                                                            ],
-                                                        ], 500);
-            
-                                                    } 
-                                                        else {
+                                                    foreach ($md as $key => $val) {
                 
-                                                        $pf[] = [
-                                                            'updated_at' => Carbon::now(),
-                                                            'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
-                                                            'company' => $tmp['company']['id'],
-                                                            'category_id' => $tmp['kategori_bagian']['id'],
-                                                            'group_mesin' => $tmp['group_mesin']['id'],
-                                                            'code_mesin' => $tmp['mesin']['id'],
-                                                            'table_column' => $val['tabel_kolom'],
-                                                            'history_latest' => ceil($val['history']),
-                                                            'before' => ceil($val['dari']),
-                                                        ];
+                                                        if( !isset($tmp['mesin']['id']) || !isset($tmp['kategori_bagian']['id']) || !isset($tmp['company']['id']) || !isset($tmp['group_mesin']['id'])){
+                                                            
+                                                            $dt = [
+                                                                'message'    => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, ada data yang kosong'),
+                                                                'alertype' => 'error'
+                                                            ];
+                
+                                                            return response()->json([
+                                                                'data' => [
+                                                                    'message' => $dt,
+                                                                ],
+                                                            ], 500);
+                
+                                                        } 
+                                                            else {
+                
+                                                                $pf[] = [
+                                                                    'updated_at' => Carbon::now(),
+                                                                    'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                                                                    'company' => $tmp['company']['id'],
+                                                                    'category_id' => $tmp['kategori_bagian']['id'],
+                                                                    'group_mesin' => $tmp['group_mesin']['id'],
+                                                                    'code_mesin' => $tmp['mesin']['id'],
+                                                                    'table_column' => $val['tabel_kolom'],
+                                                                    'history_latest' => ceil($val['history']),
+                                                                    'before' => ceil($val['dari']),
+                                                                ];
 
-
+                                                        }
+                
+                
                                                     }
-                
-                                            }
-                                                
+
+                                            // continue 2;
+                                                    
                                         }
 
                                     }
 
-                                    continue 2;
                                 }
 
-
                             }
-                                                                
+                            
                         HistoryRecalculateTemporary::insert($pf);
 
                     return response()->json(['res' => 200]);
