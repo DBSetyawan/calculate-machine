@@ -779,7 +779,6 @@
       ),
       'widgets' => 
       array (
-        0 => 'App\\Widgets\\Userdimmer',
       ),
     ),
     'bread' => 

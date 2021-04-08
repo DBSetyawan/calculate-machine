@@ -21,6 +21,7 @@
     <!-- App CSS -->
     <link rel="stylesheet" href="{{ voyager_asset('css/app.css') }}"/>
     <link href="{{ asset('public/css/prtip.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('https://vpn.krisanthium.com:7070/kalkulasimesin2/public/css/c3.css') }}" rel="stylesheet">
     {{-- <link rel="stylesheet" href="{{ asset('public/css/fv.css') }}"/> --}}
         
     @yield('css')
@@ -130,6 +131,8 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 <script type="text/javascript" src="{{ voyager_asset('js/app.js') }}"></script>
 <script src="{{ ('https://vpn.krisanthium.com:7070/kalkulasimesin2/public/js/app.js') }}"></script>
 {{-- <script src="{{ ('http://192.168.88.113/kalkulasimesin2/public/js/app.js') }}"></script> --}}
+<script src="{{ ('https://vpn.krisanthium.com:7070/kalkulasimesin2/public/js/d3.v5.js') }}"></script>
+<script src="{{ ('https://vpn.krisanthium.com:7070/kalkulasimesin2/public/js/c3.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
 <script type="text/javascript" src="{{ asset('public/js/protip.min.js') }}"></script>
 <script src="{{ ('https://vpn.krisanthium.com:7070/kalkulasimesin2/public/js/jquery.countdown.js') }}"></script>
@@ -175,6 +178,28 @@ document.addEventListener("keydown", function(event) {
         toastr.error("toastr alert-type " + alertType + " is unknown");
     }
     @endif
+
+    // https://c3js.org/gettingstarted.html#setup
+    
+    var chart = c3.generate({
+    bindto: '#chart',
+    data: {
+        columns: [
+            ['2018', 30, 200, 2342, 400, 150, 2345, 234, 234],
+            ['2019', 41, 2313, 234, 1231, 423, 234, 4123, 234],
+            ['2020', 512, 4123, 234, 234, 234, 2342, 234, 2342],
+        ]
+    },
+    grid: {
+        x: {
+            show: true
+        },
+        y: {
+            show: true
+        }
+    }
+});
+    
 </script>
 @include('voyager::media.manager')
 @yield('javascript')
