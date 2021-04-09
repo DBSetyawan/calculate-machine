@@ -932,7 +932,7 @@ trait ModuleCaculates {
                                             }
                                                 
                                         }
-                                                                               
+
                                         continue 2;
                                     }
 
@@ -940,106 +940,25 @@ trait ModuleCaculates {
 
                             }
 
-                        HistoryRecalculateTemporary::insert($pf);
+                HistoryRecalculateTemporary::insert($pf);
 
-                    return response()->json(['res' => 200]);
+            return response()->json(['res' => 200]);
 
-                } catch (Exception $e) {
-                    $code = 500;
-                    $message = __('voyager::generic.internal_error');
+        } catch (Exception $e) {
+            $code = 500;
+            $message = __('voyager::generic.internal_error');
 
-                    if ($e->getMessage()) {
-                        $message = $e->getMessage();
-                    }
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
 
-                    return response()->json([
-                        'data' => [
-                            'message' => $message,
-                            'line' => $e->getLine(),
-                        ],
-                    ], $code);
-                }
-
-            
-            // if($recall != []){
-
-            //     // $data_recalculate = [
-
-            //     //     'dibuat_oleh' => Auth::user()->name,
-            //     //     'changed_by' => Auth::user()->name,
-            //     //     'listrik' => $calc->id_listrik,
-            //     //     'penyusutan' => $penyusutanfe,
-            //     //     'labor' => $labors,
-            //     //     'mtc' => $mtcsfe,
-            //     //     'biaya_produksi_lain' => $mtcsfefn->biaya_produksi_lain,
-            //     //     'biaya_administrasi_umum' => $bau,
-            //     //     'gaji_lainnya' => $gaji_lainnya,
-            //     //     'bagian_penjualan' => $b_penjualan,
-            //     //     'total_semua_biaya' => $total,
-            //     //     'total_semua_biaya_perjam' => $semua_total_biaya_perjam,
-            //     //     'total_tanpa_penyusutan_n_mtc' => $tanpa_penyusutan_plus_mtc_total,
-            //     //     'total_tanpa_penyusutan_n_mtc_perjam' => $tanpa_penyusutan_plus_mtc_perjam,
-            //     //     'total_tanpa_penyusutan' => $tanpa_penyusutan_total,
-            //     //     'total_tanpa_penyusutan_perjam' => $tanpa_penyusutan_total_perjam,
-            //     //     'total_tanpa_mtc' => $tanpa_penyusutan_plus_mtc_total,
-            //     //     'total_tanpa_mtc_perjam' => $tanpa_mtc_total_perjam,
-            //     //     'recalculate_status' => "active",
-            //     //     'id_logs' => $recall->id,
-            //     //     'code_mesin' => $calc->code_mesin,
-            //     //     'company' => $recall->company,
-            //     //     'group_mesin' => $calc->group_mesin,
-            //     //     'category_bagian' => $recall->category_bagian,
-
-            //     // ];
-
-            //     // $cr = AllRecalculate::orderBy(function ($query) use ($tanpa_penyusutan_total, $tanpa_penyusutan_total_perjam, $tanpa_penyusutan_plus_mtc_total, $tanpa_penyusutan_plus_mtc_perjam, $gaji_lainnya, $b_penjualan, $bau, $total, $recall, $penyusutanfefn, $mtcsfefn, $laborsfn, $semua_total_biaya_perjam){
-            //         $cr = AllRecalculate::whereIn('id', [$recall->id])->update(
-            //             [
-            //                 // 'id_labor' => $totallbr,
-            //                 'id_labor' => $laborsfn->total_biaya,
-            //                 'id_penyusutan' => $penyusutanfefn->penyusutan_perbulan,
-            //                 // 'id_penyusutan' => $totalpeny,
-            //                 'id_mtc' => $mtcsfefn->total_biaya_perbulan,
-            //                 // 'id_mtc' => $totalmtmct,
-            //                 'id_bprodlain_insteadof_mtc' => $mtcsfefn->biaya_produksi_lain,
-            //                 'id_gajilain' => $gaji_lainnya,
-            //                 // 'id_bgoenjualan' => $bagianpenjualanfe->biaya_perbulan_bag_penjualan,
-            //                 'id_bgoenjualan' => $b_penjualan,
-            //                 'id_bau' => $bau,
-            //                 'total_semua_biaya' => $total,
-            //                 'total_semua_biaya_perjam' => $semua_total_biaya_perjam,
-    
-            //                 'total_tanpa_penyusutan_n_mtc' => $tanpa_penyusutan_plus_mtc_total,
-            //                 'total_tanpa_penyusutan_n_mtc_perjam' => $tanpa_penyusutan_plus_mtc_perjam,
-    
-            //                 'total_tanpa_penyusutan' => $tanpa_penyusutan_total,
-            //                 'total_tanpa_penyusutan_perjam' => $tanpa_penyusutan_total_perjam,
-    
-            //                 'total_tanpa_mtc' => $tanpa_penyusutan_plus_mtc_total,
-            //                 'total_tanpa_mtc_perjam' => $tanpa_mtc_total_perjam,
-            //             ]
-            //         );
-             
-
-            //     if($cr > 0){
-
-            //         $datalogs = HistoryLogRecalculate::updateOrCreate($data_recalculate);
-
-            //         if(!empty($datalogs)){
-
-            //             $redirect = redirect()->back();
-                        
-            //             return $redirect->with([
-            //                 'message'    => __('berhasil mengakumulasi mesin & terdaftar dilogs.'),
-            //                 'alert-type' => 'success',
-            //             ]
-            //         );
-
-            //     }
-                
-            // }
-
-        // }
+            return response()->json([
+                'data' => [
+                    'message' => $message,
+                    'line' => $e->getLine(),
+                ],
+            ], $code);
+        }
 
     }
 

@@ -508,9 +508,12 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                         'begin_at' => Carbon::now()
                     ];
                     
-                    AllRecalculate::UpdateOrCreate(['code_mesin' => $datatemp->code_mesin], $data);\
+                    AllRecalculate::UpdateOrCreate(['code_mesin' => $datatemp->code_mesin], $data);
 
-                   app(VoyagerTotalKalkulasiController::class)->recalculate();
+                    /**
+                     * @disabled trigger after transfer data.
+                     */
+                    //app(VoyagerTotalKalkulasiController::class)->recalculate();
                     
                 }
 
