@@ -916,33 +916,30 @@ trait ModuleCaculates {
                                                         } 
                                                             else {
                 
-                                                                $pf[] = [
-                                                                    'updated_at' => Carbon::now(),
-                                                                    'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
-                                                                    'company' => $tmp['company']['id'],
-                                                                    'category_id' => $tmp['kategori_bagian']['id'],
-                                                                    'group_mesin' => $tmp['group_mesin']['id'],
-                                                                    'code_mesin' => $tmp['mesin']['id'],
-                                                                    'table_column' => $val['tabel_kolom'],
-                                                                    'history_latest' => ceil($val['history']),
-                                                                    'before' => ceil($val['dari']),
-                                                                ];
+                                                        $pf[] = [
+                                                            'updated_at' => Carbon::now(),
+                                                            'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                                                            'company' => $tmp['company']['id'],
+                                                            'category_id' => $tmp['kategori_bagian']['id'],
+                                                            'group_mesin' => $tmp['group_mesin']['id'],
+                                                            'code_mesin' => $tmp['mesin']['id'],
+                                                            'table_column' => $val['tabel_kolom'],
+                                                            'history_latest' => ceil($val['history']),
+                                                            'before' => ceil($val['dari']),
+                                                        ];
 
-                                                        }
-                
-                
-                                                    }
-
-                                            // continue 2;
-                                                    
+                                                }
+                                            }
+                                                
                                         }
-
+                                                                               
+                                        continue 2;
                                     }
 
                                 }
 
                             }
-                            
+
                         HistoryRecalculateTemporary::insert($pf);
 
                     return response()->json(['res' => 200]);

@@ -362,13 +362,18 @@ $(document).ready(function(){
       $(".Penyusutan").prop("checked", false);
 
         setTimeout(function(){ 
-            
+          
+            $("#semua_biaya_v").hide(); //tanpa penyusutan
             $(".calctp").hide(); //tanpa penyusutan
             $(".csbe").hide(); //smua biaya
             $(".calcmtc").hide(); //tanpa mtc
             $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
             $("#alltruepnytmtc").hide();
             $(".CustomFilter").focus();
+
+            $('#tanpa_penyusutan_v').hide();
+            $('#tanpa_mtc_v').hide();
+            $('#tanpa_penyusutan_n_tanpa_mtc').hide();
             $(".TransactionTrRtRt").hide();
             
         }, 1000);
@@ -412,8 +417,12 @@ $(document).ready(function(){
               $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
               $("#alltruepnytmtc").hide();
               $(".CustomFilter").focus();
-              $(".TransactionTrRtRt").show();
 
+              $('#semua_biaya_v').hide();
+              $('#tanpa_penyusutan_v').hide();
+              $('#tanpa_mtc_v').hide();
+              $('#tanpa_penyusutan_n_tanpa_mtc').hide();
+              $(".TransactionTrRtRt").hide();
           
           }, 1000);
 
@@ -434,6 +443,12 @@ $(document).ready(function(){
             $("#penyesuaian").show(); //tanpa mtc + penyusutan
             $("#alltruepnytmtc").hide();
             $(".CustomFilter").focus();
+
+            $('#semua_biaya_v').hide();
+            $('#tanpa_penyusutan_v').hide();
+            $('#tanpa_mtc_v').hide();
+            $('#tanpa_penyusutan_n_tanpa_mtc').hide();
+            $(".TransactionTrRtRt").hide();
         
         }, 1000);
 
@@ -443,6 +458,7 @@ $(document).ready(function(){
 
             $(".Maintenance").prop("checked", true);
             $(".CustomFilter").focus();
+            $(".TransactionTrRtRt").show();
 
           } else {
 
@@ -463,6 +479,7 @@ $(document).ready(function(){
                 $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
                 $("#alltruepnytmtc").hide();
                 $(".CustomFilter").focus();
+                $(".TransactionTrRtRt").hide();
             
             }, 1000);
 
@@ -474,10 +491,16 @@ $(document).ready(function(){
     if(typeof thisLocalStorageDataRow[0] == 'undefined' ){
    
       $("#penyusutan").prop("checked", false);
+      $(".TransactionTrRtRt").hide();
       $("#penyesuaian").hide();
       $(".TransactionTr").hide();
       $("#pnyt").hide();
       $("#mtcs").hide();
+      
+            $('#semua_biaya_v').hide();
+            $('#tanpa_penyusutan_v').hide();
+            $('#tanpa_mtc_v').hide();
+            $('#tanpa_penyusutan_n_tanpa_mtc').hide();
 
       setTimeout(function(){ 
             
@@ -491,7 +514,7 @@ $(document).ready(function(){
                     
                     )
 
-                    SendButtonCalcSmuaBiayaExports().then(value => {
+                  SendButtonCalcSmuaBiayaExports().then(value => {
                     if(value.SendButtonCalcSmuaBiayaExports == 200){
                       $('#semua_biaya_v').show();
                       $('#tanpa_penyusutan_v').hide();
@@ -527,15 +550,26 @@ $(document).ready(function(){
     } 
       else {
 
-          $(".CustomFilter").focus();
-          $("#alltruepnytmtc").show();
-    
+        if(thisLocalStorageDataRow[0] == null){
+
+            localStorage.clear();
+            $(".TransactionTrRtRt").hide();
+            $('#semua_biaya_v').hide();
+            $('#tanpa_penyusutan_v').hide();
+            $('#tanpa_mtc_v').hide();
+            $('#tanpa_penyusutan_n_tanpa_mtc').hide();
+
+        }
+           else {
+
+            $(".CustomFilter").focus();
+            $("#alltruepnytmtc").show();
+
           if(thisLocalStorageDataRow[0].ajax.data.penyusutan == 1){
-            
+              
               $("#penyusutan").prop("checked", true);
               $("#penyesuaian").show();
               $("#calctnpmtctp").hide();
-
               mesin_calc_table(1)
               $(".CustomFilter").focus();
           
@@ -557,14 +591,14 @@ $(document).ready(function(){
                           
                         )
 
-      SendButtonCalcSmuaBiayaExports().then(value => {
-        if(value.SendButtonCalcSmuaBiayaExports == 200){
-          $('#semua_biaya_v').show();
-          $('#tanpa_penyusutan_v').hide();
-          $('#tanpa_mtc_v').hide();
-          $('#tanpa_penyusutan_n_tanpa_mtc').hide();
-        }
-      })
+              SendButtonCalcSmuaBiayaExports().then(value => {
+                if(value.SendButtonCalcSmuaBiayaExports == 200){
+                  $('#semua_biaya_v').show();
+                  $('#tanpa_penyusutan_v').hide();
+                  $('#tanpa_mtc_v').hide();
+                  $('#tanpa_penyusutan_n_tanpa_mtc').hide();
+                }
+              })
 
               //set recallculate
                recuncheck_tnppnystan().then(value => {
@@ -604,7 +638,6 @@ $(document).ready(function(){
                         
                       $(".calctnpmtctp").html(sd.button_ButtonexportCalcTanpaMTCnTanpaPenyusutan)
                   
-                      
                   )  
                       recalcc_recalculateTanpaPenyusutanNtanpaMTC().then(value => {
                         if(value.res == 200){
@@ -777,7 +810,7 @@ $(document).ready(function(){
                           }
                         );
 
-                        $(".csbe").show(); //smua biaya
+                      $(".csbe").show(); //smua biaya
 
                       $(".calcmtc").hide(); //tanpa mtc
                       $(".calctnpmtctp").hide(); //tanpa mtc + penyusutan
@@ -792,9 +825,11 @@ $(document).ready(function(){
                       
                     }, 1000);
 
-            }
-      
-        }
+              }
+        
+          }
+
+      }
 
     }
     
