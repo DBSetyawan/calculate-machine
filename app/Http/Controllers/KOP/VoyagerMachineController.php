@@ -9,9 +9,12 @@ use App\RptMtc;
 use App\Company;
 use App\Listrik;
 use Carbon\Carbon;
+use App\AccountMtc;
+use App\LaborTotal;
 use App\LwbpMaster;
 use App\MesinTotal;
 use App\Penyusutan;
+use App\RPTMtcTotal;
 use RumusPenyusutan;
 use App\ListrikOutput;
 use App\KategoriBagian;
@@ -28,7 +31,10 @@ use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use TCG\Voyager\Database\Schema\SchemaManager;
+use App\Http\Controllers\KOP\Helpers\RumusLabor;
 use App\Http\Controllers\KOP\VoyagerLaborController;
+use App\Http\Controllers\KOP\VoyagerRptMTController;
+use App\Http\Controllers\KOP\Helpers\RumusRptMaintenance;
 use App\Http\Controllers\KOP\Helpers\ModulTrackingDataHelpers;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
@@ -184,6 +190,53 @@ class VoyagerMachineController extends BaseVoyagerBaseController
             'showCheckboxColumn'
         ));
     }
+
+    public function RataRataPerbaikanPerbulan($perbaikan_, $perbaikan__, $perbaikan___){
+
+        return RumusRptMaintenance::HitungRataRataPerbaikanPerbulan($perbaikan_, $perbaikan__, $perbaikan___);
+
+    }
+
+    public function RataRataSparePartPerbulan($sparepart_, $sparepart__, $sparepart___){
+
+        return RumusRptMaintenance::HitungRataRataSparePartPerbulan($sparepart_, $sparepart__, $sparepart___);
+
+    }
+
+    public function TotalSemuaBiayaProduksi($total_account_mtc, $listrikoutputperjam, $category_bagian){
+
+        return RumusRptMaintenance::HitungTotalBiayaProduksi($total_account_mtc, $listrikoutputperjam, $category_bagian);
+
+    }
+
+    public function TotalBiayaPenyusutanMaintenance($ratarataperbaikanperbulan, $rataratasparepartperbulan){
+
+        return RumusRptMaintenance::HitungTotalPenyusutanPerbulan($ratarataperbaikanperbulan, $rataratasparepartperbulan);
+    }
+
+    public function RumusBiayaGajiUpahSupervisor($shift, $mesin_yang_ditangai_spv, $code_mesin){
+
+        return RumusLabor::SpvLevels($shift, $mesin_yang_ditangai_spv, $code_mesin);
+
+    }
+
+    public function RumusBiayaGajiUpahOperator($shift, $operator){
+
+        return RumusLabor::OptLevels($shift, $operator);
+
+    }
+
+    public function RumusBiayaGajiUpahHelper($shift, $helper){
+
+        return RumusLabor::Helplevels($shift, $helper);
+        
+    }
+
+    public function RumusTotalBiayaLabor($spv, $operator, $helper){
+
+        return RumusLabor::SumLevels($spv, $operator, $helper);
+
+    }
     
     public function detailcodemesin(Request $req){
 
@@ -191,7 +244,7 @@ class VoyagerMachineController extends BaseVoyagerBaseController
          * revisi mengganti 
          */
         // $mesin = Mesin::whereIn('category_bagian_id', [(Int) $req->ctgId])->where('on_off', '!=', 0)
-        $mesin = Mesin::whereIn('group_mesin_id', [(Int) $req->group_mesin_id])->where('on_off', '!=', 0)
+        $mesin = Mesin::whereIn('group_mesin_id', [$req->group_mesin_id])->where('on_off', '!=', 0)
         ->with('KbagianTo','CompanyTo','GroupMesinTo','MesinListrikPerjamTo','AsumsiTo')->get();
         return response()->json(['detail'=> $mesin]);
     }
@@ -226,6 +279,59 @@ class VoyagerMachineController extends BaseVoyagerBaseController
          */
         $rumusTotalPenyusutan = RumusPenyusutan::HitungTotalPenyusutanPerbulan((float) $r->purchaseorder_value, $r->umur);
 
+
+        /**
+         * @Transaksi MTC, Hitung Total Perbaikan Biaya perbulan
+         * @param $perbaikanpertahunn.
+         */
+        $RataRataPerbaikanPerbulan = $this->RataRataPerbaikanPerbulan($r->perbaikan_tahun1, $r->perbaikan_tahun2, $r->perbaikan_tahun3);
+        
+        /**
+         * Hitung Total Sparepart Biaya perbulan
+         * @param $perbaikanpertahunn.
+         */
+        $RataRataSparePartPerbulan = $this->RataRataSparePartPerbulan($r->sparepart_tahun1, $r->sparepart_tahun2, $r->sparepart_tahun3);
+        
+        /**
+         * mengambil master account_mct AE$34 * sheet listrik AF5
+         * @development process
+         */
+        $totalBiayaAccountMTC = AccountMtc::whereIn('company_parent_id', [3])->get();
+
+        $totalAccountMTC = collect([$totalBiayaAccountMTC])->sum(function ($totalbiayaacmtc){
+                return $totalbiayaacmtc->sum('biaya_perbulan');
+            });
+
+        $TotalSemuaBiayaProduksilain = $this->TotalSemuaBiayaProduksi($totalAccountMTC, $r->listrik_perjam_id, $r->category_bagian);
+    
+        /**
+         * total biaya penyusutan perbulan
+         */
+        $TotalBiayaPenyusutanMaintenance = $this->TotalBiayaPenyusutanMaintenance($RataRataPerbaikanPerbulan, $RataRataSparePartPerbulan);
+
+        // /**
+        //  * @Hitung Labor, Hitung Biaya Level
+        //  * @method RumusBiayaGajiUpahSupervisor, RumusBiayaGajiUpahOperator, RumusBiayaGajiUpahHelper
+        //  *
+        //  * Total biaya level Supervisor
+        //  */
+        // $biayasupervisor = $this->RumusBiayaGajiUpahSupervisor($r->shift_labor, $r->jumlah_mesin_ditanggani, $r->code_mesin_ids);
+        
+        // /**
+        //  * Total biaya level Operator
+        //  */
+        // $biayaoperator = $this->RumusBiayaGajiUpahOperator($r->shift_labor, $r->operator);
+         
+        // /**
+        //  * Total biaya level helper
+        //  */
+        // $biayahelper = $this->RumusBiayaGajiUpahHelper($r->shift_labor, $r->helper);
+
+        // /**
+        //  * Total biaya labor
+        //  */
+        // $total_biaya_upah_perbulan = $this->RumusTotalBiayaLabor($biayasupervisor, $biayaoperator, $biayahelper);
+
         if($r->setTo["isConfirmed"] == "true"){
 
             $simpanMesin = Mesin::create($datamesin);
@@ -251,9 +357,9 @@ class VoyagerMachineController extends BaseVoyagerBaseController
                     'updated_at' => Carbon::now(),
                     'created_at' => Carbon::now(),
                     'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
-                    'company_id' => $r->company_id,
-                    'group_mesin' => $r->group_mesin_id,
-                    'code_mesin' => $simpanMesin->id,
+                    'company_id' => $dtmesin->company_id,
+                    'group_mesin' => $dtmesin->group_mesin_id,
+                    'code_mesin' => $dtmesin->id,
                     'table_column' => 'mesin.added.event',
                     'history_latest' => 'first event',
                     'before' => '',
@@ -268,6 +374,9 @@ class VoyagerMachineController extends BaseVoyagerBaseController
             $result = \Batch::insert($MesinTotal, $columns, $dmach, $batchSize);
 
 
+                /**
+                 * @penyusutan
+                 */
                 $TotalakumulasibiayaPenyusutan = [
                     'company_parent_id' => $dtmesin->company_id,
                     'category_bagian' => $dtmesin->category_bagian_id,
@@ -307,36 +416,174 @@ class VoyagerMachineController extends BaseVoyagerBaseController
                 
                 $batchSize = 500;
                     
-            $result = \Batch::insert($PenyusutanTotal, $columns, $datas, $batchSize);
+            \Batch::insert($PenyusutanTotal, $columns, $datas, $batchSize);
     
-
                 $simpanBiayaListrik = Penyusutan::create($TotalakumulasibiayaPenyusutan);
 
-            }
-            // $simpanMesin = Mesin::UpdateOrCreate(['code_mesin' => $r->code_mesin], $datamesin);
-
-
-                    // $totaltracks = [
-    
-                    //     'id_listrik' => $simpanMesin->id,
-                    //     'changed_by' => Auth::user()->name
+                $data_response_rptmtc = [
+                    'company_parent_id' => $dtmesin->company_id,
+                    'category_bagian' => $dtmesin->category_bagian_id,
+                    'code_mesin' => $dtmesin->id,
+                    'code_rpt_mtc' => RumusRptMaintenance::generateIDRPTRPTMTC(), 
+                    'perbaikan_tahun1' => $r->perbaikan_tahun1,
+                    'perbaikan_tahun2' => $r->perbaikan_tahun2,
+                    'perbaikan_tahun3' => $r->perbaikan_tahun3,
         
-                    // ];
+                    'rata_rata_perbaikan_perbulan' => $RataRataPerbaikanPerbulan,
         
-                    // $total = ListrikTotal::create($totaltracks);
+                    'sparepart_tahun1' => $r->sparepart_tahun1,
+                    'sparepart_tahun2' => $r->sparepart_tahun2,
+                    'sparepart_tahun3' => $r->sparepart_tahun3,
+        
+                    'rata_rata_sparepart_perbulan' => $RataRataSparePartPerbulan,
+        
+                    'biaya_produksi_lain' => $TotalSemuaBiayaProduksilain,
+                    'total_biaya_perbulan' => $TotalBiayaPenyusutanMaintenance,
+                ];
+
+                // foreach(array_merge((array)$r->data, $dtmesin->toArray()) as $idx => $val){
+                        
+                //     $LaborInstance = New Labor;
+
+                //         $result_gaji_labor = [
+                //             'company_parent_id' => $dtmesin->company_id,
+                //             'category_bagian' => $dtmesin->category_bagian_id,
+                //             'code_mesin' => $val,
+                //             'shift' => $r->shift_labor,
+                //             'supervisor' => $r->supervisor,
+                //             'operator' => $r->operator,
+                //             'helper' => $r->helper,
+                //             'supporting' => $r->supporting,
+                //             // 'supervisor_level3' => $biayasupervisor,
+                //             // 'operator_level2' => $biayaoperator,
+                //             // 'helper_level0' => $biayahelper,
+                //             'support_level0' => 0,
+                //             'jumlah_mesin_ditanggani' => count([$val]),
+                //             // 'total_biaya' => $total_biaya_upah_perbulan,
+                //         ];
+                        
+                //         $dt[] = [
+                //             'company_parent_id' => $dtmesin->company_id,
+                //             'category_bagian' => $dtmesin->category_bagian_id,
+                //             'code_mesin' => $dtmesin->id,
+                //             // 'code_mesin' => $r->code_mesin,
+                //             'shift' => $r->shift_labor,
+                //             'supervisor' => $r->supervisor,
+                //             'operator' => $r->operator,
+                //             'helper' => $r->helper,
+                //             'supporting' => $r->supporting,
+                //             // 'supervisor_level3' => $biayasupervisor,
+                //             // 'operator_level2' => $biayaoperator,
+                //             // 'helper_level0' => $biayahelper,
+                //             'support_level0' => 0,
+                //             'jumlah_mesin_ditanggani' => count([$val]),
+                //             // 'total_biaya' => $total_biaya_upah_perbulan,
+                //         ];
+
+                //         $datas[] = [
+                //             'updated_at' => Carbon::now(),
+                //             'created_at' => Carbon::now(),
+                //             'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                //             'company_id' =>  $dtmesin->company_id,
+                //             'category_id' =>  $dtmesin->category_bagian_id,
+                //             'code_mesin' => $dtmesin->id,
+                //             'table_column' => 'labor.added.event',
+                //             // 'history_latest' => ceil( $total_biaya_upah_perbulan),
+                //             // 'before' => ceil($total_biaya_upah_perbulan),
+                //         ];
+
+                //         $index = 'code_mesin';
+                
+                //         \Batch::update($LaborInstance, $dt, $index);
+
+                //     $simpanDataBiayaListrik = Labor::UpdateOrCreate(['code_mesin' => $dtmesin->id], $result_gaji_labor);
+             
+                    $simpanDataRpTMTC = RptMtc::create($data_response_rptmtc);
+
+                // }
+
+                //     $columns = [
+                //         'updated_at',
+                //         'created_at', 
+                //         'created_by', 
+                //         'company_id',
+                //         'category_id',
+                //         'code_mesin',
+                //         'table_column',
+                //         'history_latest',
+                //         'before',
+                //     ];
+
+                // $LaborTotal = new LaborTotal;
+                
+                // $batchSize = 500;
                     
-                    //     if(!empty($total)){
-                    //         $this->resetFunc();
-                    //     }
+                // $result = \Batch::insert($LaborTotal, $columns, $datas, $batchSize);
+
+                /**
+                 * @data form MTC
+                 */
+                // $t = RptMtc::whereIn('company_parent_id', [3])->get();
+
+                $columns = [
+                    'updated_at',
+                    'created_at', 
+                    'created_by', 
+                    'company_parent_id',
+                    'categori_id',
+                    'code_mesin',
+                    'table_coloumn',
+                    'history_latest',
+                    'before',
+                ];
+                
+                $datas[] = [
+                    'updated_at' => Carbon::now(),
+                    'created_at' => Carbon::now(),
+                    'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                    'company_parent_id' => $dtmesin->company_id,
+                    'categori_id' =>  $dtmesin->category_bagian_id,
+                    'code_mesin' =>  $dtmesin->id,
+                    'table_coloumn' => 'rpt_mtc.added.event',
+                    'history_latest' => ceil($TotalBiayaPenyusutanMaintenance),
+                    'before' => ceil($TotalBiayaPenyusutanMaintenance),
+                ];
+    
+            $RPTMtcTotal = new RPTMtcTotal;
+                
+                $batchSize = 500;
+                    
+            $result = \Batch::insert($RPTMtcTotal, $columns, $datas, $batchSize);
+
+
+            }
+            
+            Mesin::UpdateOrCreate(['code_mesin' => $dtmesin->code_mesin], $datamesin);
 
                 return response()->json(
                     [
                         'isConfirmed' => $r->setTo["isConfirmed"],
                         'rumusTotalPenyusutan' => $rumusTotalPenyusutan,
+                        //form labor
+                        // 'set_default_mesin' => $r->jumlah_penangganan_mesin,
+                        // 'spv' => $biayasupervisor,
+                        // 'mesin' => count($r->data),
+                        // 'opt' => $biayaoperator,
+                        // 'help' => $biayahelper,
+                        // 'total_biaya_levels' => $total_biaya_upah_perbulan,
+                        //form mtc
+                        // 'rata_rata_perbaikan_perbulan' => $simpanDataRpTMTC->rata_rata_perbaikan_perbulan,
+                        // 'rata_rata_sparepart_perbulan' => $simpanDataRpTMTC->rata_rata_sparepart_perbulan,
+                        // 'biaya_produksi_lain' => $simpanDataRpTMTC->biaya_produksi_lain,
+                        // 'total_biaya_perbulan' => $simpanDataRpTMTC->total_biaya_perbulan,
+                        'rata_rata_perbaikan_perbulan' => $RataRataPerbaikanPerbulan,
+                        'rata_rata_sparepart_perbulan' => $RataRataSparePartPerbulan,
+                        'biaya_produksi_lain' => $TotalSemuaBiayaProduksilain,
+                        'total_biaya_perbulan' => $TotalBiayaPenyusutanMaintenance,
                     ]
                 );
     
-            }
+        }
 
             else {
 
@@ -344,6 +591,19 @@ class VoyagerMachineController extends BaseVoyagerBaseController
                     [
                         'isDenied' => $r->setTo["isDenied"],
                         'rumusTotalPenyusutan' => $rumusTotalPenyusutan,
+                        //form labor
+                        // 'set_default_mesin' => $r->jumlah_penangganan_mesin,
+                        // 'spv' => $biayasupervisor,
+                        // 'isDenied' => $r->setTo["isDenied"],
+                        // 'mesin' => count($r->data),
+                        // 'opt' => $biayaoperator,
+                        // 'help' => $biayahelper,
+                        //form mtc
+                        // 'total_biaya_levels' => $total_biaya_upah_perbulan,
+                        'rata_rata_perbaikan_perbulan' => $RataRataPerbaikanPerbulan,
+                        'rata_rata_sparepart_perbulan' => $RataRataSparePartPerbulan,
+                        'biaya_produksi_lain' => $TotalSemuaBiayaProduksilain,
+                        'total_biaya_perbulan' => $TotalBiayaPenyusutanMaintenance,
                     ]
             );
         }
@@ -724,35 +984,17 @@ class VoyagerMachineController extends BaseVoyagerBaseController
     
             } else if($key_search == true) {
 
-                // $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
+                /**
+                 * @Penyusutan
+                 */
+                $checkpenyusutan = Penyusutan::all();
 
-                // $resLIstrik = $dataListrik->destroy($ids);
+                foreach($checkpenyusutan as $pnystanloops){
 
-                // $dataListrik = $resLIstrik
-                //     ? [
-                //         'message'    => __('voyager::generic.successfully_deleted')." {$displayName}",
-                //         'alert-type' => 'success',
-                //     ]
-                //     : [
-                //         'message'    => __('voyager::generic.error_deleting')." {$displayName}",
-                //         'alert-type' => 'error',
-                //     ];
-
-                // if ($resLIstrik) {
-                //     event(new BreadDataDeleted($dataType, $dataListrik));
-                // }
-
-                 /**
-                     * @Penyusutan
-                     */
-                    $checkpenyusutan = Penyusutan::all();
-
-                    foreach($checkpenyusutan as $pnystanloops){
-
-                        $mesin_insteadof_penyusutan[] = $pnystanloops->code_mesin;
-                        
-                        $r = in_array((Int)$mesin_insteadof_penyusutan, $ids);
-                    }
+                    $mesin_insteadof_penyusutan[] = $pnystanloops->code_mesin;
+                    
+                    $r = in_array((Int)$mesin_insteadof_penyusutan, $ids);
+                }
 
                     $merge_insteadofpenyusutan = collect($ids)->map(function ($pnystanloops) use ($mesin_insteadof_penyusutan) {
 
@@ -780,25 +1022,7 @@ class VoyagerMachineController extends BaseVoyagerBaseController
                 
                         } else if($key_search_mesin_insteadof_penyusutan == true) {
 
-                            // $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
-
-                            // $resPenyusutan = $dataPenyusutan->destroy($ids);
-
-                            // $dataPenyusutan = $resPenyusutan
-                            //     ? [
-                            //         'message'    => __('voyager::generic.successfully_deleted')." {$displayName}",
-                            //         'alert-type' => 'success',
-                            //     ]
-                            //     : [
-                            //         'message'    => __('voyager::generic.error_deleting')." {$displayName}",
-                            //         'alert-type' => 'error',
-                            //     ];
-
-                            // if ($resPenyusutan) {
-                            //     event(new BreadDataDeleted($dataType, $dataPenyusutan));
-                            // }
-
-                                    /**
+                                /**
                                  * @RptMtc
                                  */
                                 $checkRptMtc = RptMtc::all();
@@ -835,24 +1059,6 @@ class VoyagerMachineController extends BaseVoyagerBaseController
                                         ];
                             
                                     } else if($key_searchRpt_Mtc == true) {
-
-                                        // $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
-
-                                        // $resMtc = $dataRptMtc->destroy($ids);
-
-                                        // $dataRptMtc = $resMtc
-                                        //     ? [
-                                        //         'message'    => __('voyager::generic.successfully_deleted')." {$displayName}",
-                                        //         'alert-type' => 'success',
-                                        //     ]
-                                        //     : [
-                                        //         'message'    => __('voyager::generic.error_deleting')." {$displayName}",
-                                        //         'alert-type' => 'error',
-                                        //     ];
-
-                                        // if ($resMtc) {
-                                        //     event(new BreadDataDeleted($dataType, $dataRptMtc));
-                                        // }
 
                                             /**
                                              * @Labors

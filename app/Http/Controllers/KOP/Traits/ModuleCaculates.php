@@ -335,6 +335,8 @@ trait ModuleCaculates {
                     $harga_akhir_perjam[] = $kopmesin->total_semua_biaya_perjams / count($arr);
                     
                 }
+
+                // dd($harga_akhir_perjam);
              
                 $KOP = new tb_mesin;
 
@@ -370,16 +372,17 @@ trait ModuleCaculates {
     /**
      * @send recalculate tanpa penyusutan
      */
-
-       /**
-     * @send recalculate tanpa penyusutan
-     */
     public function ConnectionKOPkalkulasiTanpaPenyusutan(Request $req)
     {
 
         try
             {
 
+                /**
+                 * @method Tanpa Penyusutan 
+                 * @author EDP 
+                 * @modules sync to KOP kalkulasi mesin
+                 */
                 $Recalculate = AllRecalculate::whereNull('ended_at')->with(['listrik','KategoriBagian','Mesin.GroupMesinTo','Company','GroupMesin'])
                 ->groupBy('id')
                 ->selectRaw('*,

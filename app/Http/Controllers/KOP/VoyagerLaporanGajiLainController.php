@@ -43,7 +43,7 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
     {
         $company = Company::all();
         $mesin = Mesin::all();
-        $cbagian = KategoriBagian::all();
+        $cbagian = KategoriBagian::whereIn('id', [13, 12, 14, 11])->get();
 
         return view('vendor.voyager.laporan-gaji-lain.forms_glain', compact('company','mesin','cbagian'));
     }

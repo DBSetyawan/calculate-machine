@@ -86,16 +86,16 @@
                                         <input type="text" class="form-control removeLater" id="code_account" name="code_account" placeholder="Nominal biaya lain">
                                     </div>
                                     <div class="form-group">
-                                        <label for="url_instagram">2018</label>
-                                        <input type="text" class="form-control removeLater" id="tahun1" name="tahun1" placeholder="Nominal biaya tahun 2018">
+                                        <label for="url_instagram">Periode 1</label>
+                                        <input type="text" class="form-control removeLater" id="tahun1" name="tahun1" placeholder="Nominal biaya tahun periode 1">
                                     </div>
                                     <div class="form-group">
-                                        <label for="url_instagram">2019</label>
-                                        <input type="text" class="form-control removeLater" id="tahun2" name="tahun2" placeholder="Nominal biaya tahun 2019">
+                                        <label for="url_instagram">Periode 2</label>
+                                        <input type="text" class="form-control removeLater" id="tahun2" name="tahun2" placeholder="Nominal biaya tahun periode 2">
                                     </div>
                                     <div class="form-group">
-                                        <label for="url_instagram">2020</label>
-                                        <input type="text" class="form-control removeLater" id="tahun3" name="tahun3" placeholder="Nominal biaya tahun 2020">
+                                        <label for="url_instagram">Periode 3</label>
+                                        <input type="text" class="form-control removeLater" id="tahun3" name="tahun3" placeholder="Nominal biaya tahun periode 3">
                                     </div>
                                 </div>
                             </div>
