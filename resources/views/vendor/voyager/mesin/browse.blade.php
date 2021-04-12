@@ -255,6 +255,9 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     <span>{{ $data->{$row->field} }}</span>
+                                                    {{-- @if ($row->display_name == "Location Mch Id")
+                                                    <span class="badge badge-danger">{{$data->company_name}}</span>
+                                                @endif --}}
                                                     @if ($row->display_name == 'Machine status')
                                                     @if ($data->on_off == 1)
                                                         <span class="badge badge-success">Mesin aktif</span>
@@ -262,6 +265,7 @@
                                                     @if ($data->on_off == 0)
                                                         <span class="badge badge-danger">Mesin tidak aktif</span>
                                                     @endif
+                                                    
                                                 @endif
                                                 @endif
                                             </td>

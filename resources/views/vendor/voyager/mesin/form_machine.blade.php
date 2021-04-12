@@ -96,6 +96,19 @@
                                     <label for="url_instagram">Voltase</label>
                                     <input type="text" class="form-control" id="voltase" data-validate-length-range="6" data-validate-words="2" name="voltase" placeholder="Voltase">
                                 </div>
+
+                                <div class="row">
+
+                                    <div class="form-group">
+                                        <label for="program_id">Lokasi mesin</label>
+                                        <select class="form-control select2" id="location_mch_id" name="location_mch_id" required>
+                                            @foreach ($LocationMachine as $c)
+                                        <option value="{{$c->id}}">{{ $c->company_name }}</option>
+                                            @endforeach
+                                        </select>   
+                                    </div>
+
+                                </div>
                                 <div class="form-group">
                                     <label for="url_instagram">Faktor Kali LWBP</label>
                                     <input type="text" class="form-control" data-validate-length-range="6" data-validate-words="2" id="faktor_kali_lwbp" name="faktor_kali_lwbp" placeholder="Faktor kali LWBP">
@@ -653,7 +666,18 @@
             $("#company_display").prop("disabled", true);
             $("#category_bagian_display").prop("disabled", true);
 
-                 
+            
+        $('#location_mch_id').on('change', function() {
+            GetFullLocationMachineID(this.value).then(function(results){
+                            // results.detail.forEach(function(eval) {
+                                $("#faktor_kali_lwbp").val(results.detail.faktor_lwbp);
+                                $("#faktor_kali_wbp").val(results.detail.faktor_wbp);
+                            // })
+                    
+                            
+                });
+        });
+
         $('#code_mesins').on('change', function() {
             GetFullDataMesin(this.value).then(function(results){
                     $("#code_mesin_id").val(results.detail.id);
@@ -673,6 +697,8 @@
         $("#category_bagian_id_labor").hide();
         $("#shift_labor").hide();
 
+        $("#faktor_kali_lwbp").prop('disabled', 'disabled');
+                                $("#faktor_kali_wbp").prop('disabled','disabled');
 
             $('#group_mesin_ids').on('change', function() {
                 GetFullDataMesin_Labor(this.value).then(function(results){
@@ -707,6 +733,32 @@
 
 
         });
+
+        async function GetFullLocationMachineID(mesinid
+                ) {
+                    let datamesinid = {
+                            // ctgId:mesinid,
+                            group_mesin_id:mesinid
+                        }
+                const apiDataMesin = "{{ route('detail.data.detaillocationID') }}";
+                        
+                    const settings = {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                    'Content-Type': 'application/json;charset=utf-8'
+                                    },
+                                body: JSON.stringify(datamesinid)
+                        }
+                        try {
+                                
+                                const fetchResponse = await fetch(`${apiDataMesin}`, settings);
+                                const data = await fetchResponse.json();
+                                return data;
+                            } catch (error) {
+                            return error
+                        }    
+                    }
 
         async function GetFullDataMesin(mesinid
                 ) {
@@ -753,6 +805,7 @@
                     'voltase'            : $('input[name=voltase]').val(),
                     'code_mesin'    : $('input[name=code_mesin]').val(),
                     'group_mesin_id'   : $('select[name=group_mesin_id]').val(),
+                    'location_mch_id'   : $('select[name=location_mch_id]').val(),
                     'category_bagian_id'     : $('select[name=category_bagian_id]').val(),
                     // 'listrik_perjam_id'        : $('select[name=listrik_perjam_id]').val(),
                     'listrik_perjam_id'        : $('input[name=listrik_perjam_id]').val(),
@@ -847,6 +900,11 @@
                                 //     $("#jumlah_mesin_yangditangani").val("Sebanyak : "+data.mesin+" mesin");
 
                                 if(data.isConfirmed == "true"){
+
+                                    let curr = '{{ route("voyager.mesin.index") }}';
+                                setTimeout(function(){ 
+                                    window.location.href = curr;
+                                }, 4000);
 
                                         pesanStore.fire({
                                             icon: 'success',

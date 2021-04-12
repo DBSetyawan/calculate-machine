@@ -54,6 +54,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('labors/form-mtc','KOP\VoyagerLaborController@formLaborAction')->name('labors.form.master');
     
     Route::post('mesin-detail','KOP\VoyagerMachineController@detailcodemesin')->name('detail.data.mesin');
+    Route::post('mesin-location-detail-ms','KOP\VoyagerMachineController@detaillocationID')->name('detail.data.detaillocationID');
     Route::post('mesin-detail-on','KOP\VoyagerMachineController@detailcodemesinOn')->name('detail.data.mesins');
 
     Route::post('laporan-gaji-lains/store-laporan-gaji-lain','KOP\VoyagerLaporanGajiLainController@HitungAkumulasiLaporanGajiLain')->name('laporan.g.lains.store.master');

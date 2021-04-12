@@ -169,6 +169,9 @@
                                             <label for="url_instagram">Faktor kali WBP</label>
                                             <input type="text" class="form-control fkw" id="faktor_kali_wbp" name="faktor_kali_wbp" placeholder="Faktor kali WBP">
                                         </div>
+                                        <div class="form-group">
+                                        <span class="badge badge-success" id="comp"></span>
+                                        </div>
                                     </div>
                                 </div>
                                 </div>
@@ -316,6 +319,7 @@
                         $("#voltase").val(results.detail.voltase);
                         $("#shift_display").val("Mesin shift ke "+results.detail.asumsi_to.shift);
                         $("#shift").val(results.detail.asumsi_to.shift);
+                        $("#comp").html(results.detail.has_location_mch_id.company_name);
                         $(".fkl").val(results.detail.faktor_kali_lwbp);
                         $(".fkw").val(results.detail.faktor_kali_wbp);
 

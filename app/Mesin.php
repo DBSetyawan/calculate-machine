@@ -17,6 +17,7 @@ class Mesin extends Model
         'voltase',
         'ampere',
         'group_mesin_id',
+        'location_mch_id',
         'listrik_perjam_id',
         'category_bagian_id',
         'company_id',
@@ -43,6 +44,11 @@ class Mesin extends Model
     public function HasToMtc()
     {
         return $this->hasMany('App\Mtc', 'code_mesin');
+    }
+
+    public function HasLocationMchId()
+    {
+        return $this->belongsTo('App\LocationMachine', 'location_mch_id');
     }
 
     public function HasToTotalCalc()
