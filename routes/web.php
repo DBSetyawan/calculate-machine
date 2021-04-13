@@ -98,6 +98,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('calc-kop/closing-transaction-closingtransactionkopBAU','KOP\VoyagerTotalKalkulasiController@closingtransactionkopBAU')->name('kop.closing.closingtransactionkopBAU');
     Route::post('calc-kop/closing-transaction-closingtransactionkopLABOR','KOP\VoyagerTotalKalkulasiController@closingtransactionkopLABOR')->name('kop.closing.closingtransactionkopLABOR');
     Route::post('calc-kop/closing-transaction-closingtransactionkopMTC','KOP\VoyagerTotalKalkulasiController@closingtransactionkopMTC')->name('kop.closing.closingtransactionkopMTC');
+    Route::post('calc-kop/closing-transaction-closingtransactionkopPNYT','KOP\VoyagerTotalKalkulasiController@closingtransactionkopPNYT')->name('kop.closing.closingtransactionkopPNYT');
+    Route::post('calc-kop/closing-transaction-closingtransactionkopPRC','KOP\VoyagerTotalKalkulasiController@closingtransactionkopPRC')->name('kop.closing.closingtransactionkopPRC');
     Route::get('calc-rpts/rpts/','KOP\VoyagerListrikController@rpts')->name('rpts');
     // Route::get('/history-log-recalculate','KOP\VoyagerHIstoryLogCalculateController@index')->name('h.index');
     Route::post('calc-rpts/open-transaction-calc-edp','KOP\VoyagerTotalKalkulasiController@OpenTransactionPenyusutan')->name('tr.open.penyusutan');

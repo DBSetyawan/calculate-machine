@@ -43,7 +43,7 @@ trait ModuleCaculates {
 
     public function view_totalkalkulasi() {
 
-        $reccll = isset(AllRecalculate::orderBy('created_at','desc')->first()->total_tanpa_mtc_perjam) ? AllRecalculate::orderBy('created_at','desc')->first()->total_tanpa_mtc_perjam : "403";
+        $reccll = isset(AllRecalculate::whereNull('ended_at')->orderBy('created_at','desc')->first()->total_tanpa_mtc_perjam) ? AllRecalculate::orderBy('created_at','desc')->whereNull('ended_at')->first()->total_tanpa_mtc_perjam : "403";
 
         if($reccll == "403"){
             
@@ -51,7 +51,7 @@ trait ModuleCaculates {
 
         }
 
-        $group_mesin = isset(AllRecalculate::with('Listrik')->orderBy('created_at','desc')->first()->group_mesin) ? AllRecalculate::with('Listrik')->orderBy('created_at','desc')->first()->group_mesin : "403";
+        $group_mesin = isset(AllRecalculate::whereNull('ended_at')->with('Listrik')->orderBy('created_at','desc')->first()->group_mesin) ? AllRecalculate::with('Listrik')->orderBy('created_at','desc')->whereNull('ended_at')->first()->group_mesin : "403";
 
         if($group_mesin == "403"){
             
@@ -80,6 +80,10 @@ trait ModuleCaculates {
     
     }
     
+    /**
+     * @method @allrecalculate
+     * @prefix RecalculateOnly
+     */
     public function rcllunchecktnpmtcs(){
 
         $SendTemporaryCalculateInstance = new AllRecalculate;
@@ -105,6 +109,10 @@ trait ModuleCaculates {
         return response()->json(['res' => 200]);
     }
 
+    /**
+     * @method @allrecalculate
+     * @prefix RecalculateOnly
+     */
     public function reclltnpapenyusutan(){
 
         $SendTemporaryCalculateInstance = new AllRecalculate;
@@ -131,6 +139,10 @@ trait ModuleCaculates {
         return response()->json(['res' => 200]);
     }
 
+    /**
+     * @method @allrecalculate
+     * @prefix RecalculateOnly
+     */
     public function PenyusutanRecalculateOnly(){
 
         $pnystnttl = Penyusutan::whereNull('ended_at')->get();
@@ -158,6 +170,10 @@ trait ModuleCaculates {
 
     }
 
+    /**
+     * @method @allrecalculate
+     * @prefix RecalculateOnly
+     */
     public function MtcRecalculateOnly(){
 
         try {
@@ -219,6 +235,8 @@ trait ModuleCaculates {
     
     /**
      * @send recalculate tanpa penyusutan + tanpa MTC
+     * @method @allrecalculate
+     * @prefix ConnectionKOP
      */
     public function ConnectionKOPkalkulasi(Request $req)
     {
@@ -294,6 +312,8 @@ trait ModuleCaculates {
 
     /**
      * @send recalculate semua biaya
+     * @method @allrecalculate
+     * @prefix ConnectionKOP
      */
     public function ConnectionKOPkalkulasiSemuaBiaya(Request $req)
     {
@@ -371,6 +391,8 @@ trait ModuleCaculates {
 
     /**
      * @send recalculate tanpa penyusutan
+     * @method @allrecalculate
+     * @prefix ConnectionKOP
      */
     public function ConnectionKOPkalkulasiTanpaPenyusutan(Request $req)
     {
@@ -450,6 +472,8 @@ trait ModuleCaculates {
 
     /**
      * @send recalculate tanpa MTC
+     * @method @allrecalculate
+     * @prefix ConnectionKOP
      */
     public function ConnectionKOPkalkulasiTanpaMTC(Request $req)
     {
@@ -524,6 +548,10 @@ trait ModuleCaculates {
         }
     }
     
+    /**
+     * @modules closing transaction
+     * @MTC
+     */
     public function closingtransactionkopMTC(){
 
         try
@@ -565,7 +593,6 @@ trait ModuleCaculates {
 
             }
             
-            
         } catch (Exception $e) {
             $code = 500;
             $messages = __('voyager::generic.internal_error');
@@ -585,6 +612,10 @@ trait ModuleCaculates {
 
     }
 
+    /**
+     * @modules closing transaction
+     * @Labor
+     */
     public function closingtransactionkopLABOR(){
 
         try
@@ -643,6 +674,10 @@ trait ModuleCaculates {
 
     }
 
+    /**
+     * @modules closing transaction
+     * @Listrik
+     */
     public function closingtransactionkoplistrik(){
 
         try
@@ -702,6 +737,10 @@ trait ModuleCaculates {
 
     }
 
+    /**
+     * @modules closing transaction
+     * @Laporan bagian administrasi umum
+     */
     public function closingtransactionkopBAU(){
 
         try
@@ -759,7 +798,11 @@ trait ModuleCaculates {
             ], $code);
         }
     }
-
+    
+    /**
+     * @modules closing transaction
+     * @Laporan gaji lainnya
+     */
     public function closingtransactionkopgajilainnya(){
 
         try
@@ -818,6 +861,136 @@ trait ModuleCaculates {
         }
     }
 
+
+    /**
+     * @modules closing transaction
+     * @Penyusutan
+     */
+    public function closingtransactionkopPNYT(){
+
+        try
+            {
+                $SendTemporaryCalculateInstance = new Penyusutan;
+                
+                $allrecalculates = Penyusutan::where('ended_at','=', NULL)->get()->toArray();
+                // $allrecalculates = LaporanGajiLain::where('ended_at','!=', NULL)->get()->toArray();
+                
+                if(empty($allrecalculates) == true){
+                    $messages = __('voyager::generic.internal_error');
+
+                    return response()->json([
+                        'data' => [
+                            'message' => $messages
+                        ],
+                    ], 500);
+                }
+                    else {
+
+                        foreach($allrecalculates as $index => $tmp){
+
+                            $d[] = [
+                                'id' => $tmp['id'],
+                                'ended_at' => Carbon::now(), //testing closed
+                                // 'ended_at' => NULL, //testing opened
+
+                            ];
+
+                        }
+
+                    $id = 'id';
+
+                \Batch::update($SendTemporaryCalculateInstance, $d, $id);
+
+                return response()->json(['res' => 200, 'data' => [
+                    'message' => 'success'
+                ]]);
+
+            }
+                
+        } catch (Exception $e) {
+            $code = 500;
+            $messages = __('voyager::generic.internal_error');
+
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'data' => [
+                    'message' => $messages,
+                    'line' => $e->getLine(),
+                ],
+            ], $code);
+        }
+    }
+
+    /**
+     * @modules closing transaction
+     * @Laporan bagian penjualan
+     */
+
+    public function closingtransactionkopPRC(){
+
+        try
+            {
+                $SendTemporaryCalculateInstance = new LaporanBagianPenjualan;
+                
+                $allrecalculates = LaporanBagianPenjualan::where('ended_at','=', NULL)->get()->toArray();
+                // $allrecalculates = LaporanBagianPenjualan::where('ended_at','!=', NULL)->get()->toArray();
+                
+                if(empty($allrecalculates) == true){
+                    $messages = __('voyager::generic.internal_error');
+
+                    return response()->json([
+                        'data' => [
+                            'message' => $messages
+                        ],
+                    ], 500);
+                }
+                    else {
+
+                        foreach($allrecalculates as $index => $tmp){
+
+                            $d[] = [
+                                'id' => $tmp['id'],
+                                'ended_at' => Carbon::now(), //testing closed
+                                // 'ended_at' => NULL, //testing opened
+
+                            ];
+
+                        }
+
+                    $id = 'id';
+
+                \Batch::update($SendTemporaryCalculateInstance, $d, $id);
+
+                return response()->json(['res' => 200, 'data' => [
+                    'message' => 'success'
+                ]]);
+
+            }
+                
+        } catch (Exception $e) {
+            $code = 500;
+            $messages = __('voyager::generic.internal_error');
+
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'data' => [
+                    'message' => $messages,
+                    'line' => $e->getLine(),
+                ],
+            ], $code);
+        }
+    }
+
+    /**
+     * @modules closing transaction
+     * @ALL Recalculate Temporary
+     */
     public function closingtransactionkop(){
 
         try

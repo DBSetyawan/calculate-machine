@@ -96,18 +96,13 @@
                                     <label for="url_instagram">Voltase</label>
                                     <input type="text" class="form-control" id="voltase" data-validate-length-range="6" data-validate-words="2" name="voltase" placeholder="Voltase">
                                 </div>
-
-                                <div class="row">
-
-                                    <div class="form-group">
-                                        <label for="program_id">Lokasi mesin</label>
-                                        <select class="form-control select2" id="location_mch_id" name="location_mch_id" required>
-                                            @foreach ($LocationMachine as $c)
-                                        <option value="{{$c->id}}">{{ $c->company_name }}</option>
-                                            @endforeach
-                                        </select>   
-                                    </div>
-
+                                <div class="form-group">
+                                    <label for="program_id">Lokasi mesin</label>
+                                    <select class="form-control select2" id="location_mch_id" name="location_mch_id" required>
+                                        @foreach ($LocationMachine as $c)
+                                    <option value="{{$c->id}}">{{ $c->company_name }}</option>
+                                        @endforeach
+                                    </select>   
                                 </div>
                                 <div class="form-group">
                                     <label for="url_instagram">Faktor Kali LWBP</label>

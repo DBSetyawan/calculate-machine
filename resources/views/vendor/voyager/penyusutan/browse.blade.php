@@ -15,6 +15,10 @@
         <a href="{{ route('penyusutans.form.master') }}" class="btn btn-success btn-add-new">
             <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Penyusutan</span>
         </a>
+        <a id="closingpnystn" class="btn btn-primary btn-add-new">
+            {{-- <a href="{{ route('voyager.recalculate') }}" class="btn btn-success btn-add-new"> --}}
+            <i class="voyager-double-right"></i> <span>{{ __('Close Penyusuntan') }} </span>
+        </a>
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
         @endcan
@@ -357,6 +361,104 @@
         <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
     @endif
     <script>
+
+        async function closingPNYSTN(mesinid) {
+
+            let datafix = {
+                    mesinid:mesinid
+                }
+                
+                const apiDataMesin = "{{ route('kop.closing.closingtransactionkopPNYT') }}";
+                        
+                    const settings = {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                    'Content-Type': 'application/json;charset=utf-8'
+                                },
+                                body: JSON.stringify(datafix)
+                        }
+                try {
+                        
+                        const fetchResponse = await fetch(`${apiDataMesin}`, settings);
+                        const data = await fetchResponse.json();
+
+                        return data;
+
+                    } catch (objError) {
+
+                        return objError;
+                }    
+
+            }
+
+
+            $('#closingpnystn').on('click', function(e) {
+
+            setTimeout(() => {
+                $("#closingpnystn").text("Closing penyusutan, tunggu sebentar..");
+            }, 500);
+
+            closingPNYSTN(true).then(function(res){
+
+                if(res.res == 200){
+                    const success = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    success.fire({
+                        icon: 'success',
+                        title: 'Data berhasil menutup transaksi periode tahunan.'
+                    });
+
+                    $("#closingpnystn").text("Close Penyusutan");
+
+                    let curr = '{{ route("voyager.penyusutan.index") }}';
+                    setTimeout(function(){ 
+                        window.location.href = curr;
+                    }, 6000);
+
+                } 
+
+                if(res.data.message == 'Internal error'){
+
+                    const err = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                        err.fire({
+                            icon: 'warning',
+                            title: 'data yang ada closing tidak dapat kami temukan.'
+                        });
+
+                        $("#closingpnystn").text("Closing Penyusutan");
+
+                        let curr = '{{ route("voyager.penyusutan.index") }}';
+                        setTimeout(function(){ 
+                            window.location.href = curr;
+                        }, 6000);
+
+                    }
+
+                });
+            });
+
         $(document).ready(function () {
             @if (!$dataType->server_side)
                 var table = $('#dataTable').DataTable({!! json_encode(

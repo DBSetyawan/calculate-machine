@@ -162,9 +162,10 @@
                                 <div class="contanier">
                                     <div class="panel-body">
                                         <div class="form-group">
-                                            <div class="form-group">
-                                                <span class="badge badge-success" id="comp"></span>
-                                                </div>
+                                            <span class="badge badge-success" id="comp"></span>
+                                        </div>
+                                        <div class="form-group">
+                                           
                                             <label for="url_instagram">Faktor kali LWBP</label>
                                             <input type="text" class="form-control fkl" id="faktor_kali_lwbp" name="faktor_kali_lwbp" placeholder="Faktor kali LWBP">
                                         </div>

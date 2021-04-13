@@ -40,16 +40,16 @@
                                         <input type="text" class="form-control removeLater" id="nama_biaya" name="nama_biaya" placeholder="Nominal biaya lain">
                                     </div>
                                     <div class="form-group">
-                                        <label for="url_instagram">Biaya tahun awal</label>
-                                        <input type="text" class="form-control removeLater" id="tahun1" name="tahun1" placeholder="Nominal biaya lain">
+                                        <label for="url_instagram">Biaya periode 1</label>
+                                        <input type="text" class="form-control removeLater" id="tahun1" name="tahun1" placeholder="Nominal periode 1">
                                     </div>
                                     <div class="form-group">
-                                        <label for="url_instagram">Biaya tahun kedua</label>
-                                        <input type="text" class="form-control removeLater" id="tahun2" name="tahun2" placeholder="Nominal biaya lain">
+                                        <label for="url_instagram">Biaya periode 2</label>
+                                        <input type="text" class="form-control removeLater" id="tahun2" name="tahun2" placeholder="Nominal periode 2">
                                     </div>
                                     <div class="form-group">
-                                        <label for="url_instagram">Biaya tahun ketiga</label>
-                                        <input type="text" class="form-control removeLater" id="tahun3" name="tahun3" placeholder="Nominal biaya lain">
+                                        <label for="url_instagram">Biaya periode 3</label>
+                                        <input type="text" class="form-control removeLater" id="tahun3" name="tahun3" placeholder="Nominal periode 3">
                                     </div>
                                     <button type="submit" class="btn btn-primary pull-right save">Hitung</button>&nbsp;
                                 </div>

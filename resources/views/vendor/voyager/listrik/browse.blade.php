@@ -475,7 +475,7 @@
     $('#closerecalculatesendlistrik').on('click', function(e) {
 
         setTimeout(() => {
-            $("#closerecalculatesend").text("Closing recalculate transaksi, tunggu sebentar..");
+            $("#closerecalculatesendlistrik").text("Closing Listrik, tunggu sebentar..");
         }, 500);
 
         closingrecalculate(true).then(function(res){
@@ -498,16 +498,16 @@
                     title: 'Data berhasil menutup transaksi periode tahunan.'
                 });
 
-                $("#sendcalculate").text("Close Recalculate");
+                $("#closerecalculatesendlistrik").text("Close Recalculate");
 
-                let curr = '{{ route("tr.total.kalkulasi") }}';
+                let curr = '{{ route("voyager.listrik.index") }}';
                 setTimeout(function(){ 
                     window.location.href = curr;
                 }, 6000);
 
             } 
 
-            if(res.data.message == 'error'){
+            if(res.data.message == 'Internal error'){
 
                 const err = Swal.mixin({
                     toast: true,
@@ -526,11 +526,11 @@
                         title: 'data sudah pernah diclosing sebelumnya.'
                     });
 
-                    $("#sendcalculate").text("Recalculate Machine");
+                    $("#closerecalculatesendlistrik").text("Recalculate Machine");
 
-                    let curr = '{{ route("voyager.all-recalculate.index") }}';
+                    let currss = '{{ route("voyager.listrik.index") }}';
                     setTimeout(function(){ 
-                        window.location.href = curr;
+                        window.location.href = currss;
                     }, 6000);
 
                 }

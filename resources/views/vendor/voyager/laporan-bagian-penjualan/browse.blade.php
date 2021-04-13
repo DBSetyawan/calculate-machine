@@ -12,6 +12,10 @@
                 <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }}</span>
             </a> --}}
         @endcan
+        <a id="closegajilainnya" class="btn btn-primary btn-add-new">
+            {{-- <a href="{{ route('voyager.recalculate') }}" class="btn btn-success btn-add-new"> --}}
+            <i class="voyager-double-right"></i> <span>{{ __('Close Penjualan') }} </span>
+        </a>
         <a href="{{ route('lp.bg.pnjualan.form.master') }}" class="btn btn-success btn-add-new">
             <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Bagian penjualan</span>
         </a>
@@ -250,6 +254,13 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     <span>{{ $data->{$row->field} }}</span>
+                                                    @if ($row->display_name == 'TRANSACTION STATUS')
+                                                        @if(!empty($data->ended_at))
+                                                                <span class="badge badge-danger">closed</span>
+                                                            @else
+                                                                <span class="badge badge-success">opened</span>
+                                                        @endif
+                                                    @endif
                                                     @if ($row->display_name == '2018')
                                                         <span>{{ "Rp " . number_format($data->tahun1,0,',','.') }}</span>
                                                     @endif
@@ -364,6 +375,105 @@
         <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
     @endif
     <script>
+
+
+        async function closingpenjualan(mesinid) {
+
+            let datafix = {
+                    mesinid:mesinid
+                }
+                
+                const apiDataMesin = "{{ route('kop.closing.closingtransactionkopPRC') }}";
+                        
+                    const settings = {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                    'Content-Type': 'application/json;charset=utf-8'
+                                },
+                                body: JSON.stringify(datafix)
+                        }
+                try {
+                        
+                        const fetchResponse = await fetch(`${apiDataMesin}`, settings);
+                        const data = await fetchResponse.json();
+
+                        return data;
+
+                    } catch (objError) {
+
+                        return objError;
+                }    
+
+            }
+
+
+            $('#closegajilainnya').on('click', function(e) {
+
+            setTimeout(() => {
+                $("#closegajilainnya").text("Closing penjualan, tunggu sebentar..");
+            }, 500);
+
+            closingpenjualan(true).then(function(res){
+
+                if(res.res == 200){
+                    const success = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    success.fire({
+                        icon: 'success',
+                        title: 'Data berhasil menutup transaksi periode tahunan.'
+                    });
+
+                    $("#closegajilainnya").text("Close Gaji Lain");
+
+                    let curr = '{{ route("voyager.laporan-bagian-penjualan.index") }}';
+                    setTimeout(function(){ 
+                        window.location.href = curr;
+                    }, 6000);
+
+                } 
+
+                if(res.data.message == 'Internal error'){
+
+                    const err = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                        err.fire({
+                            icon: 'warning',
+                            title: 'data yang ada closing tidak dapat kami temukan.'
+                        });
+
+                        $("#closegajilainnya").text("Closing Gaji Lain");
+
+                        let curr = '{{ route("voyager.laporan-bagian-penjualan.index") }}';
+                        setTimeout(function(){ 
+                            window.location.href = curr;
+                        }, 6000);
+
+                    }
+
+                });
+            });
+
         $(document).ready(function () {
             @if (!$dataType->server_side)
                 var table = $('#dataTable').DataTable({!! json_encode(
