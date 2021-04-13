@@ -311,7 +311,7 @@
                         @endif
                         @inject('bpnjualan','App\LaporanBagianPenjualan')
                         @php
-                            $tpnjualan = $bpnjualan->whereIn('company_parent_id', [3])->get();
+                            $tpnjualan = $bpnjualan->whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
 
                             $tpnjualan = collect([$tpnjualan])->sum(function ($region){
                                     return $region->sum('biaya_perbulan_bag_penjualan');

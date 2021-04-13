@@ -311,7 +311,7 @@
                         @endif
                         @inject('BiayaAdministrasiUmum','App\LaporanBiayaAdministrasiUmum')
                         @php
-                            $total_BiayaAdministrasiUmum = $BiayaAdministrasiUmum->whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
+                            $total_BiayaAdministrasiUmum = $BiayaAdministrasiUmum->whereNull('ended_at')->whereIn('company_parent_id', [3])->get();
 
                             $adm2018 = collect([$total_BiayaAdministrasiUmum])->sum(function ($total_BiayaAdministrasiUmum){
                                     return $total_BiayaAdministrasiUmum->sum('tahun1');

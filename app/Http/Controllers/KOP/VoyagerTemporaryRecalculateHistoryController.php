@@ -62,7 +62,7 @@ class VoyagerTemporaryRecalculateHistoryController extends BaseVoyagerBaseContro
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
                 $query = $model->{$dataType->scope}();
             } else {
-                $query = $model::select('*');
+                $query = $model::groupBy('before')->select('*');
             }
 
             // Use withTrashed() if model uses SoftDeletes and if toggle is selected

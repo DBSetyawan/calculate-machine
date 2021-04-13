@@ -314,7 +314,7 @@
                         @endif
                         @inject('listrik','App\Labor')
                         @php
-                            $total_listrik = $listrik->whereIn('company_parent_id', [3])->get();
+                            $total_listrik = $listrik->whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
 
                             $x = collect([$total_listrik])->sum(function ($region){
                                     return $region->sum('total_biaya');

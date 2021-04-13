@@ -54,7 +54,7 @@ class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController 
 
         if(!empty($simpanDataLaporanLapBagPenjualan) && $simpanDataLaporanLapBagPenjualan != [] && $simpanDataLaporanLapBagPenjualan != null){
 
-            $xbgpenj = LaporanBagianPenjualan::whereIn('company_parent_id', [3])->get();
+            $xbgpenj = LaporanBagianPenjualan::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
 
             $t = collect([$xbgpenj])->sum(function ($biaya){
                 return sprintf("%.5f", $biaya->sum('biaya_perbulan_bag_penjualan'));
@@ -426,7 +426,7 @@ class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController 
         LaporanBagianPenjualan::UpdateOrCreate(['id'=> $id], $result_lbpnjualan);
 
         $AllRecalculateInstance = new AllRecalculate;
-        $rcl = AllRecalculate::all();
+        $rcl = AllRecalculate::whereNull('ended_at')->get();
 
         foreach($rcl as $indexs => $dtlg){
     

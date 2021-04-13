@@ -27,7 +27,12 @@ use App\Http\Controllers\KOP\Helpers\ModulTrackingDataHelpers;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
 class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements PenyusutanInterface
-{
+{   
+
+    //  * $inventory = Inventory::where('category', $cat)
+    // ->where('title', 'like', '%' . $search_query . '%')
+    // ->whereBetween('price', [$min_price, $max_price])
+    // ->get();
 
     public function RmsPenyusutan($purchase, $umurbln)
     {
@@ -69,7 +74,7 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
 
         if(!empty($simpanBiayaListrik) && $simpanBiayaListrik != [] && $simpanBiayaListrik != null){
 
-            $total_listrik = Penyusutan::whereIn('company_parent_id', [3])->get();
+            $total_listrik = Penyusutan::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
 
             $total_penyusutan_perbulan = collect([$total_listrik])->sum(function ($biaya){
                 return sprintf("%.5f", $biaya->sum('penyusutan_perbulan'));
@@ -432,7 +437,7 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
 
         Penyusutan::UpdateOrCreate(['id' => $id], $automatedTotalakumulasibiayaPenyusutan);
 
-        $pnystnttl = Penyusutan::all();
+        $pnystnttl = Penyusutan::whereNull('ended_at')->get();
         $AllRecalculateInstance = New AllRecalculate;
 
         foreach($pnystnttl as $indexs => $data_peny){

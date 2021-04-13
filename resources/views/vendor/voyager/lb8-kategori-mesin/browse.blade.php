@@ -283,24 +283,6 @@
                             </div>
                         </div>
                         @endif
-                        @inject('listrik','App\Labor')
-                        @php
-                            $total_listrik = $listrik->whereIn('company_parent_id', [3])->get();
-
-                            $x = collect([$total_listrik])->sum(function ($region){
-                                    return $region->sum('total_biaya');
-                                });
-                        @endphp
-                        <br/>
-                        {{-- <div class="panel panel-bordered">
-                            <div class="panel-body">
-                                <div class="pull-left">
-                                    <div class="col-2">
-                                        <label for="total PPJ" class="badge badge-success">Total labor :</label> <span class="">Rp {{number_format($x, 0, ".", ".")}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> --}}
                     </div>
                 </div>
             </div>

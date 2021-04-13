@@ -42,8 +42,8 @@ class RumusLapBagPenjualan {
         * =(SUM(J5:J25))-(SUM(J6:J13)*0,67)
         * Total Seluruh Biaya/Perbulan.
         */
-        $terkaitjumlahtotallapenjualan = LaporanBagianPenjualan::whereIn('id', $totaljumlahtotalterkait)->sum('biaya_perbulan_bag_penjualan');
-        $totalseluruhlappenualanperbulan = LaporanBagianPenjualan::all();
+        $terkaitjumlahtotallapenjualan = LaporanBagianPenjualan::whereNull('ended_at')->whereIn('id', $totaljumlahtotalterkait)->sum('biaya_perbulan_bag_penjualan');
+        $totalseluruhlappenualanperbulan = LaporanBagianPenjualan::whereNull('ended_at')->get();
 
             $ttal_params1 = collect([$totalseluruhlappenualanperbulan])->sum(function ($counprm1){
                 return $counprm1->sum('biaya_perbulan_bag_penjualan');
