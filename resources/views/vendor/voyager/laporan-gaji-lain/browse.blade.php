@@ -711,7 +711,7 @@
 
             } 
 
-            if(res.data.message == 'error'){
+            if(res.data.message == 'Internal error'){
 
                 const err = Swal.mixin({
                     toast: true,
@@ -727,10 +727,10 @@
 
                     err.fire({
                         icon: 'warning',
-                        title: 'data sudah pernah diclosing sebelumnya.'
+                        title: 'data yang ada closing tidak dapat kami temukan.'
                     });
 
-                    $("#closegajilainnya").text("Closing Recalculate");
+                    $("#closegajilainnya").text("Closing Gaji Lain");
 
                     let curr = '{{ route("voyager.laporan-gaji-lain.index") }}';
                     setTimeout(function(){ 

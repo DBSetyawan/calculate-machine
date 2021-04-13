@@ -202,7 +202,7 @@ trait ModuleCaculates {
 
         } catch (Exception $e) {
             $code = 500;
-            $message = __('voyager::generic.internal_error');
+            $messages = __('voyager::generic.internal_error');
 
             if ($e->getMessage()) {
                 $message = $e->getMessage();
@@ -210,7 +210,7 @@ trait ModuleCaculates {
 
             return response()->json([
                 'data' => [
-                    'message' => $message,
+                    'message' => $messages,
                 ],
             ], $code);
         }
@@ -277,7 +277,7 @@ trait ModuleCaculates {
 
         } catch (Exception $e) {
             $code = 500;
-            $message = __('voyager::generic.internal_error');
+            $messages = __('voyager::generic.internal_error');
 
             if ($e->getMessage()) {
                 $message = $e->getMessage();
@@ -285,7 +285,7 @@ trait ModuleCaculates {
 
             return response()->json([
                 'data' => [
-                    'message' => $message,
+                    'message' => $messages,
                     'line' => $e->getLine(),
                 ],
             ], $code);
@@ -353,7 +353,7 @@ trait ModuleCaculates {
 
         } catch (Exception $e) {
             $code = 500;
-            $message = __('voyager::generic.internal_error');
+            $messages = __('voyager::generic.internal_error');
 
             if ($e->getMessage()) {
                 $message = $e->getMessage();
@@ -361,7 +361,7 @@ trait ModuleCaculates {
 
             return response()->json([
                 'data' => [
-                    'message' => $message,
+                    'message' => $messages,
                     'line' => $e->getLine(),
                 ],
             ], $code);
@@ -433,7 +433,7 @@ trait ModuleCaculates {
 
         } catch (Exception $e) {
             $code = 500;
-            $message = __('voyager::generic.internal_error');
+            $messages = __('voyager::generic.internal_error');
 
             if ($e->getMessage()) {
                 $message = $e->getMessage();
@@ -441,7 +441,7 @@ trait ModuleCaculates {
 
             return response()->json([
                 'data' => [
-                    'message' => $message,
+                    'message' => $messages,
                     'line' => $e->getLine(),
                 ],
             ], $code);
@@ -509,7 +509,7 @@ trait ModuleCaculates {
 
         } catch (Exception $e) {
             $code = 500;
-            $message = __('voyager::generic.internal_error');
+            $messages = __('voyager::generic.internal_error');
 
             if ($e->getMessage()) {
                 $message = $e->getMessage();
@@ -517,13 +517,73 @@ trait ModuleCaculates {
 
             return response()->json([
                 'data' => [
-                    'message' => $message,
+                    'message' => $messages,
                     'line' => $e->getLine(),
                 ],
             ], $code);
         }
     }
     
+    public function closingtransactionkopMTC(){
+
+        try
+            {
+                $SendTemporaryCalculateInstance = new RptMtc;
+                
+                $allrecalculates = RptMtc::where('ended_at','=', NULL)->get()->toArray();
+                // $allrecalculates = RptMtc::where('ended_at','!=', NULL)->get()->toArray();
+
+                if(empty($allrecalculates) == true){
+                    $messages = __('voyager::generic.internal_error');
+
+                    return response()->json([
+                        'data' => [
+                            'message' => $messages
+                        ],
+                    ], 500);
+                }
+                    else {
+
+                        foreach($allrecalculates as $index => $tmp){
+
+                            $d[] = [
+                                'id' => $tmp['id'],
+                                'ended_at' => Carbon::now(), //testing closed
+                                // 'ended_at' => NULL, //testing opened
+
+                            ];
+
+                        }
+
+                    $id = 'id';
+
+                \Batch::update($SendTemporaryCalculateInstance, $d, $id);
+                
+                return response()->json(['res' => 200, 'data' => [
+                    'message' => 'success'
+                ]]);
+
+            }
+            
+            
+        } catch (Exception $e) {
+            $code = 500;
+            $messages = __('voyager::generic.internal_error');
+
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'data' => [
+                    'message' => $messages,
+                    'messages' => $message,
+                    'line' => $e->getLine(),
+                ],
+            ], $code);
+        }
+
+    }
 
     public function closingtransactionkopLABOR(){
 
@@ -531,12 +591,15 @@ trait ModuleCaculates {
             {
                 $SendTemporaryCalculateInstance = new Labor;
                 
-                $allrecalculates = Labor::whereNull('ended_at')->get()->toArray();
+                $allrecalculates = Labor::where('ended_at','=', NULL)->get()->toArray();
+                // $allrecalculates = Labor::where('ended_at','!=', NULL)->get()->toArray();
 
-                if(!empty($allrecalculates) == true){
+                if(empty($allrecalculates) == true){
+                    $messages = __('voyager::generic.internal_error');
+
                     return response()->json([
                         'data' => [
-                            'message' => 'error'
+                            'message' => $messages
                         ],
                     ], 500);
                 }
@@ -557,13 +620,14 @@ trait ModuleCaculates {
 
                 \Batch::update($SendTemporaryCalculateInstance, $d, $id);
 
-                return response()->json(['res' => 200]);
-
+                return response()->json(['res' => 200, 'data' => [
+                    'message' => 'success'
+                ]]);
             }
 
         } catch (Exception $e) {
             $code = 500;
-            $message = __('voyager::generic.internal_error');
+            $messages = __('voyager::generic.internal_error');
 
             if ($e->getMessage()) {
                 $message = $e->getMessage();
@@ -571,7 +635,7 @@ trait ModuleCaculates {
 
             return response()->json([
                 'data' => [
-                    'message' => $message,
+                    'message' => $messages,
                     'line' => $e->getLine(),
                 ],
             ], $code);
@@ -585,12 +649,15 @@ trait ModuleCaculates {
             {
                 $SendTemporaryCalculateInstance = new Listrik;
                 
-                $allrecalculates = Listrik::whereNull('ended_at')->get()->toArray();
+                $allrecalculates = Listrik::where('ended_at','=', NULL)->get()->toArray();
+                // $allrecalculates = Listrik::where('ended_at','!=', NULL)->get()->toArray();
 
-                if(!empty($allrecalculates) == true){
+                if(empty($allrecalculates) == true){
+                    $messages = __('voyager::generic.internal_error');
+
                     return response()->json([
                         'data' => [
-                            'message' => 'error'
+                            'message' => $messages
                         ],
                     ], 500);
                 }
@@ -611,13 +678,15 @@ trait ModuleCaculates {
 
                 \Batch::update($SendTemporaryCalculateInstance, $d, $id);
 
-                return response()->json(['res' => 200]);
+                return response()->json(['res' => 200, 'data' => [
+                    'message' => 'success'
+                ]]);
 
             }
                 
         } catch (Exception $e) {
             $code = 500;
-            $message = __('voyager::generic.internal_error');
+            $messages = __('voyager::generic.internal_error');
 
             if ($e->getMessage()) {
                 $message = $e->getMessage();
@@ -625,12 +694,12 @@ trait ModuleCaculates {
 
             return response()->json([
                 'data' => [
-                    'message' => $message,
+                    'message' => $messages,
                     'line' => $e->getLine(),
                 ],
             ], $code);
         }
-        
+
     }
 
     public function closingtransactionkopBAU(){
@@ -639,12 +708,15 @@ trait ModuleCaculates {
             {
                 $SendTemporaryCalculateInstance = new LaporanBiayaAdministrasiUmum;
                 
-                $allrecalculates = LaporanBiayaAdministrasiUmum::whereNull('ended_at')->get()->toArray();
+                $allrecalculates = LaporanBiayaAdministrasiUmum::where('ended_at','=', NULL)->get()->toArray();
+                // $allrecalculates = LaporanBiayaAdministrasiUmum::where('ended_at','!=', NULL)->get()->toArray();
 
-                if(!empty($allrecalculates) == true){
+                if(empty($allrecalculates) == true){
+                    $messages = __('voyager::generic.internal_error');
+
                     return response()->json([
                         'data' => [
-                            'message' => 'error'
+                            'message' => $messages
                         ],
                     ], 500);
                 }
@@ -665,13 +737,15 @@ trait ModuleCaculates {
 
                 \Batch::update($SendTemporaryCalculateInstance, $d, $id);
 
-                return response()->json(['res' => 200]);
+                return response()->json(['res' => 200, 'data' => [
+                    'message' => 'success'
+                ]]);
 
             }
 
         } catch (Exception $e) {
             $code = 500;
-            $message = __('voyager::generic.internal_error');
+            $messages = __('voyager::generic.internal_error');
 
             if ($e->getMessage()) {
                 $message = $e->getMessage();
@@ -679,7 +753,7 @@ trait ModuleCaculates {
 
             return response()->json([
                 'data' => [
-                    'message' => $message,
+                    'message' => $messages,
                     'line' => $e->getLine(),
                 ],
             ], $code);
@@ -692,12 +766,15 @@ trait ModuleCaculates {
             {
                 $SendTemporaryCalculateInstance = new LaporanGajiLain;
                 
-                $allrecalculates = LaporanGajiLain::whereNull('ended_at')->get()->toArray();
+                $allrecalculates = LaporanGajiLain::where('ended_at','=', NULL)->get()->toArray();
+                // $allrecalculates = LaporanGajiLain::where('ended_at','!=', NULL)->get()->toArray();
                 
-                if(!empty($allrecalculates) == true){
+                if(empty($allrecalculates) == true){
+                    $messages = __('voyager::generic.internal_error');
+
                     return response()->json([
                         'data' => [
-                            'message' => 'error'
+                            'message' => $messages
                         ],
                     ], 500);
                 }
@@ -718,13 +795,15 @@ trait ModuleCaculates {
 
                 \Batch::update($SendTemporaryCalculateInstance, $d, $id);
 
-                return response()->json(['res' => 200]);
+                return response()->json(['res' => 200, 'data' => [
+                    'message' => 'success'
+                ]]);
 
             }
                 
         } catch (Exception $e) {
             $code = 500;
-            $message = __('voyager::generic.internal_error');
+            $messages = __('voyager::generic.internal_error');
 
             if ($e->getMessage()) {
                 $message = $e->getMessage();
@@ -732,7 +811,7 @@ trait ModuleCaculates {
 
             return response()->json([
                 'data' => [
-                    'message' => $message,
+                    'message' => $messages,
                     'line' => $e->getLine(),
                 ],
             ], $code);
@@ -747,12 +826,14 @@ trait ModuleCaculates {
                 
                 $allrecalculates = AllRecalculate::with(['Listrik.Listrikperjam',
                 'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
-                'Company'])->whereNull('ended_at')->get()->toArray();
+                'Company'])->where('ended_at','=', NULL)->get()->toArray();
 
-                if(!empty($allrecalculates) == true){
+                if(empty($allrecalculates) == true){
+                    $messages = __('voyager::generic.internal_error');
+
                     return response()->json([
                         'data' => [
-                            'message' => 'error'
+                            'message' => $messages
                         ],
                     ], 500);
                 }
@@ -773,12 +854,14 @@ trait ModuleCaculates {
 
                 \Batch::update($SendTemporaryCalculateInstance, $d, $id);
 
-                return response()->json(['res' => 200]);
+                return response()->json(['res' => 200, 'data' => [
+                    'message' => 'success'
+                ]]);
             }
                 
         } catch (Exception $e) {
             $code = 500;
-            $message = __('voyager::generic.internal_error');
+            $messages = __('voyager::generic.internal_error');
 
             if ($e->getMessage()) {
                 $message = $e->getMessage();
@@ -786,7 +869,7 @@ trait ModuleCaculates {
 
             return response()->json([
                 'data' => [
-                    'message' => $message,
+                    'message' => $messages,
                     'line' => $e->getLine(),
                 ],
             ], $code);

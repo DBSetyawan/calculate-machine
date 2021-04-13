@@ -20,6 +20,10 @@
         <a href="{{ route('rpt.mtc.form.master') }}" class="btn btn-success btn-add-new">
             <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} RPT MTC</span>
         </a>
+        <a id="closingMTC" class="btn btn-primary btn-add-new">
+            {{-- <a href="{{ route('voyager.recalculate') }}" class="btn btn-success btn-add-new"> --}}
+            <i class="voyager-double-right"></i> <span>{{ __('Close MTC') }} </span>
+        </a>
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
         @endcan
@@ -255,6 +259,13 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     <span>{{ $data->{$row->field} }}</span>
+                                                    @if ($row->display_name == 'TRANSACTION STATUS')
+                                                        @if(!empty($data->ended_at))
+                                                                <span class="badge badge-danger">closed</span>
+                                                            @else
+                                                                <span class="badge badge-success">opened</span>
+                                                        @endif
+                                                    @endif
                                                     @if ($row->display_name == 'perbaikan tahun 2018')
                                                         <span>{{ "Rp " . number_format($data->perbaikan_tahun1,0,',','.') }}</span>
                                                     @endif
@@ -380,13 +391,13 @@
     @endif
     <script>
 
-        async function closingLabor(mesinid) {
+        async function closingMTC(mesinid) {
 
             let datafix = {
                     mesinid:mesinid
                 }
                 
-                const apiDataMesin = "{{ route('kop.closing.closingtransactionkopLABOR') }}";
+                const apiDataMesin = "{{ route('kop.closing.closingtransactionkopMTC') }}";
                         
                     const settings = {
                                 method: 'POST',
@@ -411,15 +422,15 @@
             }
 
 
-            $('#closingLabor').on('click', function(e) {
+            $('#closingMTC').on('click', function(e) {
 
             setTimeout(() => {
-                $("#closingLabor").text("Closing Labor, tunggu sebentar..");
+                $("#closingMTC").text("Closing MTC, tunggu sebentar..");
             }, 500);
 
-            closingLabor(true).then(function(res){
+            closingMTC(true).then(function(res){
                 
-                if(res.data.message == 'error'){
+                if(res.data.message == 'Internal error'){
 
                 const err = Swal.mixin({
                     toast: true,
@@ -435,19 +446,19 @@
 
                     err.fire({
                         icon: 'warning',
-                        title: 'data sudah pernah diclosing sebelumnya.'
+                        title: 'data yang ada closing tidak dapat kami temukan.'
                     });
 
-                    $("#closingLabor").text("Closing B. Administrasi Umum");
+                    $("#closingMTC").text("Closing MTC");
 
-                    let curr = '{{ route("voyager.labor.index") }}';
+                    let curr = '{{ route("voyager.rpt-mtc.index") }}';
                     setTimeout(function(){ 
                         window.location.href = curr;
                     }, 6000);
 
-                }
+                } 
 
-                    if(res.res == 200){
+                if(res.res == 200){
                         const success = Swal.mixin({
                             toast: true,
                             position: 'top-end',
@@ -465,9 +476,9 @@
                             title: 'Data berhasil menutup transaksi periode tahunan.'
                         });
 
-                        $("#closingLabor").text("Close B. Administrasi Umum");
+                        $("#closingMTC").text("Close MTC");
 
-                        let curr = '{{ route("voyager.labor.index") }}';
+                        let curr = '{{ route("voyager.rpt-mtc.index") }}';
                         setTimeout(function(){ 
                             window.location.href = curr;
                         }, 6000);

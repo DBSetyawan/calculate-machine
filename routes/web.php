@@ -97,6 +97,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('calc-kop/closing-transaction-closingtransactionkopgajilainnya','KOP\VoyagerTotalKalkulasiController@closingtransactionkopgajilainnya')->name('kop.closing.closingtransactionkopgajilainnya');
     Route::post('calc-kop/closing-transaction-closingtransactionkopBAU','KOP\VoyagerTotalKalkulasiController@closingtransactionkopBAU')->name('kop.closing.closingtransactionkopBAU');
     Route::post('calc-kop/closing-transaction-closingtransactionkopLABOR','KOP\VoyagerTotalKalkulasiController@closingtransactionkopLABOR')->name('kop.closing.closingtransactionkopLABOR');
+    Route::post('calc-kop/closing-transaction-closingtransactionkopMTC','KOP\VoyagerTotalKalkulasiController@closingtransactionkopMTC')->name('kop.closing.closingtransactionkopMTC');
     Route::get('calc-rpts/rpts/','KOP\VoyagerListrikController@rpts')->name('rpts');
     // Route::get('/history-log-recalculate','KOP\VoyagerHIstoryLogCalculateController@index')->name('h.index');
     Route::post('calc-rpts/open-transaction-calc-edp','KOP\VoyagerTotalKalkulasiController@OpenTransactionPenyusutan')->name('tr.open.penyusutan');

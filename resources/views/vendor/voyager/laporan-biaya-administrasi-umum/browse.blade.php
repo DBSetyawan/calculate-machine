@@ -432,7 +432,7 @@
 
             closingBAU(true).then(function(res){
                 
-                if(res.data.message == 'error'){
+                if(res.data.message == 'Internal error'){
 
                 const err = Swal.mixin({
                     toast: true,
@@ -448,7 +448,7 @@
 
                     err.fire({
                         icon: 'warning',
-                        title: 'data sudah pernah diclosing sebelumnya.'
+                        title: 'data yang ada closing tidak dapat kami temukan.'
                     });
 
                     $("#closeBAU").text("Closing B. Administrasi Umum");
@@ -480,7 +480,7 @@
 
                         $("#closeBAU").text("Close B. Administrasi Umum");
 
-                        let curr = '{{ route("voyager.laporan-gaji-lain.index") }}';
+                        let curr = '{{ route("voyager.laporan-biaya-administrasi-umum.index") }}';
                         setTimeout(function(){ 
                             window.location.href = curr;
                         }, 6000);
