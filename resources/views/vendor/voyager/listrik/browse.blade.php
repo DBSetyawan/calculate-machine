@@ -507,7 +507,7 @@
 
             } 
 
-            if(res.data.message.alertype == 'error'){
+            if(res.data.message == 'error'){
 
                 const err = Swal.mixin({
                     toast: true,
@@ -522,8 +522,8 @@
                 })
 
                     err.fire({
-                        icon: 'error',
-                        title: res.data.message.message
+                        icon: 'warning',
+                        title: 'data sudah pernah diclosing sebelumnya.'
                     });
 
                     $("#sendcalculate").text("Recalculate Machine");

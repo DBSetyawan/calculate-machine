@@ -85,7 +85,7 @@ trait ModuleCaculates {
         $SendTemporaryCalculateInstance = new AllRecalculate;
         $allrecalculate = AllRecalculate::with(['Listrik.Listrikperjam',
         'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
-        'Company'])->get();
+        'Company'])->whereNull('ended_at')->get();
         
                 foreach($allrecalculate as $index => $tmp){
 
@@ -110,7 +110,7 @@ trait ModuleCaculates {
         $SendTemporaryCalculateInstance = new AllRecalculate;
         $allrecalculate = AllRecalculate::with(['Listrik.Listrikperjam',
         'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
-        'Company'])->get();
+        'Company'])->whereNull('ended_at')->get();
         
                 foreach($allrecalculate as $index => $tmp){
 
@@ -133,7 +133,7 @@ trait ModuleCaculates {
 
     public function PenyusutanRecalculateOnly(){
 
-        $pnystnttl = Penyusutan::all();
+        $pnystnttl = Penyusutan::whereNull('ended_at')->get();
 
             $AllRecalculateInstance = new AllRecalculate;
 
@@ -164,7 +164,7 @@ trait ModuleCaculates {
 
             $AllRecalculateInstance = new AllRecalculate;
             // $allrec = AllRecalculate::all();
-            $allrec = RptMtc::all();
+            $allrec = RptMtc::whereNull('ended_at')->get();
             
                 foreach($allrec as $index => $datarmtc){
 
@@ -429,7 +429,6 @@ trait ModuleCaculates {
 
                 }
 
-
             return response()->json(['data_KOP' => $t]);
 
         } catch (Exception $e) {
@@ -506,7 +505,6 @@ trait ModuleCaculates {
 
                 }
 
-
             return response()->json(['data_KOP' => $t]);
 
         } catch (Exception $e) {
@@ -527,6 +525,60 @@ trait ModuleCaculates {
     }
     
 
+    public function closingtransactionkopLABOR(){
+
+        try
+            {
+                $SendTemporaryCalculateInstance = new Labor;
+                
+                $allrecalculates = Labor::whereNull('ended_at')->get()->toArray();
+
+                if(!empty($allrecalculates) == true){
+                    return response()->json([
+                        'data' => [
+                            'message' => 'error'
+                        ],
+                    ], 500);
+                }
+                    else {
+
+                        foreach($allrecalculates as $index => $tmp){
+
+                            $d[] = [
+                                'id' => $tmp['id'],
+                                'ended_at' => Carbon::now(), //testing closed
+                                // 'ended_at' => NULL, //testing opened
+
+                            ];
+
+                        }
+
+                    $id = 'id';
+
+                \Batch::update($SendTemporaryCalculateInstance, $d, $id);
+
+                return response()->json(['res' => 200]);
+
+            }
+
+        } catch (Exception $e) {
+            $code = 500;
+            $message = __('voyager::generic.internal_error');
+
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'data' => [
+                    'message' => $message,
+                    'line' => $e->getLine(),
+                ],
+            ], $code);
+        }
+
+    }
+
     public function closingtransactionkoplistrik(){
 
         try
@@ -535,22 +587,140 @@ trait ModuleCaculates {
                 
                 $allrecalculates = Listrik::whereNull('ended_at')->get()->toArray();
 
-                            foreach($allrecalculates as $index => $tmp){
+                if(!empty($allrecalculates) == true){
+                    return response()->json([
+                        'data' => [
+                            'message' => 'error'
+                        ],
+                    ], 500);
+                }
+                    else {
 
-                                $d[] = [
-                                    'id' => $tmp['id'],
-                                    'ended_at' => Carbon::now(), //testing closed
-                                    // 'ended_at' => NULL, //testing opened
+                        foreach($allrecalculates as $index => $tmp){
 
-                                ];
+                            $d[] = [
+                                'id' => $tmp['id'],
+                                'ended_at' => Carbon::now(), //testing closed
+                                // 'ended_at' => NULL, //testing opened
 
-                            }
+                            ];
+
+                        }
 
                     $id = 'id';
 
                 \Batch::update($SendTemporaryCalculateInstance, $d, $id);
 
-            return response()->json(['res' => 200]);
+                return response()->json(['res' => 200]);
+
+            }
+                
+        } catch (Exception $e) {
+            $code = 500;
+            $message = __('voyager::generic.internal_error');
+
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'data' => [
+                    'message' => $message,
+                    'line' => $e->getLine(),
+                ],
+            ], $code);
+        }
+        
+    }
+
+    public function closingtransactionkopBAU(){
+
+        try
+            {
+                $SendTemporaryCalculateInstance = new LaporanBiayaAdministrasiUmum;
+                
+                $allrecalculates = LaporanBiayaAdministrasiUmum::whereNull('ended_at')->get()->toArray();
+
+                if(!empty($allrecalculates) == true){
+                    return response()->json([
+                        'data' => [
+                            'message' => 'error'
+                        ],
+                    ], 500);
+                }
+                    else {
+
+                        foreach($allrecalculates as $index => $tmp){
+
+                            $d[] = [
+                                'id' => $tmp['id'],
+                                'ended_at' => Carbon::now(), //testing closed
+                                // 'ended_at' => NULL, //testing opened
+
+                            ];
+
+                        }
+
+                    $id = 'id';
+
+                \Batch::update($SendTemporaryCalculateInstance, $d, $id);
+
+                return response()->json(['res' => 200]);
+
+            }
+
+        } catch (Exception $e) {
+            $code = 500;
+            $message = __('voyager::generic.internal_error');
+
+            if ($e->getMessage()) {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'data' => [
+                    'message' => $message,
+                    'line' => $e->getLine(),
+                ],
+            ], $code);
+        }
+    }
+
+    public function closingtransactionkopgajilainnya(){
+
+        try
+            {
+                $SendTemporaryCalculateInstance = new LaporanGajiLain;
+                
+                $allrecalculates = LaporanGajiLain::whereNull('ended_at')->get()->toArray();
+                
+                if(!empty($allrecalculates) == true){
+                    return response()->json([
+                        'data' => [
+                            'message' => 'error'
+                        ],
+                    ], 500);
+                }
+                    else {
+
+                        foreach($allrecalculates as $index => $tmp){
+
+                            $d[] = [
+                                'id' => $tmp['id'],
+                                'ended_at' => Carbon::now(), //testing closed
+                                // 'ended_at' => NULL, //testing opened
+
+                            ];
+
+                        }
+
+                    $id = 'id';
+
+                \Batch::update($SendTemporaryCalculateInstance, $d, $id);
+
+                return response()->json(['res' => 200]);
+
+            }
                 
         } catch (Exception $e) {
             $code = 500;
@@ -579,22 +749,32 @@ trait ModuleCaculates {
                 'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
                 'Company'])->whereNull('ended_at')->get()->toArray();
 
-                            foreach($allrecalculates as $index => $tmp){
+                if(!empty($allrecalculates) == true){
+                    return response()->json([
+                        'data' => [
+                            'message' => 'error'
+                        ],
+                    ], 500);
+                }
+                    else {
 
-                                $d[] = [
-                                    'id' => $tmp['id'],
-                                    'ended_at' => Carbon::now(), //testing closed
-                                    // 'ended_at' => NULL, //testing opened
+                        foreach($allrecalculates as $index => $tmp){
 
-                                ];
+                            $d[] = [
+                                'id' => $tmp['id'],
+                                'ended_at' => Carbon::now(), //testing closed
+                                // 'ended_at' => NULL, //testing opened
 
-                            }
+                            ];
+
+                        }
 
                     $id = 'id';
 
                 \Batch::update($SendTemporaryCalculateInstance, $d, $id);
 
-            return response()->json(['res' => 200]);
+                return response()->json(['res' => 200]);
+            }
                 
         } catch (Exception $e) {
             $code = 500;

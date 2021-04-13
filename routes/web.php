@@ -94,6 +94,9 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('calc-rpts/form-test/','KOP\VoyagerTotalKalkulasiController@ListrikInstanceOfPenyusutan')->name('tr.test');
     Route::post('calc-kop/closing-transaction/','KOP\VoyagerTotalKalkulasiController@closingtransactionkop')->name('kop.closing');
     Route::post('calc-kop/closing-transaction-listrik/','KOP\VoyagerTotalKalkulasiController@closingtransactionkoplistrik')->name('kop.closing.listrik');
+    Route::post('calc-kop/closing-transaction-closingtransactionkopgajilainnya','KOP\VoyagerTotalKalkulasiController@closingtransactionkopgajilainnya')->name('kop.closing.closingtransactionkopgajilainnya');
+    Route::post('calc-kop/closing-transaction-closingtransactionkopBAU','KOP\VoyagerTotalKalkulasiController@closingtransactionkopBAU')->name('kop.closing.closingtransactionkopBAU');
+    Route::post('calc-kop/closing-transaction-closingtransactionkopLABOR','KOP\VoyagerTotalKalkulasiController@closingtransactionkopLABOR')->name('kop.closing.closingtransactionkopLABOR');
     Route::get('calc-rpts/rpts/','KOP\VoyagerListrikController@rpts')->name('rpts');
     // Route::get('/history-log-recalculate','KOP\VoyagerHIstoryLogCalculateController@index')->name('h.index');
     Route::post('calc-rpts/open-transaction-calc-edp','KOP\VoyagerTotalKalkulasiController@OpenTransactionPenyusutan')->name('tr.open.penyusutan');

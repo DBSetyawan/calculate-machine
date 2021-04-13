@@ -15,6 +15,10 @@
         <a href="{{ route('labors.form.master') }}" class="btn btn-success btn-add-new">
             <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Labor</span>
         </a>
+        <a id="closingLabor" class="btn btn-primary btn-add-new">
+            {{-- <a href="{{ route('voyager.recalculate') }}" class="btn btn-success btn-add-new"> --}}
+            <i class="voyager-double-right"></i> <span>{{ __('Close Labor') }} </span>
+        </a>
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
         @endcan
@@ -331,8 +335,6 @@
             </div>
         </div>
     </div>
-
-
     {{-- Single delete modal --}}
     <div class="modal modal-danger fade" tabindex="-1" id="delete_modal" role="dialog">
         <div class="modal-dialog">
@@ -366,6 +368,104 @@
         <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
     @endif
     <script>
+
+        async function closingLabor(mesinid) {
+
+            let datafix = {
+                    mesinid:mesinid
+                }
+                
+                const apiDataMesin = "{{ route('kop.closing.closingtransactionkopLABOR') }}";
+                        
+                    const settings = {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                    'Content-Type': 'application/json;charset=utf-8'
+                                },
+                                body: JSON.stringify(datafix)
+                        }
+                try {
+                        
+                        const fetchResponse = await fetch(`${apiDataMesin}`, settings);
+                        const data = await fetchResponse.json();
+
+                        return data;
+
+                    } catch (objError) {
+
+                        return objError;
+                }    
+
+            }
+
+
+        $('#closingLabor').on('click', function(e) {
+
+            setTimeout(() => {
+                $("#closingLabor").text("Closing Labor, tunggu sebentar..");
+            }, 500);
+
+            closingLabor(true).then(function(res){
+                
+                if(res.data.message == 'error'){
+
+                const err = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                    err.fire({
+                        icon: 'warning',
+                        title: 'data sudah pernah diclosing sebelumnya.'
+                    });
+
+                    $("#closingLabor").text("Closing Labor");
+
+                    let curr = '{{ route("voyager.labor.index") }}';
+                    setTimeout(function(){ 
+                        window.location.href = curr;
+                    }, 6000);
+
+                }
+
+                    if(res.res == 200){
+                        const success = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 4000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        })
+
+                        success.fire({
+                            icon: 'success',
+                            title: 'Data berhasil menutup transaksi periode tahunan.'
+                        });
+
+                        $("#closingLabor").text("Close Labor");
+
+                        let curr = '{{ route("voyager.labor.index") }}';
+                        setTimeout(function(){ 
+                            window.location.href = curr;
+                        }, 6000);
+
+                    } 
+
+                });
+            });
+
         $(document).ready(function () {
             @if (!$dataType->server_side)
                 var table = $('#dataTable').DataTable({!! json_encode(

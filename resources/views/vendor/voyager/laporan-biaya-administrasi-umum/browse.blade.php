@@ -15,6 +15,10 @@
         <a href="{{ route('lp.biaya.administrasi.umum.form.master') }}" class="btn btn-success btn-add-new">
             <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Biaya ADM</span>
         </a>
+        <a id="closeBAU" class="btn btn-primary btn-add-new">
+            {{-- <a href="{{ route('voyager.recalculate') }}" class="btn btn-success btn-add-new"> --}}
+            <i class="voyager-double-right"></i> <span>{{ __('Close B. Administrasi Umum') }} </span>
+        </a>
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
         @endcan
@@ -250,6 +254,13 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     <span>{{ $data->{$row->field} }}</span>
+                                                    @if ($row->display_name == 'TRANSACTION STATUS')
+                                                        @if(!empty($data->ended_at))
+                                                                <span class="badge badge-danger">closed</span>
+                                                            @else
+                                                                <span class="badge badge-success">opened</span>
+                                                        @endif
+                                                    @endif
                                                     @if ($row->display_name == 'Total Biaya per Bulan')
                                                         <span>{{ "Rp " . number_format($data->total_biaya_lp_adm,0,',','.') }}</span>
                                                     @endif
@@ -381,6 +392,104 @@
         <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
     @endif
     <script>
+
+        async function closingBAU(mesinid) {
+
+            let datafix = {
+                    mesinid:mesinid
+                }
+                
+                const apiDataMesin = "{{ route('kop.closing.closingtransactionkopBAU') }}";
+                        
+                    const settings = {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                    'Content-Type': 'application/json;charset=utf-8'
+                                },
+                                body: JSON.stringify(datafix)
+                        }
+                try {
+                        
+                        const fetchResponse = await fetch(`${apiDataMesin}`, settings);
+                        const data = await fetchResponse.json();
+
+                        return data;
+
+                    } catch (objError) {
+
+                        return objError;
+                }    
+
+            }
+
+
+        $('#closeBAU').on('click', function(e) {
+
+            setTimeout(() => {
+                $("#closeBAU").text("Closing Biaya Administrasi Umum, tunggu sebentar..");
+            }, 500);
+
+            closingBAU(true).then(function(res){
+                
+                if(res.data.message == 'error'){
+
+                const err = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                    err.fire({
+                        icon: 'warning',
+                        title: 'data sudah pernah diclosing sebelumnya.'
+                    });
+
+                    $("#closeBAU").text("Closing B. Administrasi Umum");
+
+                    let curr = '{{ route("voyager.laporan-biaya-administrasi-umum.index") }}';
+                    setTimeout(function(){ 
+                        window.location.href = curr;
+                    }, 6000);
+
+                }
+
+                    if(res.res == 200){
+                        const success = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 4000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        })
+
+                        success.fire({
+                            icon: 'success',
+                            title: 'Data berhasil menutup transaksi periode tahunan.'
+                        });
+
+                        $("#closeBAU").text("Close B. Administrasi Umum");
+
+                        let curr = '{{ route("voyager.laporan-gaji-lain.index") }}';
+                        setTimeout(function(){ 
+                            window.location.href = curr;
+                        }, 6000);
+
+                    } 
+
+                });
+            });
+
         $(document).ready(function () {
             @if (!$dataType->server_side)
                 var table = $('#dataTable').DataTable({!! json_encode(
