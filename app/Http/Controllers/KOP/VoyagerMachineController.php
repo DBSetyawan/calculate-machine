@@ -282,7 +282,9 @@ class VoyagerMachineController extends BaseVoyagerBaseController
             'company_id' => $r->company_id,
             'group_mesin_id' => $r->group_mesin_id,
             'category_bagian_id' => $r->category_bagian_id,
-            'listrik_perjam_id' => $r->listrik_perjam_id
+            // 'listrik_perjam_id' => $r->listrik_perjam_id
+            'capacity_mch' => $r->listrik_perjam_id
+            
         ];
         
         /**
@@ -778,7 +780,9 @@ class VoyagerMachineController extends BaseVoyagerBaseController
             'group_mesin' => $request->group_mesin_id,
             'company_id' => $request->company_id,
             'category_bagian' => $request->category_bagian_id,
-            'listrik_perjam_id' => $request->listrik_perjam_id
+            // 'listrik_perjam_id' => $request->listrik_perjam_id
+            'capacity_mch' => $request->listrik_perjam_id
+            
         ];
 
         $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $data, $datamesin);
@@ -999,7 +1003,7 @@ class VoyagerMachineController extends BaseVoyagerBaseController
                 /**
                  * @Penyusutan
                  */
-                $checkpenyusutan = Penyusutan::all();
+                $checkpenyusutan = Penyusutan::whereNull('ended_at')->get();
 
                 foreach($checkpenyusutan as $pnystanloops){
 
@@ -1134,21 +1138,21 @@ class VoyagerMachineController extends BaseVoyagerBaseController
 
                                                 }
 
-                                                return redirect()->route("voyager.{$dataType->slug}.index")->with($dataLabors);
+                                            return redirect()->route("voyager.{$dataType->slug}.index")->with($dataLabors);
 
-                                            }
+                                        }
 
                                     }
 
-                                    return redirect()->route("voyager.{$dataType->slug}.index")->with($dataRptMtc);
+                                return redirect()->route("voyager.{$dataType->slug}.index")->with($dataRptMtc);
 
-                                }
+                            }
 
                         }
 
-                        return redirect()->route("voyager.{$dataType->slug}.index")->with($dataPenyusutan);
+                    return redirect()->route("voyager.{$dataType->slug}.index")->with($dataPenyusutan);
 
-                    }
+                }
 
             }
 

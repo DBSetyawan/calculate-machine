@@ -250,6 +250,13 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     {{-- <span>{{ $data->{$row->field} }}</span> --}}
+                                                    @if ($row->display_name == 'TRANSACTION STATUS')
+                                                        @if(!empty($data->ended_at))
+                                                                <span class="badge badge-danger">closed</span>
+                                                            @else
+                                                                <span class="badge badge-success">opened</span>
+                                                        @endif
+                                                    @endif
                                                     @if ($row->display_name == 'Supervisor (lvl 3)')
                                                         <span>{{ "Rp " . number_format($data->supervisor_level3,0,',','.') }}</span>
                                                     @endif

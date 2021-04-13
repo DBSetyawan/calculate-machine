@@ -162,15 +162,15 @@
                                 <div class="contanier">
                                     <div class="panel-body">
                                         <div class="form-group">
+                                            <div class="form-group">
+                                                <span class="badge badge-success" id="comp"></span>
+                                                </div>
                                             <label for="url_instagram">Faktor kali LWBP</label>
                                             <input type="text" class="form-control fkl" id="faktor_kali_lwbp" name="faktor_kali_lwbp" placeholder="Faktor kali LWBP">
                                         </div>
                                         <div class="form-group">
                                             <label for="url_instagram">Faktor kali WBP</label>
                                             <input type="text" class="form-control fkw" id="faktor_kali_wbp" name="faktor_kali_wbp" placeholder="Faktor kali WBP">
-                                        </div>
-                                        <div class="form-group">
-                                        <span class="badge badge-success" id="comp"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -284,8 +284,9 @@
                                 const data = await fetchResponse.json();
                                 return data;
                             } catch (error) {
+
                             return error
-                            }    
+                        }    
                     }
 
             $("#company_parent_id").hide();
@@ -310,9 +311,11 @@
                         $("#company_parent_id").val(results.detail.company_to.id);
                         $("#group_mesin_display").val(results.detail.group_mesin_to.nama_kategori_mesin);
                         $("#group_mesin").val(results.detail.group_mesin_to.id);
-                        $("#perjam_display").val(results.detail.mesin_listrik_perjam_to.output_perjam);
+                        $("#perjam_display").val(results.detail.capacity_mch);
+                        // $("#perjam_display").val(results.detail.mesin_listrik_perjam_to.output_perjam);
                         // $("#perjam_display").val( (results.detail.mesin_listrik_perjam_to.persen * 100 ).toFixed(1) +"%");
-                        $("#perjam").val(results.detail.mesin_listrik_perjam_to.persen);
+                        // $("#perjam").val(results.detail.mesin_listrik_perjam_to.persen);
+                        $("#perjam").val(results.detail.capacity_mch);
                         $("#category_bagian_display").val(results.detail.kbagian_to.nama_bagian);
                         $("#category_bagian").val(results.detail.kbagian_to.id);
                         $("#ampere").val(results.detail.ampere);

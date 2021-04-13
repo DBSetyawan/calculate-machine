@@ -61,7 +61,7 @@ class VoyagerLaporanBiayaAdministrasiUmumController extends BaseVoyagerBaseContr
 
         if(!empty($simpanDataLaporanLBAU) && $simpanDataLaporanLBAU != [] && $simpanDataLaporanLBAU != null){
 
-            $tbau = LaporanBiayaAdministrasiUmum::whereIn('company_parent_id', [3])->get();
+            $tbau = LaporanBiayaAdministrasiUmum::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
 
             $t = collect([$tbau])->sum(function ($biaya){
                 return sprintf("%.5f", $biaya->sum('total_biaya_lp_adm'));

@@ -72,7 +72,7 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
 
         if(!empty($simpanDataLaporanGajiLain) && $simpanDataLaporanGajiLain != [] && $simpanDataLaporanGajiLain != null){
 
-            $x = LaporanGajiLain::whereIn('company_parent_id', [3])->get();
+            $x = LaporanGajiLain::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
 
             $t = collect([$x])->sum(function ($biaya){
                 return sprintf("%.5f", $biaya->sum('total_biaya_laporan_periode'));
@@ -479,7 +479,7 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
 
     protected function saldoAkhir_REPRO(){
 
-        $srepro = LaporanGajiLain::whereIn('category_bagian', [9])->get();
+        $srepro = LaporanGajiLain::whereIn('category_bagian', [9])->whereNull('ended_at')->get();
         
             $hasil_akhir_gj_lain = collect([$srepro])->sum(function ($t){
                 return $t->sum('total_biaya_laporan_periode');
@@ -490,7 +490,7 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
 
     protected function saldoAkhir_MTC(){
         
-        $smtcs = LaporanGajiLain::whereIn('category_bagian', [11])->get();
+        $smtcs = LaporanGajiLain::whereIn('category_bagian', [11])->whereNull('ended_at')->get();
 
             $hasil_akhir_gj_lain = collect([$smtcs])->sum(function ($t){
                 return $t->sum('total_biaya_laporan_periode');
@@ -501,7 +501,7 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
 
     protected function saldoAkhir_UMUM(){
 
-        $sumum = LaporanGajiLain::whereIn('category_bagian', [12])->get();
+        $sumum = LaporanGajiLain::whereIn('category_bagian', [12])->whereNull('ended_at')->get();
         
             $hasil_akhir_gj_lain = collect([$sumum])->sum(function ($t){
                 return $t->sum('total_biaya_laporan_periode');
@@ -512,7 +512,7 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
 
     protected function saldoAkhir_QC(){
 
-        $sqcs = LaporanGajiLain::whereIn('category_bagian', [13])->get();
+        $sqcs = LaporanGajiLain::whereIn('category_bagian', [13])->whereNull('ended_at')->get();
 
             $hasil_akhir_gj_lain = collect([$sqcs])->sum(function ($t){
                 return $t->sum('total_biaya_laporan_periode');
@@ -547,8 +547,8 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
                 // ])
                 // ->first();
 
-            LaporanGajiLain::whereIn('category_bagian', [$request->input('category_bagian')])->get();
-            $data = LaporanGajiLain::findOrFail((Int)$request->input('id'));
+            LaporanGajiLain::whereIn('category_bagian', [$request->input('category_bagian')])->whereNull('ended_at')->get();
+            $data = LaporanGajiLain::whereNull('ended_at')->where('id',(Int) $request->input('id'))->first();
             $datax = [
                 'tahun1' => $data->tahun1,
                 'tahun2' => $data->tahun2,
@@ -558,9 +558,9 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
 
             // dd($datax);
           
-            $LaporanGajiLain = LaporanGajiLain::all();
+            $LaporanGajiLain = LaporanGajiLain::whereNull('ended_at')->get();
             $AllRecalculateInstance = new AllRecalculate;
-            $rcl = AllRecalculate::all();
+            $rcl = AllRecalculate::whereNull('ended_at')->get();
     
             foreach($rcl as $indexs => $dtlg){
     

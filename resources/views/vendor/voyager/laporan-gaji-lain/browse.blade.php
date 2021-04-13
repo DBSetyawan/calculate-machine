@@ -3,7 +3,7 @@
 @section('page_title', __('voyager::generic.viewing').' '.$dataType->getTranslatedAttribute('display_name_plural'))
 @inject('laporangajilain','App\LaporanGajiLain')
 @php
-    $laporangajilain_bagianREPRO = $laporangajilain->whereIn('category_bagian', [9])->get();
+    $laporangajilain_bagianREPRO = $laporangajilain->whereIn('category_bagian', [9])->whereNull('ended_at')->get();
     // ->pluck('tahun1')->dd();
     // tahun2018
     // #REPRO
@@ -26,7 +26,7 @@
     });
 
     // #POTONG
-    $laporanbPOTONG = $laporangajilain->whereIn('category_bagian', [1])->get();
+    $laporanbPOTONG = $laporangajilain->whereIn('category_bagian', [1])->whereNull('ended_at')->get();
     // ->pluck('tahun1')->dd();
     // tahun2018
     $potong = collect([$laporanbPOTONG])->sum(function ($potong){
@@ -48,7 +48,7 @@
     });
 
     // #CETAK
-    $laporanCETAK = $laporangajilain->whereIn('category_bagian', [2])->get();
+    $laporanCETAK = $laporangajilain->whereIn('category_bagian', [2])->whereNull('ended_at')->get();
     // ->pluck('tahun1')->dd();
     // tahun2018
     $cetak = collect([$laporanCETAK])->sum(function ($cetak){
@@ -70,7 +70,7 @@
     });
 
     // #PLONG
-    $laporanPLONG = $laporangajilain->whereIn('category_bagian', [4])->get();
+    $laporanPLONG = $laporangajilain->whereIn('category_bagian', [4])->whereNull('ended_at')->get();
     // ->pluck('tahun1')->dd();
     // tahun2018
     $plong = collect([$laporanPLONG])->sum(function ($plong){
@@ -92,7 +92,7 @@
     });
 
      // #FINISHING
-     $laporanFINISHING = $laporangajilain->whereIn('category_bagian', [10])->get();
+     $laporanFINISHING = $laporangajilain->whereIn('category_bagian', [10])->whereNull('ended_at')->get();
     // ->pluck('tahun1')->dd();
     // tahun2018
     $FINISHING = collect([$laporanFINISHING])->sum(function ($FINISHING){
@@ -114,7 +114,7 @@
     });
 
   // #MTC
-  $laporanMTC = $laporangajilain->whereIn('category_bagian', [11])->get();
+  $laporanMTC = $laporangajilain->whereIn('category_bagian', [11])->whereNull('ended_at')->get();
     // ->pluck('tahun1')->dd();
     // tahun2018
     $MTC = collect([$laporanMTC])->sum(function ($MTC){
@@ -136,7 +136,7 @@
     });
 
     // #UMUM (Hanya Kary KOP)
-    $UMUM = $laporangajilain->whereIn('category_bagian', [12])->get();
+    $UMUM = $laporangajilain->whereIn('category_bagian', [12])->whereNull('ended_at')->get();
     // ->pluck('tahun1')->dd();
     // tahun2018
     $UM = collect([$UMUM])->sum(function ($UM){
@@ -157,7 +157,7 @@
         return $UM->sum('total_biaya_laporan_periode');
     });
 
-    $QCs = $laporangajilain->whereIn('category_bagian', [13])->get();
+    $QCs = $laporangajilain->whereIn('category_bagian', [13])->whereNull('ended_at')->get();
 
     $qc_ = collect([$QCs])->sum(function ($qxc){
         return $qxc->sum('tahun1');
@@ -424,6 +424,13 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     {{-- <span>{{ $data->{$row->field} }}</span> --}}
+                                                    @if ($row->display_name == 'TRANSACTION_STATUS')
+                                                        @if(!empty($data->ended_at))
+                                                                <span class="badge badge-danger">closed</span>
+                                                            @else
+                                                                <span class="badge badge-success">opened</span>
+                                                        @endif
+                                                    @endif
                                                     @if ($row->display_name == '2018')
                                                     <span>{{ "Rp " . number_format($data->tahun1,0,',','.') }}</span>
                                                     @endif

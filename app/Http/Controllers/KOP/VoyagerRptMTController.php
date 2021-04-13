@@ -515,7 +515,7 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
                $data_success = RptMtc::findOrFail($request->id)->update($automatedRecalculateMTC);
                $dash = RptMtc::findOrFail($request->id)->code_mesin;
 
-               $rptmtc = RptMtc::all();
+               $rptmtc = RptMtc::whereNull('ended_at')->get();
                $AllRecalculateInstance = New AllRecalculate;
        
             //    foreach($rptmtc as $index => $datarmtc){

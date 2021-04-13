@@ -19,6 +19,7 @@ class Penyusutan extends Model
         'purchaseorder_value',
         'nama_sim',
         'purchaseorder_value',
+        'ended_at',
         'umur',
         'penyusutan_perbulan',
         'category_bagian',

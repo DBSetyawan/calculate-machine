@@ -633,7 +633,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
     protected function resetFunc($old, $new, $corp, $category, $group_mesin, $code_mesin){
 
-        $alllstrk = Listrik::all();
+        $alllstrk = Listrik::whereNull('ended_at')->get();
         $ListrikInstance = New Listrik;
 
         foreach($alllstrk as $tmp){
@@ -830,7 +830,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
         $saldo_akhir_cost_perbulan = $this->total_cost_perbulan();
 
-        $costperbulan = Listrik::findOrFail($id);
+        $costperbulan = Listrik::whereNull('ended_at')->where('id', $id)->first();
 
         $persen_costperbulan = $this->RumusPersenListrik($costperbulan->nilai_cost_bulan, $saldo_akhir_cost_perbulan);
 

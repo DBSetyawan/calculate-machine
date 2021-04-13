@@ -30,7 +30,7 @@
 
             <p class="container">
                 <div class="span1">
-                    <label for=""><span class="badge badge-success">Connected</span> {{ auth()->user()->name }}, last login: {{ Carbon\Carbon::now() }}</label>
+                    Login sebagai -> <label for=""><span class="badge badge-success">{{ auth()->user()->role->name }}</span> , time login: {{ Carbon\Carbon::now() }}</label>
                 </div>
             </p>
             <p class="container">

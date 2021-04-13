@@ -650,9 +650,9 @@ trait ModuleCaculates {
 
                     // $labors = Labor::where('code_mesin', $tmp->code_mesin)->first()->total_biaya;
 
-                    $penyusutanfefn = Penyusutan::where('code_mesin', $tmp->code_mesin)->first();
-                    $laborsfn = Labor::where('code_mesin', $tmp->code_mesin)->first();
-                    $mtcsfefn = RptMtc::where('code_mesin', $tmp->code_mesin)->first();
+                    $penyusutanfefn = Penyusutan::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first();
+                    $laborsfn = Labor::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first();
+                    $mtcsfefn = RptMtc::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first();
 
                     for ($i=0; $i < count($allrecalculate->toArray()); $i++){
 
@@ -754,37 +754,37 @@ trait ModuleCaculates {
                                             return $REPRO->sum('total_biaya_laporan_periode');
                                         });
                                         
-                                        $laporanMTC = LaporanGajiLain::whereIn('category_bagian', [11])->get();
+                                        $laporanMTC = LaporanGajiLain::whereIn('category_bagian', [11])->whereNull('ended_at')->get();
                                         $totalMTC = collect([$laporanMTC])->sum(function ($MTC){
                                             return $MTC->sum('total_biaya_laporan_periode');
                                         });
                 
-                                        $UMUM = LaporanGajiLain::whereIn('category_bagian', [12])->get();
+                                        $UMUM = LaporanGajiLain::whereIn('category_bagian', [12])->whereNull('ended_at')->get();
                                         $totalUMUM = collect([$UMUM])->sum(function ($um){
                                             return $um->sum('total_biaya_laporan_periode');
                                         });
                 
-                                        $qcl = laporangajilain::whereIn('category_bagian', [13])->get();
+                                        $qcl = laporangajilain::whereIn('category_bagian', [13])->whereNull('ended_at')->get();
                                         $totalQC = collect([$qcl])->sum(function ($qc){
                                             return $qc->sum('total_biaya_laporan_periode');
                                         });
                 
-                                        $LaporanBiayaAdministrasiUmum = LaporanBiayaAdministrasiUmum::whereIn('company_parent_id', [3])->get();
+                                        $LaporanBiayaAdministrasiUmum = LaporanBiayaAdministrasiUmum::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
                                         $totalbau = collect([$LaporanBiayaAdministrasiUmum])->sum(function ($bau){
                                             return $bau->sum('total_biaya_lp_adm');
                                         });
                 
-                                        $penyusutan = Penyusutan::whereIn('company_parent_id', [3])->get();
+                                        $penyusutan = Penyusutan::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
                                         $totalpeny = collect([$penyusutan])->sum(function ($bau){
                                             return $bau->sum('penyusutan_perbulan');
                                         });
                 
-                                        $labor = Labor::whereIn('company_parent_id', [3])->get();
+                                        $labor = Labor::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
                                         $totallbr = collect([$labor])->sum(function ($bau){
                                             return $bau->sum('total_biaya');
                                         });
                 
-                                        $mtc = RptMtc::whereIn('company_parent_id', [3])->get();
+                                        $mtc = RptMtc::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
                                         $totalmtmct = collect([$mtc])->sum(function ($bau){
                                             return $bau->sum('total_biaya_perbulan');
                                         });
@@ -973,7 +973,7 @@ trait ModuleCaculates {
                 $SendTemporaryCalculateInstance = new AllRecalculate;
                 $allrecalculate = AllRecalculate::with(['Listrik.Listrikperjam',
                 'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
-                'Company'])->get();
+                'Company'])->whereNull('ended_at')->get();
             
                 foreach($allrecalculate as $index => $tmp){
 
@@ -981,50 +981,50 @@ trait ModuleCaculates {
                     // $recRow = AllRecalculate::orderby('created_at','desc')->with(['Listrik.Listrikperjam','KategoriBagian','Mesin','GroupMesin','Company'])->first();
                     
                     $ambil_listrik_dari_mesin = $tmp->mesin->MesinListrikPerjamTo->persen;
-                    $mtcsfe = RptMtc::where('code_mesin', $tmp->code_mesin)->first()->total_biaya_perbulan;
-                    $penyusutanfe = Penyusutan::where('code_mesin', $tmp->code_mesin)->first()->penyusutan_perbulan;
-                    $labors = Labor::where('code_mesin', $tmp->code_mesin)->first()->total_biaya;
+                    $mtcsfe = RptMtc::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first()->total_biaya_perbulan;
+                    $penyusutanfe = Penyusutan::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first()->penyusutan_perbulan;
+                    $labors = Labor::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first()->total_biaya;
 
-                    $penyusutanfefn = Penyusutan::where('code_mesin', $tmp->code_mesin)->first();
-                    $laborsfn = Labor::where('code_mesin', $tmp->code_mesin)->first();
-                    $mtcsfefn = RptMtc::where('code_mesin', $tmp->code_mesin)->first();
+                    $penyusutanfefn = Penyusutan::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first();
+                    $laborsfn = Labor::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first();
+                    $mtcsfefn = RptMtc::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first();
 
-                    $laporangajilain_bagianREPRO = LaporanGajiLain::whereIn('category_bagian', [9])->get();
+                    $laporangajilain_bagianREPRO = LaporanGajiLain::whereIn('category_bagian', [9])->whereNull('ended_at')->get();
                     $totalREPRO = collect([$laporangajilain_bagianREPRO])->sum(function ($REPRO){
                         return $REPRO->sum('total_biaya_laporan_periode');
                     });
                     
-                    $laporanMTC = LaporanGajiLain::whereIn('category_bagian', [11])->get();
+                    $laporanMTC = LaporanGajiLain::whereIn('category_bagian', [11])->whereNull('ended_at')->get();
                     $totalMTC = collect([$laporanMTC])->sum(function ($MTC){
                         return $MTC->sum('total_biaya_laporan_periode');
                     });
 
-                    $UMUM = LaporanGajiLain::whereIn('category_bagian', [12])->get();
+                    $UMUM = LaporanGajiLain::whereIn('category_bagian', [12])->whereNull('ended_at')->get();
                     $totalUMUM = collect([$UMUM])->sum(function ($um){
                         return $um->sum('total_biaya_laporan_periode');
                     });
 
-                    $qcl = laporangajilain::whereIn('category_bagian', [13])->get();
+                    $qcl = laporangajilain::whereIn('category_bagian', [13])->whereNull('ended_at')->get();
                     $totalQC = collect([$qcl])->sum(function ($qc){
                         return $qc->sum('total_biaya_laporan_periode');
                     });
 
-                    $LaporanBiayaAdministrasiUmum = LaporanBiayaAdministrasiUmum::whereIn('company_parent_id', [3])->get();
+                    $LaporanBiayaAdministrasiUmum = LaporanBiayaAdministrasiUmum::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
                     $totalbau = collect([$LaporanBiayaAdministrasiUmum])->sum(function ($bau){
                         return $bau->sum('total_biaya_lp_adm');
                     });
 
-                    $penyusutan = Penyusutan::whereIn('company_parent_id', [3])->get();
+                    $penyusutan = Penyusutan::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
                     $totalpeny = collect([$penyusutan])->sum(function ($bau){
                         return $bau->sum('penyusutan_perbulan');
                     });
 
-                    $labor = Labor::whereIn('company_parent_id', [3])->get();
+                    $labor = Labor::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
                     $totallbr = collect([$labor])->sum(function ($bau){
                         return $bau->sum('total_biaya');
                     });
 
-                    $mtc = RptMtc::whereIn('company_parent_id', [3])->get();
+                    $mtc = RptMtc::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
                     $totalmtmct = collect([$mtc])->sum(function ($bau){
                         return $bau->sum('total_biaya_perbulan');
                     });
@@ -1144,7 +1144,7 @@ trait ModuleCaculates {
                 $SendTemporaryCalculateInstance = new AllRecalculate;
                 $allrecalculate = AllRecalculate::whereNull('ended_at')->with(['Listrik.Listrikperjam',
                 'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
-                'Company'])->get();
+                'Company'])->whereNull('ended_at')->get();
             
                 foreach($allrecalculate as $index => $tmp){
 
@@ -1152,50 +1152,50 @@ trait ModuleCaculates {
                     // $recRow = AllRecalculate::orderby('created_at','desc')->with(['Listrik.Listrikperjam','KategoriBagian','Mesin','GroupMesin','Company'])->first();
                     
                     $ambil_listrik_dari_mesin = $tmp->mesin->MesinListrikPerjamTo->persen;
-                    $mtcsfe = RptMtc::where('code_mesin', $tmp->code_mesin)->first()->total_biaya_perbulan;
-                    $penyusutanfe = Penyusutan::where('code_mesin', $tmp->code_mesin)->first()->penyusutan_perbulan;
-                    $labors = Labor::where('code_mesin', $tmp->code_mesin)->first()->total_biaya;
+                    $mtcsfe = RptMtc::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first()->total_biaya_perbulan;
+                    $penyusutanfe = Penyusutan::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first()->penyusutan_perbulan;
+                    $labors = Labor::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first()->total_biaya;
 
-                    $penyusutanfefn = Penyusutan::where('code_mesin', $tmp->code_mesin)->first();
-                    $laborsfn = Labor::where('code_mesin', $tmp->code_mesin)->first();
-                    $mtcsfefn = RptMtc::where('code_mesin', $tmp->code_mesin)->first();
+                    $penyusutanfefn = Penyusutan::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first();
+                    $laborsfn = Labor::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first();
+                    $mtcsfefn = RptMtc::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first();
 
-                    $laporangajilain_bagianREPRO = LaporanGajiLain::whereIn('category_bagian', [9])->get();
+                    $laporangajilain_bagianREPRO = LaporanGajiLain::whereIn('category_bagian', [9])->whereNull('ended_at')->get();
                     $totalREPRO = collect([$laporangajilain_bagianREPRO])->sum(function ($REPRO){
                         return $REPRO->sum('total_biaya_laporan_periode');
                     });
                     
-                    $laporanMTC = LaporanGajiLain::whereIn('category_bagian', [11])->get();
+                    $laporanMTC = LaporanGajiLain::whereIn('category_bagian', [11])->whereNull('ended_at')->get();
                     $totalMTC = collect([$laporanMTC])->sum(function ($MTC){
                         return $MTC->sum('total_biaya_laporan_periode');
                     });
 
-                    $UMUM = LaporanGajiLain::whereIn('category_bagian', [12])->get();
+                    $UMUM = LaporanGajiLain::whereIn('category_bagian', [12])->whereNull('ended_at')->get();
                     $totalUMUM = collect([$UMUM])->sum(function ($um){
                         return $um->sum('total_biaya_laporan_periode');
                     });
 
-                    $qcl = laporangajilain::whereIn('category_bagian', [13])->get();
+                    $qcl = laporangajilain::whereIn('category_bagian', [13])->whereNull('ended_at')->get();
                     $totalQC = collect([$qcl])->sum(function ($qc){
                         return $qc->sum('total_biaya_laporan_periode');
                     });
 
-                    $LaporanBiayaAdministrasiUmum = LaporanBiayaAdministrasiUmum::whereIn('company_parent_id', [3])->get();
+                    $LaporanBiayaAdministrasiUmum = LaporanBiayaAdministrasiUmum::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
                     $totalbau = collect([$LaporanBiayaAdministrasiUmum])->sum(function ($bau){
                         return $bau->sum('total_biaya_lp_adm');
                     });
 
-                    $penyusutan = Penyusutan::whereIn('company_parent_id', [3])->get();
+                    $penyusutan = Penyusutan::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
                     $totalpeny = collect([$penyusutan])->sum(function ($bau){
                         return $bau->sum('penyusutan_perbulan');
                     });
 
-                    $labor = Labor::whereIn('company_parent_id', [3])->get();
+                    $labor = Labor::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
                     $totallbr = collect([$labor])->sum(function ($bau){
                         return $bau->sum('total_biaya');
                     });
 
-                    $mtc = RptMtc::whereIn('company_parent_id', [3])->get();
+                    $mtc = RptMtc::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
                     $totalmtmct = collect([$mtc])->sum(function ($bau){
                         return $bau->sum('total_biaya_perbulan');
                     });
@@ -1313,7 +1313,7 @@ trait ModuleCaculates {
                 $SendTemporaryCalculateInstance = new AllRecalculate;
                 $allrecalculate = AllRecalculate::whereNull('ended_at')->with(['Listrik.Listrikperjam',
                 'KategoriBagian','Mesin','mesin.MesinListrikPerjamTo','GroupMesin',
-                'Company'])->get();
+                'Company'])->whereNull('ended_at')->get();
             
                 foreach($allrecalculate as $index => $tmp){
 
@@ -1321,50 +1321,50 @@ trait ModuleCaculates {
                     // $recRow = AllRecalculate::orderby('created_at','desc')->with(['Listrik.Listrikperjam','KategoriBagian','Mesin','GroupMesin','Company'])->first();
                     
                     $ambil_listrik_dari_mesin = $tmp->mesin->MesinListrikPerjamTo->persen;
-                    $mtcsfe = RptMtc::where('code_mesin', $tmp->code_mesin)->first()->total_biaya_perbulan;
-                    $penyusutanfe = Penyusutan::where('code_mesin', $tmp->code_mesin)->first()->penyusutan_perbulan;
-                    $labors = Labor::where('code_mesin', $tmp->code_mesin)->first()->total_biaya;
+                    $mtcsfe = RptMtc::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first()->total_biaya_perbulan;
+                    $penyusutanfe = Penyusutan::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first()->penyusutan_perbulan;
+                    $labors = Labor::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first()->total_biaya;
 
-                    $penyusutanfefn = Penyusutan::where('code_mesin', $tmp->code_mesin)->first();
-                    $laborsfn = Labor::where('code_mesin', $tmp->code_mesin)->first();
-                    $mtcsfefn = RptMtc::where('code_mesin', $tmp->code_mesin)->first();
+                    $penyusutanfefn = Penyusutan::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first();
+                    $laborsfn = Labor::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first();
+                    $mtcsfefn = RptMtc::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first();
 
-                    $laporangajilain_bagianREPRO = LaporanGajiLain::whereIn('category_bagian', [9])->get();
+                    $laporangajilain_bagianREPRO = LaporanGajiLain::whereIn('category_bagian', [9])->whereNull('ended_at')->get();
                     $totalREPRO = collect([$laporangajilain_bagianREPRO])->sum(function ($REPRO){
                         return $REPRO->sum('total_biaya_laporan_periode');
                     });
                     
-                    $laporanMTC = LaporanGajiLain::whereIn('category_bagian', [11])->get();
+                    $laporanMTC = LaporanGajiLain::whereIn('category_bagian', [11])->whereNull('ended_at')->get();
                     $totalMTC = collect([$laporanMTC])->sum(function ($MTC){
                         return $MTC->sum('total_biaya_laporan_periode');
                     });
 
-                    $UMUM = LaporanGajiLain::whereIn('category_bagian', [12])->get();
+                    $UMUM = LaporanGajiLain::whereIn('category_bagian', [12])->whereNull('ended_at')->get();
                     $totalUMUM = collect([$UMUM])->sum(function ($um){
                         return $um->sum('total_biaya_laporan_periode');
                     });
 
-                    $qcl = laporangajilain::whereIn('category_bagian', [13])->get();
+                    $qcl = laporangajilain::whereIn('category_bagian', [13])->whereNull('ended_at')->get();
                     $totalQC = collect([$qcl])->sum(function ($qc){
                         return $qc->sum('total_biaya_laporan_periode');
                     });
 
-                    $LaporanBiayaAdministrasiUmum = LaporanBiayaAdministrasiUmum::whereIn('company_parent_id', [3])->get();
+                    $LaporanBiayaAdministrasiUmum = LaporanBiayaAdministrasiUmum::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
                     $totalbau = collect([$LaporanBiayaAdministrasiUmum])->sum(function ($bau){
                         return $bau->sum('total_biaya_lp_adm');
                     });
 
-                    $penyusutan = Penyusutan::whereIn('company_parent_id', [3])->get();
+                    $penyusutan = Penyusutan::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
                     $totalpeny = collect([$penyusutan])->sum(function ($bau){
                         return $bau->sum('penyusutan_perbulan');
                     });
 
-                    $labor = Labor::whereIn('company_parent_id', [3])->get();
+                    $labor = Labor::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
                     $totallbr = collect([$labor])->sum(function ($bau){
                         return $bau->sum('total_biaya');
                     });
 
-                    $mtc = RptMtc::whereIn('company_parent_id', [3])->get();
+                    $mtc = RptMtc::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
                     $totalmtmct = collect([$mtc])->sum(function ($bau){
                         return $bau->sum('total_biaya_perbulan');
                     });
