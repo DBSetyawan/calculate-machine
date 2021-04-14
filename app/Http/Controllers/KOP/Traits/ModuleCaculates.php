@@ -1176,14 +1176,98 @@ trait ModuleCaculates {
                                 $ambil_listrik_dari_mesin = $ambillistrik[$i];
                                 // $ambil_listrik_dari_mesin = $tmp->mesin->MesinListrikPerjamTo->persen;
                                 // dd( $tmp['code_mesin']);
-                                $mtcsfe = RptMtc::where('code_mesin', $tmp['code_mesin'])->first()->total_biaya_perbulan;
-                                $penyusutanfe = Penyusutan::where('code_mesin', $tmp['code_mesin'])->first()->penyusutan_perbulan;
+                                $mtcsfe = isset(RptMtc::where('code_mesin', $tmp['code_mesin'])->first()->total_biaya_perbulan) ? RptMtc::where('code_mesin', $tmp['code_mesin'])->first()->total_biaya_perbulan : null;
+                                $penyusutanfe = isset(Penyusutan::where('code_mesin', $tmp['code_mesin'])->first()->penyusutan_perbulan) ? Penyusutan::where('code_mesin', $tmp['code_mesin'])->first()->penyusutan_perbulan : null;
             
-                                $labors = Labor::where('code_mesin', $tmp['code_mesin'])->first()->total_biaya;
-            
+                                $labors = isset(Labor::where('code_mesin', $tmp['code_mesin'])->first()->total_biaya) ? Labor::where('code_mesin', $tmp['code_mesin'])->first()->total_biaya : null;
+
                                 $penyusutanfefn = Penyusutan::where('code_mesin', $tmp['code_mesin'])->first();
                                 $laborsfn = Labor::where('code_mesin', $tmp['code_mesin'])->first();
                                 $mtcsfefn =  RptMtc::where('code_mesin', $tmp['code_mesin'])->first();
+
+                                if(is_null($labors)){
+                                    
+                                    $dt = [
+                                        'message'  => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, biaya total dari beberapa master masih ada yang belum diisi di Master Labor'),
+                                        'alertype' => 'error'
+                                    ];
+
+                                    return response()->json([
+                                        'data' => [
+                                            'message' => $dt,
+                                        ],
+                                    ], 500);
+                                }
+
+                                if(is_null($mtcsfe)){
+                                    
+                                    $dt = [
+                                        'message'  => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, biaya total dari beberapa master masih ada yang belum diisi di Master MTC / Biaya Produksi Lain'),
+                                        'alertype' => 'error'
+                                    ];
+
+                                    return response()->json([
+                                        'data' => [
+                                            'message' => $dt,
+                                        ],
+                                    ], 500);
+                                }
+
+                                if(is_null($penyusutanfe)){
+                                    
+                                    $dt = [
+                                        'message'  => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, biaya total dari beberapa master masih ada yang belum diisi di Master Penyusutan'),
+                                        'alertype' => 'error'
+                                    ];
+
+                                    return response()->json([
+                                        'data' => [
+                                            'message' => $dt,
+                                        ],
+                                    ], 500);
+                                }
+
+                                if(is_null($penyusutanfefn)){
+                                    
+                                    $dt = [
+                                        'message'  => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, mesin tidak dapat kami temukan dipenyusutan.'),
+                                        'alertype' => 'error'
+                                    ];
+
+                                    return response()->json([
+                                        'data' => [
+                                            'message' => $dt,
+                                        ],
+                                    ], 500);
+                                }
+
+                                if(is_null($laborsfn)){
+                                    
+                                    $dt = [
+                                        'message'  => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, mesin tidak dapat kami temukan dilabor.'),
+                                        'alertype' => 'error'
+                                    ];
+
+                                    return response()->json([
+                                        'data' => [
+                                            'message' => $dt,
+                                        ],
+                                    ], 500);
+                                }
+
+                                if(is_null($mtcsfefn)){
+                                    
+                                    $dt = [
+                                        'message'  => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, mesin tidak dapat kami temukan dimtc.'),
+                                        'alertype' => 'error'
+                                    ];
+
+                                    return response()->json([
+                                        'data' => [
+                                            'message' => $dt,
+                                        ],
+                                    ], 500);
+                                }
 
                                         $laporangajilain_bagianREPRO = LaporanGajiLain::whereIn('category_bagian', [9])->get();
                                         $totalREPRO = collect([$laporangajilain_bagianREPRO])->sum(function ($REPRO){

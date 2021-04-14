@@ -598,7 +598,7 @@
                                         Swal.fire({
                                             icon: "info",
                                             title: 'Machine update!',
-                                            html: "Mesin tidak dapat ditambahkan karena transaksi mesin sudah diclosed(locked) & mesin distatus open sudah ada.",
+                                            html: "Mesin berhasil diupdate, sistem mendeteksi transaksi mesin sudah diclosed(locked) & mesin distatus open sudah ada.",
                                             timer: 11500,
                                             allowOutsideClick: false,
                                             allowEscapeKey: false,

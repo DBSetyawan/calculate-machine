@@ -70,54 +70,93 @@ class VoyagerPenyusutanController extends BaseVoyagerBaseController Implements P
 
     if($r->setTo["isConfirmed"] == "true"){
 
-        $simpanBiayaListrik = Penyusutan::create($TotalakumulasibiayaPenyusutan);
+        /**
+         * @flow ask, ketika transaksi close.. ingin menambahkan mesin yang sebelumnya pernah dibuat. tapi dengan status transaksinya close. can create or update ?
+         */
+        $datacheckclosemachinesame = Penyusutan::where('code_mesin', $r->code_mesin)->whereNotNull('ended_at')->first();
+        $datacheckclosemachinesamechecked = Penyusutan::where('code_mesin', $r->code_mesin)->whereNull('ended_at')->first();
 
-        if(!empty($simpanBiayaListrik) && $simpanBiayaListrik != [] && $simpanBiayaListrik != null){
+        if(is_null($datacheckclosemachinesame)){
 
-            $total_listrik = Penyusutan::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
-
-            $total_penyusutan_perbulan = collect([$total_listrik])->sum(function ($biaya){
-                return sprintf("%.5f", $biaya->sum('penyusutan_perbulan'));
-            });
+            $simpanBiayaListrik = Penyusutan::UpdateOrCreate(['code_mesin' => (Int) $r->code_mesin], $TotalakumulasibiayaPenyusutan);
             
-            $columns = [
-                'updated_at',
-                'created_at', 
-                'created_by', 
-                'company_parent_id',
-                'category_id',
-                'code_mesin',
-                'table_column',
-                'history_latest',
-                'before',
-            ];
-            
-            $datas[] = [
-                'updated_at' => Carbon::now(),
-                'created_at' => Carbon::now(),
-                'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
-                'company_parent_id' => $r->company_parent_id,
-                'category_id' => $r->category_bagian,
-                'code_mesin' => $r->code_mesin,
-                'table_column' => 'penyusutan.added.event',
-                'history_latest' => ceil($total_penyusutan_perbulan),
-                'before' => ceil($total_penyusutan_perbulan),
-            ];
+            return response()->json(
+                [
+                    'isConfirmed' => $r->setTo["isConfirmed"],
+                    'is_tr_conn' => __('dx')
+                ]
+            );
 
-        $PenyusutanTotal = new PenyusutanTotal;
-            
-            $batchSize = 500;
-                
-        $result = \Batch::insert($PenyusutanTotal, $columns, $datas, $batchSize);
+        } 
 
-        }
-                return response()->json(
-                    [
-                        'd' => $simpanBiayaListrik->penyusutan_perbulan,
-                        'isConfirmed' => $r->setTo["isConfirmed"],
+        // $simpanBiayaListrik = Penyusutan::create($TotalakumulasibiayaPenyusutan);
 
-                    ]
-                );
+           if($datacheckclosemachinesame){
+
+                if(!is_null($datacheckclosemachinesamechecked)){
+
+                    $simpanBiayaListrik = Penyusutan::UpdateOrCreate(['code_mesin' => (Int) $r->code_mesin], $TotalakumulasibiayaPenyusutan);
+                    
+                    return response()->json(
+                        [
+                            'isConfirmed' => $r->setTo["isConfirmed"],
+                            'is_tr_conn' => __('xc'),
+
+                        ]
+                    );
+                } 
+                    else {
+
+                        $simpanBiayaListrik = Penyusutan::create($TotalakumulasibiayaPenyusutan);
+
+                        $total_listrik = Penyusutan::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
+
+                        $total_penyusutan_perbulan = collect([$total_listrik])->sum(function ($biaya){
+                            return sprintf("%.5f", $biaya->sum('penyusutan_perbulan'));
+                        });
+                        
+                        $columns = [
+                            'updated_at',
+                            'created_at', 
+                            'created_by', 
+                            'company_parent_id',
+                            'category_id',
+                            'code_mesin',
+                            'table_column',
+                            'history_latest',
+                            'before',
+                        ];
+                        
+                        $datas[] = [
+                            'updated_at' => Carbon::now(),
+                            'created_at' => Carbon::now(),
+                            'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                            'company_parent_id' => $r->company_parent_id,
+                            'category_id' => $r->category_bagian,
+                            'code_mesin' => $r->code_mesin,
+                            'table_column' => 'penyusutan.added.event',
+                            'history_latest' => ceil($total_penyusutan_perbulan),
+                            'before' => ceil($total_penyusutan_perbulan),
+                        ];
+
+                    $PenyusutanTotal = new PenyusutanTotal;
+                        
+                        $batchSize = 500;
+                            
+                    $result = \Batch::insert($PenyusutanTotal, $columns, $datas, $batchSize);
+
+                        return response()->json(
+                            [
+                                'd' => $simpanBiayaListrik->penyusutan_perbulan,
+                                'isConfirmed' => $r->setTo["isConfirmed"],
+    
+                            ]
+                        );
+                                
+                    }
+                    
+                }
+           
             } 
                 else {
                 

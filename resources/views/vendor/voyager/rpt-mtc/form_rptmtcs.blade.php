@@ -190,7 +190,16 @@
         </form>
     </div>
 @stop
+@inject('mtc','App\ListrikOutput')
 
+@php
+   $mtcs = $mtc::whereIn('company_parent_id', [3])->get();
+
+$tcostmonth = collect([$mtcs])->sum(function ($biaya){
+    return sprintf("%.5f", $biaya->sum('output_perjam'));
+});
+
+@endphp
 @section('javascript')
     <script>
 
@@ -252,15 +261,18 @@
             $("#category_bagian").hide();
             $("#perjam").hide();
             $('#code_mesin').on('change', function() {
-
                 GetFullDataMesin(this.value).then(function(results){
+                    
+                        let ttl = (results.detail.capacity_mch / "{{ $tcostmonth }}");
                         $("#code_mesin_id").val(results.detail.id);
                         $("#company_display").val(results.detail.company_to.company_name);
                         $("#company_parent_id").val(results.detail.company_to.id);
                         $("#category_bagian_display").val(results.detail.kbagian_to.nama_bagian);
                         $("#category_bagian").val(results.detail.kbagian_to.id);
-                        $("#perjam_display").val(Math.round(parseFloat(results.detail.mesin_listrik_perjam_to.persen).toFixed(2) * 100)+"%");
-                        $("#perjam").val(results.detail.mesin_listrik_perjam_to.persen);
+                        // $("#perjam_display").val(ttl);
+                        $("#perjam_display").val(Math.round(parseFloat(ttl).toFixed(2) * 100)+"%");
+                        // $("#perjam").val(results.detail.mesin_listrik_perjam_to.persen);
+                        $("#perjam").val(ttl);
                                 
                     });
                 });
@@ -335,16 +347,98 @@
 
                                 if(data.isConfirmed == "true"){
 
-                                    let curr = '{{ route("voyager.rpt-mtc.index") }}';
-                                        setTimeout(function(){ 
-                                            window.location.href = curr;
-                                        }, 4000);
+                                    // let curr = '{{ route("voyager.rpt-mtc.index") }}';
+                                    //     setTimeout(function(){ 
+                                    //         window.location.href = curr;
+                                    //     }, 4000);
 
-                                        pesanStore.fire({
-                                            icon: 'success',
-                                            title: 'Data berhasil disimpan..'
-                                        })
+                                    //     pesanStore.fire({
+                                    //         icon: 'success',
+                                    //         title: 'Data berhasil disimpan..'
+                                    //     })
 
+                                    let timerInterval
+
+                                        if(data.is_tr_conn == 'dx'){
+
+                                            Swal.fire({
+                                                icon: "info",
+                                                title: 'Machine update!',
+                                                html: "Mesin berhasil diupdate & check kembali mesin jika ada mesin sudah ada dengan status closed, mesin tidak dapat ditambahkan lagi atau direkalkulasi kembali (locked).",
+                                                timer: 11500,
+                                                allowOutsideClick: false,
+                                                allowEscapeKey: false,
+                                                stopKeydownPropagation: true,
+                                                timerProgressBar: true,
+                                            didOpen: () => {
+                                                Swal.showLoading()
+                                                timerInterval = setInterval(() => {
+                                                const content = Swal.getContent()
+                                                if (content) {
+                                                    const b = content.querySelector('b')
+                                                    if (b) {
+                                                    b.textContent = Swal.getTimerLeft()
+                                                    }
+                                                }
+                                                }, 100)
+                                            },
+                                            willClose: () => {
+                                                clearInterval(timerInterval)
+                                            }
+                                            }).then((result) => {
+                                                if (result.dismiss === Swal.DismissReason.timer) {
+                                                    console.log('I was closed by the timer')
+                                                }
+                                            })
+
+                                        } else if(data.is_tr_conn == 'xc'){
+
+                                            Swal.fire({
+                                                icon: "info",
+                                                title: 'Machine update!',
+                                                html: "Mesin berhasil diupdate, sistem mendeteksi transaksi mesin sudah diclosed(locked) & mesin distatus open sudah ada.",
+                                                timer: 11500,
+                                                allowOutsideClick: false,
+                                                allowEscapeKey: false,
+                                                stopKeydownPropagation: true,
+                                                timerProgressBar: true,
+                                            didOpen: () => {
+                                                Swal.showLoading()
+                                                timerInterval = setInterval(() => {
+                                                const content = Swal.getContent()
+                                                if (content) {
+                                                    const b = content.querySelector('b')
+                                                    if (b) {
+                                                    b.textContent = Swal.getTimerLeft()
+                                                    }
+                                                }
+                                                }, 100)
+                                            },
+                                            willClose: () => {
+                                                clearInterval(timerInterval)
+                                            }
+                                            }).then((result) => {
+                                                if (result.dismiss === Swal.DismissReason.timer) {
+                                                    console.log('I was closed by the timer')
+                                                }
+                                            })
+                                        } else if(data.is_tr_conn == 'sc') {
+
+                                            pesanStore.fire({
+                                                icon: 'success',
+                                                title: 'Data passed'
+                                            })
+
+                                            let curr = '{{ route("voyager.rpt-mtc.index") }}';
+                                            setTimeout(function(){ 
+                                                window.location.href = curr;
+                                            }, 5000);
+                                        } else {
+                                            pesanStore.fire({
+                                                icon: 'danger',
+                                                title: 'error tidak diketahui..'
+                                            })
+                                        }
 
                                     // return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya MTC berhasil diakumulasi & disimpan', 'success')
                                 }

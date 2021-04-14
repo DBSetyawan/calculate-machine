@@ -780,8 +780,8 @@ class VoyagerMachineController extends BaseVoyagerBaseController
             'group_mesin' => $request->group_mesin_id,
             'company_id' => $request->company_id,
             'category_bagian' => $request->category_bagian_id,
-            // 'listrik_perjam_id' => $request->listrik_perjam_id
-            'capacity_mch' => $request->listrik_perjam_id
+            'listrik_perjam_id' => $request->listrik_perjam_id,
+            'capacity_mch' => $request->capacity_mch
             
         ];
 

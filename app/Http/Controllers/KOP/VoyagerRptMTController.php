@@ -111,59 +111,94 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
 
     if($r->setTo["isConfirmed"] == "true"){
 
-        $simpanDataRpTMTC = RptMtc::create($data_response_rptmtc);
+        /**
+         * @flow ask, ketika transaksi close.. ingin menambahkan mesin yang sebelumnya pernah dibuat. tapi dengan status transaksinya close. can create or update ?
+         */
+        $datacheckclosemachinesame = RptMtc::where('code_mesin', $r->code_mesin)->whereNotNull('ended_at')->first();
+        $datacheckclosemachinesamechecked = RptMtc::where('code_mesin', $r->code_mesin)->whereNull('ended_at')->first();
 
-        if(!empty($simpanDataRpTMTC) && $simpanDataRpTMTC != [] && $simpanDataRpTMTC != null){
+        if(is_null($datacheckclosemachinesame)){
 
-            $t = RptMtc::whereIn('company_parent_id', [3])->get();
-
-            $total_penyusutan_perbulan = collect([$t])->sum(function ($biaya){
-                return sprintf("%.5f", $biaya->sum('total_biaya_perbulan'));
-            });
-                
-            $columns = [
-                'updated_at',
-                'created_at', 
-                'created_by', 
-                'company_parent_id',
-                'categori_id',
-                'code_mesin',
-                'table_coloumn',
-                'history_latest',
-                'before',
-            ];
+            $simpanDataRpTMTC = RptMtc::UpdateOrCreate(['code_mesin' => (Int) $r->code_mesin], $data_response_rptmtc);
             
-            $datas[] = [
-                'updated_at' => Carbon::now(),
-                'created_at' => Carbon::now(),
-                'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
-                'company_parent_id' => $r->company_parent_id,
-                'categori_id' => $r->category_bagian,
-                'code_mesin' => $r->code_mesin,
-                'table_coloumn' => 'rpt_mtc.added.event',
-                'history_latest' => ceil($TotalBiayaPenyusutanMaintenance),
-                'before' => ceil($TotalBiayaPenyusutanMaintenance),
-            ];
-
-        $RPTMtcTotal = new RPTMtcTotal;
-            
-            $batchSize = 500;
-                
-        $result = \Batch::insert($RPTMtcTotal, $columns, $datas, $batchSize);
-
             return response()->json(
                 [
-                    'rata_rata_perbaikan_perbulan' => $simpanDataRpTMTC->rata_rata_perbaikan_perbulan,
-                    'rata_rata_sparepart_perbulan' => $simpanDataRpTMTC->rata_rata_sparepart_perbulan,
                     'isConfirmed' => $r->setTo["isConfirmed"],
-                    'biaya_produksi_lain' => $simpanDataRpTMTC->biaya_produksi_lain,
-                    'total_biaya_perbulan' => $simpanDataRpTMTC->total_biaya_perbulan,
+                    'is_tr_conn' => __('dx')
                 ]
             );
 
-        }
+        } 
 
-    } else {
+        if($datacheckclosemachinesame){
+
+            if(!is_null($datacheckclosemachinesamechecked)){
+
+                $simpanDataRpTMTC = RptMtc::UpdateOrCreate(['code_mesin' => (Int) $r->code_mesin], $data_response_rptmtc);
+                
+                return response()->json(
+                    [
+                        'isConfirmed' => $r->setTo["isConfirmed"],
+                        'is_tr_conn' => __('xc'),
+
+                    ]
+                );
+            } 
+                else {
+                
+            $simpanDataRpTMTC = RptMtc::create($data_response_rptmtc);
+
+            // if(!empty($simpanDataRpTMTC) && $simpanDataRpTMTC != [] && $simpanDataRpTMTC != null){
+
+                $t = RptMtc::whereIn('company_parent_id', [3])->get();
+
+                $total_penyusutan_perbulan = collect([$t])->sum(function ($biaya){
+                    return sprintf("%.5f", $biaya->sum('total_biaya_perbulan'));
+                });
+                    
+                $columns = [
+                    'updated_at',
+                    'created_at', 
+                    'created_by', 
+                    'company_parent_id',
+                    'categori_id',
+                    'code_mesin',
+                    'table_coloumn',
+                    'history_latest',
+                    'before',
+                ];
+                
+                $datas[] = [
+                    'updated_at' => Carbon::now(),
+                    'created_at' => Carbon::now(),
+                    'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                    'company_parent_id' => $r->company_parent_id,
+                    'categori_id' => $r->category_bagian,
+                    'code_mesin' => $r->code_mesin,
+                    'table_coloumn' => 'rpt_mtc.added.event',
+                    'history_latest' => ceil($TotalBiayaPenyusutanMaintenance),
+                    'before' => ceil($TotalBiayaPenyusutanMaintenance),
+                ];
+
+            $RPTMtcTotal = new RPTMtcTotal;
+                
+                $batchSize = 500;
+                    
+                $result = \Batch::insert($RPTMtcTotal, $columns, $datas, $batchSize);
+
+                    return response()->json(
+                        [
+                            'rata_rata_perbaikan_perbulan' => $simpanDataRpTMTC->rata_rata_perbaikan_perbulan,
+                            'rata_rata_sparepart_perbulan' => $simpanDataRpTMTC->rata_rata_sparepart_perbulan,
+                            'isConfirmed' => $r->setTo["isConfirmed"],
+                            'biaya_produksi_lain' => $simpanDataRpTMTC->biaya_produksi_lain,
+                            'total_biaya_perbulan' => $simpanDataRpTMTC->total_biaya_perbulan,
+                        ]
+                    );
+                }
+            }
+
+        } else {
 
             return response()->json(
                 [

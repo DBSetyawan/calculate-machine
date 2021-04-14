@@ -115,7 +115,7 @@
 
                                     <div class="form-group">
                                         <label for="url_instagram">Jumlah Karyawan SPV</label>
-                                        <input type="text" class="form-control removeLater" id="supervisor" name="supervisor" placeholder="Jumlah Supervisor">
+                                        <input type="text" class="form-control removeLater" disabled="true" value="1" id="supervisor" name="supervisor" placeholder="Jumlah Supervisor">
                                     </div>
                                     <div class="form-group">
                                         <label for="url_instagram">Jumlah Karyawan Operator</label>
@@ -286,6 +286,7 @@
 
         $("#company_display").prop("disabled", true);
         $("#perjam_display").prop("disabled", true);
+        $("#supervisor").prop("disabled", true);
         $("#shift_display").prop("disabled", true);
         $("#category_bagian_display").prop("disabled", true);
 
@@ -299,6 +300,10 @@
                 GetFullDataMesin(this.value).then(function(results){
 
                         if(isEmpty(results.detail) == false){
+
+                            if(results.detail.length > 0){
+                                $(".notification").remove();
+                            }
 
                             results.detail.forEach(function(eval) {
                             // for(x = 0; x < results.detail.length; x++) {
@@ -321,7 +326,7 @@
      
                                 // elements.push(element);
                                 $(".notification").each(function(){
-                                    
+
                                     $(this).append(element);
 
                                 });
@@ -421,18 +426,101 @@
 
                                     if(data.isConfirmed == "true"){
 
-                                        let curr = '{{ route("voyager.labor.index") }}';
-                                        setTimeout(function(){ 
-                                            window.location.href = curr;
-                                        }, 4000);
+                                        // let curr = '{{ route("voyager.labor.index") }}';
+                                        // setTimeout(function(){ 
+                                        //     window.location.href = curr;
+                                        // }, 4000);
                                         
-                                        // return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya labor berhasil diakumulasi & disimpan', 'success')
-                                        pesanStore.fire({
-                                            icon: 'success',
-                                            title: 'Data berhasil disimpan..'
-                                        })
-                                    }
+                                        // // return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya labor berhasil diakumulasi & disimpan', 'success')
+                                        // pesanStore.fire({
+                                        //     icon: 'success',
+                                        //     title: 'Data berhasil disimpan..'
+                                        // })
 
+                                        let timerInterval
+
+                                            if(data.is_tr_conn == 'dx'){
+
+                                                Swal.fire({
+                                                    icon: "info",
+                                                    title: 'Machine update!',
+                                                    html: "Mesin berhasil diupdate & check kembali mesin jika ada mesin sudah ada dengan status closed, mesin tidak dapat ditambahkan lagi atau direkalkulasi kembali (locked).",
+                                                    timer: 11500,
+                                                    allowOutsideClick: false,
+                                                    allowEscapeKey: false,
+                                                    stopKeydownPropagation: true,
+                                                    timerProgressBar: true,
+                                                didOpen: () => {
+                                                    Swal.showLoading()
+                                                    timerInterval = setInterval(() => {
+                                                    const content = Swal.getContent()
+                                                    if (content) {
+                                                        const b = content.querySelector('b')
+                                                        if (b) {
+                                                        b.textContent = Swal.getTimerLeft()
+                                                        }
+                                                    }
+                                                    }, 100)
+                                                },
+                                                willClose: () => {
+                                                    clearInterval(timerInterval)
+                                                }
+                                                }).then((result) => {
+                                                    if (result.dismiss === Swal.DismissReason.timer) {
+                                                        console.log('I was closed by the timer')
+                                                    }
+                                                })
+
+                                            } else if(data.is_tr_conn == 'xc'){
+
+                                                Swal.fire({
+                                                    icon: "info",
+                                                    title: 'Machine update!',
+                                                    html: "Mesin berhasil diupdate, sistem mendeteksi transaksi mesin sudah diclosed(locked) & mesin distatus open sudah ada.",
+                                                    timer: 11500,
+                                                    allowOutsideClick: false,
+                                                    allowEscapeKey: false,
+                                                    stopKeydownPropagation: true,
+                                                    timerProgressBar: true,
+                                                didOpen: () => {
+                                                    Swal.showLoading()
+                                                    timerInterval = setInterval(() => {
+                                                    const content = Swal.getContent()
+                                                    if (content) {
+                                                        const b = content.querySelector('b')
+                                                        if (b) {
+                                                        b.textContent = Swal.getTimerLeft()
+                                                        }
+                                                    }
+                                                    }, 100)
+                                                },
+                                                willClose: () => {
+                                                    clearInterval(timerInterval)
+                                                }
+                                                }).then((result) => {
+                                                    if (result.dismiss === Swal.DismissReason.timer) {
+                                                        console.log('I was closed by the timer')
+                                                    }
+                                                })
+                                            } else if(data.is_tr_conn == 'sc') {
+
+                                                pesanStore.fire({
+                                                    icon: 'success',
+                                                    title: 'Data passed'
+                                                })
+
+                                                let curr = '{{ route("voyager.labor.index") }}';
+                                                setTimeout(function(){ 
+                                                    window.location.href = curr;
+                                                }, 5000);
+                                            } else {
+                                                pesanStore.fire({
+                                                    icon: 'danger',
+                                                    title: 'error tidak diketahui..'
+                                                }
+                                            )
+                                        }
+                                    }
                                 }
                             );
                         }
