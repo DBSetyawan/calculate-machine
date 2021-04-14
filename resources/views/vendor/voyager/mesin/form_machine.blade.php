@@ -835,11 +835,12 @@
 
                 Swal.fire({
                     title: 'Informasi',
+                    icon: 'question',
                     text: 'Apakah anda ingin menyimpan data mesin & hitung biaya?',
                     showDenyButton: true,
                     showCancelButton: true,
-                    confirmButtonText: `ya, simpan hasil pengakumulasian penyusutan & simpan mesin sekarang ✓`,
-                    denyButtonText: `belum, masih mengakumulasi biaya penyusutan & jangan simpan mesin & penyusutannya`,
+                    confirmButtonText: `ya, simpan hasil pengakumulasian penyusutan & MTC & simpan mesin sekarang ✓`,
+                    denyButtonText: `belum, masih mengakumulasi biaya penyusutan & jangan simpan mesin & penyusutannya & MTC / Biaya Produksi Lain`,
                     cancelButtonText: `jangan simpan mesin dan mengakumulasi mesin`,
                     }).then((result) => {
                     if (result.isConfirmed) {
@@ -951,17 +952,16 @@
                        .done(function(data) {
                         $("#total_perbulan_p").val("Rp "+formatCurrency(Math.round(data.rumusTotalPenyusutan)));
 
-$("#rtrtperbaikanperbulan").val("Rp "+formatCurrency(Math.round(data.rata_rata_perbaikan_perbulan)));
-$("#sparepart_perbulan").val("Rp "+formatCurrency(Math.round(data.rata_rata_sparepart_perbulan)));
-$("#biaya_produksi_lain").val("Rp "+formatCurrency(Math.round(data.biaya_produksi_lain)));
-$("#total_biaya_perbulan").val("Rp "+formatCurrency(Math.round(data.total_biaya_perbulan)));
+                        $("#rtrtperbaikanperbulan").val("Rp "+formatCurrency(Math.round(data.rata_rata_perbaikan_perbulan)));
+                        $("#sparepart_perbulan").val("Rp "+formatCurrency(Math.round(data.rata_rata_sparepart_perbulan)));
+                        $("#biaya_produksi_lain").val("Rp "+formatCurrency(Math.round(data.biaya_produksi_lain)));
+                        $("#total_biaya_perbulan").val("Rp "+formatCurrency(Math.round(data.total_biaya_perbulan)));
 
-
-// $("#gaji_supervisor").val("Rp "+formatCurrency(Math.round(data.spv)));
-//     $("#gaji_operator").val("Rp "+formatCurrency(Math.round(data.opt)));
-//     $("#gaji_helper").val("Rp "+formatCurrency(Math.round(data.help)));
-//     $("#total_perbulan_ps").val("Rp "+formatCurrency(Math.round(data.total_biaya_levels)));
-//     $("#jumlah_mesin_yangditangani").val("Sebanyak : "+data.mesin+" mesin");
+                        // $("#gaji_supervisor").val("Rp "+formatCurrency(Math.round(data.spv)));
+                        // $("#gaji_operator").val("Rp "+formatCurrency(Math.round(data.opt)));
+                        // $("#gaji_helper").val("Rp "+formatCurrency(Math.round(data.help)));
+                        // $("#total_perbulan_ps").val("Rp "+formatCurrency(Math.round(data.total_biaya_levels)));
+                        // $("#jumlah_mesin_yangditangani").val("Sebanyak : "+data.mesin+" mesin");
 
    
                                if(data.isDenied == "true"){

@@ -198,45 +198,71 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
         if($r->setTo["isConfirmed"] == "true"){
 
-            $simpanBiayaListrik = Listrik::UpdateOrCreate(['code_mesin' => (Int) $r->code_mesin], $Totalakumulasibiayalistrik);
-            $old = Listrik::where('code_mesin', (Int) $r->code_mesin)->first();
+            /**
+             * @flow ask, ketika transaksi close.. ingin menambahkan mesin yang sebelumnya pernah dibuat. tapi dengan status transaksinya close. can create or update ?
+             */
+            $datacheckclosemachinesame = Listrik::where('code_mesin', $r->code_mesin)->whereNotNull('ended_at')->first();
+            $datacheckclosemachinesamechecked = Listrik::where('code_mesin', $r->code_mesin)->whereNull('ended_at')->first();
 
-            if(!empty($simpanBiayaListrik) && $simpanBiayaListrik != [] && $simpanBiayaListrik != null){
+            if(is_null($datacheckclosemachinesame)){
 
-                    $total_listrik = Listrik::whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
+                $simpanBiayaListrik = Listrik::UpdateOrCreate(['code_mesin' => (Int) $r->code_mesin], $Totalakumulasibiayalistrik);
+                
+                return response()->json(
+                    [
+                        'isConfirmed' => $r->setTo["isConfirmed"],
+                        'is_tr_conn' => __('dx')
+                    ]
+                );
 
-                    if(!empty($total_listrik) || $total_listrik != null || $total_listrik != []){
+            } 
+                
+            if($datacheckclosemachinesame){
 
-                        $t = collect([$total_listrik])->sum(function ($biaya){
-                            return sprintf("%.5f", $biaya->sum('ncost_bulan_plus_adm'));
-                        });
-        
-                    } else {
-                        $t = 0;
-                    }
+                if(!is_null($datacheckclosemachinesamechecked)){
+
+                    $simpanBiayaListrik = Listrik::UpdateOrCreate(['code_mesin' => (Int) $r->code_mesin], $Totalakumulasibiayalistrik);
+                    
+                    return response()->json(
+                        [
+                            'isConfirmed' => $r->setTo["isConfirmed"],
+                            'is_tr_conn' => __('xc'),
+
+                        ]
+                    );
+                } 
+                    else {
+
+                    $dtlistrikbulks = [
+                        'shift' => $r->shift,
+                        'begin_at' => Carbon::now(),
+                        'listrikperjam' => $r->perjam,
+                        'ampere' => $r->ampere,
+                        'voltase' =>  $r->voltase,
+                        'company_parent_id' => $r->company_parent_id,
+                        'code_mesin' => (Int) $r->code_mesin,
+                        'code_listrik' => RumusListrik::generateIDListrik(), //not 
+                        'group_mesin' => $r->group_mesin,
+                        'LWBP_perminggu' => $rumusLWBPerminggu,
+                        'WBP_perminggu' => $rumusWBPerminggu,
+                        'nilai_cost_bulan' => (float) $totalbiayacostperbulan,
+                        'category_bagian' => $r->category_bagian,
+                        'LWBP_faktorkali' => $r->faktor_kali_lwbp,
+                        'WBP_faktorkali' => $r->faktor_kali_wbp,
+                        'total_biaya_listrik' => $totalbiayaListrikperminggu,
+                        'assumptionshift_lwbp1' => $r->sht_1lwbp,
+                        'assumptionshift_lwbp2' => $r->sht_2lwbp,
+                        'assumptionshift_lwbp3' => $r->sht_3lwbp,
+                        'assumption_itval_perminggu' => $r->intervalnumeric,
+                        'assumption_wbp' => $r->wbp
+                    ];
+                        
+                    $simpanBiayaListrik = Listrik::create($dtlistrikbulks);
+
+                $old = Listrik::where('code_mesin', (Int) $r->code_mesin)->first();
 
                     $tb = app(Listrik::class)->getTable();
 
-                // $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $old, $Totalakumulasibiayalistrik);
-            
-                //     foreach ($md as $key => $val) {
-            
-                //             $pf[] = [
-                //                 'updated_at' => Carbon::now(),
-                //                 'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
-                //                 'company_id' => $r->company_parent_id,
-                //                 'category_id' => $r->category_bagian,
-                //                 'group_mesin' => $r->group_mesin,
-                //                 'code_mesin' => $r->code_mesin,
-                //                 'table_column' => $val['tabel_kolom'],
-                //                 'history_latest' => ceil($val['history']),
-                //                 'before' => ceil($val['dari']),
-                //             ];
-                            
-                //         }
-                        
-                //     HistoryLogRecalculate::insert($pf);
-                    
                 $this->resetFunc($old, $Totalakumulasibiayalistrik, $r->company_parent_id,  $r->category_bagian, $r->group_mesin, $r->code_mesin);
 
                 $columns = [
@@ -264,26 +290,27 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                     'history_latest' => ceil($costADM),
                     'before' => ceil($costADM),
                 ];
-                
 
-            $ListrikInstance = new HistoryLogRecalculate;
-                
-                $batchSize = 500;
+                $ListrikInstance = new HistoryLogRecalculate;
                     
-            $result = \Batch::insert($ListrikInstance, $columns, $datas, $batchSize);
+                    $batchSize = 500;
+                        
+                $result = \Batch::insert($ListrikInstance, $columns, $datas, $batchSize);
 
-            return response()->json(
-                [
-                    'isConfirmed' => $r->setTo["isConfirmed"],
-                    'lwbp_perminggu' => $rumusLWBPerminggu,
-                    'wbp_perminggu' => ceil($rumusWBPerminggu),
-                    'total_biaya_listrik_perminggu' => $totalbiayaListrikperminggu,
-                    'totalbiaya_cost_perbulan' => $totalbiayacostperbulan,
-                    'persen_cost_perbulan' => $simpanBiayaListrik->persen_cost_perbulan,
-                    'ncost_bulan_plus_adm' => $simpanBiayaListrik->ncost_bulan_plus_adm,
-                    'testCase' => $Totalakumulasibiayalistrik
-                ]
-            );
+                return response()->json(
+                    [
+                        'isConfirmed' => $r->setTo["isConfirmed"],
+                        'is_tr_conn' => __('sc'),
+                        'lwbp_perminggu' => $rumusLWBPerminggu,
+                        'wbp_perminggu' => ceil($rumusWBPerminggu),
+                        'total_biaya_listrik_perminggu' => $totalbiayaListrikperminggu,
+                        'totalbiaya_cost_perbulan' => $totalbiayacostperbulan,
+                        'persen_cost_perbulan' => $simpanBiayaListrik->persen_cost_perbulan,
+                        'ncost_bulan_plus_adm' => $simpanBiayaListrik->ncost_bulan_plus_adm,
+                        'testCase' => $Totalakumulasibiayalistrik
+                    ]
+                );
+            }
 
         }
 
@@ -511,7 +538,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                     AllRecalculate::UpdateOrCreate(['code_mesin' => $datatemp->code_mesin], $data);
 
                     /**
-                     * @disabled trigger after transfer data.
+                     * @disabled trigger after transfer data 1min/25sec.
                      */
                     //app(VoyagerTotalKalkulasiController::class)->recalculate();
                     

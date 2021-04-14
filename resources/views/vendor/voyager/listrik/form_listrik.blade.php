@@ -463,15 +463,13 @@
             }
 
             if( this.value == "1"){
-            shift1()
+                shift1()
             } 
             if( this.value == "2"){
                 shift2()
-
             } 
             if( this.value == "3"){
                 shift3()
-
             }
             
         });
@@ -489,7 +487,6 @@
         $(document).ready(function() {
 
             $('form').submit(function(event) {
-
 
                 var formData = {
 
@@ -515,6 +512,7 @@
 
                 Swal.fire({
                     title: 'Informasi',
+                    icon: "question",
                     text: 'Apakah anda ingin mengakumulasi biaya perhitugan listrik sekarang?',
                     showDenyButton: true,
                     showCancelButton: true,
@@ -522,7 +520,6 @@
                     cancelButtonText: `jangan diakumulasi & simpan data`,
                     denyButtonText: `belum, masih mengakumulasi biaya & jangan simpan`,
                     }).then((result) => {
-                    /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
 
                         const pesanStore = Swal.mixin({
@@ -560,21 +557,91 @@
                             $("#wbp_").val(Math.round(data.wbp_perminggu)); 
                             $("#totalbiayalstrk_").val("Rp "+formatCurrency(Math.round(data.total_biaya_listrik_perminggu)));
                             $("#totalcostperbulan").val("Rp "+formatCurrency(Math.round(data.totalbiaya_cost_perbulan)));
-                        
+                            
                             if(data.isConfirmed == "true"){
+                                let timerInterval
 
-                                let curr = '{{ route("voyager.listrik.index") }}';
-                                setTimeout(function(){ 
-                                    window.location.href = curr;
-                                }, 4000);
+                                    if(data.is_tr_conn == 'dx'){
 
-                                    // return Swal.fire('Data diakumulasi ulang.', 'Perhitugan akumulasi biaya listrik berhasil diakumulasi & disimpan', 'success')
-                                    pesanStore.fire({
-                                        icon: 'success',
-                                        title: 'Data berhasil disimpan..'
-                                    })
+                                        Swal.fire({
+                                            icon: "info",
+                                            title: 'Machine update!',
+                                            html: "Mesin berhasil diupdate & check kembali mesin jika ada mesin sudah ada dengan status closed, mesin tidak dapat ditambahkan lagi atau direkalkulasi kembali (locked).",
+                                            timer: 11500,
+                                            allowOutsideClick: false,
+                                            allowEscapeKey: false,
+                                            stopKeydownPropagation: true,
+                                            timerProgressBar: true,
+                                        didOpen: () => {
+                                            Swal.showLoading()
+                                            timerInterval = setInterval(() => {
+                                            const content = Swal.getContent()
+                                            if (content) {
+                                                const b = content.querySelector('b')
+                                                if (b) {
+                                                b.textContent = Swal.getTimerLeft()
+                                                }
+                                            }
+                                            }, 100)
+                                        },
+                                        willClose: () => {
+                                            clearInterval(timerInterval)
+                                        }
+                                        }).then((result) => {
+                                            if (result.dismiss === Swal.DismissReason.timer) {
+                                                console.log('I was closed by the timer')
+                                            }
+                                        })
+
+                                    } else if(data.is_tr_conn == 'xc'){
+
+                                        Swal.fire({
+                                            icon: "info",
+                                            title: 'Machine update!',
+                                            html: "Mesin tidak dapat ditambahkan karena transaksi mesin sudah diclosed(locked) & mesin distatus open sudah ada.",
+                                            timer: 11500,
+                                            allowOutsideClick: false,
+                                            allowEscapeKey: false,
+                                            stopKeydownPropagation: true,
+                                            timerProgressBar: true,
+                                        didOpen: () => {
+                                            Swal.showLoading()
+                                            timerInterval = setInterval(() => {
+                                            const content = Swal.getContent()
+                                            if (content) {
+                                                const b = content.querySelector('b')
+                                                if (b) {
+                                                b.textContent = Swal.getTimerLeft()
+                                                }
+                                            }
+                                            }, 100)
+                                        },
+                                        willClose: () => {
+                                            clearInterval(timerInterval)
+                                        }
+                                        }).then((result) => {
+                                            if (result.dismiss === Swal.DismissReason.timer) {
+                                                console.log('I was closed by the timer')
+                                            }
+                                        })
+                                    } else if(data.is_tr_conn == 'sc') {
+
+                                        pesanStore.fire({
+                                            icon: 'success',
+                                            title: 'Data passed'
+                                        })
+
+                                        let curr = '{{ route("voyager.listrik.index") }}';
+                                        setTimeout(function(){ 
+                                            window.location.href = curr;
+                                        }, 5000);
+                                    } else {
+                                        pesanStore.fire({
+                                            icon: 'danger',
+                                            title: 'error tidak diketahui..'
+                                        })
+                                    }
                                 }
-
                               
                             }
                         );
