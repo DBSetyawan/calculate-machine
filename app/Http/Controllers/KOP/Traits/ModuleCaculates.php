@@ -1092,8 +1092,11 @@ trait ModuleCaculates {
 
                     for ($i=0; $i < count($allrecalculate->toArray()); $i++){
 
-                        $ambillistrik[] = isset($allrecalculate->toArray()[$i]['mesin']['mesin_listrik_perjam_to']['persen']) 
-                        ? $allrecalculate->toArray()[$i]['mesin']['mesin_listrik_perjam_to']['persen']
+                        // $ambillistrik[] = isset($allrecalculate->toArray()[$i]['mesin']['mesin_listrik_perjam_to']['persen']) 
+                        // ? $allrecalculate->toArray()[$i]['mesin']['mesin_listrik_perjam_to']['persen']
+                        // : "kosong";
+                        $ambillistrik[] = isset($allrecalculate->toArray()[$i]['mesin']['capacity_mch']) 
+                        ? $allrecalculate->toArray()[$i]['mesin']['capacity_mch']
                         : "kosong";
 
                         $checklab[] = isset(Labor::where('code_mesin', $allrecalculate->toArray()[$i]['code_mesin'])->first()->total_biaya) 
