@@ -448,6 +448,9 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
         ]);
     }
 
+    /**
+     * @unavaiblable
+     */
     public function EventChangeGajiLain(Request $request)
     {
         try {
@@ -537,40 +540,36 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
 
             // $jumlah_total = $this->RumusTotalLaporanGajiLain($request->input('tahun1'), $request->input('tahun2'), $request->input('tahun3'));
 
-          
-                // $update_data_lp_gaji_lain = tap(DB::table('laporan_gaji_lain')->where('id', $request->input('id')))
-                // ->update( [
-                //     'tahun1' => $request->input('tahun1'),
-                //     'tahun2' => $request->input('tahun2'),
-                //     'tahun3' => $request->input('tahun3'),
-                //     'total_biaya_laporan_periode' => $jumlah_total
-                // ])
-                // ->first();
-
-            LaporanGajiLain::whereIn('category_bagian', [$request->input('category_bagian')])->whereNull('ended_at')->get();
+            LaporanGajiLain::whereIn('category_bagian', [$request->input('category_bagian')])->get();
             $data = LaporanGajiLain::whereNull('ended_at')->where('id',(Int) $request->input('id'))->first();
+            $AllRecalculateInstance = new AllRecalculate;
+            $rcl = AllRecalculate::whereNull('ended_at')->get();
+
+            $jumlah_total = $this->RumusTotalLaporanGajiLain($request->tahun1, $request->tahun2, $request->tahun3);
             $datax = [
+                'company_parent_id' => (Int)$request->company_parent_id,
+                'category_bagian' => (Int)$request->category_bagian,
                 'tahun1' => $data->tahun1,
                 'tahun2' => $data->tahun2,
                 'tahun3' => $data->tahun3,
                 'total_biaya_laporan_periode' => $data->total_biaya_laporan_periode
             ];
 
-            // dd($datax);
+            tap(DB::table('laporan_gaji_lain')->where('id', $request->input('id')))
+                ->update( [
+                    'company_parent_id' => (Int)$request->company_parent_id,
+                    'category_bagian' => (Int)$request->category_bagian,
+                    'tahun1' => $request->input('tahun1'),
+                    'tahun2' => $request->input('tahun2'),
+                    'tahun3' => $request->input('tahun3'),
+                    'total_biaya_laporan_periode' => $jumlah_total
+                ])
+                ->first();
           
-            $LaporanGajiLain = LaporanGajiLain::whereNull('ended_at')->get();
-            $AllRecalculateInstance = new AllRecalculate;
-            $rcl = AllRecalculate::whereNull('ended_at')->get();
+         
+
     
             foreach($rcl as $indexs => $dtlg){
-    
-                $jumlah_total = $this->RumusTotalLaporanGajiLain($request->tahun1, $request->tahun2, $request->tahun3);
-                $result_gaji_labor = [
-                    'tahun1' => (Int)$request->tahun1,
-                    'tahun2' =>(Int) $request->tahun2,
-                    'tahun3' => (Int)$request->tahun3,
-                    'total_biaya_laporan_periode' => $jumlah_total
-                ];
     
                 $dpney[] = [
                     'code_mesin' => $dtlg->code_mesin,
@@ -584,7 +583,14 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
             }
 
             $tb = app(LaporanGajiLain::class)->getTable();
-
+            $result_gaji_labor = [
+                'company_parent_id' => (Int)$request->company_parent_id,
+                'category_bagian' => (Int)$request->category_bagian,
+                'tahun1' => (Int)$request->tahun1,
+                'tahun2' =>(Int) $request->tahun2,
+                'tahun3' => (Int)$request->tahun3,
+                'total_biaya_laporan_periode' => $jumlah_total
+            ];
             $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $datax, $result_gaji_labor);
     
             foreach ($md as $key => $val) {

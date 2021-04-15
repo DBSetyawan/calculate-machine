@@ -252,7 +252,7 @@
                 </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary pull-right save">Hitung master listik</button>&nbsp;
+            <button type="submit" class="btn btn-primary pull-right save">Kalkulasi Listrik</button>&nbsp;
 
             {{-- <button type="submit" class="btn btn-primary pull-right save">
                 Add Donation
@@ -560,7 +560,7 @@
                             
                             if(data.isConfirmed == "true"){
                                 let timerInterval
-
+                                let curr = '{{ route("voyager.listrik.index") }}';
                                     if(data.is_tr_conn == 'dx'){
 
                                         Swal.fire({
@@ -573,7 +573,7 @@
                                             stopKeydownPropagation: true,
                                             timerProgressBar: true,
                                         didOpen: () => {
-                                            Swal.showLoading()
+                                            // Swal.showLoading()
                                             timerInterval = setInterval(() => {
                                             const content = Swal.getContent()
                                             if (content) {
@@ -603,9 +603,9 @@
                                             allowOutsideClick: false,
                                             allowEscapeKey: false,
                                             stopKeydownPropagation: true,
-                                            timerProgressBar: true,
+                                            timerProgressBar: false,
                                         didOpen: () => {
-                                            Swal.showLoading()
+                                            // Swal.showLoading()
                                             timerInterval = setInterval(() => {
                                             const content = Swal.getContent()
                                             if (content) {
@@ -631,7 +631,6 @@
                                             title: 'Data passed'
                                         })
 
-                                        let curr = '{{ route("voyager.listrik.index") }}';
                                         setTimeout(function(){ 
                                             window.location.href = curr;
                                         }, 5000);

@@ -211,11 +211,18 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                 return response()->json(
                     [
                         'isConfirmed' => $r->setTo["isConfirmed"],
-                        'is_tr_conn' => __('dx')
+                        'is_tr_conn' => __('dx'),
+                        'lwbp_perminggu' => $rumusLWBPerminggu,
+                        'wbp_perminggu' => ceil($rumusWBPerminggu),
+                        'total_biaya_listrik_perminggu' => $totalbiayaListrikperminggu,
+                        'totalbiaya_cost_perbulan' => $totalbiayacostperbulan,
+                        'persen_cost_perbulan' => $simpanBiayaListrik->persen_cost_perbulan,
+                        'ncost_bulan_plus_adm' => $simpanBiayaListrik->ncost_bulan_plus_adm,
+                        'testCase' => $Totalakumulasibiayalistrik
                     ]
                 );
 
-            } 
+            }
                 
             if($datacheckclosemachinesame){
 

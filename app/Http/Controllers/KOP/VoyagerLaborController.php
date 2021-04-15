@@ -88,6 +88,8 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
                         
                         $LaborInstance = New Labor;
 
+                        $lbrmachine[] = $val;
+
                             $result_gaji_labor = [
                                 'company_parent_id' => $r->company_parent_id,
                                 'category_bagian' => $r->category_bagian,
@@ -140,62 +142,72 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
                     
                             \Batch::update($LaborInstance, $dt, $index);
 
-                            // $simpanDataBiayaListrik = Labor::UpdateOrCreate(['code_mesin' => $val], $result_gaji_labor);
+                            $simpanDataBiayaListrik = Labor::UpdateOrCreate(['code_mesin' => $val], $result_gaji_labor);
+                        }
 
                              /**
                              * @flow ask, ketika transaksi close.. ingin menambahkan mesin yang sebelumnya pernah dibuat. tapi dengan status transaksinya close. can create or update ?
                              */
-                            $datacheckclosemachinesame = Labor::where('code_mesin', $val[$idx])->whereNotNull('ended_at')->get();
-                            $datacheckclosemachinesamechecked = Labor::where('code_mesin', $val[$idx])->whereNull('ended_at')->get();
+                            $datacheckclosemachinesame = Labor::where('code_mesin', $lbrmachine)->whereNotNull('ended_at')->first();
+                            $datacheckclosemachinesamechecked = Labor::where('code_mesin', $lbrmachine)->whereNull('ended_at')->first();
 
                                 if(is_null($datacheckclosemachinesame)){
 
-                                    $simpanBiayaListrik = Labor::UpdateOrCreate(['code_mesin' => (Int) $val], $dt);
-                                    
                                     return response()->json(
                                         [
+                                            'set_default_mesin' => $r->jumlah_penangganan_mesin,
+                                            'spv' => $simpanDataBiayaListrik->supervisor_level3,
+                                            'opt' => $simpanDataBiayaListrik->operator_level2,
+                                            'help' => $biayahelper,
+                                            'is_tr_conn' => __('dx'),
+                                            'mesin' => count($r->data),
                                             'isConfirmed' => $r->setTo["isConfirmed"],
-                                            'is_tr_conn' => __('dx')
+                                            'total_biaya_levels' => $total_biaya_upah_perbulan,
                                         ]
                                     );
 
                                 } 
 
-                if($datacheckclosemachinesame){
+                                if($datacheckclosemachinesame){
 
-                    if(!is_null($datacheckclosemachinesamechecked)){
-    
-                        $simpanBiayaListrik = Labor::UpdateOrCreate(['code_mesin' => (Int) $val], $result_gaji_labor);
-                        
-                        return response()->json(
-                            [
-                                'isConfirmed' => $r->setTo["isConfirmed"],
-                                'is_tr_conn' => __('xc'),
-    
-                            ]
-                        );
-                    } 
-                        else {
+                                    if(!is_null($datacheckclosemachinesamechecked)){
+                                        
+                                    // $simpanDataBiayaListrik = Labor::create($result_gaji_labor);
+                                    $simpanDataBiayaListrik = Labor::UpdateOrCreate(['code_mesin' => $val], $result_gaji_labor);
 
-                            $simpanDataBiayaListrik = Labor::create($result_gaji_labor);
+                                            return response()->json(
+                                                [
+                                                    'set_default_mesin' => $r->jumlah_penangganan_mesin,
+                                                    'spv' => $simpanDataBiayaListrik->supervisor_level3,
+                                                    'opt' => $simpanDataBiayaListrik->operator_level2,
+                                                    'help' => $biayahelper,
+                                                    'is_tr_conn' => __('xc'),
+                                                    'mesin' => count($r->data),
+                                                    'isConfirmed' => $r->setTo["isConfirmed"],
+                                                    'total_biaya_levels' => $total_biaya_upah_perbulan,
+                                                ]
+                                            );
+                                        } 
+                                            else {
 
-                        return response()->json(
-                            [
-                                'set_default_mesin' => $r->jumlah_penangganan_mesin,
-                                'spv' => $simpanDataBiayaListrik->supervisor_level3,
-                                'opt' => $simpanDataBiayaListrik->operator_level2,
-                                'help' => $biayahelper,
-                                'mesin' => count($r->data),
-                                'isConfirmed' => $r->setTo["isConfirmed"],
-                                'total_biaya_levels' => $total_biaya_upah_perbulan,
-                            ]
-                    );
+                                                // $simpanDataBiayaListrik = Labor::create($result_gaji_labor);
+                                                $simpanDataBiayaListrik = Labor::UpdateOrCreate(['code_mesin' => $val], $result_gaji_labor);
 
-                }
-            }
+                                            return response()->json(
+                                                [
+                                                    'set_default_mesin' => $r->jumlah_penangganan_mesin,
+                                                    'spv' => $simpanDataBiayaListrik->supervisor_level3,
+                                                    'opt' => $simpanDataBiayaListrik->operator_level2,
+                                                    'help' => $biayahelper,
+                                                    'mesin' => count($r->data),
+                                                    'isConfirmed' => $r->setTo["isConfirmed"],
+                                                    'total_biaya_levels' => $total_biaya_upah_perbulan,
+                                                ]
+                                        );
 
-                    }
+                                    }
 
+                            }
 
                         $columns = [
                             'updated_at',
@@ -211,11 +223,9 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
 
                     $LaborTotal = new LaborTotal;
                     
-                    $batchSize = 500;
+                $batchSize = 500;
                         
-      $result = \Batch::insert($LaborTotal, $columns, $datas, $batchSize);
-
-       
+            $result = \Batch::insert($LaborTotal, $columns, $datas, $batchSize);
        
         } else {
             
