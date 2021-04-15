@@ -21,9 +21,9 @@ class RumusLaporanGajiLain {
         }else if(is_null($tahun3) ){
             $intervaltahun = ( ( $tahun2 + $tahun1 ) / 24); // 2/1
 
-        }else if(is_null($tahun3) && is_null($tahun2) ){ // 3 /2
+        }else if(is_null($tahun3) && is_null($tahun2) ){ // 3 /2 on
             $intervaltahun = ( ( $tahun1 ) / 12);
-        }else if(is_null($tahun3) && is_null($tahun1)){ // 3 /1
+        }else if(is_null($tahun3) && is_null($tahun1)){ // 3 /1 on
             $intervaltahun = ( ( $tahun2 ) / 12);
         }else if(is_null($tahun1) && is_null($tahun2)){ // 1 /2
             $intervaltahun = ( ( $tahun3 ) / 12);
@@ -32,7 +32,7 @@ class RumusLaporanGajiLain {
             $intervaltahun = 0;
         } else {
 
-            $intervaltahun = ( ( $tahun2 + $tahun1 + $tahun3) / 36);
+            $intervaltahun = ( ( $tahun2 + $tahun1 + $tahun3) / 36); // on
         }
 
         return $intervaltahun;
