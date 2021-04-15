@@ -14,7 +14,28 @@ class RumusLaporanGajiLain {
 
     public static function JumlahLaporanGajiLain($tahun1, $tahun2, $tahun3) {
 
-        return ( ($tahun1 + $tahun2 + $tahun3) / 36);
+        if(is_null($tahun1) ){
+            $intervaltahun = ( ( $tahun2 + $tahun3 ) / 24); // 3/2
+        }else if(is_null($tahun2) ){
+            $intervaltahun = ( ( $tahun1 + $tahun3 ) / 24); // 1/3
+        }else if(is_null($tahun3) ){
+            $intervaltahun = ( ( $tahun2 + $tahun1 ) / 24); // 2/1
+
+        }else if(is_null($tahun3) && is_null($tahun2) ){ // 3 /2
+            $intervaltahun = ( ( $tahun1 ) / 12);
+        }else if(is_null($tahun3) && is_null($tahun1)){ // 3 /1
+            $intervaltahun = ( ( $tahun2 ) / 12);
+        }else if(is_null($tahun1) && is_null($tahun2)){ // 1 /2
+            $intervaltahun = ( ( $tahun3 ) / 12);
+
+        }else if(is_null($tahun1) && is_null($tahun2) && is_null($tahun3)){
+            $intervaltahun = 0;
+        } else {
+
+            $intervaltahun = ( ( $tahun2 + $tahun1 + $tahun3) / 36);
+        }
+
+        return $intervaltahun;
 
     }
 

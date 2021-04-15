@@ -348,7 +348,9 @@ class VoyagerMachineController extends BaseVoyagerBaseController
 
         if($r->setTo["isConfirmed"] == "true"){
 
-            $simpanMesin = Mesin::create($datamesin);
+            // $simpanMesin = Mesin::create($datamesin);
+            $simpanMesin = Mesin::UpdateOrCreate($datamesin);
+
             $dtmesin = Mesin::whereIn('id',[$simpanMesin->id])->first();
             
             if(!empty($simpanMesin) && $simpanMesin != [] && $simpanMesin != null){

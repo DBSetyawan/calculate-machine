@@ -55,6 +55,8 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
          */
         $total_biaya_upah_perbulan = $this->RumusTotalLaporanGajiLain($r->tahun1, $r->tahun2, $r->tahun3);
 
+        // dd($total_biaya_upah_perbulan);
+
         $result_gaji_labor = [
             'company_parent_id' => $r->company_parent_id,
             'category_bagian' => $r->category_bagian,
