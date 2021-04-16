@@ -319,10 +319,10 @@
                                 $("#shift_display").val("Mesin shift ke "+eval.asumsi_to.shift);
                                 $("#shift").val(eval.asumsi_to.shift);
                                 // $('#mesinttid').append(elements);
-                                // var clone = $("#mesinttid").clone(); // making zeh' clones!
+                                // var clone = $("#mesinttid").clone();
                                 // $("#mesinttid").remove();   
                                 // $("body").append(clone);  
-                                $("<div/>").addClass("notification").appendTo(".mesinch");         // original is gone
+                                $("<div/>").addClass("notification").appendTo(".mesinch");
      
                                 // elements.push(element);
                                 $(".notification").each(function(){

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\KOP\Helpers;
 
 use App\RptMtc;
 use Carbon\Carbon;
+use App\ListrikOutput;
 use Illuminate\Support\Str;
 
 class RumusRptMaintenance {
@@ -25,6 +26,13 @@ class RumusRptMaintenance {
 
     public static function HitungTotalBiayaProduksi($total_account_RPTMTC, $listrikoutputperjam, $category_bagian) {
 
+        $ListrikOutput = new ListrikOutput;
+        $total_listrik = $ListrikOutput->get();
+
+        $total_output_output_perjam = collect([$total_listrik])->sum(function ($region){
+                return $region->sum('output_perjam');
+            });
+
         if(in_array($category_bagian, [1])){
 
             $hitungBiayaProduksiLain = 0;
@@ -32,7 +40,7 @@ class RumusRptMaintenance {
         }   
             else {
 
-                $hitungBiayaProduksiLain = ( $total_account_RPTMTC * $listrikoutputperjam );
+                $hitungBiayaProduksiLain = ( $total_output_output_perjam * $listrikoutputperjam );
 
             }
 
