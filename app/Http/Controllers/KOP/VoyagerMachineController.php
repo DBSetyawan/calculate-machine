@@ -242,7 +242,7 @@ class VoyagerMachineController extends BaseVoyagerBaseController
     public function detaillocationID(Request $req){
 
         /**group mesin dari kategori bagian id
-         * revisi mengganti 
+         * rev v4. 
          */
         // $mesin = Mesin::whereIn('category_bagian_id', [(Int) $req->ctgId])->where('on_off', '!=', 0)
         $mesin = LocationMachine::whereIn('id', [$req->group_mesin_id])->first();
@@ -252,12 +252,46 @@ class VoyagerMachineController extends BaseVoyagerBaseController
     public function detailcodemesin(Request $req){
 
         /**group mesin dari kategori bagian id
-         * revisi mengganti 
+         * rev v5. 
          */
         // $mesin = Mesin::whereIn('category_bagian_id', [(Int) $req->ctgId])->where('on_off', '!=', 0)
-        $mesin = Mesin::whereIn('group_mesin_id', [$req->group_mesin_id])->where('on_off', '!=', 0)
-        ->with('KbagianTo','CompanyTo','GroupMesinTo','MesinListrikPerjamTo','AsumsiTo')->get();
-        return response()->json(['detail'=> $mesin]);
+
+        /**
+         * @id 5 === group potong / Cetak
+         */
+        if($req->grp_id == "5"){
+
+            $mesin = Mesin::whereIn('group_mesin_id', [2])->where('on_off', '!=', 0)
+            ->with('KbagianTo','CompanyTo','GroupMesinTo','MesinListrikPerjamTo','AsumsiTo')->get();
+            return response()->json(['detail'=> $mesin]);
+
+        }
+
+        /**
+         * @id 5 === group hotprint / plong / sortir
+         */
+        if($req->grp_id == "7"){
+            $mesin = Mesin::whereIn('group_mesin_id', [5, 6, 7])->where('on_off', '!=', 0)
+            ->with('KbagianTo','CompanyTo','GroupMesinTo','MesinListrikPerjamTo','AsumsiTo')->get();
+            return response()->json(['detail'=> $mesin]);
+        }
+
+        /**
+         * @id 5 === group lem
+         */
+        if($req->grp_id == "4"){
+            $mesin = Mesin::whereIn('group_mesin_id', [8])->where('on_off', '!=', 0)
+            ->with('KbagianTo','CompanyTo','GroupMesinTo','MesinListrikPerjamTo','AsumsiTo')->get();
+            return response()->json(['detail'=> $mesin]);
+        }
+        
+        /**
+         * @global var show group machine. 
+         * [] hide functionallity.
+         */
+        // $mesin = Mesin::whereIn('group_mesin_id', [$req->group_mesin_id])->where('on_off', '!=', 0)
+        // ->with('KbagianTo','CompanyTo','GroupMesinTo','MesinListrikPerjamTo','AsumsiTo')->get();
+        // return response()->json(['detail'=> $mesin]);
     }
 
     public function detailcodemesinOn(Request $req){

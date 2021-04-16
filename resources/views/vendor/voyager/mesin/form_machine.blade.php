@@ -513,31 +513,31 @@
                                                 {{-- </div> --}}
             
                                                 <div class="form-group">
-                                                    <label for="url_instagram">Perbaikan tahun 1</label>
-                                                    <input type="text" class="form-control removeLater" id="perbaikan_tahun1" name="perbaikan_tahun1" placeholder="Biaya perbaikan tahun 1">
+                                                    <label for="url_instagram">Perbaikan periode 1</label>
+                                                    <input type="text" class="form-control removeLater" id="perbaikan_tahun1" name="perbaikan_tahun1" placeholder="Biaya perbaikan periode 1">
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="url_instagram">Perbaikan tahun 2</label>
-                                                    <input type="text" class="form-control removeLater" id="perbaikan_tahun2" name="perbaikan_tahun2" placeholder="Biaya perbaikan tahun 2">
-                                                </div>
-            
-                                                <div class="form-group">
-                                                    <label for="url_instagram">Perbaikan tahun 3</label>
-                                                    <input type="text" class="form-control removeLater" id="perbaikan_tahun3" name="perbaikan_tahun3" placeholder="Biaya perbaikan tahun 3">
+                                                    <label for="url_instagram">Perbaikan periode 2</label>
+                                                    <input type="text" class="form-control removeLater" id="perbaikan_tahun2" name="perbaikan_tahun2" placeholder="Biaya perbaikan periode 2">
                                                 </div>
             
                                                 <div class="form-group">
-                                                    <label for="url_instagram">Sparepart tahun 1</label>
-                                                    <input type="text" class="form-control removeLater" id="sparepart_tahun1" name="sparepart_tahun1" placeholder="Biaya perbaikan tahun 1">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="url_instagram">Sparepart tahun 2</label>
-                                                    <input type="text" class="form-control removeLater" id="sparepart_tahun2" name="sparepart_tahun2" placeholder="Biaya perbaikan tahun 2">
+                                                    <label for="url_instagram">Perbaikan periode 3</label>
+                                                    <input type="text" class="form-control removeLater" id="perbaikan_tahun3" name="perbaikan_tahun3" placeholder="Biaya perbaikan periode 3">
                                                 </div>
             
                                                 <div class="form-group">
-                                                    <label for="url_instagram">Sparepart tahun 3</label>
-                                                    <input type="text" class="form-control removeLater" id="sparepart_tahun3" name="sparepart_tahun3" placeholder="Biaya perbaikan tahun 3">
+                                                    <label for="url_instagram">Sparepart periode 1</label>
+                                                    <input type="text" class="form-control removeLater" id="sparepart_tahun1" name="sparepart_tahun1" placeholder="Biaya perbaikan periode 1">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="url_instagram">Sparepart periode 2</label>
+                                                    <input type="text" class="form-control removeLater" id="sparepart_tahun2" name="sparepart_tahun2" placeholder="Biaya perbaikan periode 2">
+                                                </div>
+            
+                                                <div class="form-group">
+                                                    <label for="url_instagram">Sparepart periode 3</label>
+                                                    <input type="text" class="form-control removeLater" id="sparepart_tahun3" name="sparepart_tahun3" placeholder="Biaya perbaikan periode 3">
                                                 </div>
             
                                             </div>

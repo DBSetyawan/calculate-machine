@@ -26,16 +26,22 @@
                         <div class="panel panel-bordered">
                             <div class="panel-body">
                                 <div class="contanier">
-
-                                  
                                     <div class="form-group">
+                                        <label for="program_id">Detail group</label>
+                                            <select class="form-control select2" id="grp_id" name="grp_id" required>
+                                                <option value="5"> Group Potong / Cetak</option>
+                                                <option value="7"> Groupp Hotprint / Plong / Sortir</option>
+                                                <option value="4"> Groupp Lem</option>
+                                            </select>
+                                    </div>
+                                    {{-- <div class="form-group">
                                         <label for="program_id">Group mesin</label>
                                             <select class="form-control select2" id="group_mesin_id" name="group_mesin_id" required>
-                                            @foreach ($Lb8KategoriMesin as $m)
+                                            {{-- @foreach ($Lb8KategoriMesin as $m)
                                         <option value="{{$m->id}}">{{$m->nama_kategori_mesin}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                            @endforeach --}}
+                                        {{-- </select>
+                                    </div> --}}
                                     <input type="text" class="form-control hidden" id="code_mesin_id" name="code_mesin_id" placeholder="">
 
                                     {{-- <div class="form-group">
@@ -47,12 +53,12 @@
                                         </select>
                                     </div>
                              --}}
-                             <div class="form-group">
+                             {{-- <div class="form-group">
                                 <label for="company">kategori bagian group mesin</label>
                                 <input type="text" class="form-control" id="category_bagian_display" name="category_bagian_display" placeholder="">
                                 <input type="text" class="form-control" id="category_bagian_id" name="category_bagian_id" placeholder="">
 
-                            </div>
+                            </div> --}}
                              <div class="form-group">
                                 <label for="company">Company</label>
                                 <input type="text" class="form-control" id="company_display" name="company_display" placeholder="">
@@ -230,11 +236,11 @@
             }
         })
 
-        async function GetFullDataMesin(mesinid
+        async function GetFullDataMesin(grp_id
                 ) {
                     let datamesinid = {
-                            // ctgId:mesinid,
-                            group_mesin_id:mesinid
+                            grp_id:grp_id
+                            // group_mesin_id:mesinid
                         }
                 const apiDataMesin = "{{ route('detail.data.mesin') }}";
                         
@@ -296,8 +302,8 @@
             $("#code_mesin_id").val($(this).val());
         });
 
-            $('#group_mesin_id').on('change', function() {
-                GetFullDataMesin(this.value).then(function(results){
+            $('#grp_id').on('change', function() {
+                GetFullDataMesin($("#grp_id").val()).then(function(results){
 
                         if(isEmpty(results.detail) == false){
 
@@ -366,6 +372,7 @@
                     'helper'                : $('input[name=helper]').val(),
                     'supporting'            : $('input[name=supporting]').val(),
                     'jumlah_penangganan_mesin' : $('input[name=jumlah_penangganan_mesin]').val(),
+                    'jml_mesin_mch'     : $('select[name=grp_id]').val(),
 
                 };
 
