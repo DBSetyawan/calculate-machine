@@ -40,6 +40,18 @@
                                         <input type="text" class="form-control removeLater" id="nama_biaya" name="nama_biaya" placeholder="Nominal biaya lain">
                                     </div>
                                     <div class="form-group">
+                                        <label for="oprd">Open periode </label>
+                                        <select class="form-control select2" id="oprd" name="oprd" required>
+                                        {{-- <option value="1"> Periode 1</option>
+                                        <option value="2"> Periode 2</option>
+                                        <option value="3"> Periode 3</option> --}}
+                                        <option value="4"> All Periode</option>
+                                        <option value="5"> Open periode 1 / 3</option>
+                                        {{-- <option value="6"> Open periode 2 / 1</option> --}}
+                                        <option value="7"> Open periode 3 / 2</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="url_instagram">Biaya periode 1</label>
                                         <input type="text" class="form-control removeLater" id="tahun1" name="tahun1" placeholder="Nominal periode 1">
                                     </div>
@@ -224,6 +236,112 @@
             });
 
         });
+
+        function open_periode1(){
+
+            $("#tahun1").show();
+            $("#tahun2").hide();
+            $("#tahun3").hide();
+
+            $("#tahun2").val('');
+            $("#tahun3").val('');
+
+        }
+
+            function open_periode4(){
+
+                $("#tahun3").show();
+                $("#tahun2").show();
+                $("#tahun1").show();
+
+            }
+
+            function close_periode4(){
+
+                $("#tahun3").hide();
+                $("#tahun2").hide();
+                $("#tahun1").hide();
+
+                $("#tahun1").val('');
+                $("#tahun2").val('');
+                $("#tahun3").val('');
+
+            }
+
+            function open_periode2(){
+
+                $("#tahun2").show();
+                $("#tahun3").hide();
+                $("#tahun1").hide();
+
+                $("#tahun3").val('');
+                $("#tahun1").val('');
+
+            }
+
+            function open_periode3(){
+
+                $("#tahun3").show();
+                $("#tahun2").hide();
+                $("#tahun1").hide();
+
+                $("#tahun2").val('');
+                $("#tahun1").val('');
+
+            }
+
+            function open_periode31(){
+
+                $("#tahun3").show();
+                $("#tahun2").hide();
+                $("#tahun1").show();
+
+                $("#tahun2").val('');
+
+            }
+
+            function open_periode21(){
+
+                $("#tahun3").hide();
+                $("#tahun2").show();
+                $("#tahun1").show();
+
+                $("#tahun3").val('');
+
+            }
+
+            function open_periode32(){
+
+                $("#tahun3").show();
+                $("#tahun2").show();
+                $("#tahun1").hide();
+
+                $("#tahun1").val('');
+
+
+            }
+
+            $('#oprd').on('change', function() {
+
+                if(this.value == 1){
+                    open_periode1();
+                }else if(this.value == 2){
+                    open_periode2();
+                }else if(this.value == 3){
+                    open_periode3();
+                }else if(this.value == 4){
+                    open_periode4();
+                }else if(this.value == 5){
+                    open_periode31();
+                }else if(this.value == 6){
+                    open_periode21();
+                }else if(this.value == 7){
+                    open_periode32();
+                } else {
+                    close_periode4();
+                }
+
+            });
 
     </script>
 @stop
