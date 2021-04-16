@@ -20,6 +20,7 @@ use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
+use App\Http\Controllers\KOP\VoyagerListrikController;
 use App\Http\Controllers\KOP\Service\BiayaAdministrasiUmumInterface;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 use App\Http\Controllers\KOP\Helpers\RumusBiayaAdministrasiUmum as HelpersRumusBiayaAdministrasiUmum;
@@ -315,7 +316,7 @@ class VoyagerLocationMachineController extends BaseVoyagerBaseController
         $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
         event(new BreadDataUpdated($dataType, $data));
-
+        app(VoyagerListrikController::class)->resetListrikForLwbpWbp();
 
         if (auth()->user()->can('browse', app($dataType->model_name))) {
             $redirect = redirect()->route("voyager.{$dataType->slug}.index");

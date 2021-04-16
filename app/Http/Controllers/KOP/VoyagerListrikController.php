@@ -707,6 +707,27 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
     }
 
+    public function resetListrikForLwbpWbp(){
+
+        $alllstrk = Listrik::whereNull('ended_at')->get();
+        $ListrikInstance = New Listrik;
+
+        foreach($alllstrk as $tmp){
+
+            $data[] = [
+                'id' => $tmp->id,
+                'persen_cost_perbulan' => NULL,
+                'ncost_bulan_plus_adm' => NULL
+            ];
+
+            $index = 'id';
+
+            \Batch::update($ListrikInstance, $data, $index);
+        
+        }
+
+    }
+
     /**
      * @bulk update all dokumen listrik
      */
