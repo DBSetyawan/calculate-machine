@@ -55,8 +55,6 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
          */
         $total_biaya_upah_perbulan = $this->RumusTotalLaporanGajiLain($r->tahun1, $r->tahun2, $r->tahun3);
 
-        // dd($total_biaya_upah_perbulan);
-
         $result_gaji_labor = [
             'company_parent_id' => $r->company_parent_id,
             'category_bagian' => $r->category_bagian,
@@ -64,6 +62,9 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
             'tahun1' => $r->tahun1,
             'tahun2' => $r->tahun2,
             'tahun3' => $r->tahun3,
+            'thn_periode_1' => Carbon::parse($r->tahun_periode_vr1)->format('Y'),
+            'thn_periode_2' => Carbon::parse($r->tahun_periode_vr2)->format('Y'),
+            'thn_periode_3' => Carbon::parse($r->tahun_periode_vr3)->format('Y'),
             'total_biaya_laporan_periode' => $total_biaya_upah_perbulan,
             'code_rpt_gaji_lain' => HelpersLaporanGajiLain::generateIDLaporanGajiLain(),
         ];

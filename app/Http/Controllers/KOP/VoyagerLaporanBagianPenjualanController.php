@@ -45,6 +45,9 @@ class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController 
             'tahun1' => $r->tahun1,
             'tahun2' => $r->tahun2,
             'tahun3' => $r->tahun3,
+            'thn_periode_1' => Carbon::parse($r->tahun_periode_vr1)->format('Y'),
+            'thn_periode_2' => Carbon::parse($r->tahun_periode_vr2)->format('Y'),
+            'thn_periode_3' => Carbon::parse($r->tahun_periode_vr3)->format('Y'),
             'biaya_perbulan_bag_penjualan' => $total_biaya_upah_lpperbulan,
         ];
 

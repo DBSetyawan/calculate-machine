@@ -435,14 +435,23 @@
                                                                 <span class="badge badge-success">opened</span>
                                                         @endif
                                                     @endif
-                                                    @if ($row->display_name == '2018')
+                                                    @if ($row->display_name == 'SALDO AP1')
                                                     <span>{{ "Rp " . number_format($data->tahun1,0,',','.') }}</span>
                                                     @endif
-                                                    @if ($row->display_name == '2019')
+                                                    @if ($row->display_name == 'PERIODE TAHUN 1')
+                                                    <span class="badge badge-info">{{ $data->thn_periode_1 }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'SALDO AP2')
                                                     <span>{{ "Rp " . number_format($data->tahun2,0,',','.') }}</span>
                                                     @endif
-                                                    @if ($row->display_name == '2020')
+                                                    @if ($row->display_name == 'PERIODE TAHUN 2')
+                                                    <span class="badge badge-info">{{ $data->thn_periode_2 }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'SALDO AP3')
                                                     <span>{{ "Rp " . number_format($data->tahun3,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'PERIODE TAHUN 3')
+                                                    <span class="badge badge-info">{{ $data->thn_periode_3 }}</span>
                                                     @endif
                                                     @if ($row->display_name == 'Total Biaya / periode')
                                                     <span>{{ "Rp " . number_format($data->total_biaya_laporan_periode,0,',','.') }}</span>

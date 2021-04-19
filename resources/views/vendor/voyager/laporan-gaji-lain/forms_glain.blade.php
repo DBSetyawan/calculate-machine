@@ -92,22 +92,27 @@
                                         <option value="2"> Periode 2</option>
                                         <option value="3"> Periode 3</option> --}}
                                         <option value="4"> All Periode</option>
-                                        <option value="5"> Open periode 1 / 3</option>
+                                        <option value="1"> Open periode 1</option>
+                                        <option value="6"> Open periode 1 / 2</option>
+                                        {{-- <option value="5"> Open periode 1 / 3</option> --}}
                                         {{-- <option value="6"> Open periode 2 / 1</option> --}}
-                                        <option value="7"> Open periode 3 / 2</option>
+                                        {{-- <option value="7"> Open periode 3 / 2</option> --}}
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="url_instagram">Periode 1</label>
                                         <input type="text" class="form-control removeLater" id="tahun1" name="tahun1" placeholder="Nominal biaya tahun periode 1">
+                                        <input type="date" class="form-control" id="start_date1" placeholder="Start Date"/>
                                     </div>
                                     <div class="form-group">
                                         <label for="url_instagram">Periode 2</label>
                                         <input type="text" class="form-control removeLater" id="tahun2" name="tahun2" placeholder="Nominal biaya tahun periode 2">
+                                        <input type="date" class="form-control" id="start_date2" placeholder="Start Date"/>
                                     </div>
                                     <div class="form-group">
                                         <label for="url_instagram">Periode 3</label>
                                         <input type="text" class="form-control removeLater" id="tahun3" name="tahun3" placeholder="Nominal biaya tahun periode 3">
+                                        <input type="date" class="form-control" id="start_date3" placeholder="Start Date"/>
                                     </div>
                                 </div>
                             </div>
@@ -171,12 +176,24 @@
         })
 
         $('document').ready(function () {
+
+            var today = moment().format('l');
+
+            $('#start_date1').val(today);
+            $('#start_date2').val(today);
+            $('#start_date3').val(today);
+
             $('.toggleswitch').bootstrapToggle();
 
             $("#tahun1").hide();
             $("#tahun2").hide();
             $("#tahun3").hide();
             $("#tahun4").hide();
+
+            $("#start_date1").hide();
+            $("#start_date2").hide();
+            $("#start_date3").hide();
+
         });
 
     function formatCurrency(x) {
@@ -195,6 +212,9 @@
                     'tahun1'                : $('input[name=tahun1]').val(),
                     'tahun2'                : $('input[name=tahun2]').val(),
                     'tahun3'                : $('input[name=tahun3]').val(),
+                    'tahun_periode_vr1'      : $('input[id=start_date1]').val(),
+                    'tahun_periode_vr2'      : $('input[id=start_date2]').val(),
+                    'tahun_periode_vr3'      : $('input[id=start_date2]').val(),
 
                 };
 
@@ -310,6 +330,10 @@
 
             $("#tahun2").val('');
             $("#tahun3").val('');
+            
+            $("#start_date1").show();
+            $("#start_date2").hide();
+            $("#start_date3").hide();
 
         }
 
@@ -318,6 +342,10 @@
             $("#tahun3").show();
             $("#tahun2").show();
             $("#tahun1").show();
+
+            $("#start_date1").show();
+            $("#start_date2").show();
+            $("#start_date3").show();
 
         }
 
@@ -331,6 +359,10 @@
             $("#tahun2").val('');
             $("#tahun3").val('');
 
+            $("#start_date3").hide();
+            $("#start_date2").hide();
+            $("#start_date1").hide();
+
 
         }
 
@@ -343,6 +375,9 @@
             $("#tahun3").val('');
             $("#tahun1").val('');
 
+            $("#start_date1").hide();
+            $("#start_date3").hide();
+            $("#start_date2").show();
 
         }
 
@@ -355,6 +390,9 @@
             $("#tahun2").val('');
             $("#tahun1").val('');
 
+            $("#start_date1").hide();
+            $("#start_date3").show();
+            $("#start_date2").hide();
 
         }
 
@@ -366,6 +404,9 @@
 
             $("#tahun2").val('');
 
+            $("#start_date3").show();
+            $("#start_date1").show();
+            $("#start_date2").hide();
 
         }
 
@@ -377,6 +418,9 @@
 
             $("#tahun3").val('');
 
+            $("#start_date3").hide();
+            $("#start_date2").show();
+            $("#start_date2").show();
 
         }
 
@@ -387,6 +431,10 @@
             $("#tahun1").hide();
             
             $("#tahun1").val('');
+
+            $("#start_date1").hide();
+            $("#start_date2").show();
+            $("#start_date2").show();
 
 
         }
