@@ -1072,29 +1072,12 @@ trait ModuleCaculates {
 
                 foreach($allrecalculate as $indexs => $tmp){
 
-                    // $calc = AllRecalculate::orderby('id','desc')->with('mesin.MesinListrikPerjamTo')->first();
-                    // $recRow = AllRecalculate::orderby('created_at','desc')->with(['Listrik.Listrikperjam','KategoriBagian','Mesin','GroupMesin','Company'])->first();
-                
-                    // $penyusutanfefn = Penyusutan::where('code_mesin', $tmp->code_mesin)->first();
-                    // $laborsfn = Labor::where('code_mesin', $tmp->code_mesin)->first();
-                    // $mtcsfefn =  RptMtc::where('code_mesin', $tmp->code_mesin)->first();
-
-                    // $ambil_listrik_dari_mesin = $tmp->mesin->MesinListrikPerjamTo->persen;
-
-                    // $mtcsfe = RptMtc::where('code_mesin', $tmp->code_mesin)->first()->total_biaya_perbulan;
-                    // $penyusutanfe = Penyusutan::where('code_mesin', $tmp->code_mesin)->first()->penyusutan_perbulan;
-
-                    // $labors = Labor::where('code_mesin', $tmp->code_mesin)->first()->total_biaya;
-
                     $penyusutanfefn = Penyusutan::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first();
                     $laborsfn = Labor::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first();
                     $mtcsfefn = RptMtc::where('code_mesin', $tmp->code_mesin)->whereNull('ended_at')->first();
 
                     for ($i=0; $i < count($allrecalculate->toArray()); $i++){
 
-                        // $ambillistrik[] = isset($allrecalculate->toArray()[$i]['mesin']['mesin_listrik_perjam_to']['persen']) 
-                        // ? $allrecalculate->toArray()[$i]['mesin']['mesin_listrik_perjam_to']['persen']
-                        // : "kosong";
                         $ambillistrik[] = isset($allrecalculate->toArray()[$i]['mesin']['capacity_mch']) 
                         ? $allrecalculate->toArray()[$i]['mesin']['capacity_mch']
                         : "kosong";
@@ -1110,10 +1093,6 @@ trait ModuleCaculates {
                         $checkrpt[] = isset(RptMtc::where('code_mesin', $allrecalculate->toArray()[$i]['code_mesin'])->first()->total_biaya_perbulan) 
                             ? RptMtc::where('code_mesin', $allrecalculate->toArray()[$i]['code_mesin'])->first()->total_biaya_perbulan 
                             : "kosong";
-                    // $mtcsfe = RptMtc::where('code_mesin', $tmp->code_mesin)->first()->total_biaya_perbulan;
-                    // $penyusutanfe = Penyusutan::where('code_mesin', $tmp->code_mesin)->first()->penyusutan_perbulan;
-                    // dd(Penyusutan::where('code_mesin', $dd)->first()->penyusutan_perbulan);
-                    // $labors = Labor::where('code_mesin', $tmp->code_mesin)->first()->total_biaya;
                     if( $checkpenyusutan[$i] == "kosong" || $checklab[$i] == "kosong" || $checkrpt[$i] == "kosong" || $ambillistrik[$i] == "kosong" ){
                    
                             if($checkpenyusutan[$i] == "kosong"){
