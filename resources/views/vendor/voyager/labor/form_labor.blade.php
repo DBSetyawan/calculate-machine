@@ -29,9 +29,10 @@
                                     <div class="form-group">
                                         <label for="program_id">Detail group</label>
                                             <select class="form-control select2" id="grp_id" name="grp_id" required>
+                                                <option value="0"> Pilih detail Group mesin</option>
                                                 <option value="5"> Group Potong / Cetak</option>
-                                                <option value="7"> Groupp Hotprint / Plong / Sortir</option>
-                                                <option value="4"> Groupp Lem</option>
+                                                <option value="7"> Group Hotprint / Plong / Sortir</option>
+                                                <option value="4"> Group Lem</option>
                                             </select>
                                     </div>
                                     {{-- <div class="form-group">
