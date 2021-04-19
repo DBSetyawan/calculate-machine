@@ -186,21 +186,20 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
                                 /**
                                  * @Module logically automatically update machine with category
                                  */
-                                for($floops = 0; $floops < count([$simpanDataBiayaListriks]); $floops++){
+                                for($floops = 0; $floops < count([$lbrmachine]); $floops++){
+                                            
 
-                                    $checkmesin_msns[] = Mesin::whereIn('id', [$simpanDataBiayaListriks[$floops]['code_mesin']] )->get();
-                                
-                                }
-        
-                                for($rt = 0; $rt < count([$checkmesin_msns]); $rt++){
-                                    foreach($checkmesin_msns as $fh){
-
-                                        $checkmesin_msns = Labor::orWhereNull('ended_at')->orWhereNotNull('ended_at')->updateOrCreate(['code_mesin' => $fh[$rt]->id ], ['category_bagian' => $fh[$rt]->category_bagian_id ]);
-                                        $triggerEventChanged = Labor::where(['code_mesin' => [$fh[$rt]->id] ])->orWhereNull('ended_at')->orWhereNotNull('ended_at')->update(['category_bagian' => $fh[$rt]->category_bagian_id ]);
+                                    $fg[$floops] = $lbrmachine;
                                     
-                                    }
-
                                 }
+                                
+                                $checkmesin_msnss[] = Mesin::whereIn('id', $fg[0])->get();
+                                    foreach($checkmesin_msnss as $fh){
+                                        foreach($fh as $gjh){
+                                            $triggerEventChanged = Labor::where(['code_mesin' => $gjh->id ])->update(['category_bagian' => $gjh->category_bagian_id]);
+                                        }
+                                
+                                    }
 
                                 return response()->json(
                                         [
@@ -238,7 +237,7 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
                                                 }
                                         
                                             }
-                                            
+
                                             return response()->json(
                                                 [
                                                     'set_default_mesin' => $r->jumlah_penangganan_mesin,
@@ -257,29 +256,31 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
                                                     /**
                                                      * @Module logically automatically update machine with category
                                                      */
-                                                    for($floops = 0; $floops < count([$simpanDataBiayaListriks]); $floops++){
+                                                        for($floops = 0; $floops < count([$lbrmachine]); $floops++){
+                                            
 
-                                                        $checkmesin_mnskls[] = Mesin::whereIn('id', [$simpanDataBiayaListriks[$floops]['code_mesin']])->get();
-                                                    
-                                                    }
-                            
-                                                    for($rt = 0; $rt < count([$checkmesin_mnskls]); $rt++){
-                                                        foreach($checkmesin_mnskls as $fh){
+                                                            $fg[$floops] = $lbrmachine;
                                                             
-                                                            if(! is_null($datacheckclosemachinesame)){
-
-                                                                $checkmesin_msns = Labor::orWhereNotNull('ended_at')->create(array_merge($merge_event_machine_closed, ['code_mesin' => $fh[$rt]->id ], ['category_bagian' => $fh[$rt]->category_bagian_id], ['jumlah_mesin_ditanggani' => count([ $fh[$rt]->id ]) ]) );
-                                                                $triggerEventChanged = Labor::where(['code_mesin' => $fh[$rt]->id ])->orWhereNull('ended_at')->orWhereNotNull('ended_at')->update(['category_bagian' => $fh[$rt]->category_bagian_id ]);
-
-                                                            } else {
-
-                                                                $checkmesin_msns = Labor::where(['code_mesin' => [$fh[$rt]->id] ])->update(array_merge($merge_event_machine, ['category_bagian' => $fh[$rt]->category_bagian_id ]) );
-                                                                $triggerEventChanged = Labor::where(['code_mesin' => [$fh[$rt]->id] ])->orWhereNull('ended_at')->orWhereNotNull('ended_at')->update(['category_bagian' => $fh[$rt]->category_bagian_id ]);
-                                                            }
-
                                                         }
-                            
-                                                    }
+                                                        
+                                                        $checkmesin_msnss[] = Mesin::whereIn('id', $fg[0])->get();
+                                                            foreach($checkmesin_msnss as $fh){
+                                                                foreach($fh as $gjh){
+
+                                                                    if(! is_null($datacheckclosemachinesame)){
+
+                                                                        Labor::orWhereNotNull('ended_at')->create(array_merge($merge_event_machine_closed, ['code_mesin' => $gjh->id ], ['category_bagian' => $gjh->category_bagian_id], ['jumlah_mesin_ditanggani' => count([ $gjh->id ]) ]) );
+                                                                        Labor::where(['code_mesin' => $gjh->id ])->orWhereNull('ended_at')->orWhereNotNull('ended_at')->update(['category_bagian' => $gjh->category_bagian_id ]);
+
+                                                                    } else {
+
+                                                                        Labor::where(['code_mesin' =>  $gjh->id ])->update(array_merge($merge_event_machine, ['category_bagian' => $gjh->category_bagian_id ]) );
+                                                                        Labor::where(['code_mesin' => $gjh->id ])->orWhereNull('ended_at')->orWhereNotNull('ended_at')->update(['category_bagian' => $gjh->category_bagian_id ]);
+                                                                    }
+
+                                                                }
+                                                        
+                                                            }
 
                                                 return response()->json(
                                                     [
