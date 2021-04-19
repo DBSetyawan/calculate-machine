@@ -92,6 +92,9 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
                 'history_latest' => ceil($total_biaya_upah_perbulan),
             ];
 
+            /**
+             * @method tracking methode attempts.
+             */
             $columns = [
                 'updated_at',
                 'created_at', 

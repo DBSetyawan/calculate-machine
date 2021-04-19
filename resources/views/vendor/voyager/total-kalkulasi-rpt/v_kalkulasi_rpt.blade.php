@@ -2593,8 +2593,8 @@ $(document).ready(function(){
 
       }
 
-      function recalculate(){
 
+      $(document).ready(function() {
 
         var dataTables = $('#dataTableSearchRange').DataTable( {
             paging: false,
@@ -2604,7 +2604,7 @@ $(document).ready(function(){
             stateSave: true,
             stateDuration: -1,
             serverSide: true,
-            scrollY:        '90vh',
+            scrollY:        '100vh',
             scrollX:        '100vh',
             info:           true,
             scrollCollapse: true,
@@ -2665,12 +2665,6 @@ $(document).ready(function(){
 
         dataTables.columns.adjust().draw();
         
-      }
-
-      $(document).ready(function() {
-
-        return recalculate();
-
     } );
 
     //Async Promise wait send KOP kalkulasi mesin

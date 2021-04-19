@@ -18,9 +18,7 @@
     <div class="page-content container-fluid">
         <form class="form-edit-add" role="form"
             method="POST" enctype="multipart/form-data" autocomplete="off">
-
             {{ csrf_field() }}
-
             <div class="row">
                     <div class="col-md-8">
                         <div class="panel panel-bordered">
