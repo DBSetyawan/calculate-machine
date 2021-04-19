@@ -39,4 +39,9 @@ class KategoriBagian extends Model
         return $this->hasMany('App\GajiLain', 'category_bagian');
     }
 
+    public function HasToLabor()
+    {
+        return $this->hasMany('App\Labor', 'category_bagian');
+    }
+
 }

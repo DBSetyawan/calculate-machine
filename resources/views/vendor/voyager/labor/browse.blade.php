@@ -273,6 +273,9 @@
                                                     @if ($row->display_name == 'Supporting (lvl 0)')
                                                         <span>{{ "Rp " . number_format($data->support_level0,0,',','.') }}</span>
                                                     @endif
+                                                    {{-- @if ($row->display_name == 'ctg_mch')
+                                                        <span>{{ $data->code_mesin }}</span>
+                                                    @endif --}}
                                                     @if ($row->display_name == 'Total')
                                                     <span>{{ "Rp " . number_format($data->total_biaya,0,',','.') }}</span>
                                                 @endif
