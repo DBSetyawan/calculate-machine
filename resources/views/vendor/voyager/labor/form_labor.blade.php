@@ -512,18 +512,81 @@
                                                 })
                                             } else if(data.is_tr_conn == 'sc') {
 
-                                                pesanStore.fire({
-                                                    icon: 'success',
-                                                    title: 'Data passed'
+                                                Swal.fire({
+                                                    icon: "info",
+                                                    title: 'Machine update!',
+                                                    html: "[sc] Mesin berhasil diupdate, sistem mendeteksi transaksi labor telah diupdate.",
+                                                    timer: 11500,
+                                                    allowOutsideClick: false,
+                                                    allowEscapeKey: false,
+                                                    stopKeydownPropagation: true,
+                                                    timerProgressBar: true,
+                                                didOpen: () => {
+                                                    Swal.showLoading()
+                                                    timerInterval = setInterval(() => {
+                                                    const content = Swal.getContent()
+                                                    if (content) {
+                                                        const b = content.querySelector('b')
+                                                        if (b) {
+                                                        b.textContent = Swal.getTimerLeft()
+                                                        }
+                                                    }
+                                                    }, 100)
+                                                },
+                                                willClose: () => {
+                                                    clearInterval(timerInterval)
+                                                }
+                                                }).then((result) => {
+                                                    if (result.dismiss === Swal.DismissReason.timer) {
+                                                        console.log('I was closed by the timer')
+                                                    }
                                                 })
 
                                                 let curr = '{{ route("voyager.labor.index") }}';
                                                 setTimeout(function(){ 
                                                     window.location.href = curr;
                                                 }, 5000);
-                                            } else {
+                                            }  else if(data.is_tr_conn == 'ccv') {
+
+                                                Swal.fire({
+                                                    icon: "info",
+                                                    title: 'Machine update!',
+                                                    html: "[ccv] Mesin berhasil diupdate, sistem mendeteksi transaksi labor telah diupdate.",
+                                                    timer: 11500,
+                                                    allowOutsideClick: false,
+                                                    allowEscapeKey: false,
+                                                    stopKeydownPropagation: true,
+                                                    timerProgressBar: true,
+                                                didOpen: () => {
+                                                    Swal.showLoading()
+                                                    timerInterval = setInterval(() => {
+                                                    const content = Swal.getContent()
+                                                    if (content) {
+                                                        const b = content.querySelector('b')
+                                                        if (b) {
+                                                        b.textContent = Swal.getTimerLeft()
+                                                        }
+                                                    }
+                                                    }, 100)
+                                                },
+                                                willClose: () => {
+                                                    clearInterval(timerInterval)
+                                                }
+                                                }).then((result) => {
+                                                    if (result.dismiss === Swal.DismissReason.timer) {
+                                                        console.log('I was closed by the timer')
+                                                    }
+                                                })
+
+                                                let curr = '{{ route("voyager.labor.index") }}';
+                                                setTimeout(function(){ 
+                                                    window.location.href = curr;
+                                                }, 5000);
+                                            }   
+                                                else {
+                                                
                                                 pesanStore.fire({
-                                                    icon: 'danger',
+                                                    icon: 'error',
                                                     title: 'error tidak diketahui..'
                                                 }
                                             )
