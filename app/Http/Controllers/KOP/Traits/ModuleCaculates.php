@@ -873,7 +873,7 @@ trait ModuleCaculates {
                 $SendTemporaryCalculateInstance = new Penyusutan;
                 
                 $allrecalculates = Penyusutan::where('ended_at','=', NULL)->get()->toArray();
-                // $allrecalculates = LaporanGajiLain::where('ended_at','!=', NULL)->get()->toArray();
+                // $allrecalculates = Penyusutan::where('ended_at','!=', NULL)->get()->toArray();
                 
                 if(empty($allrecalculates) == true){
                     $messages = __('voyager::generic.internal_error');

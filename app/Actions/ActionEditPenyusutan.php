@@ -51,6 +51,18 @@ class ActionEditPenyusutan extends AbstractAction
 
     public function getDefaultRoute()
     {
-        return route('voyager.'.$this->dataType->slug.'.edit', $this->data->{$this->data->getKeyName()});
+        if($this->data->ended_at == null){
+
+            return route('voyager.'.$this->dataType->slug.'.edit', $this->data->{$this->data->getKeyName()});
+        
+        } else {
+
+            $redirect = redirect()->back();
+                return $redirect->with([
+                    'message'    => __('Informasi master data penyusutan, data yang telah diclosed. tidak bisa diedit maupun direkakulasi ulang.'),
+                    'alert-type' => 'info',
+                ]);
+            
+        }
     }
 }
