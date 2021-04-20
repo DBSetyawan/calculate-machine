@@ -431,7 +431,7 @@
                     }, 6000);
 
                 } 
-                    else {
+                    // else {
 
                         // if(res.json == 1){
 
@@ -462,7 +462,7 @@
                         // }
 
 
-                    }
+                    // }
 
                     if(res.data.message.alertype == 'error'){
 

@@ -207,6 +207,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             if(is_null($datacheckclosemachinesame)){
 
                 $simpanBiayaListrik = Listrik::UpdateOrCreate(['code_mesin' => (Int) $r->code_mesin], $Totalakumulasibiayalistrik);
+                $this->resetFunc(null, $Totalakumulasibiayalistrik, $r->company_parent_id,  $r->category_bagian, $r->group_mesin, $r->code_mesin);
                 
                 return response()->json(
                     [
@@ -229,6 +230,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                 if(!is_null($datacheckclosemachinesamechecked)){
 
                     $simpanBiayaListrik = Listrik::UpdateOrCreate(['code_mesin' => (Int) $r->code_mesin], $Totalakumulasibiayalistrik);
+                    $this->resetFunc(null, $Totalakumulasibiayalistrik, $r->company_parent_id,  $r->category_bagian, $r->group_mesin, $r->code_mesin);
                     
                     return response()->json(
                         [
@@ -1034,6 +1036,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
     public function update(Request $r, $id)
     {
 
+        // dd($r->all());
         $slug = $this->getSlug($r);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -1164,6 +1167,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             // 'code_listrik' => RumusListrik::generateIDListrik(), //not 
             'LWBP_perminggu' => $rumusLWBPerminggu,
             'WBP_perminggu' => $rumusWBPerminggu,
+            'group_mesin' => $r->group_mesin,
             'nilai_cost_bulan' => (float) $totalbiayacostperbulan,
             'category_bagian' => $r->category_bagian,
             'LWBP_faktorkali' => $r->LWBP_faktorkali,

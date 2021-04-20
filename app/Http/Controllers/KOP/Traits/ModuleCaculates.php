@@ -1169,19 +1169,13 @@ trait ModuleCaculates {
                                             ? Labor::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->total_biaya 
                                             : 0;
 
-                                $penyusutanfefn = isset(Penyusutan::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->penyusutan_perbulan)
-                                                    ? Penyusutan::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->penyusutan_perbulan
-                                                    : 0;
+                                $penyusutanfefn = Penyusutan::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first();
 
-                                $laborsfn = isset(Labor::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->total_biaya)
-                                            ? Labor::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->total_biaya
-                                            : 0;
+                                $laborsfn = Labor::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first();
 
-                                $mtcsfefn =  isset(RptMtc::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->total_biaya_perbulan)
-                                            ? RptMtc::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->total_biaya_perbulan
-                                            : 0;
+                                $mtcsfefn =  RptMtc::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first();
 
-                                if(is_null($labors)){
+                                if(isset($labors[$i])){
                                     
                                     $dt = [
                                         'message'  => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, biaya total dari beberapa master masih ada yang belum diisi di Master Labor'),
@@ -1195,7 +1189,7 @@ trait ModuleCaculates {
                                     ], 500);
                                 }
 
-                                if(is_null($mtcsfe)){
+                                if(isset($mtcsfe[$i])){
                                     
                                     $dt = [
                                         'message'  => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, biaya total dari beberapa master masih ada yang belum diisi di Master MTC / Biaya Produksi Lain'),
@@ -1209,7 +1203,7 @@ trait ModuleCaculates {
                                     ], 500);
                                 }
 
-                                if(is_null($penyusutanfe)){
+                                if(isset($penyusutanfe[$i])){
                                     
                                     $dt = [
                                         'message'  => __('Maaf tidak bisa merekalkulasi biaya kalkulasi total, biaya total dari beberapa master masih ada yang belum diisi di Master Penyusutan'),

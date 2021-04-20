@@ -261,7 +261,7 @@ class VoyagerMachineController extends BaseVoyagerBaseController
          */
         if($req->grp_id == "5"){
 
-            $mesin = Mesin::whereIn('group_mesin_id', [2])->where('on_off', '!=', 0)
+            $mesin = Mesin::whereIn('group_mesin_id', [1,2])->where('on_off', '!=', 0)
             ->with('KbagianTo','CompanyTo','GroupMesinTo','MesinListrikPerjamTo','AsumsiTo')->get();
             return response()->json(['detail'=> $mesin]);
 
