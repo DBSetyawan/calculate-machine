@@ -33,16 +33,16 @@ class RumusRptMaintenance {
                 return $region->sum('output_perjam');
             });
 
-        if(in_array($category_bagian, [1])){
+        // if(in_array($category_bagian, [1])){
 
-            $hitungBiayaProduksiLain = 0;
+        //     $hitungBiayaProduksiLain = 0;
 
-        }   
-            else {
+        // }   
+        //     else {
 
                 $hitungBiayaProduksiLain = ( $total_output_output_perjam * $listrikoutputperjam );
 
-            }
+            // }
 
         return isset($hitungBiayaProduksiLain) ? $hitungBiayaProduksiLain : 0;
 

@@ -2,20 +2,13 @@
 
 namespace App\Http\Controllers\KOP;
 
-use App\Mtc;
 use App\Mesin;
 use Exception;
-use App\RptMtc;
 use App\Company;
-use Carbon\Carbon;
-use App\AccountMtc;
-use App\RPTMtcTotal;
-use RumusMaintenance;
-use App\ListrikOutput;
-use App\AllRecalculate;
 use App\KategoriBagian;
-use App\TransaksiMtcTotal;
+use App\Lb8KategoriMesin;
 use Illuminate\Http\Request;
+use App\BiayaAdministrasiUmum;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -25,228 +18,44 @@ use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadDataRestored;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
-use App\Http\Controllers\KOP\Service\MTcInterface;
-use App\Http\Controllers\KOP\Service\RptMTcInterface;
-use App\Http\Controllers\KOP\Helpers\RumusRptMaintenance;
-use App\Http\Controllers\KOP\Helpers\ModulTrackingDataHelpers;
+use App\Http\Controllers\KOP\Service\BiayaAdministrasiUmumInterface;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
+use App\Http\Controllers\KOP\Helpers\RumusBiayaAdministrasiUmum as HelpersRumusBiayaAdministrasiUmum;
 
-class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTcInterface
+class VoyagerSpecialLaborController extends BaseVoyagerBaseController
 {
 
-    public function RataRataPerbaikanPerbulan($perbaikan_, $perbaikan__, $perbaikan___){
-
-        return RumusRptMaintenance::HitungRataRataPerbaikanPerbulan($perbaikan_, $perbaikan__, $perbaikan___);
-
-    }
-
-    public function RataRataSparePartPerbulan($sparepart_, $sparepart__, $sparepart___){
-
-        return RumusRptMaintenance::HitungRataRataSparePartPerbulan($sparepart_, $sparepart__, $sparepart___);
-
-    }
-
-    public function TotalSemuaBiayaProduksi($total_account_mtc, $listrikoutputperjam, $category_bagian){
-
-        return RumusRptMaintenance::HitungTotalBiayaProduksi($total_account_mtc, $listrikoutputperjam, $category_bagian);
-
-    }
-
-    public function TotalBiayaPenyusutanMaintenance($ratarataperbaikanperbulan, $rataratasparepartperbulan){
-
-        return RumusRptMaintenance::HitungTotalPenyusutanPerbulan($ratarataperbaikanperbulan, $rataratasparepartperbulan);
-    }
-
-    public function HitungAkumulasiRPTMaintenance(Request $r){
-            
-        /**
-         * Hitung Total Perbaikan Biaya perbulan
-         * @param $perbaikanpertahunn.
-         */
-        $RataRataPerbaikanPerbulan = $this->RataRataPerbaikanPerbulan($r->perbaikan_tahun1, $r->perbaikan_tahun2, $r->perbaikan_tahun3);
-        
-        /**
-         * Hitung Total Sparepart Biaya perbulan
-         * @param $perbaikanpertahunn.
-         */
-        $RataRataSparePartPerbulan = $this->RataRataSparePartPerbulan($r->sparepart_tahun1, $r->sparepart_tahun2, $r->sparepart_tahun3);
-        
-        /**
-         * mengambil master account_mct AE$34 * sheet listrik AF5
-         * @development process
-         */
-        $totalBiayaAccountMTC = AccountMtc::whereIn('company_parent_id', [3])->get();
-
-        $totalAccountMTC = collect([$totalBiayaAccountMTC])->sum(function ($totalbiayaacmtc){
-                return $totalbiayaacmtc->sum('biaya_perbulan');
-            });
-
-        $TotalSemuaBiayaProduksilain = $this->TotalSemuaBiayaProduksi($totalAccountMTC, $r->percent, $r->category_bagian);
-    
-        /**
-         * total biaya penyusutan perbulan
-         */
-        $TotalBiayaPenyusutanMaintenance = $this->TotalBiayaPenyusutanMaintenance($RataRataPerbaikanPerbulan, $RataRataSparePartPerbulan);
-
-        $data_response_rptmtc = [
-            'code_mesin' => $r->code_mesin,
-            'company_parent_id' => $r->company_parent_id,
-            'category_bagian' => $r->category_bagian,
-            'code_rpt_mtc' => RumusRptMaintenance::generateIDRPTRPTMTC(), 
-            'perbaikan_tahun1' => $r->perbaikan_tahun1,
-            'perbaikan_tahun2' => $r->perbaikan_tahun2,
-            'perbaikan_tahun3' => $r->perbaikan_tahun3,
-
-            'rata_rata_perbaikan_perbulan' => $RataRataPerbaikanPerbulan,
-
-            'sparepart_tahun1' => $r->sparepart_tahun1,
-            'sparepart_tahun2' => $r->sparepart_tahun2,
-            'sparepart_tahun3' => $r->sparepart_tahun3,
-
-            'thn_sparepart_periode_1' => Carbon::parse($r->tahun_periode_vr1)->format('Y'),
-            'thn_sparepart_periode_2' => Carbon::parse($r->tahun_periode_vr2)->format('Y'),
-            'thn_sparepart_periode_3' => Carbon::parse($r->tahun_periode_vr3)->format('Y'),
-
-            'thn_perbaikan_periode_1' => Carbon::parse($r->tahun_periode_vrs1)->format('Y'),
-            'thn_perbaikan_periode_2' => Carbon::parse($r->tahun_periode_vrs2)->format('Y'),
-            'thn_perbaikan_periode_3' => Carbon::parse($r->tahun_periode_vrs3)->format('Y'),
-
-            'rata_rata_sparepart_perbulan' => $RataRataSparePartPerbulan,
-
-            'biaya_produksi_lain' => $TotalSemuaBiayaProduksilain,
-            'total_biaya_perbulan' => $TotalBiayaPenyusutanMaintenance,
-        ];
-
-    if($r->setTo["isConfirmed"] == "true"){
-
-        /**
-         * @flow ask, ketika transaksi close.. ingin menambahkan mesin yang sebelumnya pernah dibuat. tapi dengan status transaksinya close. can create or update ?
-         */
-        $datacheckclosemachinesame = RptMtc::where('code_mesin', $r->code_mesin)->whereNotNull('ended_at')->first();
-        $datacheckclosemachinesamechecked = RptMtc::where('code_mesin', $r->code_mesin)->whereNull('ended_at')->first();
-
-        if(is_null($datacheckclosemachinesame)){
-
-            $simpanDataRpTMTC = RptMtc::UpdateOrCreate(['code_mesin' => (Int) $r->code_mesin], $data_response_rptmtc);
-            
-            return response()->json(
-                [
-                    'isConfirmed' => $r->setTo["isConfirmed"],
-                    'is_tr_conn' => __('dx'),
-                    'rata_rata_perbaikan_perbulan' => $simpanDataRpTMTC->rata_rata_perbaikan_perbulan,
-                    'rata_rata_sparepart_perbulan' => $simpanDataRpTMTC->rata_rata_sparepart_perbulan,
-                    'biaya_produksi_lain' => $simpanDataRpTMTC->biaya_produksi_lain,
-                    'total_biaya_perbulan' => $simpanDataRpTMTC->total_biaya_perbulan,
-                ]
-            );
-
-        } 
-
-        if($datacheckclosemachinesame){
-
-            if(!is_null($datacheckclosemachinesamechecked)){
-
-                $simpanDataRpTMTC = RptMtc::UpdateOrCreate(['code_mesin' => (Int) $r->code_mesin], $data_response_rptmtc);
-                
-                return response()->json(
-                    [
-                        'isConfirmed' => $r->setTo["isConfirmed"],
-                        'is_tr_conn' => __('xc'),
-                        'rata_rata_perbaikan_perbulan' => $simpanDataRpTMTC->rata_rata_perbaikan_perbulan,
-                        'rata_rata_sparepart_perbulan' => $simpanDataRpTMTC->rata_rata_sparepart_perbulan,
-                        'biaya_produksi_lain' => $simpanDataRpTMTC->biaya_produksi_lain,
-                        'total_biaya_perbulan' => $simpanDataRpTMTC->total_biaya_perbulan,
-
-                    ]
-                );
-            } 
-                else {
-                
-            $simpanDataRpTMTC = RptMtc::create($data_response_rptmtc);
-
-            // if(!empty($simpanDataRpTMTC) && $simpanDataRpTMTC != [] && $simpanDataRpTMTC != null){
-
-                $t = RptMtc::whereIn('company_parent_id', [3])->get();
-
-                $total_penyusutan_perbulan = collect([$t])->sum(function ($biaya){
-                    return sprintf("%.5f", $biaya->sum('total_biaya_perbulan'));
-                });
-                    
-                $columns = [
-                    'updated_at',
-                    'created_at', 
-                    'created_by', 
-                    'company_parent_id',
-                    'categori_id',
-                    'code_mesin',
-                    'table_coloumn',
-                    'history_latest',
-                    'before',
-                ];
-                
-                $datas[] = [
-                    'updated_at' => Carbon::now(),
-                    'created_at' => Carbon::now(),
-                    'created_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
-                    'company_parent_id' => $r->company_parent_id,
-                    'categori_id' => $r->category_bagian,
-                    'code_mesin' => $r->code_mesin,
-                    'table_coloumn' => 'rpt_mtc.added.event',
-                    'history_latest' => ceil($TotalBiayaPenyusutanMaintenance),
-                    'before' => ceil($TotalBiayaPenyusutanMaintenance),
-                ];
-
-            $RPTMtcTotal = new RPTMtcTotal;
-                
-                $batchSize = 500;
-                    
-                $result = \Batch::insert($RPTMtcTotal, $columns, $datas, $batchSize);
-
-                    return response()->json(
-                        [
-                            'rata_rata_perbaikan_perbulan' => $simpanDataRpTMTC->rata_rata_perbaikan_perbulan,
-                            'rata_rata_sparepart_perbulan' => $simpanDataRpTMTC->rata_rata_sparepart_perbulan,
-                            'isConfirmed' => $r->setTo["isConfirmed"],
-                            'biaya_produksi_lain' => $simpanDataRpTMTC->biaya_produksi_lain,
-                            'total_biaya_perbulan' => $simpanDataRpTMTC->total_biaya_perbulan,
-                        ]
-                    );
-                }
-            }
-
-        } else {
-
-            return response()->json(
-                [
-                    'rata_rata_perbaikan_perbulan' => $RataRataPerbaikanPerbulan,
-                    'rata_rata_sparepart_perbulan' => $RataRataSparePartPerbulan,
-                    'biaya_produksi_lain' => $TotalSemuaBiayaProduksilain,
-                    'total_biaya_perbulan' => $TotalBiayaPenyusutanMaintenance,
-                    'isDenied' => $r->setTo["isDenied"],
-                ]
-            );
-
-
-        }
-
-    }
-    
-    public function formRPTMTCAction(Request $request)
+    public function formSpecialLabor(Request $request)
     {
         $company = Company::all();
-        $mesin = Mesin::whereNotIn('on_off', [0])->get();
+        $mesin = Mesin::all();
         $cbagian = KategoriBagian::all();
-        $LsOutputPerjam = ListrikOutput::all();
 
-        return view('vendor.voyager.rpt-mtc.form_rptmtcs', compact('company','mesin','cbagian','LsOutputPerjam'));
+        return view('vendor.voyager.special-labor.form_spclbr', compact('company','mesin','cbagian'));
     }
- 
+
+    public function getGroupMachine(Request $request){
+
+        $search = $request->search;
+  
+        if($search == ''){
+           $employees = Lb8KategoriMesin::orderby('nama_kategori_mesin','asc')->select('id','nama_kategori_mesin')->limit(5)->get();
+        }else{
+           $employees = Lb8KategoriMesin::orderby('nama_kategori_mesin','asc')->select('id','nama_kategori_mesin')->where('nama_kategori_mesin', 'like', '%' .$search . '%')->limit(5)->get();
+        }
+  
+        $response = array();
+        foreach($employees as $employee){
+           $response[] = array("value"=>$employee->id,"label"=>$employee->nama_kategori_mesin);
+        }
+  
+        return response()->json($response);
+     }
+
     public function index(Request $request)
     {
-
         // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);
-        // dd($slug);
 
         // GET THE DataType based on the slug
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -500,158 +309,7 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
             $view = "voyager::$slug.edit-add";
         }
 
-        $LsOutputPerjam = ListrikOutput::all();
-        $cbagian = KategoriBagian::all();
-        $company = Company::all();
-        $mesin = Mesin::all();
-
-        return Voyager::view($view, compact('company','mesin','cbagian','LsOutputPerjam','dataType', 'dataTypeContent', 'isModelTranslatable'));
-    }
-
-    public function EventChangeRptMTC(Request $request)
-    {
-        try {
-
-
-            /**
-             * Hitung Total Perbaikan Biaya perbulan
-             * @param $perbaikanpertahunn.
-             */
-            $RataRataPerbaikanPerbulan = $this->RataRataPerbaikanPerbulan($request->perbaikan_tahun1, $request->perbaikan_tahun2, $request->perbaikan_tahun3);
-            
-            /**
-             * Hitung Total Sparepart Biaya perbulan
-              * @param $perbaikanpertahunn.
-              */
-            $RataRataSparePartPerbulan = $this->RataRataSparePartPerbulan($request->sparepart_tahun1, $request->sparepart_tahun2, $request->sparepart_tahun3);
-            
-            /**
-             * mengambil master account_mct AE$34 * sheet listrik AF5
-             * @development process
-             */
-            $totalBiayaAccountMTC = AccountMtc::whereIn('company_parent_id', [3])->get();
-
-            $totalAccountMTC = collect([$totalBiayaAccountMTC])->sum(function ($totalbiayaacmtc){
-                    return $totalbiayaacmtc->sum('biaya_perbulan');
-                });
-
-            $TotalSemuaBiayaProduksilain = $this->TotalSemuaBiayaProduksi($totalAccountMTC, $request->percent, $request->category_bagian);
-        
-            /**
-             * total biaya penyusutan perbulan
-             */
-            $TotalBiayaPenyusutanMaintenance = $this->TotalBiayaPenyusutanMaintenance($RataRataPerbaikanPerbulan, $RataRataSparePartPerbulan);
-
-                $automatedRecalculateMTC = [
-                    'id' => $request->id,
-                    'perbaikan_tahun1' => $request->perbaikan_tahun1,
-                    'code_mesin' => $request->code_mesin,
-                    'category_bagian' => $request->category_bagian,
-                    'company_parent_id' => $request->company_parent_id,
-                    'perbaikan_tahun2' => $request->perbaikan_tahun2,
-                    'perbaikan_tahun3' => $request->perbaikan_tahun3,
-        
-                    'rata_rata_perbaikan_perbulan' => $RataRataPerbaikanPerbulan,
-        
-                    'sparepart_tahun1' => $request->sparepart_tahun1,
-                    'sparepart_tahun2' => $request->sparepart_tahun2,
-                    'sparepart_tahun3' => $request->sparepart_tahun3,
-        
-                    'rata_rata_sparepart_perbulan' => $RataRataSparePartPerbulan,
-        
-                    'biaya_produksi_lain' => $TotalSemuaBiayaProduksilain,
-                    'total_biaya_perbulan' => $TotalBiayaPenyusutanMaintenance,
-                ];
-        
-               $data_success = RptMtc::findOrFail($request->id)->update($automatedRecalculateMTC);
-               $dash = RptMtc::findOrFail($request->id)->code_mesin;
-
-               $rptmtc = RptMtc::whereNull('ended_at')->get();
-               $AllRecalculateInstance = New AllRecalculate;
-       
-            //    foreach($rptmtc as $index => $datarmtc){
-
-                 /**
-                 * Hitung Total Perbaikan Biaya perbulan
-                 * @param $perbaikanpertahunn.
-                 */
-                $RataRataPerbaikanPerbulan = $this->RataRataPerbaikanPerbulan($request->perbaikan_tahun1, $request->perbaikan_tahun2, $request->perbaikan_tahun3);
-                
-                /**
-                 * Hitung Total Sparepart Biaya perbulan
-                 * @param $perbaikanpertahunn.
-                */
-                $RataRataSparePartPerbulan = $this->RataRataSparePartPerbulan($request->sparepart_tahun1, $request->sparepart_tahun2, $request->sparepart_tahun3);
-                
-                /**
-                 * mengambil master account_mct AE$34 * sheet listrik AF5
-                 * @development process
-                 */
-                $totalBiayaAccountMTC = AccountMtc::whereIn('company_parent_id', [3])->get();
-
-                $totalAccountMTC = collect([$totalBiayaAccountMTC])->sum(function ($totalbiayaacmtc){
-                        return $totalbiayaacmtc->sum('biaya_perbulan');
-                    });
-
-                $TotalSemuaBiayaProduksilain = $this->TotalSemuaBiayaProduksi($totalAccountMTC, $request->percent, $request->category_bagian);
-                // AllRecalculate::whereIn('code_mesin', [$dash])->update([]);
-           
-                /**
-                 * total biaya penyusutan perbulan
-                 */
-                $TotalBiayaPenyusutanMaintenance = $this->TotalBiayaPenyusutanMaintenance($RataRataPerbaikanPerbulan, $RataRataSparePartPerbulan);
-
-                    $dmtc[] = [
-                        'code_mesin' => $request->code_mesin,
-                        'id_mtc' => $TotalBiayaPenyusutanMaintenance,
-                        'id_bprodlain_insteadof_mtc' => $TotalSemuaBiayaProduksilain
-                    ];
-        
-                        $code_mesin = 'code_mesin';
-
-                    \Batch::update($AllRecalculateInstance, $dmtc, $code_mesin);
-
-            //    }
-            $tb = app(RptMtc::class)->getTable();
-
-                $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $request->dataold, $automatedRecalculateMTC);
-
-                foreach ($md as $key => $val) {
-
-                        $pf[] = [
-                            'updated_at' => Carbon::now(),
-                            'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
-                            'company_parent_id' => $request->company_parent_id,
-                            'categori_id' => $request->category_bagian,
-                            'code_mesin' => $request->code_mesin,
-                            'table_coloumn' => $val['tabel_kolom'],
-                            'history_latest' => ceil($val['history']),
-                            'before' => ceil($val['dari']),
-                        ];
-                        
-                    }
-                
-                $d = RPTMtcTotal::insert($pf);
-            
-            return response()->json(['success' => __('voyager::generic.successfully_updated'), 'data' => '','track' => $pf]);
-            
-        } catch (Exception $e) {
-
-            $code = 500;
-            $message = __('voyager::generic.internal_error');
-
-            if ($e->getMessage()) {
-                $message = $e->getMessage();
-            }
-
-            return response()->json([
-                'data' => [
-                    'status'  => $code,
-                    'message' => $message,
-                ],
-            ], $code);
-        }
-
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     // POST BR(E)AD
@@ -672,13 +330,6 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
             $data = $model->withTrashed()->findOrFail($id);
         } else {
             $data = $model->findOrFail($id);
-            // DB::table('total_kalkulasi_tanpa_penyusutan')
-            // ->where('mtc', $data->total_biaya_perbulan)
-            // ->update(array('mtc' => $request->total_biaya_perbulan)); 
-
-            // DB::table('total_kalkulasi_tanpa_penyusutan')
-            // ->where('b_prod_lain', $data->biaya_produksi_lain)
-            // ->update(array('b_prod_lain' => $request->biaya_produksi_lain)); 
         }
 
         // Check permission

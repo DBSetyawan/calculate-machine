@@ -91,33 +91,76 @@
                                         <input type="text" class="form-control" id="perjam" name="perjam" placeholder="">
                                     </div>
 
+                                <div class="container">
+                                    <div class="row">
+                                    <div class="form-group">
+                                        <label for="oprd">Open periode perbaikan</label>
+                                        <select class="form-control select2" id="oprd" name="oprd" required>
+                                        {{-- <option value="1"> Periode 1</option>
+                                        <option value="2"> Periode 2</option>
+                                        <option value="3"> Periode 3</option> --}}
+                                        <option value="4"> All Periode</option>
+                                        <option value="1"> Open periode 1</option>
+                                        <option value="6"> Open periode 1 / 2</option>
+                                        {{-- <option value="5"> Open periode 1 / 3</option> --}}
+                                        {{-- <option value="6"> Open periode 2 / 1</option> --}}
+                                        {{-- <option value="7"> Open periode 3 / 2</option> --}}
+                                        </select>
+                                    </div>
+
                                     <div class="form-group">
                                         <label for="url_instagram">Perbaikan tahun 1</label>
                                         <input type="text" class="form-control removeLater" id="perbaikan_tahun1" name="perbaikan_tahun1" placeholder="Biaya perbaikan tahun 1">
+                                        <input type="date" class="form-control" id="start_date_perbaikan_tahun1" placeholder="Start Date"/>
                                     </div>
                                     <div class="form-group">
                                         <label for="url_instagram">Perbaikan tahun 2</label>
                                         <input type="text" class="form-control removeLater" id="perbaikan_tahun2" name="perbaikan_tahun2" placeholder="Biaya perbaikan tahun 2">
+                                        <input type="date" class="form-control" id="start_date_perbaikan_tahun2" placeholder="Start Date"/>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="url_instagram">Perbaikan tahun 3</label>
                                         <input type="text" class="form-control removeLater" id="perbaikan_tahun3" name="perbaikan_tahun3" placeholder="Biaya perbaikan tahun 3">
+                                        <input type="date" class="form-control" id="start_date_perbaikan_tahun3" placeholder="Start Date"/>
                                     </div>
+                                </div>
+                            </div>
 
+                            <div class="container">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label for="oprd">Open periode sparepart</label>
+                                        <select class="form-control select2" id="oprds" name="oprds" required>
+                                        {{-- <option value="1"> Periode 1</option>
+                                        <option value="2"> Periode 2</option>
+                                        <option value="3"> Periode 3</option> --}}
+                                        <option value="4"> All Periode</option>
+                                        <option value="1"> Open periode 1</option>
+                                        <option value="6"> Open periode 1 / 2</option>
+                                        {{-- <option value="5"> Open periode 1 / 3</option> --}}
+                                        {{-- <option value="6"> Open periode 2 / 1</option> --}}
+                                        {{-- <option value="7"> Open periode 3 / 2</option> --}}
+                                        </select>
+                                    </div>
                                     <div class="form-group">
                                         <label for="url_instagram">Sparepart tahun 1</label>
                                         <input type="text" class="form-control removeLater" id="sparepart_tahun1" name="sparepart_tahun1" placeholder="Biaya perbaikan tahun 1">
+                                        <input type="date" class="form-control" id="start_date_sparepart_tahun1" placeholder="Start Date"/>
                                     </div>
                                     <div class="form-group">
                                         <label for="url_instagram">Sparepart tahun 2</label>
                                         <input type="text" class="form-control removeLater" id="sparepart_tahun2" name="sparepart_tahun2" placeholder="Biaya perbaikan tahun 2">
+                                        <input type="date" class="form-control" id="start_date_sparepart_tahun2" placeholder="Start Date"/>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="url_instagram">Sparepart tahun 3</label>
                                         <input type="text" class="form-control removeLater" id="sparepart_tahun3" name="sparepart_tahun3" placeholder="Biaya perbaikan tahun 3">
+                                        <input type="date" class="form-control" id="start_date_sparepart_tahun3" placeholder="Start Date"/>
                                     </div>
+                                    </div>
+                                </div>
 
                                 </div>
                             </div>
@@ -175,9 +218,6 @@
 
                             </div>
                         </div>
-
-                      
-
                     </div>
                 </div>
                 </div>
@@ -281,6 +321,24 @@ $tcostmonth = collect([$mtcs])->sum(function ($biaya){
 
         $(document).ready(function() {
 
+            $("#perbaikan_tahun1").hide();
+            $("#perbaikan_tahun2").hide();
+            $("#perbaikan_tahun3").hide();
+            $("#perbaikan_tahun4").hide();
+            
+            $("#sparepart_tahun1").hide();
+            $("#sparepart_tahun2").hide();
+            $("#sparepart_tahun3").hide();
+
+
+            $("#start_date_perbaikan_tahun1").hide();
+            $("#start_date_perbaikan_tahun2").hide();
+            $("#start_date_perbaikan_tahun3").hide();
+
+            $("#start_date_sparepart_tahun1").hide();
+            $("#start_date_sparepart_tahun2").hide();
+            $("#start_date_sparepart_tahun3").hide();
+
             $('form').submit(function(event) {
 
                 var formData = {
@@ -297,6 +355,13 @@ $tcostmonth = collect([$mtcs])->sum(function ($biaya){
                     'sparepart_tahun2'    : $('input[name=sparepart_tahun2]').val(),
                     'sparepart_tahun3'    : $('input[name=sparepart_tahun3]').val(),
 
+                    'tahun_periode_vr1'      : $('input[id=start_date_perbaikan_tahun1]').val(),
+                    'tahun_periode_vr2'      : $('input[id=start_date_perbaikan_tahun2]').val(),
+                    'tahun_periode_vr3'      : $('input[id=start_date_perbaikan_tahun3]').val(),
+                    
+                    'tahun_periode_vrs1'      : $('input[id=start_date_sparepart_tahun1]').val(),
+                    'tahun_periode_vrs2'      : $('input[id=start_date_sparepart_tahun2]').val(),
+                    'tahun_periode_vrs3'      : $('input[id=start_date_sparepart_tahun3]').val(),
                 };
 
                 
@@ -493,6 +558,282 @@ $tcostmonth = collect([$mtcs])->sum(function ($biaya){
             });
 
         });
+
+            function open_periode1(){
+
+                $("#perbaikan_tahun1").show();
+                $("#perbaikan_tahun2").hide();
+                $("#perbaikan_tahun3").hide();
+
+                $("#perbaikan_tahun2").val('');
+                $("#perbaikan_tahun3").val('');
+
+                $("#start_date_perbaikan_tahun1").show();
+                $("#start_date_perbaikan_tahun2").hide();
+                $("#start_date_perbaikan_tahun3").hide();
+
+            }
+
+            function open_periodepart1(){
+
+                $("#sparepart_tahun1").show();
+                $("#sparepart_tahun2").hide();
+                $("#sparepart_tahun3").hide();
+
+                $("#sparepart_tahun2").val('');
+                $("#sparepart_tahun3").val('');
+
+                $("#start_date_sparepart_tahun1").show();
+                $("#start_date_sparepart_tahun2").hide();
+                $("#start_date_sparepart_tahun3").hide();
+
+            }
+
+                function open_periode4(){
+
+                $("#perbaikan_tahun3").show();
+                $("#perbaikan_tahun2").show();
+                $("#perbaikan_tahun1").show();
+
+                $("#start_date_perbaikan_tahun1").show();
+                $("#start_date_perbaikan_tahun2").show();
+                $("#start_date_perbaikan_tahun3").show();
+
+                }
+
+                function open_periodepart4(){
+
+                    $("#sparepart_tahun3").show();
+                    $("#sparepart_tahun2").show();
+                    $("#sparepart_tahun1").show();
+
+                    $("#start_date_sparepart_tahun1").show();
+                    $("#start_date_sparepart_tahun2").show();
+                    $("#start_date_sparepart_tahun3").show();
+
+                }
+
+            function close_periode4(){
+
+                $("#perbaikan_tahun3").hide();
+                $("#perbaikan_tahun2").hide();
+                $("#perbaikan_tahun1").hide();
+
+                $("#perbaikan_tahun1").val('');
+                $("#perbaikan_tahun2").val('');
+                $("#perbaikan_tahun3").val('');
+
+                $("#start_date_perbaikan_tahun3").hide();
+                $("#start_date_perbaikan_tahun2").hide();
+                $("#start_date_perbaikan_tahun1").hide();
+
+            }
+
+            function close_periodepart4(){
+
+                $("#sparepart_tahun3").hide();
+                $("#sparepart_tahun2").hide();
+                $("#sparepart_tahun1").hide();
+
+                $("#sparepart_tahun1").val('');
+                $("#sparepart_tahun2").val('');
+                $("#sparepart_tahun3").val('');
+
+                $("#start_date_sparepart_tahun3").hide();
+                $("#start_date_sparepart_tahun2").hide();
+                $("#start_date_sparepart_tahun1").hide();
+
+
+            }
+
+            function open_periode2(){
+
+                $("#perbaikan_tahun2").show();
+                $("#perbaikan_tahun3").hide();
+                $("#perbaikan_tahun1").hide();
+
+                $("#perbaikan_tahun3").val('');
+                $("#perbaikan_tahun1").val('');
+
+                $("#start_date_perbaikan_tahun1").hide();
+                $("#start_date_perbaikan_tahun3").hide();
+                $("#start_date_perbaikan_tahun2").show();
+
+            }
+
+            function open_periodepart2(){
+
+                $("#sparepart_tahun2").show();
+                $("#sparepart_tahun3").hide();
+                $("#sparepart_tahun1").hide();
+
+                $("#sparepart_tahun3").val('');
+                $("#sparepart_tahun1").val('');
+
+                $("#start_date_sparepart_tahun1").hide();
+                $("#start_date_sparepart_tahun3").hide();
+                $("#start_date_sparepart_tahun2").show();
+
+            }
+
+            function open_periode3(){
+
+                $("#perbaikan_tahun3").show();
+                $("#perbaikan_tahun2").hide();
+                $("#perbaikan_tahun1").hide();
+
+                $("#perbaikan_tahun2").val('');
+                $("#perbaikan_tahun1").val('');
+
+                $("#start_date_perbaikan_tahun1").hide();
+                $("#start_date_perbaikan_tahun3").show();
+                $("#start_date_perbaikan_tahun2").hide();
+
+            }
+
+            function open_periodepart3(){
+
+                $("#sparepart_tahun3").show();
+                $("#sparepart_tahun2").hide();
+                $("#sparepart_tahun1").hide();
+
+                $("#sparepart_tahun2").val('');
+                $("#sparepart_tahun1").val('');
+
+                $("#start_date_sparepart_tahun1").hide();
+                $("#start_date_sparepart_tahun3").show();
+                $("#start_date_sparepart_tahun2").hide();
+
+            }
+
+            function open_periode31(){
+
+            $("#perbaikan_tahun3").show();
+            $("#perbaikan_tahun2").hide();
+            $("#perbaikan_tahun1").show();
+
+            $("#perbaikan_tahun2").val('');
+
+            $("#start_date_perbaikan_tahun3").show();
+            $("#start_date_perbaikan_tahun1").show();
+            $("#start_date_perbaikan_tahun2").hide();
+
+            }
+
+            function open_periodepart31(){
+
+                $("#sparepart_tahun3").show();
+                $("#sparepart_tahun2").hide();
+                $("#sparepart_tahun1").show();
+
+                $("#sparepart_tahun2").val('');
+
+                $("#start_date_sparepart_tahun3").show();
+                $("#start_date_sparepart_tahun1").show();
+                $("#start_date_sparepart_tahun2").hide();
+
+            }
+
+            function open_periode21(){
+
+                $("#perbaikan_tahun3").hide();
+                $("#perbaikan_tahun2").show();
+                $("#perbaikan_tahun1").show();
+
+                $("#perbaikan_tahun3").val('');
+
+                $("#start_date_perbaikan_tahun3").hide();
+                $("#start_date_perbaikan_tahun2").show();
+                $("#start_date_perbaikan_tahun1").show();
+
+            }
+
+            function open_periodepart21(){
+
+                $("#sparepart_tahun3").hide();
+                $("#sparepart_tahun2").show();
+                $("#sparepart_tahun1").show();
+
+                $("#sparepart_tahun3").val('');
+
+                $("#start_date_sparepart_tahun3").hide();
+                $("#start_date_sparepart_tahun2").show();
+                $("#start_date_sparepart_tahun1").show();
+
+            }
+
+            function open_periode32(){
+
+            $("#perbaikan_tahun3").show();
+            $("#perbaikan_tahun2").show();
+            $("#perbaikan_tahun1").hide();
+
+            $("#perbaikan_tahun1").val('');
+
+            $("#start_date_perbaikan_tahun1").hide();
+            $("#start_date_perbaikan_tahun2").show();
+            $("#start_date_perbaikan_tahun3").show();
+
+
+            }
+
+            function open_periodepart32(){
+
+                $("#sparepart_tahun3").show();
+                $("#sparepart_tahun2").show();
+                $("#sparepart_tahun1").hide();
+
+                $("#sparepart_tahun1").val('');
+
+                $("#start_date_sparepart_tahun1").hide();
+                $("#start_date_sparepart_tahun2").show();
+                $("#start_date_sparepart_tahun3").show();
+
+
+            }
+
+        $('#oprd').on('change', function() {
+            if(this.value == 1){
+                open_periode1();
+            }else if(this.value == 2){
+                open_periode2();
+            }else if(this.value == 3){
+                open_periode3();
+            }else if(this.value == 4){
+                open_periode4();
+            }else if(this.value == 5){
+                open_periode31();
+            }else if(this.value == 6){
+                open_periode21();
+            }else if(this.value == 7){
+                open_periode32();
+            } else {
+                close_periode4();
+            }
+
+        });
+
+        $('#oprds').on('change', function() {
+            if(this.value == 1){
+                open_periodepart1();
+            }else if(this.value == 2){
+                open_periodepart2();
+            }else if(this.value == 3){
+                open_periodepart3();
+            }else if(this.value == 4){
+                open_periodepart4();
+            }else if(this.value == 5){
+                open_periodepart31();
+            }else if(this.value == 6){
+                open_periodepart21();
+            }else if(this.value == 7){
+                open_periodepart32();
+            } else {
+                close_periodepart4();
+            }
+
+        });
+
 
     </script>
 @stop

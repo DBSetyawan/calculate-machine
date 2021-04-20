@@ -258,7 +258,7 @@
                                                     @endif
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
-                                                    <span>{{ $data->{$row->field} }}</span>
+                                                    {{-- <span>{{ $data->{$row->field} }}</span> --}}
                                                     @if ($row->display_name == 'TRANSACTION STATUS')
                                                         @if(!empty($data->ended_at))
                                                                 <span class="badge badge-danger">closed</span>
@@ -269,11 +269,20 @@
                                                     @if ($row->display_name == 'perbaikan tahun 2018')
                                                         <span>{{ "Rp " . number_format($data->perbaikan_tahun1,0,',','.') }}</span>
                                                     @endif
+                                                    @if ($row->display_name == 'PERBAIKAN P1')
+                                                        <span class="badge badge-success">{{ $data->thn_perbaikan_periode_1}}</span>
+                                                    @endif
                                                     @if ($row->display_name == 'perbaikan tahun 2019')
                                                         <span>{{ "Rp " . number_format($data->perbaikan_tahun2,0,',','.') }}</span>
                                                     @endif
+                                                    @if ($row->display_name == 'PERBAIKAN P2')
+                                                        <span class="badge badge-success">{{ $data->thn_perbaikan_periode_2}}</span>
+                                                    @endif
                                                     @if ($row->display_name == 'perbaikan tahun 2020')
                                                         <span>{{ "Rp " . number_format($data->perbaikan_tahun3,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'PERBAIKAN P3')
+                                                        <span class="badge badge-success">{{ $data->thn_perbaikan_periode_3}}</span>
                                                     @endif
                                                     @if ($row->display_name == 'Rata2 perbaikan Perbulan')
                                                         <span>{{ "Rp " . number_format($data->rata_rata_perbaikan_perbulan,0,',','.') }}</span>
@@ -281,11 +290,20 @@
                                                     @if ($row->display_name == 'sparepart tahun 2018')
                                                         <span>{{ "Rp " . number_format($data->sparepart_tahun1,0,',','.') }}</span>
                                                     @endif
+                                                    @if ($row->display_name == 'SPAREPART P1')
+                                                        <span class="badge badge-success">{{ $data->thn_sparepart_periode_1}}</span>
+                                                    @endif
                                                     @if ($row->display_name == 'sparepart tahun 2019')
                                                         <span>{{ "Rp " . number_format($data->sparepart_tahun2,0,',','.') }}</span>
                                                     @endif
+                                                    @if ($row->display_name == 'SPAREPART P2')
+                                                        <span class="badge badge-success">{{ $data->thn_sparepart_periode_2}}</span>
+                                                    @endif
                                                     @if ($row->display_name == 'sparepart tahun 2020')
                                                         <span>{{ "Rp " . number_format($data->sparepart_tahun3,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'SPAREPART P3')
+                                                        <span class="badge badge-success">{{ $data->thn_sparepart_periode_3}}</span>
                                                     @endif
                                                     @if ($row->display_name == 'Rata2 sparepart Perbulan')
                                                         <span>{{ "Rp " . number_format($data->rata_rata_sparepart_perbulan,0,',','.') }}</span>

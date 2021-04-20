@@ -1,24 +1,18 @@
 @extends('voyager::master')
 
 @section('page_title', __('voyager::generic.viewing').' '.$dataType->getTranslatedAttribute('display_name_plural'))
-
 @section('page_header')
     <div class="container-fluid">
         <h1 class="page-title">
             <i class="{{ $dataType->icon }}"></i> {{ $dataType->getTranslatedAttribute('display_name_plural') }}
         </h1>
-        @can('add', app($dataType->model_name))
-            {{-- <a href="{{ route('voyager.'.$dataType->slug.'.create') }}" class="btn btn-success btn-add-new">
+        {{-- @can('add', app($dataType->model_name))
+            <a href="{{ route('voyager.'.$dataType->slug.'.create') }}" class="btn btn-success btn-add-new">
                 <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }}</span>
-            </a> --}}
-        @endcan
-        <a id="sendcalculate" class="btn btn-success btn-add-new">
-            {{-- <a href="{{ route('voyager.recalculate') }}" class="btn btn-success btn-add-new"> --}}
-            <i class="voyager-double-right"></i> <span>{{ __('Recalculate Machine') }} </span>
-        </a>
-        <a id="closerecalculatesend" class="btn btn-primary btn-add-new">
-            {{-- <a href="{{ route('voyager.recalculate') }}" class="btn btn-success btn-add-new"> --}}
-            <i class="voyager-double-right"></i> <span>{{ __('Close Recalculate') }} </span>
+            </a>
+        @endcan --}}
+        <a href="{{ route('mesin.form.formSpecialLabor') }}" class="btn btn-success btn-add-new">
+            <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }} Grouping mesin labor</span>
         </a>
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
@@ -54,7 +48,7 @@
                         @if ($isServerSide)
                             <form method="get" class="form-search">
                                 <div id="search-input">
-                                    <div class="col-2">
+                                    <div class="col-2">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
                                         <select id="search_key" name="key">
                                             @foreach($searchNames as $key => $name)
                                                 <option value="{{ $key }}" @if($search->key == $key || (empty($search->key) && $key == $defaultSearchKey)) selected @endif>{{ $name }}</option>
@@ -236,7 +230,9 @@
                                                             @foreach (array_slice($files, 0, 3) as $file)
                                                                 <li>{{ $file }}</li>
                                                             @endforeach
-                                                            </ul>
+                                                            </ul>  @if ($row->display_name == 'ROLE')
+                                                            <span>{{ __("donatur") }}</span>
+                                                        @endif
                                                         @endif
                                                         @if (count($files) > 3)
                                                             {{ __('voyager::media.files_more', ['count' => (count($files) - 3)]) }}
@@ -255,14 +251,15 @@
                                                 @else
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     {{-- <span>{{ $data->{$row->field} }}</span> --}}
-                                                    @if ($row->display_name == 'TRANSACTION STATUS')
-                                                            
-                                                            @if(!empty($data->ended_at))
-                                                                <span class="badge badge-danger">closed</span>
-                                                            @else
-                                                                <span class="badge badge-success">opened</span>
-                                                            @endif
-                                                     @endif
+                                                    @if ($row->display_name == 'Upah Atas (Rp)')
+                                                        <span>{{ "Rp " . number_format($data->upah_atas,0,',','.') }}</span>
+                                                    @endif
+                                                    @if ($row->display_name == 'Upah Tengah (Rp)')
+                                                        <span>{{ "Rp " . number_format($data->upah_tengah,0,',','.') }}</span>
+                                                    @endif
+                                                        @if ($row->display_name == 'Upah Terkecil (Rp)')
+                                                        <span>{{ "Rp " . number_format($data->upah_terkecil,0,',','.') }}</span>
+                                                    @endif
                                                 @endif
                                             </td>
                                         @endforeach
@@ -299,32 +296,6 @@
                             </div>
                         </div>
                         @endif
-                        @inject('bpnjualan','App\BagianPenjualan')
-                        @php
-                            $tpnjualan = $bpnjualan->whereIn('company_parent_id', [3])->get();
-
-                            $tpnjualan = collect([$tpnjualan])->sum(function ($region){
-                                    return $region->sum('biaya_perbulan');
-                                });
-                                $tpnjualanprthn = $bpnjualan->whereIn('company_parent_id', [3])->get();
-
-                                $tpnjualanprthn = collect([$tpnjualanprthn])->sum(function ($region){
-                                    return $region->sum('biaya_pertahun');
-                                });
-                        @endphp
-                        <br/>
-                        <div class="panel panel-bordered">
-                            <div class="panel-body">
-                                <div class="pull-left">
-                                    <div class="col-2">
-                                        {{-- <label for="total PPJ">Total penjualan perbulan  :</label> <span class="badge badge-success">Rp {{number_format($tpnjualan, 0, ".", ".")}}</span> --}}
-                                    </div>
-                                    <div class="col-2">
-                                        {{-- <label for="total PPJ">Total penjualan pertahun  :</label> <span class="badge badge-success">Rp {{number_format($tpnjualanprthn, 0, ".", ".")}}</span> --}}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -395,266 +366,6 @@
             });
         });
 
-        $('#sendcalculate').on('click', function(e) {
-
-            setTimeout(() => {
-                $("#sendcalculate").text("Data sedang dikalkulasi, tunggu sebentar..");
-            }, 500);
-
-            sendingrecalculate(true).then(function(res){
-
-                // console.log(res)
-
-                if(res.res == 200){
-                    const success = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 4000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    })
-
-                    success.fire({
-                        icon: 'success',
-                        title: 'CODE: [200][success], data berhasil disinkronkan ke KOP kalkulasi mesin.'
-                    });
-
-                    $("#sendcalculate").text("Recalculate Machine");
-
-                    let curr = '{{ route("tr.total.kalkulasi") }}';
-                    setTimeout(function(){ 
-                        window.location.href = curr;
-                    }, 6000);
-
-                } 
-                    else {
-
-                        // if(res.json == 1){
-
-                        //     const success = Swal.mixin({
-                        //         toast: true,
-                        //         position: 'top-end',
-                        //         showConfirmButton: false,
-                        //         timer: 4000,
-                        //         timerProgressBar: true,
-                        //         didOpen: (toast) => {
-                        //             toast.addEventListener('mouseenter', Swal.stopTimer)
-                        //             toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        //         }
-                        //     })
-
-                        //     success.fire({
-                        //         icon: 'success',
-                        //         title: 'CODE: [200][success], data berhasil disinkronkan ke KOP kalkulasi mesin.'
-                        //     });
-
-                        //     $("#sendcalculate").text("Recalculate Machine");
-
-                        //     let curr = '{{ route("tr.total.kalkulasi") }}';
-                        //     setTimeout(function(){ 
-                        //         window.location.href = curr;
-                        //     }, 6000);
-
-                        // }
-
-
-                    }
-
-                    if(res.data.message.alertype == 'error'){
-
-                        const err = Swal.mixin({
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 4000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.addEventListener('mouseenter', Swal.stopTimer)
-                                toast.addEventListener('mouseleave', Swal.resumeTimer)
-                            }
-                        })
-
-                            err.fire({
-                                icon: 'error',
-                                title: res.data.message.message
-                            });
-
-                        $("#sendcalculate").text("Recalculate Machine");
-
-                        // let curr = '{{ route("voyager.all-recalculate.index") }}';
-                        // setTimeout(function(){ 
-                        //     window.location.href = curr;
-                        // }, 6000);
-
-                        }
-
-            });
-        });
-
-        $('#closerecalculatesend').on('click', function(e) {
-
-            setTimeout(() => {
-                $("#closerecalculatesend").text("Closing recalculate transaksi, tunggu sebentar..");
-            }, 500);
-
-            closingrecalculate(true).then(function(res){
-
-                if(res.res == 200){
-                    const success = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 4000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    })
-
-                    success.fire({
-                        icon: 'success',
-                        title: 'Data berhasil menutup transaksi periode tahunan.'
-                    });
-
-                    $("#closerecalculatesend").text("Close Recalculate");
-
-                    let curr = '{{ route("tr.total.kalkulasi") }}';
-                    setTimeout(function(){ 
-                        window.location.href = curr;
-                    }, 6000);
-
-                } 
-
-                if(res.data.message.alertype == 'error'){
-
-                    const err = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 4000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    })
-
-                        err.fire({
-                            icon: 'error',
-                            title: res.data.message.message
-                        });
-
-                    $("#sendcalculate").text("Recalculate Machine");
-
-                    let curr = '{{ route("voyager.all-recalculate.index") }}';
-                    setTimeout(function(){ 
-                        window.location.href = curr;
-                    }, 6000);
-
-                }
-
-           });
-        });
-
-        async function closingrecalculate(mesinid) {
-
-            let datafix = {
-                    mesinid:mesinid
-                }
-                
-                const apiDataMesin = "{{ route('kop.closing') }}";
-                        
-                    const settings = {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                                    'Content-Type': 'application/json;charset=utf-8'
-                                },
-                                body: JSON.stringify(datafix)
-                        }
-                try {
-                        
-                        const fetchResponse = await fetch(`${apiDataMesin}`, settings);
-                        const data = await fetchResponse.json();
-
-                        return data;
-
-                    } catch (objError) {
-
-                        return objError;
-                }    
-            }
-
-        async function sendingrecalculate(mesinid
-        ) {
-                    let datafix = {
-                            mesinid:mesinid
-                        }
-                const apiDataMesin = "{{ route('voyager.recalculate') }}";
-                        
-                    const settings = {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                                    'Content-Type': 'application/json;charset=utf-8'
-                                },
-                                body: JSON.stringify(datafix)
-                        }
-                try {
-                        
-                        const fetchResponse = await fetch(`${apiDataMesin}`, settings);
-                        const data = await fetchResponse.json();
-
-                        return data;
-
-                    } catch (objError) {
-
-                        return objError;
-                        // if(objError.data.alert-type == 'error'){
-
-                        // const success = Swal.mixin({
-                        //     toast: true,
-                        //     position: 'top-end',
-                        //     showConfirmButton: false,
-                        //     timer: 4000,
-                        //     timerProgressBar: true,
-                        //     didOpen: (toast) => {
-                        //         toast.addEventListener('mouseenter', Swal.stopTimer)
-                        //         toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        //     }
-                        // })
-
-                        // success.fire({
-                        //     icon: 'error',
-                        //     title: objError.data.message.message
-                        // });
-                        // if (objError instanceof SyntaxError) {
-                        //         // console.error(objError);
-
-                        //         const success = Swal.mixin({
-                        //             toast: true,
-                        //             position: 'top-end',
-                        //             showConfirmButton: false,
-                        //             timer: 4000,
-                        //             timerProgressBar: true,
-                        //             didOpen: (toast) => {
-                        //                 toast.addEventListener('mouseenter', Swal.stopTimer)
-                        //                 toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        //             }
-                        //         })
-
-                        //         success.fire({
-                        //             icon: 'error',
-                        //             title: JSON.stringify(objError)
-                        //         });
-                        //     }
-                }    
-            }
 
         var deleteFormAction;
         $('td').on('click', '.delete', function (e) {

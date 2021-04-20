@@ -23,7 +23,7 @@
     <link href="{{ asset('public/css/prtip.min.css') }}" rel="stylesheet">
     <link href="{{ asset('https://vpn.krisanthium.com:7070/kalkulasimesin2/public/css/c3.css') }}" rel="stylesheet">
     {{-- <link rel="stylesheet" href="{{ asset('public/css/fv.css') }}"/> --}}
-        
+    {{-- <link href="https://code.jquery.com/ui/1.10.1/themes/smoothness/jquery-ui.css"/> --}}
     @yield('css')
     @if(__('voyager::generic.is_rtl') == 'true')
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-rtl/3.4.0/css/bootstrap-rtl.css">
@@ -138,6 +138,7 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 <script type="text/javascript" src="{{ asset('public/js/protip.min.js') }}"></script>
 <script src="{{ ('https://vpn.krisanthium.com:7070/kalkulasimesin2/public/js/jquery.countdown.js') }}"></script>
 <script src="{{ ('https://vpn.krisanthium.com:7070/kalkulasimesin2/public/js/jquery.countdown.min.js') }}"></script>
+{{-- <script src="https://code.jquery.com/ui/1.10.1/jquery-ui.js"></script> --}}
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
                 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

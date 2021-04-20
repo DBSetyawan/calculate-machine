@@ -1157,15 +1157,29 @@ trait ModuleCaculates {
 
                                 $ambil_listrik_dari_mesin = $ambillistrik[$i];
                                 // $ambil_listrik_dari_mesin = $tmp->mesin->MesinListrikPerjamTo->persen;
-                                // dd( $tmp['code_mesin']);
-                                $mtcsfe = isset(RptMtc::where('code_mesin', $tmp['code_mesin'])->first()->total_biaya_perbulan) ? RptMtc::where('code_mesin', $tmp['code_mesin'])->first()->total_biaya_perbulan : null;
-                                $penyusutanfe = isset(Penyusutan::where('code_mesin', $tmp['code_mesin'])->first()->penyusutan_perbulan) ? Penyusutan::where('code_mesin', $tmp['code_mesin'])->first()->penyusutan_perbulan : null;
-            
-                                $labors = isset(Labor::where('code_mesin', $tmp['code_mesin'])->first()->total_biaya) ? Labor::where('code_mesin', $tmp['code_mesin'])->first()->total_biaya : null;
+                                $mtcsfe = isset(RptMtc::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->total_biaya_perbulan) 
+                                            ? RptMtc::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->total_biaya_perbulan 
+                                            : 0;
 
-                                $penyusutanfefn = Penyusutan::where('code_mesin', $tmp['code_mesin'])->first();
-                                $laborsfn = Labor::where('code_mesin', $tmp['code_mesin'])->first();
-                                $mtcsfefn =  RptMtc::where('code_mesin', $tmp['code_mesin'])->first();
+                                $penyusutanfe = isset(Penyusutan::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->penyusutan_perbulan) 
+                                                ? Penyusutan::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->penyusutan_perbulan 
+                                                : 0;
+            
+                                $labors = isset(Labor::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->total_biaya) 
+                                            ? Labor::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->total_biaya 
+                                            : 0;
+
+                                $penyusutanfefn = isset(Penyusutan::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->penyusutan_perbulan)
+                                                    ? Penyusutan::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->penyusutan_perbulan
+                                                    : 0;
+
+                                $laborsfn = isset(Labor::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->total_biaya)
+                                            ? Labor::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->total_biaya
+                                            : 0;
+
+                                $mtcsfefn =  isset(RptMtc::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->total_biaya_perbulan)
+                                            ? RptMtc::where('code_mesin', $tmp['code_mesin'])->whereNull('ended_at')->first()->total_biaya_perbulan
+                                            : 0;
 
                                 if(is_null($labors)){
                                     
@@ -1467,6 +1481,9 @@ trait ModuleCaculates {
 
     }
 
+    /**
+     * @disabled func.
+     */
     public function recalculateTanpaMaintenance(){
 
         try 
@@ -1638,6 +1655,9 @@ trait ModuleCaculates {
     }
 
 
+    /**
+     * @disabled func.
+     */
     public function recalculateTanpaPenyusutan(){
 
         try 
@@ -1807,6 +1827,9 @@ trait ModuleCaculates {
 
     }
 
+    /**
+     * @disabled func.
+     */
     public function recalculateTanpaPenyusutanNtanpaMTC(){
 
         try 
