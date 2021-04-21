@@ -10,6 +10,11 @@ class SpecialLabor extends Model
     protected $table= "special_labor";
     protected $guarded = [''];
 
+    protected $casts = [
+        'nama_group_labor' => 'string',
+        'group_machine' => 'array'
+    ]; 
+
     public function Company()
     {
         return $this->belongsTo('App\Company', 'company_parent_id');

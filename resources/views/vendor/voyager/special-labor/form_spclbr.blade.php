@@ -34,9 +34,11 @@
                                         <button type="submit" class="btn btn-primary pull-right svd">Simpan group khuhus labor</button>&nbsp;
                                         <form name="add_name" id="add_name">
                                             <div class="row">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="program_id">Group khusus labor</label>
                                                 <input type="text" class="form-control col-md-4" id="nama_group_labor" name="nama_group_labor" />
                                             </div>
-
                                            <p align="right"><button type="button" name="add" id="add" class="btn btn-success waves-effect">Tambah Group mesin</button></p>
                                            <div class="text">  
                                                   <table class="table table-bordered" id="dynamic_field" border="1">  
@@ -52,7 +54,7 @@
                                                                <input type="number" name="no[]" value="1" placeholder="No" class="form-control " required="" disabled="">
                                                            </td>
                                                            <td><input type="text" class="form-control" id="machines" name="machi[]" placeholder="Group mesin" required="">
-                                                            <input type="text" class="form-control" id='group_mesin' name="group_mesin[]" readonly></td>
+                                                            <input type="text" class="form-control hidden" id='group_mesin' name="group_mesin[]" readonly></td>
                                                           <td></td>
                                                             <!--
                                                             <input type="hidden" class="form-control" name="no_surat_jalan[]" value="SJM-20210420-009" />
@@ -101,9 +103,18 @@ $tcostmonth = collect([$mtcs])->sum(function ($biaya){
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script>
 $(document).ready(function(){  
+    // console.log($("#idcallback").val())
+    // if($("#idcallback").val() == ""){
+
+
+    //     else {
+
+    //     }
 
     var i=1;  
         $( "#machines" ).autocomplete({
+            search  : function(){$(this).addClass('ui-autocomplete-loadings');},
+            open    : function(){$(this).removeClass('ui-autocomplete-loadings');},
             source: function( request, response ) {
                 $.ajax({
                 url:"{{route('mesin.getGroupMachine')}}",
@@ -126,38 +137,56 @@ $(document).ready(function(){
         });
 
     $('#add').click(function(){  
-        i++;  
-           $('#dynamic_field').append('<tr id="row'+i+'">'+
-		   '<td><input type="number" name="no[]" placeholder="No" value='+i+' class="form-control" disabled=""></td>'+
-		   '<td><input type="text" class="form-control whgl'+i+'" id="idcallback" name="machi[]" placeholder="Group mesin" required />'+
-            '<input type="text" id="group_mesin" name="group_mesin[]" class="form-control gms'+i+'"/></td>'+
-		   '<td align="right"><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove"><i class="voyager-trash"></i></button></td></tr>'+
-        '');
 
-           $('.whgl'+i+'').autocomplete({
+        if($("#machines").val() == ""){
+            alert("anda harus mengisiikan row ini terlbih dahul")
+        }
+         
+            else {
 
-            source: function( request, response ) {
-                $.ajax({
-                    url:"{{route('mesin.getGroupMachine')}}",
-                    type: 'post',
-                    dataType: "json",
-                    data: {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    search: request.term
-                },
-                    success: function( data ) {
-                        response( data );
+            if($('.whgl'+i+'').val() == ""){
+        
+                    alert("anda harus mengisiikan row ini terlbih s")
+
+                }
+
+                else {
+
+                    i++; 
+
+            $('#dynamic_field').append('<tr id="row'+i+'">'+
+            '<td><input type="number" name="no[]" placeholder="No" value='+i+' class="form-control" disabled=""></td>'+
+            '<td><input type="text" class="form-control whgl'+i+'" id="idcallback" name="machi[]" placeholder="Group mesin" required />'+
+            '<input type="text" id="group_mesin" name="group_mesin[]" class="form-control hidden gms'+i+'"/></td>'+
+            '<td align="right"><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove"><i class="voyager-trash"></i></button></td></tr>'+
+            '');
+
+                $('.whgl'+i+'').autocomplete({
+                    source: function( request, response ) {
+                            $.ajax({
+                                url:"{{route('mesin.getGroupMachine')}}",
+                                type: 'post',
+                                dataType: "json",
+                                data: {
+                                _token: $('meta[name="csrf-token"]').attr('content'),
+                                search: request.term
+                            },
+                                success: function( data ) {
+                                    response( data );
+                                }
+                            });
+                        },
+                        select: function (event, ui) {
+                            // Set selection
+                            $('.gms'+i+'').val(ui.item.value); // display the selected text
+                            $('.whgl'+i+'').val(ui.item.label); // save selected id to input
+                            return false;
+                        }
                     }
-                });
-            },
-            select: function (event, ui) {
-                // Set selection
-                $('.gms'+i+'').val(ui.item.value); // display the selected text
-                $('.whgl'+i+'').val(ui.item.label); // save selected id to input
-                return false;
+                );
             }
-           
-        });
+        }
+
       });  
 
       $(document).on('click', '.btn_remove', function(){  
@@ -172,7 +201,7 @@ $(document).ready(function(){
  $('.svd').click(function(e){  
 			var nama_group_labor  = document.getElementById("nama_group_labor").value;
             if(nama_group_labor==""){
-				alert("Ada data yang kosong");
+				alert("Nama group tidak boleh kosong");
 			}else{
 
                 let arr = { 'd' :  $("#add_name").serializeArray()};

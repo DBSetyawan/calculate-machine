@@ -5,8 +5,11 @@ namespace App\Http\Controllers\KOP;
 use App\Mesin;
 use Exception;
 use App\Company;
+use App\SpecialLabor;
 use App\KategoriBagian;
+use Mavinoo\Batch\Batch;
 use App\Lb8KategoriMesin;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\BiayaAdministrasiUmum;
 use TCG\Voyager\Facades\Voyager;
@@ -72,8 +75,39 @@ class VoyagerSpecialLaborController extends BaseVoyagerBaseController
 
             }
 
-            dd($hg);
-        return response()->json();
+            foreach($hg as $v) {
+                if(is_numeric($v)) {
+                    $ds[] = $v;
+                } else {
+                    $cstring[] = $v;
+                    $first = Arr::first($cstring, function ($value, $key) {
+                        return $value;
+                    });
+                }
+
+             
+            }
+            $data = [
+                'group_machine' => $ds,
+                'nama_group_labor' => $first,
+            ];
+
+            // dd($data);
+            $s = SpecialLabor::updateOrCreate($data);
+
+
+            // $spclabor = new SpecialLabor;
+            
+            //     $columns = [
+            //         'nama_group_labor',
+            //         'group_machine'
+            //     ];
+                        
+            //             $batchSize = 500;
+                    
+            //         $result = \Batch::insert($spclabor, $columns, $data, $batchSize);
+
+        return response()->json($s);
      }
 
     public function index(Request $request)
