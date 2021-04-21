@@ -31,31 +31,35 @@
                             <div class="panel-body">
                                 <div class="contanier">
                                     <div class="form-group">  
-                                        <button type="submit" class="btn btn-primary pull-right svd">Simpan group khuhus labor</button>&nbsp;
+                                        {{-- <button type="submit" class="btn btn-primary pull-right svd">Simpan group khuhus labor</button>&nbsp; --}}
                                         <form name="add_name" id="add_name">
-                                            <div class="row">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="program_id">Group khusus labor</label>
-                                                <input type="text" class="form-control col-md-4" id="nama_group_labor" name="nama_group_labor" />
-                                            </div>
-                                           <p align="right"><button type="button" name="add" id="add" class="btn btn-success waves-effect">Tambah Group mesin</button></p>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                    <div class="row">
+                                                            <div class="form-group">
+                                                                <label for="program_id">Group khusus labor</label>
+                                                                <input type="text" class="form-control col-md-4" id="nama_group_labor" name="nama_group_labor" />
+                                                            </div>
+                                                        </div>
+                                                </div>
+
                                            <div class="text">  
                                                   <table class="table table-bordered" id="dynamic_field" border="1">  
                                                   <thead>
-                                                           <tr class="table-responsive">
-                                                               <th nowrap="">No.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                                                               <th nowrap="">&nbsp;&nbsp;&nbsp;&nbsp; Group mesin &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                                                           </tr>
-                                                       </thead>
-                                                       <tbody>
+                                                    <tr class="table-responsive">
+                                                        <th nowrap="">No.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                                        <th nowrap="">&nbsp;&nbsp;&nbsp;&nbsp; Group mesin &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                                        <th><button type="submit" class="btn btn-primary btn-lg  col-xs-12 svd"><i class="voyager-check"></i> Simpan</button></th>
+                                                    </tr>
+                                                </thead>
+                                                    <tbody>
                                                        <tr>  
-                                                            <td width="8%">
+                                                            <td width="9%">
                                                                <input type="number" name="no[]" value="1" placeholder="No" class="form-control " required="" disabled="">
                                                            </td>
-                                                           <td><input type="text" class="form-control" id="machines" name="machi[]" placeholder="Group mesin" required="">
+                                                           <td width="70%"><input type="text" class="form-control" id="machines" name="machi[]" placeholder="Group mesin" required="">
                                                             <input type="text" class="form-control hidden" id='group_mesin' name="group_mesin[]" readonly></td>
-                                                          <td></td>
+                                                          <td> <button type="button" name="add" id="add" class="btn btn-lg col-xs-12 btn-success"><i class="voyager-plus"></i></button></td>
                                                             <!--
                                                             <input type="hidden" class="form-control" name="no_surat_jalan[]" value="SJM-20210420-009" />
                                                             <input type="number" name="no[]" value="1" placeholder="No" class="form-control name_list" required /></td> 
@@ -77,6 +81,7 @@
                                         </select>
                                     </div> --}}
 
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -103,14 +108,6 @@ $tcostmonth = collect([$mtcs])->sum(function ($biaya){
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script>
 $(document).ready(function(){  
-    // console.log($("#idcallback").val())
-    // if($("#idcallback").val() == ""){
-
-
-    //     else {
-
-    //     }
-
     var i=1;  
         $( "#machines" ).autocomplete({
             search  : function(){$(this).addClass('ui-autocomplete-loadings');},
@@ -132,24 +129,44 @@ $(document).ready(function(){
             select: function (event, ui) {
                 $('#machines').val(ui.item.label); // display the selected text
                 $('#group_mesin').val(ui.item.value); // save selected id to input
+
+                $('#machines').prop("disabled", true);
+
                 return false;
             }
         });
 
     $('#add').click(function(){  
-
+        const pesanwarning = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 10000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
         if($("#machines").val() == ""){
-            alert("anda harus mengisiikan row ini terlbih dahul")
+      
+                pesanwarning.fire({
+                    icon: 'warning',
+                    title: 'tidak bisa menambah field form, isikan terlebih dahulu field form yang kosong..'
+                })
+
         }
          
             else {
 
             if($('.whgl'+i+'').val() == ""){
-        
-                    alert("anda harus mengisiikan row ini terlbih s")
+                    
+                    pesanwarning.fire({
+                        icon: 'warning',
+                        title: 'tidak bisa menambah field form, isikan terlebih dahulu field form yang kosong..'
+                    })
 
-                }
-
+            }
                 else {
 
                     i++; 
@@ -158,7 +175,7 @@ $(document).ready(function(){
             '<td><input type="number" name="no[]" placeholder="No" value='+i+' class="form-control" disabled=""></td>'+
             '<td><input type="text" class="form-control whgl'+i+'" id="idcallback" name="machi[]" placeholder="Group mesin" required />'+
             '<input type="text" id="group_mesin" name="group_mesin[]" class="form-control hidden gms'+i+'"/></td>'+
-            '<td align="right"><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove"><i class="voyager-trash"></i></button></td></tr>'+
+            '<td align="right"><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn-lg col-xs-12 btn_remove"><i class="voyager-trash"></i></button></td></tr>'+
             '');
 
                 $('.whgl'+i+'').autocomplete({
@@ -180,6 +197,9 @@ $(document).ready(function(){
                             // Set selection
                             $('.gms'+i+'').val(ui.item.value); // display the selected text
                             $('.whgl'+i+'').val(ui.item.label); // save selected id to input
+
+                            $('.whgl'+i+'').prop("disabled", true);
+
                             return false;
                         }
                     }
@@ -199,9 +219,25 @@ $(document).ready(function(){
  });  
 
  $('.svd').click(function(e){  
+
+        const vb = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 10000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
+
 			var nama_group_labor  = document.getElementById("nama_group_labor").value;
             if(nama_group_labor==""){
-				alert("Nama group tidak boleh kosong");
+                vb.fire({
+                        icon: 'warning',
+                        title: 'Maaf tidak bisa menyimpan data, karena ada nama group yang kosong..'
+                    })
 			}else{
 
                 let arr = { 'd' :  $("#add_name").serializeArray()};
@@ -215,6 +251,10 @@ $(document).ready(function(){
                     success:function(data)  
                     {  
                     console.log(data);  
+                        vb.fire({
+                            icon: 'success',
+                            title: 'data berhasil disimpan..'
+                        })
                     }  
                 });
 			}

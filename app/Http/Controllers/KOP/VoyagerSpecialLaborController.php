@@ -67,7 +67,7 @@ class VoyagerSpecialLaborController extends BaseVoyagerBaseController
                 
             }
 
-            $clll = collect($reslt);
+        $clll = collect($reslt);
 
             foreach($clll as $fg){
 
@@ -85,27 +85,14 @@ class VoyagerSpecialLaborController extends BaseVoyagerBaseController
                     });
                 }
 
-             
             }
+
             $data = [
-                'group_machine' => $ds,
+                'group_machine' => Arr::flatten(array_unique($ds)),
                 'nama_group_labor' => $first,
             ];
 
-            // dd($data);
             $s = SpecialLabor::updateOrCreate($data);
-
-
-            // $spclabor = new SpecialLabor;
-            
-            //     $columns = [
-            //         'nama_group_labor',
-            //         'group_machine'
-            //     ];
-                        
-            //             $batchSize = 500;
-                    
-            //         $result = \Batch::insert($spclabor, $columns, $data, $batchSize);
 
         return response()->json($s);
      }
