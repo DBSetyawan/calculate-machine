@@ -5,6 +5,7 @@
 
 @section('css')
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 @stop
 
 @section('page_header')
@@ -12,7 +13,6 @@
         <i class="voyager-plus"></i>
         Transaksi RPT MTC 
     </h1>
-    <button type="submit" class="btn btn-primary pull-right save">Simpan group khuhus labor</button>&nbsp;
 
 @stop
 
@@ -20,8 +20,8 @@
     <div class="page-content container-fluid">
 
 
-        <form class="form-edit-add" role="form"
-            method="POST" enctype="multipart/form-data" autocomplete="off">
+        {{-- <form class="form-edit-add" role="form" --}}
+            {{-- method="POST" enctype="multipart/form-data" autocomplete="off"> --}}
 
             {{ csrf_field() }}
 
@@ -31,7 +31,12 @@
                             <div class="panel-body">
                                 <div class="contanier">
                                     <div class="form-group">  
+                                        <button type="submit" class="btn btn-primary pull-right svd">Simpan group khuhus labor</button>&nbsp;
                                         <form name="add_name" id="add_name">
+                                            <div class="row">
+                                                <input type="text" class="form-control col-md-4" id="nama_group_labor" name="nama_group_labor" />
+                                            </div>
+
                                            <p align="right"><button type="button" name="add" id="add" class="btn btn-success waves-effect">Tambah Group mesin</button></p>
                                            <div class="text">  
                                                   <table class="table table-bordered" id="dynamic_field" border="1">  
@@ -42,16 +47,13 @@
                                                            </tr>
                                                        </thead>
                                                        <tbody>
-                                                            <!-- For defining autocomplete -->
-    <!-- For displaying selected option value from autocomplete suggestion -->
-    <input type="text" id='employeeid' readonly>
-
                                                        <tr>  
                                                             <td width="8%">
-                                                               <input type="hidden" class="form-control" name="id_docs[]">
                                                                <input type="number" name="no[]" value="1" placeholder="No" class="form-control " required="" disabled="">
                                                            </td>
-                                                           <td><input type="text" class="form-control" id="machines" name="group_mesin[]" placeholder="Group mesin" required=""></td>
+                                                           <td><input type="text" class="form-control" id="machines" name="machi[]" placeholder="Group mesin" required="">
+                                                            <input type="text" class="form-control" id='group_mesin' name="group_mesin[]" readonly></td>
+                                                          <td></td>
                                                             <!--
                                                             <input type="hidden" class="form-control" name="no_surat_jalan[]" value="SJM-20210420-009" />
                                                             <input type="number" name="no[]" value="1" placeholder="No" class="form-control name_list" required /></td> 
@@ -82,7 +84,7 @@
             {{-- <button type="submit" class="btn btn-primary pull-right save">
                 Add Donation
             </button> --}}
-        </form>
+        {{-- </form> --}}
     </div>
 @stop
 @inject('mtc','App\ListrikOutput')
@@ -96,13 +98,13 @@ $tcostmonth = collect([$mtcs])->sum(function ($biaya){
 
 @endphp
 @section('javascript')
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script>
+$(document).ready(function(){  
 
-
-    $(document).ready(function(){  
+    var i=1;  
         $( "#machines" ).autocomplete({
             source: function( request, response ) {
-                // Fetch data
                 $.ajax({
                 url:"{{route('mesin.getGroupMachine')}}",
                 type: 'post',
@@ -117,76 +119,77 @@ $tcostmonth = collect([$mtcs])->sum(function ($biaya){
                 });
             },
             select: function (event, ui) {
-                // Set selection
                 $('#machines').val(ui.item.label); // display the selected text
-                $('#employeeid').val(ui.item.value); // save selected id to input
+                $('#group_mesin').val(ui.item.value); // save selected id to input
                 return false;
             }
         });
-    });
 
-
-  
-$(document).ready(function(){  
-
-      var i=1;  
-      $('#add').click(function(){  
-           i++;  
+    $('#add').click(function(){  
+        i++;  
            $('#dynamic_field').append('<tr id="row'+i+'">'+
-		   '<td><input type="hidden" name="no_surat_jalan[]" class="form-control" value="SJM-20210420-009"/>'+
-		   '<input type="number" name="no[]" placeholder="No" value='+i+' class="form-control" disabled=""></td>'+
-		   '<td><input type="text" class="form-control" name="nama[]" placeholder="Nama Barang" required /></td>'+
-		   '<td align="right"><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');  
+		   '<td><input type="number" name="no[]" placeholder="No" value='+i+' class="form-control" disabled=""></td>'+
+		   '<td><input type="text" class="form-control whgl'+i+'" id="idcallback" name="machi[]" placeholder="Group mesin" required />'+
+            '<input type="text" id="group_mesin" name="group_mesin[]" class="form-control gms'+i+'"/></td>'+
+		   '<td align="right"><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove"><i class="voyager-trash"></i></button></td></tr>'+
+        '');
+
+           $('.whgl'+i+'').autocomplete({
+
+            source: function( request, response ) {
+                $.ajax({
+                    url:"{{route('mesin.getGroupMachine')}}",
+                    type: 'post',
+                    dataType: "json",
+                    data: {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    search: request.term
+                },
+                    success: function( data ) {
+                        response( data );
+                    }
+                });
+            },
+            select: function (event, ui) {
+                // Set selection
+                $('.gms'+i+'').val(ui.item.value); // display the selected text
+                $('.whgl'+i+'').val(ui.item.label); // save selected id to input
+                return false;
+            }
+           
+        });
       });  
+
       $(document).on('click', '.btn_remove', function(){  
            var button_id = $(this).attr("id");   
            $('#row'+button_id+'').remove(); 
 		   i--;
       });   
-	  $('#submit').click(function(e){  
-			var no_surat_jalan  = document.getElementById("no_surat_jalan").value;
-			var no_gid  = document.getElementById("no_gid").value; 			
-			var nama_customer  = document.getElementById("nama_customer").value; 
-            var alamat_customer  = document.getElementById("alamat_customer").value; 
-			var tanggal_kirim  = document.getElementById("tanggal_kirim").value;
-            var nopol_kendaraan  = document.getElementById("nopol_kendaraan").value;
-			var no_po  = document.getElementById("no_po").value;
-			var no_so  = document.getElementById("no_so").value;
-			var coa  = document.getElementById("coa").value;
-			var keterangan  = document.getElementById("keterangan").value;
-			var sopir  = document.getElementById("sopir").value;
-			
-			var nama = document.getElementById("nama").value;
-			var jumlah = document.getElementById("jumlah").value;
-			var satuan = document.getElementById("satuan").value;
-						if(nama_customer=="" || alamat_customer=="" || jumlah=="" || satuan=="" || nama=="" || sopir==""){
-				alert("Ada data yang kosong");
-				 var x = document.getElementById("submit");
-					x.disabled = false;
-			}else{
-			var dataString = 'no_surat_jalan=' + no_surat_jalan + '&no_gid=' + no_gid + '&nama_customer=' + nama_customer + '&alamat_customer=' + alamat_customer + '&tanggal_kirim=' + tanggal_kirim + '&nopol_kendaraan=' + nopol_kendaraan + '&no_po=' + no_po+ '&no_so=' + no_so+ '&coa=' + coa+ '&keterangan=' + keterangan + '&sopir=' + sopir;
-			$.ajax({  
-                url:"modul/name2.php",  
-                method:"POST",  
-                data:dataString,  
-                success:function(data)  
-                {  
-                     $.ajax({  
-						url:"modul/name.php",  
-						method:"POST",  
-						data:$('#add_name').serialize(),  
-						success:function(data)  
-						{  
-							 $('#add_name')[0].reset();  
-						}  
-				   });   
-				   alert(data);  
-				   window.location='?p=report-sjm';
-                }  
-			});
-			}
-				  });
+
+	  
  });  
+
+ $('.svd').click(function(e){  
+			var nama_group_labor  = document.getElementById("nama_group_labor").value;
+            if(nama_group_labor==""){
+				alert("Ada data yang kosong");
+			}else{
+
+                let arr = { 'd' :  $("#add_name").serializeArray()};
+                
+                $.ajax({  
+                    url:"{{ route('mesin.machinelabor') }}",  
+                    method:"POST",
+                    dataType: "json",  
+                    data:arr,  
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    success:function(data)  
+                    {  
+                    console.log(data);  
+                    }  
+                });
+			}
+            });
  
 
     </script>

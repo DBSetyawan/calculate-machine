@@ -1,0 +1,24 @@
+{
+    "d": [{
+        "name": "nama_group_labor",
+        "value": "groups"
+    }, {
+        "name": "machi[]",
+        "value": "Mesin Cetak 1 Warna GTO 1 Berbek"
+    }, {
+        "name": "group_mesin[]",
+        "value": "13"
+    }, {
+        "name": "machi[]",
+        "value": "Mesin Cetak 1 Warna GTO 1 Berbek"
+    }, {
+        "name": "group_mesin[]",
+        "value": "13"
+    }, {
+        "name": "machi[]",
+        "value": "Mesin Cetak 1 Warna SORM Berbek"
+    }, {
+        "name": "group_mesin[]",
+        "value": "12"
+    }]
+}

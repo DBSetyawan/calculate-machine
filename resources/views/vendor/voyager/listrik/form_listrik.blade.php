@@ -167,11 +167,11 @@
                                         <div class="form-group">
                                            
                                             <label for="url_instagram">Faktor kali LWBP</label>
-                                            <input type="text" class="form-control fkl" id="faktor_kali_lwbp" name="faktor_kali_lwbp" placeholder="Faktor kali LWBP">
+                                            <input type="text" class="form-control fkl" id="faktor_kali_lwbp" name="faktor_kali_lwbp" placeholder="Faktor kali LWBP" readonly>
                                         </div>
                                         <div class="form-group">
                                             <label for="url_instagram">Faktor kali WBP</label>
-                                            <input type="text" class="form-control fkw" id="faktor_kali_wbp" name="faktor_kali_wbp" placeholder="Faktor kali WBP">
+                                            <input type="text" class="form-control fkw" id="faktor_kali_wbp" name="faktor_kali_wbp" placeholder="Faktor kali WBP" readonly>
                                         </div>
                                     </div>
                                 </div>

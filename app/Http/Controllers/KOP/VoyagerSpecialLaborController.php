@@ -52,6 +52,30 @@ class VoyagerSpecialLaborController extends BaseVoyagerBaseController
         return response()->json($response);
      }
 
+     public function machinelabor(Request $request){
+
+        $search = $request->d;
+        $enc = json_encode($search);
+        $reslt = json_decode($enc, true);
+
+            for ($i=0; $i < count([$reslt]); $i++) { 
+                # code...
+                $value[] = $reslt[$i];
+                
+            }
+
+            $clll = collect($reslt);
+
+            foreach($clll as $fg){
+
+                $hg[] = $fg['value'];
+
+            }
+
+            dd($hg);
+        return response()->json();
+     }
+
     public function index(Request $request)
     {
         // GET THE SLUG, ex. 'posts', 'pages', etc.
