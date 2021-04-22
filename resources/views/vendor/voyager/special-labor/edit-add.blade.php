@@ -1,0 +1,372 @@
+@extends('voyager::master')
+
+@section('page_title', __('voyager::generic.'.(isset($dataTypeContent->id) ? 'edit' : 'add')).' '.$dataType->getTranslatedAttribute('display_name_singular'))
+
+@section('page_header')
+    <h1 class="page-title">
+        <i class="{{ $dataType->icon }}"></i>
+        {{ __('voyager::generic.'.(isset($dataTypeContent->id) ? 'edit' : 'add')).' '.$dataType->getTranslatedAttribute('display_name_singular') }}
+    </h1>
+@stop
+
+@section('content')
+    <div class="page-content container-fluid">
+        {{-- <form class="form-edit-add" role="form"
+              method="POST" enctype="multipart/form-data" autocomplete="off">
+              {{ csrf_field() }} --}}
+        <form name="add_name" id="add_name">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-bordered">
+                    {{-- <div class="panel"> --}}
+                        @if (count($errors) > 0)
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        <div class="panel-body">
+
+                            <div class="form-group">
+                                <label for="tunjangan_tetap">Tunjangan tetap</label>
+                                <input type="text" class="form-control hidden" id="event" value="edit">
+                                <input type="text" class="form-control" id="nama_group_labor" name="nama_group_labor" placeholder=""
+                                       value="{{ old('tunjangan_tetap', $dataTypeContent->nama_group_labor ?? '') }}">
+                            </div>
+
+
+                            <div class="text">  
+                                <table class="table table-bordered" id="dynamic_field" border="1">  
+                                <thead>
+                                  <tr class="table-responsive">
+                                      <th nowrap="">No.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                      <th nowrap="">&nbsp;&nbsp;&nbsp;&nbsp; Group mesin &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                      <th><button type="submit" class="btn btn-primary btn-lg  col-xs-12 svd"><i class="voyager-check"></i> Simpan</button></th>
+                                  </tr>
+                              </thead>
+                                  <tbody>
+                                     <tr>  
+                                          <td width="9%">
+                                             {{-- <input type="number" name="no[]" value="" placeholder="counter" class="form-control " required="" disabled=""> --}}
+                                         </td>
+                                         <td width="70%"><input type="text" class="form-control hidden" id="machines"  placeholder="Group mesin" required="">
+                                          <input type="text" class="form-control hidden" id='group_mesin'  readonly></td>
+                                        <td> <button type="button" name="add" id="add" class="btn btn-lg col-xs-12 btn-success"><i class="voyager-plus"></i></button></td>
+                                          <!--
+                                          <input type="hidden" class="form-control" name="no_surat_jalan[]" value="SJM-20210420-009" />
+                                          <input type="number" name="no[]" value="1" placeholder="No" class="form-control name_list" required /></td> 
+                                          <td><input type="text" name="nama[]" placeholder="Nama Barang" class="form-control name_list" required /></td> 	
+                                          <td><input type="number" name="jumlah[]" placeholder="Jumlah (*harus berisi ANGKA)" class="form-control name_list" required /></td>
+                                          <td><input type="text" name="satuan[]" placeholder="Satuan" class="form-control name_list" required />
+                                          -->
+                                     </tr> 
+                                     </tbody>									
+                                </table>  
+                           </div>
+                            {{--  <div class="form-group">
+                                <label for="kelurahan_id">Pilih Domisili</label>
+                                <select class="form-control select2" id="kelurahan_id" name="kelurahan_id">
+                                    @if(isset($selected_domisili))
+                                        <option value="{{$selected_domisili->value}}" selected>{{$selected_domisili->text}}</option>
+                                    @endif
+                                </select>
+                            </div>  --}}
+                            
+                            {{-- <div class="form-group">
+                                <label for="kelurahan_id">Grup Donatur</label>
+                                <select class="form-control select2" id="donatur_group_id" name="donatur_group_id">
+                                    @foreach ($donatur_groups as $donatur_group)
+                                        <option value="{{$donatur_group->id}}" >{{$donatur_group->donatur_group_name}}</option>
+                                    @endforeach
+                                </select>
+                            </div> --}}
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary pull-right save">{{ __('voyager::generic.save') }}</button>&nbsp;
+
+        </form>
+
+        <iframe id="form_target" name="form_target" style="display:none"></iframe>
+        {{-- <form id="my_form" action="{{ route('voyager.upload') }}" target="form_target" method="post" enctype="multipart/form-data" style="width:0px;height:0;overflow:hidden">
+            {{ csrf_field() }}
+            <input name="image" id="upload_file" type="file" onchange="$('#my_form').submit();this.value='';">
+            <input type="hidden" name="type_slug" id="type_slug" value="{{ $dataType->slug }}">
+        </form> --}}
+    </div>
+@stop
+
+@section('javascript')
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+    <script>
+    
+        $('document').ready(function () {
+            var i = 0;
+
+            let id = "{{ $dataTypeContent->id }}";
+            getDataGroupLabor(id).then(value => {
+                    //   if(value.res == 200){
+                    //   }
+                    // console.log(value)
+
+                value.response.forEach(function(entry, ids) {
+                i++;
+
+                    $('#dynamic_field').append('<tr id="row'+i+'">'+
+                        '<td><input type="number" name="no[]" placeholder="No" value='+i+' class="form-control" disabled=""></td>'+
+                        '<td><input type="text" class="form-control whgl'+ids+'" id="idcallback" name="machi[]" value="'+entry.nama_kategori_mesin+'" placeholder="Group mesin" required />'+
+                        '<input type="text" id="group_mesin" name="group_mesin[]" value="'+entry.id+'" class="form-control gms'+ids+'"/></td>'+
+                        '<td align="right"><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn-lg col-xs-12 btn_remove"><i class="voyager-trash"></i></button></td></tr>'+
+                    '');
+
+                    $('.whgl'+ids+'').autocomplete({
+                    source: function( request, response ) {
+                            $.ajax({
+                                url:"{{route('mesin.getGroupMachine')}}",
+                                type: 'post',
+                                dataType: "json",
+                                data: {
+                                _token: $('meta[name="csrf-token"]').attr('content'),
+                                search: request.term
+                            },
+                                success: function( data ) {
+                                    response( data );
+                                }
+                            });
+                        },
+                            select: function (event, ui) {
+                                // Set selection
+                                $('.gms'+ids+'').val(ui.item.value); // display the selected text
+                                $('.whgl'+ids+'').val(ui.item.label); // save selected id to input
+                                // $('.whgl'+i+'').prop("disabled", true);
+
+                                return false;
+                            }
+                        }
+                    );
+
+                });
+            });
+
+        $('#add').click(function(){  
+
+                const pesanwarning = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 10000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+            if($("#idcallback").val() == ""){
+        
+                pesanwarning.fire({
+                    icon: 'warning',
+                    title: 'tidak bisa menambah field form, isikan terlebih dahulu field form yang kosong..'
+                })
+
+            }
+            
+                else {
+
+                if($('.gkn'+i+'').val() == ""){
+                        
+                        pesanwarning.fire({
+                            icon: 'warning',
+                            title: 'tidak bisa menambah field form, isikan terlebih dahulu field form yang kosong..'
+                        })
+
+                }
+                    else {
+
+                i++; 
+
+                $('#dynamic_field').append('<tr id="row'+i+'">'+
+                '<td><input type="number" name="no[]" placeholder="No" value='+i+' class="form-control" disabled=""></td>'+
+                '<td><input type="text" class="form-control gkn'+i+'" id="idcallback" name="machi[]" placeholder="Group mesin" required />'+
+                '<input type="text" id="group_mesin" name="group_mesin[]" class="form-control xcv'+i+'"/></td>'+
+                '<td align="right"><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn-lg col-xs-12 btn_remove"><i class="voyager-trash"></i></button></td></tr>'+
+                '');
+
+                    $('.gkn'+i+'').autocomplete({
+                        source: function( request, response ) {
+                                $.ajax({
+                                    url:"{{route('mesin.getGroupMachine')}}",
+                                    type: 'post',
+                                    dataType: "json",
+                                    data: {
+                                    _token: $('meta[name="csrf-token"]').attr('content'),
+                                    search: request.term
+                                },
+                                    success: function( data ) {
+                                        response( data );
+                                    }
+                                });
+                            },
+                            select: function (event, ui) {
+                                // Set selection
+                                $('.xcv'+i+'').val(ui.item.value); // display the selected text
+                                $('.gkn'+i+'').val(ui.item.label); // save selected id to input
+
+                                $('.gkn'+i+'').prop("disabled", true);
+
+                                return false;
+                            }
+                        }
+                    );
+                }
+            }
+        });
+        
+        $('.svd').click(function(e){  
+
+            const vb = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 10000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+
+        var nama_group_labor  = document.getElementById("nama_group_labor").value;
+        if(nama_group_labor==""){
+            vb.fire({
+                    icon: 'warning',
+                    title: 'Maaf tidak bisa menyimpan data, karena ada nama group yang kosong..'
+                })
+
+            }else{
+
+                let arr = { 'd' :  $("#add_name").serializeArray(), 'event' : $("#event").val(), 'id_groups' : id };
+                
+                $.ajax({  
+                    url:"{{ route('mesin.machinelabor') }}",  
+                    method:"POST",
+                    dataType: "json",  
+                    data:arr,  
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    success:function(data)  
+                    {  
+                    console.log(data);  
+                    if(data.data != "akses ditolak"){
+                        vb.fire({
+                            icon: 'success',
+                            title: 'data berhasil disimpan..'
+                        })
+                    } else {
+                        vb.fire({
+                            icon: 'error',
+                            title: 'data gagal disimpan, group mesin tidak boleh kosong..'
+                        })
+                    }
+                        
+                    }  
+                });
+            }
+        });
+
+      $(document).on('click', '.btn_remove', function(){  
+           var button_id = $(this).attr("id");   
+           $('#row'+button_id+'').remove(); 
+		   i--;
+      });   
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+
+            var tunjangan_tidak_tetap = document.getElementById("tunjangan_tidak_tetap");
+            var tunjangan_tetap = document.getElementById("tunjangan_tetap");
+            var tunjangan_asuransi = document.getElementById("tunjangan_asuransi");
+            var thr = document.getElementById("thr");
+            
+            thr.addEventListener("keyup", function(e) {
+                thr.value = convertRupiah(this.value, "");
+            });
+
+            tunjangan_tetap.addEventListener("keyup", function(e) {
+                tunjangan_tetap.value = convertRupiah(this.value, "");
+            });
+
+            tunjangan_tidak_tetap.addEventListener("keyup", function(e) {
+                tunjangan_tidak_tetap.value = convertRupiah(this.value, "");
+            });
+
+            tunjangan_asuransi.addEventListener("keyup", function(e) {
+                tunjangan_asuransi.value = convertRupiah(this.value, "");
+            });
+
+            function convertRupiah(angka, prefix) {
+                var number_string = angka.replace(/[^,\d]/g, "").toString(),
+                    split  = number_string.split(","),
+                    sisa   = split[0].length % 3,
+                    rupiah = split[0].substr(0, sisa),
+                    ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+                    if (ribuan) {
+                        separator = sisa ? "." : "";
+                        rupiah += separator + ribuan.join(".");
+                    }
+
+                        rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+
+                    return prefix == undefined ? rupiah : rupiah ? prefix + rupiah : "";
+                    
+                }
+                
+
+            async function getDataGroupLabor(grpid) {
+                            let datamesinid = {
+                                    grouplbr_id:grpid
+                                }
+                        const apiDataMesin = "{{ route('mesin.getGroupLabors') }}";
+                                
+                            const settings = {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                            'Content-Type': 'application/json;charset=utf-8'
+                                            },
+                                        body: JSON.stringify(datamesinid)
+                                }
+                        try {
+                                
+                                const fetchResponse = await fetch(`${apiDataMesin}`, settings);
+                                const data = await fetchResponse.json();
+                                return data;
+                            } catch (error) {
+
+                            return error
+                        }    
+                    }
+
+        });
+    </script>
+@stop

@@ -4,15 +4,16 @@ namespace App\Providers;
 
 //use Illuminate\Support\ServiceProvider;
 use TCG\Voyager\Facades\Voyager;
+use TCG\Voyager\Actions\EditAction;
 use TCG\Voyager\Actions\ViewAction;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
+use App\Actions\ActionSpecialLaborEdit;
 use Illuminate\Support\ServiceProvider;
+use TCG\Voyager\Actions\DeletionAction;
 use App\Http\Controllers\KOP\Service\ListrikInterface;
 use App\Http\Controllers\KOP\VoyagerListrikController;
-use TCG\Voyager\Actions\EditAction;
-use TCG\Voyager\Actions\DeletionAction;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -43,6 +44,7 @@ class AppServiceProvider extends ServiceProvider
         Voyager::addAction(\App\Actions\ActionEditPenyusutan::class);
         Voyager::addAction(\App\Actions\ActionCompany::class);
         Voyager::addAction(\App\Actions\ActionEditMesin::class);
+        Voyager::addAction(\App\Actions\ActionSpecialLaborEdit::class);
         Voyager::addAction(\App\Actions\ActionMTC::class);
         Voyager::addAction(\App\Actions\grouMesinAction::class);
         Voyager::addAction(\App\Actions\ActionKategoriBagian::class);

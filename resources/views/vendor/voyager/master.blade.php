@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
     <meta name="assets-path" content="{{ route('voyager.voyager_assets') }}"/>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <!-- Google Fonts -->
     {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quickswand:wght@900&display=swap" > --}}
     
@@ -147,7 +148,9 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 <script src="{{ ('https://vpn.krisanthium.com:7070/kalkulasimesin2/public/js/jquery.countdown.js') }}"></script>
 <script src="{{ ('https://vpn.krisanthium.com:7070/kalkulasimesin2/public/js/jquery.countdown.min.js') }}"></script>
 {{-- <script src="https://code.jquery.com/ui/1.10.1/jquery-ui.js"></script> --}}
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script>
+    
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
                 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
             m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

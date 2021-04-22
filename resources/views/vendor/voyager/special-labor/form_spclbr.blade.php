@@ -5,7 +5,6 @@
 
 @section('css')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 @stop
 
 @section('page_header')
@@ -105,7 +104,6 @@ $tcostmonth = collect([$mtcs])->sum(function ($biaya){
 
 @endphp
 @section('javascript')
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script>
 $(document).ready(function(){  
     var i=1;  
@@ -251,10 +249,18 @@ $(document).ready(function(){
                     success:function(data)  
                     {  
                     console.log(data);  
+
+                    if(data.data != "akses ditolak"){
                         vb.fire({
                             icon: 'success',
                             title: 'data berhasil disimpan..'
                         })
+                    } else {
+                        vb.fire({
+                            icon: 'error',
+                            title: 'data gagal disimpan, group mesin tidak boleh kosong..'
+                        })
+                    }
                     }  
                 });
 			}

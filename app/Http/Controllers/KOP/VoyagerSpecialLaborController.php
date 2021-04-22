@@ -55,19 +55,43 @@ class VoyagerSpecialLaborController extends BaseVoyagerBaseController
         return response()->json($response);
      }
 
+     public function getGroupLabors(Request $request){
+
+        $d = SpecialLabor::findOrFail($request->grouplbr_id)->first()['group_machine'];
+        $dd = Lb8KategoriMesin::orderby('id','asc')->whereIn('id', $d)->get();
+        // dd($dd);
+        foreach($dd as $dfl){
+                # code...
+                $id[] = $dfl->id;
+                $nama_kategori_mesin[] = $dfl->nama_kategori_mesin;
+                $data[] = $dfl;
+        }
+            return response()->json(['id'=> $id, 'group_machine' =>$nama_kategori_mesin, 'response' => $data]);
+          
+     }
+
      public function machinelabor(Request $request){
 
         $search = $request->d;
-        $enc = json_encode($search);
-        $reslt = json_decode($enc, true);
 
-            for ($i=0; $i < count([$reslt]); $i++) { 
-                # code...
-                $value[] = $reslt[$i];
-                
-            }
+        if($request->event == "edit") {
+            // dd($search);
+            if(count($search) == 1){
 
-        $clll = collect($reslt);
+                return response()->json(['data' => _('akses ditolak')]);
+
+            } 
+                else {
+
+                        $enc = json_encode($search);
+                        $reslt = json_decode($enc, true);
+
+                    for ($i=0; $i < count([$reslt]); $i++) { 
+                        # code...
+                        $value[] = $reslt[$i];
+                    }
+
+                $clll = collect($reslt);
 
             foreach($clll as $fg){
 
@@ -87,15 +111,68 @@ class VoyagerSpecialLaborController extends BaseVoyagerBaseController
 
             }
 
-            $data = [
-                'group_machine' => Arr::flatten(array_unique($ds)),
-                'nama_group_labor' => $first,
-            ];
+                $data = [
+                    'group_machine' => Arr::flatten(array_unique($ds)),
+                    'nama_group_labor' => $first,
+                ];
 
-            $s = SpecialLabor::updateOrCreate($data);
+                    $s = SpecialLabor::updateOrCreate(['id' => $request->id_groups], $data);
 
-        return response()->json($s);
-     }
+                return response()->json($s);
+
+            }
+
+        }
+             else {
+
+                if(count($search) == 1){
+
+                    return response()->json(['data' => _('akses ditolak')]);
+    
+                } 
+                    else {
+
+                    $enc = json_encode($search);
+                    $reslt = json_decode($enc, true);
+
+                        for ($i=0; $i < count([$reslt]); $i++) { 
+                            # code...
+                            $value[] = $reslt[$i];
+                            
+                        }
+
+                    $clll = collect($reslt);
+
+            foreach($clll as $fg){
+
+                $hg[] = $fg['value'];
+
+            }
+
+            foreach($hg as $v) {
+
+                if(is_numeric($v)) {
+                    $ds[] = $v;
+                } else {
+                    $cstring[] = $v;
+                    $first = Arr::first($cstring, function ($value, $key) {
+                        return $value;
+                    });
+                }
+
+            }
+                $data = [
+                    'group_machine' => Arr::flatten(array_unique($ds)),
+                    'nama_group_labor' => $first,
+                ];
+
+                    $s = SpecialLabor::updateOrCreate($data);
+
+                return response()->json($s);
+            }
+        }
+
+    }
 
     public function index(Request $request)
     {
