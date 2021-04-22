@@ -10,7 +10,7 @@
 @section('page_header')
     <h1 class="page-title">
         <i class="voyager-plus"></i>
-        Transaksi RPT MTC 
+        Special group labor
     </h1>
 
 @stop
@@ -59,38 +59,18 @@
                                                            <td width="70%"><input type="text" class="form-control" id="machines" name="machi[]" placeholder="Group mesin" required="">
                                                             <input type="text" class="form-control hidden" id='group_mesin' name="group_mesin[]" readonly></td>
                                                           <td> <button type="button" name="add" id="add" class="btn btn-lg col-xs-12 btn-success"><i class="voyager-plus"></i></button></td>
-                                                            <!--
-                                                            <input type="hidden" class="form-control" name="no_surat_jalan[]" value="SJM-20210420-009" />
-                                                            <input type="number" name="no[]" value="1" placeholder="No" class="form-control name_list" required /></td> 
-                                                            <td><input type="text" name="nama[]" placeholder="Nama Barang" class="form-control name_list" required /></td> 	
-                                                            <td><input type="number" name="jumlah[]" placeholder="Jumlah (*harus berisi ANGKA)" class="form-control name_list" required /></td>
-                                                            <td><input type="text" name="satuan[]" placeholder="Satuan" class="form-control name_list" required />
-                                                            -->
                                                        </tr> 
                                                        </tbody>									
                                                   </table>  
                                              </div>
-                                           </form></div>
-                                    {{-- <div class="form-group">
-                                        <label for="program_id">Company</label>
-                                        <select class="form-control select2" id="company_parent_id" name="company_parent_id" required>
-                                            @foreach ($company as $c)
-                                        <option value="{{$c->id}}">{{$c->company_name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div> --}}
-
+                                           </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
             </div>
-
-            {{-- <button type="submit" class="btn btn-primary pull-right save">
-                Add Donation
-            </button> --}}
-        {{-- </form> --}}
     </div>
 @stop
 @inject('mtc','App\ListrikOutput')

@@ -57,16 +57,15 @@ class VoyagerSpecialLaborController extends BaseVoyagerBaseController
 
      public function getGroupLabors(Request $request){
 
-        $d = SpecialLabor::findOrFail($request->grouplbr_id)->first()['group_machine'];
+        $d = SpecialLabor::findOrFail($request->grouplbr_id)->group_machine;
         $dd = Lb8KategoriMesin::orderby('id','asc')->whereIn('id', $d)->get();
-        // dd($dd);
         foreach($dd as $dfl){
                 # code...
                 $id[] = $dfl->id;
                 $nama_kategori_mesin[] = $dfl->nama_kategori_mesin;
                 $data[] = $dfl;
         }
-            return response()->json(['id'=> $id, 'group_machine' =>$nama_kategori_mesin, 'response' => $data]);
+        return response()->json(['id'=> $id, 'group_machine' =>$nama_kategori_mesin, 'response' => $data]);
           
      }
 
@@ -75,7 +74,7 @@ class VoyagerSpecialLaborController extends BaseVoyagerBaseController
         $search = $request->d;
 
         if($request->event == "edit") {
-            // dd($search);
+            
             if(count($search) == 1){
 
                 return response()->json(['data' => _('akses ditolak')]);

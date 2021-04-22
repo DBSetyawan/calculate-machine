@@ -44,63 +44,32 @@
                                 <thead>
                                   <tr class="table-responsive">
                                       <th nowrap="">No.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                                      <th nowrap="">&nbsp;&nbsp;&nbsp;&nbsp; Group mesin &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                      <th nowrap="">&nbsp;&nbsp;&nbsp;&nbsp; Silahkan, isi group mesin. sistem akan memberikan response group mesinnya. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                       <th><button type="submit" class="btn btn-primary btn-lg  col-xs-12 svd"><i class="voyager-check"></i> Simpan</button></th>
                                   </tr>
                               </thead>
                                   <tbody>
                                      <tr>  
-                                          <td width="9%">
-                                             {{-- <input type="number" name="no[]" value="" placeholder="counter" class="form-control " required="" disabled=""> --}}
-                                         </td>
-                                         <td width="70%"><input type="text" class="form-control hidden" id="machines"  placeholder="Group mesin" required="">
+                                        <td width="9%">
+                                        </td>
+                                         <td width="70%"><input type="text" class="form-control hidden" id="machines"  placeholder="Silahkan, isi group mesin. sistem akan memberikan response group mesinnya." required="">
                                           <input type="text" class="form-control hidden" id='group_mesin'  readonly></td>
                                         <td> <button type="button" name="add" id="add" class="btn btn-lg col-xs-12 btn-success"><i class="voyager-plus"></i></button></td>
-                                          <!--
-                                          <input type="hidden" class="form-control" name="no_surat_jalan[]" value="SJM-20210420-009" />
-                                          <input type="number" name="no[]" value="1" placeholder="No" class="form-control name_list" required /></td> 
-                                          <td><input type="text" name="nama[]" placeholder="Nama Barang" class="form-control name_list" required /></td> 	
-                                          <td><input type="number" name="jumlah[]" placeholder="Jumlah (*harus berisi ANGKA)" class="form-control name_list" required /></td>
-                                          <td><input type="text" name="satuan[]" placeholder="Satuan" class="form-control name_list" required />
-                                          -->
                                      </tr> 
                                      </tbody>									
                                 </table>  
                            </div>
-                            {{--  <div class="form-group">
-                                <label for="kelurahan_id">Pilih Domisili</label>
-                                <select class="form-control select2" id="kelurahan_id" name="kelurahan_id">
-                                    @if(isset($selected_domisili))
-                                        <option value="{{$selected_domisili->value}}" selected>{{$selected_domisili->text}}</option>
-                                    @endif
-                                </select>
-                            </div>  --}}
-                            
-                            {{-- <div class="form-group">
-                                <label for="kelurahan_id">Grup Donatur</label>
-                                <select class="form-control select2" id="donatur_group_id" name="donatur_group_id">
-                                    @foreach ($donatur_groups as $donatur_group)
-                                        <option value="{{$donatur_group->id}}" >{{$donatur_group->donatur_group_name}}</option>
-                                    @endforeach
-                                </select>
-                            </div> --}}
-
                         </div>
                     </div>
                 </div>
 
             </div>
 
-            <button type="submit" class="btn btn-primary pull-right save">{{ __('voyager::generic.save') }}</button>&nbsp;
+            {{-- <button type="submit" class="btn btn-primary pull-right save">{{ __('voyager::generic.save') }}</button>&nbsp; --}}
 
         </form>
 
         <iframe id="form_target" name="form_target" style="display:none"></iframe>
-        {{-- <form id="my_form" action="{{ route('voyager.upload') }}" target="form_target" method="post" enctype="multipart/form-data" style="width:0px;height:0;overflow:hidden">
-            {{ csrf_field() }}
-            <input name="image" id="upload_file" type="file" onchange="$('#my_form').submit();this.value='';">
-            <input type="hidden" name="type_slug" id="type_slug" value="{{ $dataType->slug }}">
-        </form> --}}
     </div>
 @stop
 
@@ -125,8 +94,8 @@
 
                     $('#dynamic_field').append('<tr id="row'+i+'">'+
                         '<td><input type="number" name="no[]" placeholder="No" value='+i+' class="form-control" disabled=""></td>'+
-                        '<td><input type="text" class="form-control whgl'+ids+'" id="idcallback" name="machi[]" value="'+entry.nama_kategori_mesin+'" placeholder="Group mesin" required />'+
-                        '<input type="text" id="group_mesin" name="group_mesin[]" value="'+entry.id+'" class="form-control gms'+ids+'"/></td>'+
+                        '<td><input type="text" class="form-control whgl'+ids+'" id="idcallback" name="machi[]" value="'+entry.nama_kategori_mesin+'" placeholder="Silahkan, isi group mesin. sistem akan memberikan response group mesinnya." required />'+
+                        '<input type="text" id="group_mesin" name="group_mesin[]" value="'+entry.id+'" class="form-control gms'+ids+' hidden"/></td>'+
                         '<td align="right"><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn-lg col-xs-12 btn_remove"><i class="voyager-trash"></i></button></td></tr>'+
                     '');
 
@@ -198,8 +167,8 @@
 
                 $('#dynamic_field').append('<tr id="row'+i+'">'+
                 '<td><input type="number" name="no[]" placeholder="No" value='+i+' class="form-control" disabled=""></td>'+
-                '<td><input type="text" class="form-control gkn'+i+'" id="idcallback" name="machi[]" placeholder="Group mesin" required />'+
-                '<input type="text" id="group_mesin" name="group_mesin[]" class="form-control xcv'+i+'"/></td>'+
+                '<td><input type="text" class="form-control gkn'+i+'" id="idcallback" name="machi[]" placeholder="Silahkan, isi group mesin. sistem akan memberikan response group mesinnya." required />'+
+                '<input type="text" id="group_mesin" name="group_mesin[]" class="form-control xcv'+i+' hidden"/></td>'+
                 '<td align="right"><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn-lg col-xs-12 btn_remove"><i class="voyager-trash"></i></button></td></tr>'+
                 '');
 

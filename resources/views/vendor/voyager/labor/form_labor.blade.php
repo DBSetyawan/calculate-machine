@@ -1,3 +1,4 @@
+use App\SpecialLabor;
 
 @extends('voyager::master')
 
@@ -28,11 +29,18 @@
                                 <div class="contanier">
                                     <div class="form-group">
                                         <label for="program_id">Detail group</label>
-                                            <select class="form-control select2" id="grp_id" name="grp_id" required>
+                                            {{-- <select class="form-control select2" id="grp_id" name="grp_id" required>
                                                 <option value="0"> Pilih detail Group mesin</option>
                                                 <option value="5"> Group Potong / Cetak</option>
                                                 <option value="7"> Group Hotprint / Plong / Sortir</option>
                                                 <option value="4"> Group Lem</option>
+                                            </select> --}}
+                                            <select class="form-control select2" id="grp_id" name="grp_id" required>
+                                                <option value="0"> Pilih detail Group mesin</option>
+                                                @foreach ($specialabor as $m)
+
+                                            <option value="{{$m->id}}">{{$m->nama_group_labor}}</option>
+                                                @endforeach
                                             </select>
                                     </div>
                                     {{-- <div class="form-group">
@@ -305,13 +313,10 @@
 
             $('#grp_id').on('change', function() {
                 GetFullDataMesin($("#grp_id").val()).then(function(results){
-
-                        if(isEmpty(results.detail) == false){
-
-                            if(results.detail.length > 0){
+                    if(results.detail.length > 0){
                                 $(".notification").remove();
                             }
-
+                        if(isEmpty(results.detail) == false){
                             results.detail.forEach(function(eval) {
                             // for(x = 0; x < results.detail.length; x++) {
                                 var element = $('<input id="mesnid" type="checkbox" name="code_mesin[]" value="'+eval.id+'"> <span class="badge badge-primary"> '+eval.code_mesin+' </span></>');

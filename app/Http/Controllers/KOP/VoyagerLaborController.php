@@ -9,6 +9,7 @@ use App\Company;
 use App\Listrik;
 use Carbon\Carbon;
 use App\LaborTotal;
+use App\SpecialLabor;
 use App\AllRecalculate;
 use App\KategoriBagian;
 use App\Lb8KategoriMesin;
@@ -355,10 +356,11 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
         $company = Company::all();
         $mesin = Mesin::all();
         $cbagian = KategoriBagian::all();
+        $specialabor = SpecialLabor::all();
         $Lb8KategoriMesin = Lb8KategoriMesin::all();
         $listrikShift = Listrik::with('Mesin')->whereNull('ended_at')->get();
 
-        return view('vendor.voyager.labor.form_labor', compact('company','mesin','cbagian','Lb8KategoriMesin','listrikShift'));
+        return view('vendor.voyager.labor.form_labor', compact('specialabor','company','mesin','cbagian','Lb8KategoriMesin','listrikShift'));
     }
  
     public function index(Request $request)
