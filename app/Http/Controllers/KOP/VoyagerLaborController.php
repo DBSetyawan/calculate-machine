@@ -168,16 +168,74 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
                             ];
 
                             $index = 'code_mesin';
-                    
-                            \Batch::update($LaborInstance, $dt, $index);
 
-                            $simpanDataBiayaListriks[] = tap(Labor::updateOrCreate(['code_mesin' => $val], $result_gaji_labor))->get();
-                            $simpanDataBiayaListriksx = Labor::updateOrCreate(['code_mesin' => $val], $result_gaji_labor);
+                            $users = Labor::whereIn('code_mesin', [$val])->whereNotNull('ended_at')->get();
+
+                            foreach ($users as $user) {
+                                        $datanotnull[] = $user->ended_at;
+                                        $code_mesins[] = $user->code_mesin;
+                                    }
+
+                                    if(isset($datanotnull)){
+
+                                        $simpanDataBiayaListriksx = Labor::firstOrCreate(['code_mesin' => $code_mesins], $merge_event_machine_closed);
+
+                                        // /**
+                                        //  * @testing if, sub condition, update or create specific machine.
+                                        //  */
+                                        // if($simpanDataBiayaListriksx){
+
+                                        //     foreach (collect([$simpanDataBiayaListriksx]) as $fgvb) {
+                                        //         $simpanDataBiayaListriksx = Labor::updateOrCreate(['id' => $fgvb->id], $merge_event_machine_closed);
+                                        //     }
+
+
+                                        // }
+                                        
+                                    } else {
+                                        
+                                        for($floops = 0; $floops < count([$val]); $floops++){
+                                            
+
+                                            $fg[$floops] = $lbrmachine;
+                                            
+                                        }
+                                        
+                                        $checkmesin_msnss[] = Mesin::whereIn('id', $fg[0])->get();
+                                            foreach($checkmesin_msnss as $fh){
+                                                foreach($fh as $gjh){
+                                                    
+                                                    // $simpanDataBiayaListriksx = Labor::updateOrCreate(array_merge($merge_event_machine_closed, ['code_mesin' => $gjh->id ], ['jumlah_mesin_ditanggani' => count([ $gjh->id ]) ]) );
+                                                    $simpanDataBiayaListriksx = Labor::updateOrCreate(['code_mesin' => $gjh->id ], array_merge($merge_event_machine_closed, ['category_bagian' => $gjh->category_bagian_id], ['jumlah_mesin_ditanggani' => count([ $gjh->id ]) ]));
+
+                                                }
+                                            }
+                                        
+                                        // \Batch::update($LaborInstance, $dt, $index);
+
+                                        // Labor::where(['code_mesin' => $val ])->whereNull('ended_at')->update(['category_bagian' => $r->category_bagian ]);
+                                            return response()->json(
+                                                    [
+                                                        'set_default_mesin' => 0,
+                                                        'spv' => $simpanDataBiayaListriksx->supervisor_level3,
+                                                        'opt' => $simpanDataBiayaListriksx->operator_level2,
+                                                        'help' => $biayahelper,
+                                                        'is_tr_conn' => __('ccv'),
+                                                        'mesin' => count($r->data),
+                                                        'isConfirmed' => $r->setTo["isConfirmed"],
+                                                        'total_biaya_levels' => $total_biaya_upah_perbulan,
+                                                    ]
+                                            );
+
+                                        // $simpanDataBiayaListriksx = Labor::create($result_gaji_labor);
+
+                                    }
+                            // $simpanDataBiayaListriks[] = Labor::updateOrCreate($result_gaji_labor);
 
                         }
 
                         /**
-                         * @flow ask, ketika transaksi close.. ingin menambahkan mesin yang sebelumnya pernah dibuat. tapi dengan status transaksinya close. can create or update ?
+                         * @flow, ketika transaksi close.. ingin menambahkan mesin yang sebelumnya pernah dibuat. tapi dengan status transaksinya close. can create or update ?
                          */
                         $datacheckclosemachinesame = Labor::where('code_mesin', $lbrmachine)->whereNotNull('ended_at')->first();
                         $datacheckclosemachinesamechecked = Labor::where('code_mesin', $lbrmachine)->whereNull('ended_at')->first();
@@ -197,7 +255,13 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
                                 $checkmesin_msnss[] = Mesin::whereIn('id', $fg[0])->get();
                                     foreach($checkmesin_msnss as $fh){
                                         foreach($fh as $gjh){
-                                            $triggerEventChanged = Labor::where(['code_mesin' => $gjh->id ])->update(['category_bagian' => $gjh->category_bagian_id]);
+
+                                            $databns = Labor::whereIn('code_mesin', [$lbrmachine])->whereNull('ended_at')->get();
+
+                                            foreach($databns as $rty){
+                                                Labor::whereNull('ended_at')->updateOrCreate(['code_mesin' => [$rty->code_mesin] ], $merge_event_machine_closed);
+                                            }
+                                            // $triggerEventChanged = Labor::where(['code_mesin' => $gjh->id ])->update(['category_bagian' => $gjh->category_bagian_id]);
                                         }
                                 
                                     }
@@ -221,6 +285,7 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
                                 if($datacheckclosemachinesame){
 
                                     if(!is_null($datacheckclosemachinesamechecked)){
+
                                         /**
                                          * @Module logically automatically update machine with category
                                          */
@@ -234,7 +299,13 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
                                         $checkmesin_msnss[] = Mesin::whereIn('id', $fg[0])->get();
                                             foreach($checkmesin_msnss as $fh){
                                                 foreach($fh as $gjh){
-                                                    $triggerEventChanged = Labor::where(['code_mesin' => $gjh->id ])->update(['category_bagian' => $gjh->category_bagian_id]);
+
+                                                    $databn = Labor::whereIn('code_mesin', [$lbrmachine])->whereNull('ended_at')->get();
+
+                                                    foreach($databn as $rty){
+                                                        Labor::whereNull('ended_at')->updateOrCreate(['code_mesin' => [$rty->code_mesin] ], $merge_event_machine_closed);
+                                                    }
+
                                                 }
                                         
                                             }
@@ -252,50 +323,64 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
                                                 ]
                                             );
                                         } 
-                                            else {
+                                            // else {
 
                                                     /**
                                                      * @Module logically automatically update machine with category
                                                      */
-                                                        for($floops = 0; $floops < count([$lbrmachine]); $floops++){
+                                            //             for($floops = 0; $floops < count([$lbrmachine]); $floops++){
                                             
 
-                                                            $fg[$floops] = $lbrmachine;
+                                            //                 $fg[$floops] = $lbrmachine;
                                                             
-                                                        }
+                                            //             }
                                                         
-                                                        $checkmesin_msnss[] = Mesin::whereIn('id', $fg[0])->get();
-                                                            foreach($checkmesin_msnss as $fh){
-                                                                foreach($fh as $gjh){
+                                            //             $checkmesin_msnss[] = Mesin::whereIn('id', $fg[0])->get();
+                                            //                 foreach($checkmesin_msnss as $fh){
+                                            //                     foreach($fh as $gjh){
 
-                                                                    if(! is_null($datacheckclosemachinesame)){
+                                            //                         if(! is_null($datacheckclosemachinesame)){
+                                            //                             $dataghb = Labor::whereIn('code_mesin', [$lbrmachine])->whereNull('ended_at')->get();
 
-                                                                        Labor::orWhereNotNull('ended_at')->create(array_merge($merge_event_machine_closed, ['code_mesin' => $gjh->id ], ['category_bagian' => $gjh->category_bagian_id], ['jumlah_mesin_ditanggani' => count([ $gjh->id ]) ]) );
-                                                                        Labor::where(['code_mesin' => $gjh->id ])->orWhereNull('ended_at')->orWhereNotNull('ended_at')->update(['category_bagian' => $gjh->category_bagian_id ]);
+                                            //                             foreach($dataghb as $rty){
+                                            //                                 // Labor::whereNull('ended_at')->updateOrCreate(['code_mesin' => [$rty->code_mesin] ], $merge_event_machine_closed);
+                                            //                             Labor::whereNotNull('ended_at')->create(array_merge($merge_event_machine_closed, ['code_mesin' => $rty->id ], ['category_bagian' => $rty->category_bagian_id], ['jumlah_mesin_ditanggani' => count([ $rty->id ]) ]) );
+                                            //                         // //    $df = Labor::whereNull('ended_at')->firstOrCreate(array_merge($merge_event_machine_closed, ['code_mesin' => $gjh->id ], ['category_bagian' => $gjh->category_bagian_id], ['jumlah_mesin_ditanggani' => count([ $gjh->id ]) ]) );
+                                            //                         // //    Labor::where(['code_mesin' => $df->id ])->whereNull('ended_at')->update(['category_bagian' => $df->category_bagian_id ]);
+                                            //                         // $user = Labor::firstOrCreate(array_merge($merge_event_machine_closed, ['code_mesin' => $gjh->id ], ['category_bagian' => $gjh->category_bagian_id], ['jumlah_mesin_ditanggani' => count([ $gjh->id ]) ]));
+                                            //                         // Labor::where(['code_mesin' => $gjh->id ])->whereNull('ended_at')->update(['category_bagian' => $gjh->category_bagian_id ]);
+                                                                    
+                                            //                         //    $msg = "one";
+                                            //                               }
+                                                                    
+                                            //                         } else {
 
-                                                                    } else {
+                                            //                             $databng = Labor::whereIn('code_mesin', [$lbrmachine])->whereNull('ended_at')->get();
 
-                                                                        Labor::where(['code_mesin' =>  $gjh->id ])->update(array_merge($merge_event_machine, ['category_bagian' => $gjh->category_bagian_id ]) );
-                                                                        Labor::where(['code_mesin' => $gjh->id ])->orWhereNull('ended_at')->orWhereNotNull('ended_at')->update(['category_bagian' => $gjh->category_bagian_id ]);
-                                                                    }
+                                            //                             foreach($databng as $rty){
+                                            //                                 Labor::whereNull('ended_at')->updateOrCreate(['code_mesin' => [$rty->code_mesin] ], $merge_event_machine_closed);
+                                            //                             }
+                                                                    
+                                            //                         }
 
-                                                                }
+                                            //                     }
                                                         
-                                                            }
+                                            //                 }
 
-                                                return response()->json(
-                                                    [
-                                                        'set_default_mesin' => 'sdasd',
-                                                        'spv' => $simpanDataBiayaListriksx->supervisor_level3,
-                                                        'opt' => $simpanDataBiayaListriksx->operator_level2,
-                                                        'help' => $biayahelper,
-                                                        'is_tr_conn' => __('ccv'),
-                                                        'mesin' => count($r->data),
-                                                        'isConfirmed' => $r->setTo["isConfirmed"],
-                                                        'total_biaya_levels' => $total_biaya_upah_perbulan,
-                                                    ]
-                                            );
-                                    }
+                                            //     return response()->json(
+                                            //         [
+                                            //             'set_default_mesin' => 0,
+                                            //             'spv' => $simpanDataBiayaListriksx->supervisor_level3,
+                                            //             'opt' => $simpanDataBiayaListriksx->operator_level2,
+                                            //             'help' => $biayahelper,
+                                            //             'msg' => $msg,
+                                            //             'is_tr_conn' => __('ccv'),
+                                            //             'mesin' => count($r->data),
+                                            //             'isConfirmed' => $r->setTo["isConfirmed"],
+                                            //             'total_biaya_levels' => $total_biaya_upah_perbulan,
+                                            //         ]
+                                            // );
+                                    // }
                             }
 
                         $columns = [

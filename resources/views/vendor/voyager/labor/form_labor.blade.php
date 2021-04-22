@@ -1,5 +1,3 @@
-use App\SpecialLabor;
-
 @extends('voyager::master')
 
 {{-- @section('page_title', __('voyager::generic.'.(isset($dataTypeContent->id) ? 'edit' : 'add')).' '.$dataType->getTranslatedAttribute('display_name_singular')) --}}
