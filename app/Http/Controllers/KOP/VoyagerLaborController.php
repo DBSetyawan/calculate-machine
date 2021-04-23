@@ -96,6 +96,7 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
                                 'company_parent_id' => $r->company_parent_id,
                                 'category_bagian' => $r->category_bagian,
                                 'code_mesin' => $val,
+                                'grp_id' => $r->jml_mesin_mch,
                                 // 'code_mesin' => $r->code_mesin,
                                 'shift' => $r->shift,
                                 'supervisor' => $r->supervisor,
@@ -111,6 +112,7 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
                             ];
                             
                             $merge_event_machine = [
+                                'grp_id' => $r->jml_mesin_mch,
                                 'shift' => $r->shift,
                                 'supervisor' => $r->supervisor,
                                 'operator' => $r->operator,
@@ -125,6 +127,7 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
 
                             $merge_event_machine_closed = [
                                 'shift' => $r->shift,
+                                'grp_id' => $r->jml_mesin_mch,
                                 'company_parent_id' => $r->company_parent_id,
                                 'supervisor' => $r->supervisor,
                                 'operator' => $r->operator,
@@ -139,6 +142,7 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
                             
                             $dt[] = [
                                 'company_parent_id' => $r->company_parent_id,
+                                'grp_id' => $r->jml_mesin_mch,
                                 'category_bagian' => $r->category_bagian,
                                 'code_mesin' => $val,
                                 // 'code_mesin' => $r->code_mesin,
@@ -738,7 +742,9 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
             $view = "voyager::$slug.edit-add";
         }
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
+        $specialabor = SpecialLabor::all();
+
+        return Voyager::view($view, compact('specialabor','dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     // POST BR(E)AD
@@ -781,7 +787,11 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
          *
          * Total biaya level Supervisor
          */
-        $biayasupervisor = $this->RumusBiayaGajiUpahSupervisor($request->shift, $request->jumlah_mesin_ditanggani, $request->code_mesin);
+        // progress deploy
+        $aplbr = SpecialLabor::findOrFail($request->jml_mesin_mch);
+        $jumlah_mesin = count([$aplbr->group_machine]);
+
+        $biayasupervisor = $this->RumusBiayaGajiUpahSupervisor($request->shift, $jumlah_mesin, $request->code_mesin);
         
         /**
          * Total biaya level Operator
@@ -887,6 +897,143 @@ class VoyagerLaborController extends BaseVoyagerBaseController Implements LaborI
         return $redirect->with([
             'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}"."Silahkan mengakumulasi ulang biaya persen cost perbulan.",
             'alert-type' => 'success',
+        ]);
+    }
+
+
+    public function reakumulasilabor(Request $request)
+    {
+        /**
+         * Hitung Biaya Level
+         * @method RumusBiayaGajiUpahSupervisor, RumusBiayaGajiUpahOperator, RumusBiayaGajiUpahHelper
+         *
+         * Total biaya level Supervisor
+         */
+        // progress deploy
+        $aplbr = Labor::findOrFail($request->lbrid);
+        $jumlah_mesin = count($request->data);
+
+        // dd($request->lbrid);
+        $biayasupervisor = $this->RumusBiayaGajiUpahSupervisor($request->shift, $jumlah_mesin, $request->code_mesin);
+        
+        /**
+         * Total biaya level Operator
+         */
+        $biayaoperator = $this->RumusBiayaGajiUpahOperator($request->shift, $request->operator);
+         
+        /**
+         * Total biaya level helper
+         */
+        $biayahelper = $this->RumusBiayaGajiUpahHelper($request->shift, $request->helper);
+
+        /**
+         * Total biaya labor
+         */
+        $total_biaya_upah_perbulan = $this->RumusTotalBiayaLabor($biayasupervisor, $biayaoperator, $biayahelper);
+
+        $result_gaji_labor = [
+            'company_parent_id' => $request->company_parent_id,
+            'shift' => $request->shift,
+            'code_mesin' => $request->code_mesin,
+            'category_bagian' => $request->category_bagian,
+            'supervisor' => $request->supervisor,
+            'operator' => $request->operator,
+            'helper' => $request->helper,
+            'supporting' => $request->supporting,
+            'supervisor_level3' => $biayasupervisor,
+            'operator_level2' => $biayaoperator,
+            'helper_level0' => $biayahelper,
+            'support_level0' => 0,
+            'total_biaya' => $total_biaya_upah_perbulan,
+        ];
+
+        $data = [
+            'company_parent_id' => $aplbr->company_parent_id,
+            'shift' => $aplbr->shift,
+            'code_mesin' => $aplbr->code_mesin,
+            'category_bagian' => $aplbr->category_bagian,
+            'supervisor' => $aplbr->supervisor,
+            'operator' => $aplbr->operator,
+            'helper' => $aplbr->helper,
+            'supporting' => $aplbr->supporting,
+            'supervisor_level3' => $aplbr->supervisor_level3,
+            'operator_level2' => $aplbr->operator_level2,
+            'helper_level0' => $aplbr->helper_level0,
+            'support_level0' => $aplbr->support_level0,
+            'total_biaya' => $aplbr->total_biaya
+        ];
+
+        Labor::whereIn('id', [$request->lbrid])->update($result_gaji_labor);
+
+        $lbrttl = Labor::whereNull('ended_at')->get();
+        $AllRecalculateInstance = new AllRecalculate;
+
+        foreach($lbrttl as $indexs => $data_lbr){
+
+        /**
+         * Hitung Biaya Level
+         * @method RumusBiayaGajiUpahSupervisor, RumusBiayaGajiUpahOperator, RumusBiayaGajiUpahHelper
+         *
+         * Total biaya level Supervisor
+         */
+        $biayasupervisor = $this->RumusBiayaGajiUpahSupervisor($data_lbr->shift, $data_lbr->jumlah_mesin_ditanggani, $data_lbr->code_mesin);
+        
+        /**
+         * Total biaya level Operator
+         */
+        $biayaoperator = $this->RumusBiayaGajiUpahOperator($data_lbr->shift, $data_lbr->operator);
+         
+        /**
+         * Total biaya level helper
+         */
+        $biayahelper = $this->RumusBiayaGajiUpahHelper($data_lbr->shift, $data_lbr->helper);
+
+        /**
+         * Total biaya labor
+         */
+        $total_biaya_upah_perbulan = $this->RumusTotalBiayaLabor($biayasupervisor, $biayaoperator, $biayahelper);
+
+            $dlbr[] = [
+                'code_mesin' => $data_lbr->code_mesin,
+                'id_labor' => $total_biaya_upah_perbulan
+            ];
+
+                $code_mesin = 'code_mesin';
+
+            \Batch::update($AllRecalculateInstance, $dlbr, $code_mesin);
+
+        }
+
+        $tb = app(Labor::class)->getTable();
+
+        $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $data, $result_gaji_labor);
+
+        foreach ($md as $key => $val) {
+
+                $pf[] = [
+                    'updated_at' => Carbon::now(),
+                    'company_id' => $request->company_parent_id,
+                    'category_id' => $request->category_bagian,
+                    'code_mesin' => $request->code_mesin,
+                    'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                    'table_column' => $val['tabel_kolom'],
+                    'history_latest' => ceil($val['history']),
+                    'before' => ceil($val['dari']),
+                ];
+                
+            }
+        
+        LaborTotal::insert($pf);
+
+        return response()->json([
+            'set_default_mesin' => 0,
+            'spv' => $biayasupervisor,
+            'opt' => $biayaoperator,
+            'help' => $biayahelper,
+            'mesin' => count($request->data),
+            'isConfirmed' => $request->setTo["isConfirmed"],
+            'total_biaya_levels' => $total_biaya_upah_perbulan,
+            'alertype' => 'success',
         ]);
     }
 

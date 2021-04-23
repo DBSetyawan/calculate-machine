@@ -368,6 +368,7 @@
                 var formData = {
 
                     'company_parent_id'     : $('input[name=company_parent_id]').val(),
+                    'company_parent_id'     : $('input[name=company_parent_id]').val(),
                     'code_mesin'            : $('input[name=code_mesin_id]').val(),
                     'category_bagian'       : $('input[name=category_bagian_id]').val(),
                     'shift'                 : $('input[name=shift]').val(),
@@ -450,106 +451,7 @@
 
                                         let timerInterval
 
-                                            if(data.is_tr_conn == 'dx'){
-
-                                                Swal.fire({
-                                                    icon: "info",
-                                                    title: 'Machine update!',
-                                                    html: "Mesin berhasil diupdate & check kembali mesin jika ada mesin sudah ada dengan status closed, mesin tidak dapat ditambahkan lagi atau direkalkulasi kembali (locked).",
-                                                    timer: 11500,
-                                                    allowOutsideClick: false,
-                                                    allowEscapeKey: false,
-                                                    stopKeydownPropagation: true,
-                                                    timerProgressBar: true,
-                                                didOpen: () => {
-                                                    Swal.showLoading()
-                                                    timerInterval = setInterval(() => {
-                                                    const content = Swal.getContent()
-                                                    if (content) {
-                                                        const b = content.querySelector('b')
-                                                        if (b) {
-                                                        b.textContent = Swal.getTimerLeft()
-                                                        }
-                                                    }
-                                                    }, 100)
-                                                },
-                                                willClose: () => {
-                                                    clearInterval(timerInterval)
-                                                }
-                                                }).then((result) => {
-                                                    if (result.dismiss === Swal.DismissReason.timer) {
-                                                        console.log('I was closed by the timer')
-                                                    }
-                                                })
-
-                                            } else if(data.is_tr_conn == 'xc'){
-
-                                                Swal.fire({
-                                                    icon: "info",
-                                                    title: 'Machine update!',
-                                                    html: "Mesin berhasil diupdate, sistem mendeteksi transaksi mesin sudah diclosed(locked) & mesin distatus open sudah ada.",
-                                                    timer: 11500,
-                                                    allowOutsideClick: false,
-                                                    allowEscapeKey: false,
-                                                    stopKeydownPropagation: true,
-                                                    timerProgressBar: true,
-                                                didOpen: () => {
-                                                    Swal.showLoading()
-                                                    timerInterval = setInterval(() => {
-                                                    const content = Swal.getContent()
-                                                    if (content) {
-                                                        const b = content.querySelector('b')
-                                                        if (b) {
-                                                        b.textContent = Swal.getTimerLeft()
-                                                        }
-                                                    }
-                                                    }, 100)
-                                                },
-                                                willClose: () => {
-                                                    clearInterval(timerInterval)
-                                                }
-                                                }).then((result) => {
-                                                    if (result.dismiss === Swal.DismissReason.timer) {
-                                                        console.log('I was closed by the timer')
-                                                    }
-                                                })
-                                            } else if(data.is_tr_conn == 'sc') {
-
-                                                Swal.fire({
-                                                    icon: "info",
-                                                    title: 'Machine update!',
-                                                    html: "[sc] Mesin berhasil diupdate, sistem mendeteksi transaksi labor telah diupdate.",
-                                                    timer: 11500,
-                                                    allowOutsideClick: false,
-                                                    allowEscapeKey: false,
-                                                    stopKeydownPropagation: true,
-                                                    timerProgressBar: true,
-                                                didOpen: () => {
-                                                    Swal.showLoading()
-                                                    timerInterval = setInterval(() => {
-                                                    const content = Swal.getContent()
-                                                    if (content) {
-                                                        const b = content.querySelector('b')
-                                                        if (b) {
-                                                        b.textContent = Swal.getTimerLeft()
-                                                        }
-                                                    }
-                                                    }, 100)
-                                                },
-                                                willClose: () => {
-                                                    clearInterval(timerInterval)
-                                                }
-                                                }).then((result) => {
-                                                    if (result.dismiss === Swal.DismissReason.timer) {
-                                                        console.log('I was closed by the timer')
-                                                    }
-                                                })
-
-                                                let curr = '{{ route("voyager.labor.index") }}';
-                                                setTimeout(function(){ 
-                                                    window.location.href = curr;
-                                                }, 5000);
-                                            }  else if(data.is_tr_conn == 'ccv') {
+                                            if(data.is_tr_conn == 'ccv') {
 
                                                 Swal.fire({
                                                     icon: "info",
@@ -591,7 +493,7 @@
                                                     Swal.fire({
                                                         icon: "info",
                                                         title: 'Machine update!',
-                                                        html: "[updated] Mesin berhasil diupdate, sistem mendeteksi transaksi labor telah diupdate.",
+                                                        html: "[fcv] Mesin berhasil diupdate, sistem mendeteksi transaksi labor telah diupdate.",
                                                         timer: 11500,
                                                         allowOutsideClick: false,
                                                         allowEscapeKey: false,

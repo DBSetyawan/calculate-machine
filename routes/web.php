@@ -126,6 +126,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('mesins/mesin-getGroupMachine','KOP\VoyagerSpecialLaborController@getGroupMachine')->name('mesin.getGroupMachine');
     Route::post('mesins/mesin-getGroupLabors','KOP\VoyagerSpecialLaborController@getGroupLabors')->name('mesin.getGroupLabors');
     Route::post('mesins/mesin-machinelabor','KOP\VoyagerSpecialLaborController@machinelabor')->name('mesin.machinelabor');
+    Route::post('lbrs/VoyagerLaborController','KOP\VoyagerLaborController@reakumulasilabor')->name('labors.reakumulasilabor');
     Route::post('store-form-machine','KOP\VoyagerMachineController@storePlaceEv')->name('mesin.storePlaceEv.master');
     Route::post('reset-total-tanpa-penyusutan','KOP\VoyagerTotalKalkulasiController@reclltnpapenyusutan')->name('mesin.recll.tnp.penyusutan');
     Route::post('reset-total-tanpa-rclluncheckpnyt','KOP\VoyagerTotalKalkulasiController@rclluncheckpnyt')->name('mesin.rclluncheckpnyt.tnp.penyusutan');
