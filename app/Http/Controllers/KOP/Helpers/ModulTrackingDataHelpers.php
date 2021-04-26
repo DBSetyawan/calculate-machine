@@ -155,28 +155,42 @@ class ModulTrackingDataHelpers Extends BaseVoyagerBaseController Implements Trac
 
 		}
 
-		if($table == "mesin"){
+		// 'ampere' => $request->ampere,
+		// 'faktor_kali_lwbp' =>  $request->faktor_kali_lwbp,
+		// 'faktor_kali_wbp' =>  $request->faktor_kali_wbp,
+		// 'voltase' =>  $request->voltase,
+		// 'deskripsi' =>  $request->deskripsi,
+		// 'code_mesin' => $request->code_mesin,
+		// 'location_mch_id' => $request->location_mch_id,
+		// 'group_mesin' => $request->group_mesin_id,
+		// 'company_id' => $request->company_id,
+		// 'category_bagian' => $request->category_bagian_id,
+		// 'asumsi_id' => $request->asumsi_id,
+		// 'capacity_mch' => $request->capacity_mch
+		if($table == (String) "mesin"){
 
 			$attrField = array(
 				'ampere' => 'ampere',
-				'faktor_kali_lwbp' => 'f kali lwbp',
-				'faktor_kali_wbp' =>  'f kali wbp',
-				'voltase' =>  'voltase',
-				'deskripsi' =>  'desk',
-				'code_mesin' => 'id',
-				'asumsi_id' => 'asusmsi',
-				'on_off' => 'oniff',
-				'group_mesin' => 'group mesin',
-				'company_id' => 'company',
-				'category_bagian' => 'bagian kategori',
-				'listrik_perjam_id' => 'listrik_perjam id',
+				'faktor_kali_lwbp' => 'Faktor_kali_lwbp_',
+				'faktor_kali_wbp' => 'Faktor_kali_wbp_',
+				'capacity_mch' => 'Capacity_mch',
+				'voltase' => 'voltase',
+				'deskripsi' => 'ulasan',
+				'code_mesin' => 'kode mesin',
+				'location_mch_id' => 'lokasi mesin',
+				'company_id' => 'Company_id_',
+				'group_mesin_id' => 'group mesin',
+				'category_bagian_id' => 'kategori bagian',
+				'asumsi_id' => 'asumsi idnya',
+				'capacity_mch' => 'kapasitas mesin',
+
 			);
 
-		$perubahan = [];
+		$perubahans = [];
 
 			foreach ($attrField as $keys => $vals) {
 				if($old[$keys]!=$new[$keys]) {
-					array_push($perubahan, array(
+					array_push($perubahans, array(
 						'tabel_kolom' 	=> $table.'.'.$keys,
 						'history' 	=> $new[$keys],
 						'dari' 		=> $old[$keys]
@@ -184,7 +198,7 @@ class ModulTrackingDataHelpers Extends BaseVoyagerBaseController Implements Trac
 				}
 			}
 
-			return $perubahan;
+			return $perubahans;
 
 		}
 		

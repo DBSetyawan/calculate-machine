@@ -790,7 +790,15 @@ class VoyagerMachineController extends BaseVoyagerBaseController
             $view = "voyager::$slug.edit-add";
         }
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
+        $company = Company::all();
+        $group_mesin = Lb8KategoriMesin::all();
+        $mesin = Mesin::all();
+        $cbagian = KategoriBagian::all();
+        $LsOutputPerjam = ListrikOutput::all();
+        $LwbpMaster = LwbpMaster::all();
+        $LocationMachine = LocationMachine::all();
+
+        return Voyager::view($view, compact('LocationMachine','LwbpMaster','mesin','LsOutputPerjam','group_mesin','company','cbagian','dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     // POST BR(E)AD
@@ -872,6 +880,98 @@ class VoyagerMachineController extends BaseVoyagerBaseController
         return $redirect->with([
             'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}",
             'alert-type' => 'success',
+        ]);
+    }
+
+    public function updateStatusMachine(Request $request)
+    { 
+
+        Mesin::whereIn('id', [$request->machineID])->update(['on_off' => $request->status]);
+
+        return response()->json([
+            'ok' => 200
+        ]);
+    }
+
+    public function updateMasterMachine(Request $request)
+    {   
+
+        $tb = app(Mesin::class)->getTable();
+
+        $rtd = Mesin::findOrFail($request->machineID);
+        $data = [
+            'ampere' => $rtd->ampere,
+            'faktor_kali_lwbp' =>  $rtd->faktor_kali_lwbp,
+            'faktor_kali_wbp' =>  $rtd->faktor_kali_wbp,
+            'voltase' =>  $rtd->voltase,
+            'deskripsi' =>  $rtd->deskripsi,
+            'code_mesin' => $rtd->code_mesin,
+            'location_mch_id' => $rtd->location_mch_id,
+            'company_id' => $rtd->company_id,
+            'group_mesin_id' => $rtd->group_mesin_id,
+            'category_bagian_id' => $rtd->category_bagian_id,
+            // 'on_off' => $rtd->on_off,
+            'asumsi_id' => $rtd->asumsi_id,
+            'capacity_mch' => $rtd->capacity_mch
+            
+        ];
+
+        // dd($data);
+
+        $datamesin = [
+            'ampere' => $request->ampere,
+            'faktor_kali_lwbp' =>  $request->faktor_kali_lwbp,
+            'faktor_kali_wbp' =>  $request->faktor_kali_wbp,
+            'voltase' =>  $request->voltase,
+            'deskripsi' =>  $request->deskripsi,
+            'code_mesin' => $request->code_mesin,
+            'location_mch_id' => $request->location_mch_id,
+            'company_id' => $request->company_id,
+            'group_mesin_id' => $request->group_mesin_id,
+            'category_bagian_id' => $request->category_bagian_id,
+            'asumsi_id' => $request->asumsi_id,
+            'capacity_mch' => $request->capacity_mch
+            
+        ];
+
+        Mesin::updateOrCreate(['id' => (Int) $request->machineID ], $datamesin);
+
+        $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $data, $datamesin);
+
+        if($md != []){
+
+        foreach ($md as $key => $val) {
+
+                $pf[] = [
+                    'updated_at' => Carbon::now(),
+                    'created_at' => Carbon::now(),
+                    'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                    'company_id' => $request->company_id,
+                    'group_mesin' => (Int) $request->group_mesin_id,
+                    'code_mesin' => (Int) $request->machineID,
+                    'table_column' => $val['tabel_kolom'],
+                    'history_latest' => $val['history'],
+                    'before' => $val['dari'],
+                    'history_group_mesin' => $val['history'],
+                    'before_group_mesin' => $val['dari'],
+                ];
+                
+            }
+
+            $d = MesinTotal::insert($pf);
+            
+        } else {
+            return response()->json([
+                'message'    => __('current update.'),
+                'alert-type' => 'success',
+                'sts' => 'false'
+            ]);
+        }
+
+        return response()->json([
+            'message'    => __('voyager::generic.successfully_updated'),
+            'alert-type' => 'success',
+            'sts' => 'true'
         ]);
     }
 

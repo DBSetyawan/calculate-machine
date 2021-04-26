@@ -106,11 +106,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="url_instagram">Faktor Kali LWBP</label>
-                                    <input type="text" class="form-control" data-validate-length-range="6" data-validate-words="2" id="faktor_kali_lwbp" name="faktor_kali_lwbp" placeholder="Faktor kali LWBP">
+                                    <input type="text" class="form-control" data-validate-length-range="6" readonly data-validate-words="2" id="faktor_kali_lwbp" name="faktor_kali_lwbp" placeholder="Faktor kali LWBP">
                                 </div>
                                 <div class="form-group">
                                     <label for="url_instagram">Faktor Kali WBP</label>
-                                    <input type="text" class="form-control" id="faktor_kali_wbp" data-validate-length-range="6" data-validate-words="2" name="faktor_kali_wbp" placeholder="Faktor kali WBP">
+                                    <input type="text" class="form-control" id="faktor_kali_wbp" readonly data-validate-length-range="6" data-validate-words="2" name="faktor_kali_wbp" placeholder="Faktor kali WBP">
                                 </div>
                             </div>
                             {{-- <button type="submit" class="btn btn-primary pull-right save_mach">Simpan</button>&nbsp; --}}

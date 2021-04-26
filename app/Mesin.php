@@ -9,6 +9,7 @@ class Mesin extends Model
 {
     protected $table= "mesin";
     // protected $guarded = [''];
+    // protected $primary = ['id'];
 
     protected $fillable = [
         'code_mesin',
