@@ -62,7 +62,7 @@
                                                           </h5>
                                                         {{-- <small class="text-muted">Automated.</small> --}}
                                                       </div>
-                                                      <p class="mb-1 text-secondary">Jika mencentang MAINTENANCE, maka tabel dibawah akan menyesuaikan hanya tanpa MTC. kolom MAINTENANCE akan disembunyikan, TOTAL SEMUA BIAYA MTC & TOTAL SEMUA BIAYA MTC PERJAMNYA akan ditampilkan.</p>
+                                                      <p class="mb-1 text-secondary">Jika mencentang MAINTENANCE, maka tabel dibawah akan menyesuaikan hanya tanpa MTC. kolom MAINTENANCE akan diset 0(kondisi dimana ini akan sekaligus merekalkulasi data ), TOTAL SEMUA BIAYA MTC & TOTAL SEMUA BIAYA MTC PERJAMNYA di set seperti hasil data asli pada data sebelum di set 0 ( sekaligus merekalkulasi ulang data ).</p>
                                                     </div>
                                                   <hr class="text-muted">
                                                     <div class="list-group-item-action active">
@@ -72,7 +72,7 @@
                                                         </h5>
                                                         {{-- <small class="text-muted">Automated.</small> --}}
                                                       </div>
-                                                      <p class="mb-1 text-secondary">Jika mencentang PENYUSUTAN, maka tabel dibawah akan menyesuaikan hanya tanpa PENYUSUTAN. kolom PENYUSUTAN akan disembunyikan, TOTAL SEMUA BIAYA PENYUSUTAN & TOTAL SEMUA BIAYA PENYUSUTAN PERJAMNYA akan ditampilkan.</p>
+                                                      <p class="mb-1 text-secondary">Jika mencentang PENYUSUTAN, maka tabel dibawah akan menyesuaikan hanya tanpa PENYUSUTAN. kolom PENYUSUTAN akan diset 0(kondisi dimana ini akan sekaligus merekalkulasi data ), TOTAL SEMUA BIAYA PENYUSUTAN & TOTAL SEMUA BIAYA PENYUSUTAN PERJAMNYA di set seperti hasil data asli pada data sebelum di set 0 ( sekaligus merekalkulasi ulang data ).</p>
                                                     </div>
                                                     <a class=" list-group-item-action active" id="alltruepnytmtc">
                                                       <hr class="text-muted">
@@ -82,7 +82,7 @@
                                                         </h5>
                                                         {{-- <small class="text-muted">Automated.</small> --}}
                                                       </div>
-                                                      <p class="mb-1 text-muted">Jika mencentang PENYUSUTAN & MAINTENANCE, maka tabel dibawah akan menyesuaikan hanya tanpa PENYUSUTAN & MAINTENANCE. kolom PENYUSUTAN & MAINTENANCE akan disembunyikan, TOTAL SEMUA BIAYA PENYUSUTAN + MTC & TOTAL SEMUA BIAYA PENYUSUTAN + MTC PERJAMNYA akan ditampilkan.</p>
+                                                      <p class="mb-1 text-muted">Jika mencentang PENYUSUTAN & MAINTENANCE, maka tabel dibawah akan menyesuaikan hanya tanpa PENYUSUTAN & MAINTENANCE. kolom PENYUSUTAN & MAINTENANCE akan diset 0(kondisi dimana ini akan sekaligus merekalkulasi data ), TOTAL SEMUA BIAYA PENYUSUTAN + MTC & TOTAL SEMUA BIAYA PENYUSUTAN + MTC PERJAMNYA di set seperti hasil data asli pada data sebelum di set 0 ( sekaligus merekalkulasi ulang data ).</p>
                                                       <small class="text-muted"><span class="badge badge-success"><i class="voyager-check"></i></span> PENYUSUTAN & MTC</span>
                                                         <br/>&nbsp;<h5><p class="mb-1"><code>EDP</code> Jika mengalami kendala, report ke developer.</p></h5>
                                                       </small>

@@ -512,7 +512,6 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
     {
         try {
 
-
             /**
              * Hitung Total Perbaikan Biaya perbulan
              * @param $perbaikanpertahunn.
@@ -556,11 +555,50 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
                     'sparepart_tahun1' => $request->sparepart_tahun1,
                     'sparepart_tahun2' => $request->sparepart_tahun2,
                     'sparepart_tahun3' => $request->sparepart_tahun3,
+                    
+                    'thn_perbaikan_periode_1' => $request->thn_perbaikan_periode_1,
+                    'thn_perbaikan_periode_2' => $request->thn_perbaikan_periode_2,
+                    'thn_perbaikan_periode_3' => $request->thn_perbaikan_periode_3,
+
+                    'thn_sparepart_periode_1' => $request->thn_sparepart_periode_1,
+                    'thn_sparepart_periode_2' => $request->thn_sparepart_periode_2,
+                    'thn_sparepart_periode_3' => $request->thn_sparepart_periode_3,
         
                     'rata_rata_sparepart_perbulan' => $RataRataSparePartPerbulan,
         
                     'biaya_produksi_lain' => $TotalSemuaBiayaProduksilain,
                     'total_biaya_perbulan' => $TotalBiayaPenyusutanMaintenance,
+                ];
+
+                $dfg = RptMtc::findOrFail($request->id);
+
+                $dnm = [
+                    'id' => $dfg->id,
+                    'perbaikan_tahun1' => $dfg->perbaikan_tahun1,
+                    'code_mesin' => $dfg->code_mesin,
+                    'category_bagian' => $dfg->category_bagian,
+                    'company_parent_id' => $dfg->company_parent_id,
+                    'perbaikan_tahun2' => $dfg->perbaikan_tahun2,
+                    'perbaikan_tahun3' => $dfg->perbaikan_tahun3,
+        
+                    'rata_rata_perbaikan_perbulan' => $dfg->rata_rata_perbaikan_perbulan,
+        
+                    'sparepart_tahun1' => $dfg->sparepart_tahun1,
+                    'sparepart_tahun2' => $dfg->sparepart_tahun2,
+                    'sparepart_tahun3' => $dfg->sparepart_tahun3,
+                    
+                    'thn_perbaikan_periode_1' => $dfg->thn_perbaikan_periode_1,
+                    'thn_perbaikan_periode_2' => $dfg->thn_perbaikan_periode_2,
+                    'thn_perbaikan_periode_3' => $dfg->thn_perbaikan_periode_3,
+
+                    'thn_sparepart_periode_1' => $dfg->thn_sparepart_periode_1,
+                    'thn_sparepart_periode_2' => $dfg->thn_sparepart_periode_2,
+                    'thn_sparepart_periode_3' => $dfg->thn_sparepart_periode_3,
+        
+                    'rata_rata_sparepart_perbulan' => $RataRataSparePartPerbulan,
+        
+                    'biaya_produksi_lain' => $dfg->biaya_produksi_lain,
+                    'total_biaya_perbulan' => $dfg->total_biaya_perbulan,
                 ];
         
                $data_success = RptMtc::findOrFail($request->id)->update($automatedRecalculateMTC);
@@ -614,7 +652,7 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
             //    }
             $tb = app(RptMtc::class)->getTable();
 
-                $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $request->dataold, $automatedRecalculateMTC);
+                $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $dnm, $automatedRecalculateMTC);
 
                 foreach ($md as $key => $val) {
 
@@ -633,7 +671,19 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
                 
                 $d = RPTMtcTotal::insert($pf);
             
-            return response()->json(['success' => __('voyager::generic.successfully_updated'), 'data' => '','track' => $pf]);
+            // return response()->json(['success' => __('voyager::generic.successfully_updated'), 'data' => '','track' => $pf]);
+            return response()->json(
+                [
+                    'isConfirmed' => $request->setTo["isConfirmed"],
+                    'track' => $pf,
+                    'rata_rata_perbaikan_perbulan' => $automatedRecalculateMTC['rata_rata_perbaikan_perbulan'],
+                    'rata_rata_sparepart_perbulan' => $automatedRecalculateMTC['rata_rata_sparepart_perbulan'],
+                    'biaya_produksi_lain' => $automatedRecalculateMTC['biaya_produksi_lain'],
+                    'total_biaya_perbulan' => $automatedRecalculateMTC['total_biaya_perbulan'],
+                    
+                ]
+            );
+
             
         } catch (Exception $e) {
 
@@ -648,6 +698,7 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
                 'data' => [
                     'status'  => $code,
                     'message' => $message,
+                    'message' => $e->getLine(),
                 ],
             ], $code);
         }

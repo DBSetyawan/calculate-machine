@@ -442,6 +442,14 @@ class ModulTrackingDataHelpers Extends BaseVoyagerBaseController Implements Trac
 				'sparepart_tahun1' => 'sparepart 2018',
 				'sparepart_tahun2' => 'sparepart 2019',
 				'sparepart_tahun3' => 'sparepart 2020',
+				
+				'thn_sparepart_periode_1' => 'sparepart 1',
+				'thn_sparepart_periode_2' => 'sparepart 2',
+				'thn_sparepart_periode_3' => 'sparepart 3',
+
+				'thn_perbaikan_periode_1' => 'perbaikan 1',
+				'thn_perbaikan_periode_2' => 'perbaikan 2',
+				'thn_perbaikan_periode_3' => 'perbaikan 3',
 	
 				'rata_rata_sparepart_perbulan' => 'rata rata sparepart perbulan',
 	
