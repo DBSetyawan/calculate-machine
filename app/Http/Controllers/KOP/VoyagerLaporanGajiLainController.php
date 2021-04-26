@@ -8,11 +8,13 @@ use App\Company;
 use App\GajiLain;
 use Carbon\Carbon;
 use App\GjiLainTotal;
+use App\SpecialLabor;
 use App\ListrikOutput;
 use App\AllRecalculate;
 use App\KategoriBagian;
 use App\LaporanGajiLain;
 use Mavinoo\Batch\Batch;
+use App\Lb8KategoriMesin;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Http\JsonResponse;
@@ -405,8 +407,13 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
         $companies = Company::all();
         $ktbg = KategoriBagian::all();
         $lsoutput = ListrikOutput::all();
+        $specialabor = SpecialLabor::all();
+        $company = Company::all();
+        $mesin = Mesin::all();
+        $cbagian = KategoriBagian::all();
+        $Lb8KategoriMesin = Lb8KategoriMesin::all();
 
-        return Voyager::view($view, compact('lsoutput','ktbg','show_company','companies','dataType', 'dataTypeContent', 'isModelTranslatable'));
+        return Voyager::view($view, compact('company','specialabor','mesin','lsoutput','ktbg','show_company','companies','dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     // POST BR(E)AD
@@ -552,13 +559,17 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
             $rcl = AllRecalculate::whereNull('ended_at')->get();
 
             $jumlah_total = $this->RumusTotalLaporanGajiLain($request->tahun1, $request->tahun2, $request->tahun3);
+
             $datax = [
                 'company_parent_id' => (Int)$request->company_parent_id,
                 'category_bagian' => (Int)$request->category_bagian,
                 'tahun1' => $data->tahun1,
                 'tahun2' => $data->tahun2,
                 'tahun3' => $data->tahun3,
-                'total_biaya_laporan_periode' => $data->total_biaya_laporan_periode
+                'total_biaya_laporan_periode' => $data->total_biaya_laporan_periode,
+                'thn_periode_1' => $data->thn_periode_1,
+                'thn_periode_2' => $data->thn_periode_2,
+                'thn_periode_3' => $data->thn_periode_3,
             ];
 
             tap(DB::table('laporan_gaji_lain')->where('id', $request->input('id')))
@@ -568,11 +579,12 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
                     'tahun1' => $request->input('tahun1'),
                     'tahun2' => $request->input('tahun2'),
                     'tahun3' => $request->input('tahun3'),
-                    'total_biaya_laporan_periode' => $jumlah_total
+                    'total_biaya_laporan_periode' => $jumlah_total,
+                    'thn_periode_1' => $request->tahun_periode_vr1,
+                    'thn_periode_2' => $request->tahun_periode_vr2,
+                    'thn_periode_3' => $request->tahun_periode_vr3,
                 ])
                 ->first();
-          
-         
 
     
             foreach($rcl as $indexs => $dtlg){
@@ -589,13 +601,17 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
             }
 
             $tb = app(LaporanGajiLain::class)->getTable();
+
             $result_gaji_labor = [
                 'company_parent_id' => (Int)$request->company_parent_id,
                 'category_bagian' => (Int)$request->category_bagian,
                 'tahun1' => (Int)$request->tahun1,
                 'tahun2' =>(Int) $request->tahun2,
                 'tahun3' => (Int)$request->tahun3,
-                'total_biaya_laporan_periode' => $jumlah_total
+                'total_biaya_laporan_periode' => $jumlah_total,
+                'thn_periode_1' => (Int)$request->tahun_periode_vr1,
+                'thn_periode_2' => (Int)$request->tahun_periode_vr2,
+                'thn_periode_3' => (Int)$request->tahun_periode_vr3,
             ];
             $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $datax, $result_gaji_labor);
     
@@ -633,20 +649,25 @@ class VoyagerLaporanGajiLainController extends BaseVoyagerBaseController Impleme
             // $da = DB::table('total_kalkulasi_tanpa_penyusutan')
             //  ->where('gaji_lainnya', '=',$synccalcmachine)->first();
             //  ->update(array('gaji_lainnya' => $synccalcmachine)); 
-
             return response()->json(
                 [
-                    'success' => __('voyager::generic.successfully_updated'), 
-                    // 'data' => $update_data_lp_gaji_lain,
-                    's' => $jumlah_total,
-                    // 'results' => $synccalcmachine,
-                    'repro' => $this->saldoAkhir_REPRO(),
-                    'umum' => $this->saldoAkhir_UMUM(),
-                    'qc' => $this->saldoAkhir_QC(),
-                    'mtc' => $this->saldoAkhir_MTC()
-                    // 'da' => $firsts
+                    'total_biaya_lp_adm' => $jumlah_total,
+                    'isConfirmed' => $request->setTo["isConfirmed"],
                 ]
             );
+            // return response()->json(
+            //     [
+            //         'success' => __('voyager::generic.successfully_updated'), 
+            //         // 'data' => $update_data_lp_gaji_lain,
+            //         's' => $jumlah_total,
+            //         // 'results' => $synccalcmachine,
+            //         'repro' => $this->saldoAkhir_REPRO(),
+            //         'umum' => $this->saldoAkhir_UMUM(),
+            //         'qc' => $this->saldoAkhir_QC(),
+            //         'mtc' => $this->saldoAkhir_MTC()
+            //         // 'da' => $firsts
+            //     ]
+            // );
             
          
         } catch (Exception $e) {

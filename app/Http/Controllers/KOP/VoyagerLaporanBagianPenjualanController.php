@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\KOP;
 
+use App\Mesin;
 use Exception;
 use App\Company;
 use Carbon\Carbon;
+use App\SpecialLabor;
 use App\AllRecalculate;
+use App\KategoriBagian;
 use App\BPenjualanTotal;
 use Mavinoo\Batch\Batch;
+use App\Lb8KategoriMesin;
 use Illuminate\Http\Request;
 use App\LaporanBagianPenjualan;
 use TCG\Voyager\Facades\Voyager;
@@ -385,7 +389,13 @@ class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController 
             $view = "voyager::$slug.edit-add";
         }
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
+        $specialabor = SpecialLabor::all();
+        $company = Company::all();
+        $mesin = Mesin::all();
+        $cbagian = KategoriBagian::all();
+        $Lb8KategoriMesin = Lb8KategoriMesin::all();
+
+        return Voyager::view($view, compact('company','specialabor','mesin','dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     // POST BR(E)AD
@@ -476,6 +486,81 @@ class VoyagerLaporanBagianPenjualanController extends BaseVoyagerBaseController 
             'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}"."Silahkan mengakumulasi ulang total biaya pada nama akun biaya $data->nama_biaya.",
             'alert-type' => 'success',
         ]);
+    }
+
+    public function changedbagianpenjualan(Request $request)
+    {
+
+        $total_biaya_upah_lpperbulan = $this->RumusLapBagianPenjualanPerbulan($request->tahun1, $request->tahun2, $request->tahun3, $request->nama_biaya);
+
+        $result_lbpnjualan = [
+            'company_parent_id' => $request->company_parent_id,
+            'nama_biaya' => $request->nama_biaya,
+            'tahun1' => $request->tahun1,
+            'tahun2' => $request->tahun2,
+            'tahun3' => $request->tahun3,
+            'biaya_perbulan_bag_penjualan' => $total_biaya_upah_lpperbulan,
+            'thn_periode_1' => $request->tahun_periode_vr1,
+            'thn_periode_2' => $request->tahun_periode_vr2,
+            'thn_periode_3' => $request->tahun_periode_vr3,
+        ];
+
+    $fbagpnj = LaporanBagianPenjualan::findOrFail($request->id);
+        $dby = [
+            'company_parent_id' => $fbagpnj->company_parent_id,
+            'nama_biaya' => $fbagpnj->nama_biaya,
+            'tahun1' => $fbagpnj->tahun1,
+            'tahun2' => $fbagpnj->tahun2,
+            'tahun3' => $fbagpnj->tahun3,
+            'biaya_perbulan_bag_penjualan' => $fbagpnj->total_biaya_upah_lpperbulan,
+            'thn_periode_1' => $fbagpnj->thn_periode_1,
+            'thn_periode_2' => $fbagpnj->thn_periode_2,
+            'thn_periode_3' => $fbagpnj->thn_periode_3,
+        ];
+
+        LaporanBagianPenjualan::updateOrCreate(['id'=> $request->id], $result_lbpnjualan);
+
+        $AllRecalculateInstance = new AllRecalculate;
+        $rcl = AllRecalculate::whereNull('ended_at')->get();
+
+        foreach($rcl as $indexs => $dtlg){
+    
+            $dpney[] = [
+                'code_mesin' => $dtlg->code_mesin,
+                'id_bgoenjualan' => $total_biaya_upah_lpperbulan
+            ];
+
+            $code_mesin = 'code_mesin';
+
+            \Batch::update($AllRecalculateInstance, $dpney, $code_mesin);
+
+        }
+
+        $tb = app(LaporanBagianPenjualan::class)->getTable();
+
+    $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $dby, $result_lbpnjualan);
+
+        foreach ($md as $key => $val) {
+
+                $pf[] = [
+                    'updated_at' => Carbon::now(),
+                    'company_id' => $request->company_parent_id,
+                    'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                    'table_column' => $val['tabel_kolom'],
+                    'history_latest' => ceil($val['history']),
+                    'before' => ceil($val['dari']),
+                ];
+                
+            }
+
+    BPenjualanTotal::insert($pf);
+
+        return response()->json(
+            [
+                'total_biaya_lp_adm' => $total_biaya_upah_lpperbulan,
+                'isConfirmed' => $request->setTo["isConfirmed"],
+            ]
+        );
     }
 
     //***************************************

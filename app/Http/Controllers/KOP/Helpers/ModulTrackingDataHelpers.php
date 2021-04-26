@@ -155,18 +155,6 @@ class ModulTrackingDataHelpers Extends BaseVoyagerBaseController Implements Trac
 
 		}
 
-		// 'ampere' => $request->ampere,
-		// 'faktor_kali_lwbp' =>  $request->faktor_kali_lwbp,
-		// 'faktor_kali_wbp' =>  $request->faktor_kali_wbp,
-		// 'voltase' =>  $request->voltase,
-		// 'deskripsi' =>  $request->deskripsi,
-		// 'code_mesin' => $request->code_mesin,
-		// 'location_mch_id' => $request->location_mch_id,
-		// 'group_mesin' => $request->group_mesin_id,
-		// 'company_id' => $request->company_id,
-		// 'category_bagian' => $request->category_bagian_id,
-		// 'asumsi_id' => $request->asumsi_id,
-		// 'capacity_mch' => $request->capacity_mch
 		if($table == (String) "mesin"){
 
 			$attrField = array(
@@ -268,13 +256,16 @@ class ModulTrackingDataHelpers Extends BaseVoyagerBaseController Implements Trac
 		}
 
 		if($table == "laporan_biaya_administrasi_umum"){
-
 			$attrField = array(
 				'tahun1' => '2018',
 				'company_parent_id' => 'company',
+				'nama_biaya' => 'nama biaya',
 				'tahun2' => '2019',
 				'tahun3' => '2020',
-				'total_biaya_lp_adm' => 'total'
+				'total_biaya_lp_adm' => 'total',
+				'thn_periode_1' => 't 1',
+				'thn_periode_2' => 't 2',
+				'thn_periode_3' => 't 3',
 			);
 
 		$perubahan = [];
@@ -294,13 +285,17 @@ class ModulTrackingDataHelpers Extends BaseVoyagerBaseController Implements Trac
 		}
 
 		if($table == "laporan_bagian_penjualan"){
-
+			
 			$attrField = array(
 				'company_parent_id' => 'company',
+				'nama_biaya' => 'nama biaya',
 				'tahun1' => '2018',
 				'tahun2' => '2019',
 				'tahun3' => '2020',
 				'biaya_perbulan_bag_penjualan' => 'bperbulan',
+				'thn_periode_1' => 'thn_periode_1 3',
+				'thn_periode_2' => 'thn_periode_1 2',
+				'thn_periode_3' => 'thn_periode_1 1',
 			);
 
 		$perubahan = [];
@@ -320,12 +315,17 @@ class ModulTrackingDataHelpers Extends BaseVoyagerBaseController Implements Trac
 		}
 
 		if($table == "laporan_gaji_lain"){
-
+			
 			$attrField = array(
+				'company_parent_id' => 'companies',
+				'category_bagian' => 'kategori bagian',
 				'tahun1' => '2018',
                 'tahun2' => '2019',
                 'tahun3' => '2020',
-                'total_biaya_laporan_periode' => 'total'
+                'total_biaya_laporan_periode' => 'total',
+                'thn_periode_1' => 'thn_periode_1 1',
+                'thn_periode_2' => 'thn_periode_1 2',
+                'thn_periode_3' => 'thn_periode_1 3',
 			);
 
 		$perubahan = [];

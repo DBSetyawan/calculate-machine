@@ -85,6 +85,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('listrik-outputs/store-listrik-output-store','KOP\VoyagerListrikOutputPerjamController@HitungAkumulasiListrikOutputPerjam')->name('listrik-outputs.mtc.store.master');
     Route::get('listrik-outputs/form-listrik-output-mtcs','KOP\VoyagerListrikOutputPerjamController@formListrikOutputPerjam')->name('listrik-outputs.form.master');
 
+    Route::post('laporan-biaya-administrasi-changedbau/store-laporan-biaya-administrasi-umum','KOP\VoyagerLaporanBiayaAdministrasiUmumController@changedbau')->name('lp.biaya.adminitrasi.umum.changedbau');
+    Route::post('laporan-biaya-penjualan-changedbagianpenjualan/store-laporan-biaya-changedbagianpenjualan','KOP\VoyagerLaporanBagianPenjualanController@changedbagianpenjualan')->name('lp.biaya.adminitrasi.umum.changedbagianpenjualan');
     Route::post('laporan-biaya-administrasi-umums/store-laporan-biaya-administrasi-umum','KOP\VoyagerLaporanBiayaAdministrasiUmumController@HitungAkumulasiLPBiayaAdministrasiUmum')->name('lp.biaya.adminitrasi.umum.store');
     Route::get('laporan-biaya-administrasi-umums/form-laporan-biaya-administrasi-umum','KOP\VoyagerLaporanBiayaAdministrasiUmumController@formLaporanBiayaAdministrasiUmumAction')->name('lp.biaya.administrasi.umum.form.master');
 

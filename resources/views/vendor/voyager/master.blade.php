@@ -22,6 +22,7 @@
     <!-- App CSS -->
     <link rel="stylesheet" href="{{ voyager_asset('css/app.css') }}"/>
     <link href="{{ asset('public/css/prtip.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('public/css/daterangepicker.css') }}" rel="stylesheet">
     <link href="{{ asset('https://vpn.krisanthium.com:7070/kalkulasimesin2/public/css/c3.css') }}" rel="stylesheet">
     {{-- <link rel="stylesheet" href="{{ asset('public/css/fv.css') }}"/> --}}
     {{-- <link href="https://code.jquery.com/ui/1.10.1/themes/smoothness/jquery-ui.css"/> --}}
@@ -149,6 +150,8 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 <script src="{{ ('https://vpn.krisanthium.com:7070/kalkulasimesin2/public/js/jquery.countdown.min.js') }}"></script>
 {{-- <script src="https://code.jquery.com/ui/1.10.1/jquery-ui.js"></script> --}}
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
     
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
