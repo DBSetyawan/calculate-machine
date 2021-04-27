@@ -31,6 +31,7 @@
                                         <label for="program_id">Mesin</label>
                                         <select class="form-control select2" id="code_mesin" name="code_mesin" required>
                                             @foreach ($mesin as $m)
+                                        <option value="">Pilih</option>
                                         <option value="{{$m->id}}">{{$m->code_mesin}}</option>
                                             @endforeach
                                         </select>

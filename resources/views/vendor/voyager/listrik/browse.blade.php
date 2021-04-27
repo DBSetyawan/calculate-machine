@@ -687,7 +687,8 @@
 
                             success.fire({
                                 icon: 'success',
-                                title: 'Informasi, semua dokumen listrik berhasil ditransfer ke temporary recalculate.\n keterangan detail transfer dokumen:\n total dokumen: '+res.success.totalRows+'\n hasil pencarian data event: '+res.success.totalQuery+'\n batasan yang diperbolehkan untuk transfer: '+res.success.totalBatch +' dokumen mesin',
+                                title: 'Informasi, semua data listrik berhasil ditransfer ke temporary recalculate untuk dikelola menjadi data yang valid.',
+                                // title: 'Informasi, semua dokumen listrik berhasil ditransfer ke temporary recalculate.\n keterangan detail transfer dokumen:\n total dokumen: '+res.success.totalRows+'\n hasil pencarian data event: '+res.success.totalQuery+'\n batasan yang diperbolehkan untuk transfer: '+res.success.totalBatch +' dokumen mesin',
                             });
 
                             $("#RecalTemporaryRecalculate").html('<i class="voyager-documentation"></i> <i class="voyager-forward"></i> Transfer dokumen');

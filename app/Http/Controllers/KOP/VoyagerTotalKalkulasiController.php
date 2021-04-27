@@ -824,7 +824,7 @@ class VoyagerTotalKalkulasiController extends BaseVoyagerBaseController Implemen
         $redirect = redirect()->back();
 
         return $redirect->with([
-            'message'    => __('Code 403 access denied, silahkan akumulasi terlebih dahulu semua dokumen yang ingin diakumulasikan.'),
+            'message'    => __('Akses dibatasi, silahkan akumulasi terlebih dahulu semua dokumen yang ingin diakumulasikan & hanya status open yang dapat direcalculate sedangkan status closed tidak dapat diakumulasikan ulang dan diedit ataupun dihapus.'),
             'alert-type' => 'warning',
         ]);
 
@@ -835,7 +835,7 @@ class VoyagerTotalKalkulasiController extends BaseVoyagerBaseController Implemen
         $redirect = redirect()->back();
 
         return $redirect->with([
-            'message'    => __('Code 403 access denied, silahkan set dokumen group mesin terlebih dahulu, ketika ingin meilihat akumulasi otomatis.'),
+            'message'    => __('Akses dibatasi, silahkan set dokumen group mesin terlebih dahulu, ketika ingin meilihat akumulasi otomatis & hanya status open yang dapat direcalculate sedangkan status closed tidak dapat diakumulasikan ulang dan diedit ataupun dihapus.'),
             'alert-type' => 'warning',
         ]);
 
