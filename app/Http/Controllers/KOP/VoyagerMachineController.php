@@ -394,7 +394,7 @@ class VoyagerMachineController extends BaseVoyagerBaseController
         if($r->setTo["isConfirmed"] == "true"){
 
             // $simpanMesin = Mesin::create($datamesin);
-            $simpanMesin = Mesin::UpdateOrCreate($datamesin);
+            $simpanMesin = Mesin::updateOrCreate($datamesin);
 
             $dtmesin = Mesin::whereIn('id',[$simpanMesin->id])->first();
             
@@ -495,6 +495,14 @@ class VoyagerMachineController extends BaseVoyagerBaseController
                     'sparepart_tahun1' => $r->sparepart_tahun1,
                     'sparepart_tahun2' => $r->sparepart_tahun2,
                     'sparepart_tahun3' => $r->sparepart_tahun3,
+                    
+                    'thn_sparepart_periode_1' => Carbon::parse($r->tahun_periode_vr1)->format('Y'),
+                    'thn_sparepart_periode_2' => Carbon::parse($r->tahun_periode_vr2)->format('Y'),
+                    'thn_sparepart_periode_3' => Carbon::parse($r->tahun_periode_vr3)->format('Y'),
+
+                    'thn_perbaikan_periode_1' => Carbon::parse($r->tahun_periode_vrs1)->format('Y'),
+                    'thn_perbaikan_periode_2' => Carbon::parse($r->tahun_periode_vrs2)->format('Y'),
+                    'thn_perbaikan_periode_3' => Carbon::parse($r->tahun_periode_vrs3)->format('Y'),
         
                     'rata_rata_sparepart_perbulan' => $RataRataSparePartPerbulan,
         
@@ -619,7 +627,7 @@ class VoyagerMachineController extends BaseVoyagerBaseController
 
             }
             
-            Mesin::UpdateOrCreate(['code_mesin' => $dtmesin->code_mesin], $datamesin);
+            Mesin::updateOrCreate(['code_mesin' => $dtmesin->code_mesin], $datamesin);
 
                 return response()->json(
                     [

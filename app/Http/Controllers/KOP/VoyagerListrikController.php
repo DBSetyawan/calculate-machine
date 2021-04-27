@@ -15,6 +15,7 @@ use App\SpecialLabor;
 use App\ListrikOutput;
 use App\AllRecalculate;
 use App\KategoriBagian;
+use App\LocationMachine;
 use Mavinoo\Batch\Batch;
 use App\Lb8KategoriMesin;
 use Illuminate\Http\Request;
@@ -1031,6 +1032,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         }
 
         $companies = Company::all();
+        $LocationMachine = LocationMachine::all();
         $cbagian = KategoriBagian::all();
         $lsoutput = ListrikOutput::all();
         $specialabor = SpecialLabor::all();
@@ -1043,7 +1045,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
         // dd($dataTypeContent);
         $cbagian = KategoriBagian::all();
 
-        return Voyager::view($view, compact('mesjklin','company','group_mesin','LwbpMaster','specialabor','mesin','lsoutput','cbagian','companies','dataType', 'dataTypeContent', 'isModelTranslatable'));
+        return Voyager::view($view, compact('LocationMachine','mesjklin','company','group_mesin','LwbpMaster','specialabor','mesin','lsoutput','cbagian','companies','dataType', 'dataTypeContent', 'isModelTranslatable'));
 
     }
 

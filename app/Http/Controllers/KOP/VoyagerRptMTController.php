@@ -500,7 +500,7 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
             $view = "voyager::$slug.edit-add";
         }
 
-        $LsOutputPerjam = ListrikOutput::all();
+        $LsOutputPerjam = ListrikOutput::distinct()->groupBy('persen')->get();
         $cbagian = KategoriBagian::all();
         $company = Company::all();
         $mesin = Mesin::all();

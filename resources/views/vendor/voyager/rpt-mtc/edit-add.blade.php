@@ -466,7 +466,6 @@
 
         });
 
-
         $('#thn_perbaikan_periode_1').daterangepicker({
             singleDatePicker: true,
             startDate: $('#thn_perbaikan_periode_1').val(),

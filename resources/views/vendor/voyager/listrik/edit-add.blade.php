@@ -149,8 +149,16 @@
                             </div>
                         <div class="contanier">
                             <div class="panel-body">
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     {{-- <span class="badge badge-success" id="comp"></span> --}}
+                                {{-- </div>  --}}
+                                <div class="form-group">
+                                    <label for="program_id">Lokasi mesin</label>
+                                    <select class="form-control select2" id="location_mch_id" name="location_mch_id" required>
+                                        @foreach ($LocationMachine as $c)
+                                    <option value="{{$c->id}}">{{ $c->company_name }}</option>
+                                        @endforeach
+                                    </select>   
                                 </div>
                                 <div class="form-group">
                                     
@@ -240,7 +248,48 @@
           };
         }
 
+        async function GetFullLocationMachineID(mesinid) {
+
+                    let datamesinid = {
+                            group_mesin_id:mesinid
+                        }
+
+                const apiDataMesin = "{{ route('detail.data.detaillocationID') }}";
+                        
+                    const settings = {
+
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                'Content-Type': 'application/json;charset=utf-8'
+                                },
+                            body: JSON.stringify(datamesinid)
+
+                        }
+
+                        try {
+                                
+                                const fetchResponse = await fetch(`${apiDataMesin}`, settings);
+                                const data = await fetchResponse.json();
+                                return data;
+
+                            } catch (error) {
+
+                            return error
+
+                        }    
+                    }
+
+
         $('document').ready(function () {
+
+            $('#location_mch_id').on('change', function() {
+                GetFullLocationMachineID(this.value).then(function(results){
+                    $("#faktor_kali_lwbp").val(results.detail.faktor_lwbp);
+                    $("#faktor_kali_wbp").val(results.detail.faktor_wbp);
+                });
+            });
+                
             $('.toggleswitch').bootstrapToggle();
 
             //Init datepicker for date fields if data-datepicker attribute defined

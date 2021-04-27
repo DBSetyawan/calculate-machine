@@ -1,8 +1,4 @@
-
 @extends('voyager::master')
-
-{{-- @section('page_title', __('voyager::generic.'.(isset($dataTypeContent->id) ? 'edit' : 'add')).' '.$dataType->getTranslatedAttribute('display_name_singular')) --}}
-
 @section('css')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @stop
@@ -67,18 +63,6 @@
                                             @endforeach
                                         </select>   
                                     </div>
-
-
-                                    {{-- ini diganti field REC 1.1 <div class="form-group">
-                                        <label for="program_id">Kapasitas mesin</label>
-                                        <select class="form-control select2" id="listrik_perjam_id" name="listrik_perjam_id" required>
-                                            @foreach ($LsOutputPerjam as $c)
-                                            <option value="{{$c->id}}">{{ $c->output_perjam }}</option>
-                                        {{-- <option value="{{$c->id}}">{{ RumusListrikOutputPerjam::percent($c->persen)}} - {{ $c->output_perjam }}</option> --}}
-                                            {{-- @endforeach
-                                        </select> --}}
-                                    {{-- </div> --}}
-
                                     <div class="form-group">
                                         <label for="url_instagram">Kapasitas mesin</label>
                                         <input type="text" class="form-control" data-validate-length-range="6" data-validate-words="2" id="listrik_perjam_id" name="listrik_perjam_id" placeholder="Jumlah kapasitas mesin">
@@ -113,12 +97,6 @@
                                     <input type="text" class="form-control" id="faktor_kali_wbp" readonly data-validate-length-range="6" data-validate-words="2" name="faktor_kali_wbp" placeholder="Faktor kali WBP">
                                 </div>
                             </div>
-                            {{-- <button type="submit" class="btn btn-primary pull-right save_mach">Simpan</button>&nbsp; --}}
-
-                            {{-- <button type="submit" class="btn btn-primary pull-right save">
-                                Add Donation
-                            </button> --}}
-                        {{-- </form> --}}
                         </div>
                     </div>
             </div>
@@ -129,12 +107,6 @@
                     <div id="penyusutan_frm" class="tab-pane fade">
                         <h3>Penyusutan</h3>
                         <div class="page-content container-fluid">
-
-
-                            {{-- <form class="form-edit-add" role="form"
-                                method="POST" enctype="multipart/form-data" autocomplete="off"> --}}
-                    
-                                {{-- {{ csrf_field() }} --}}
                     
                                 <div class="row">
                                         <div class="col-md-8">
@@ -142,54 +114,6 @@
                                                 <div class="panel-body">
                                                     <div class="contanier">
                     
-                                                        {{-- <div class="form-group">
-                                                            <label for="program_id">Mesin</label>
-                                                            <select class="form-control select2" id="code_mesins" name="code_mesins" required>
-                                                                @foreach ($mesin as $m)
-                                                            <option value="{{$m->id}}">{{$m->code_mesin}}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <input type="text" class="form-control" id="code_mesin_id" name="code_mesin_id" placeholder="">
-                     --}}
-                    
-                                                        {{-- <div class="form-group">
-                                                            <label for="program_id">Company</label>
-                                                            <select class="form-control select2" id="company_parent_id" name="company_parent_id" required>
-                                                                @foreach ($company as $c)
-                                                            <option value="{{$c->id}}">{{$c->company_name}}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div> --}}
-                    
-                                                        {{-- <div class="form-group">
-                                                            <label for="company">Company</label>
-                                                            <input type="text" class="form-control" id="company_display" name="company_display" placeholder="">
-                                                            <input type="text" class="form-control" id="company_parent_id" name="company_parent_id" placeholder="">
-                                                        </div>
-                                                 --}}
-                                                        {{-- <div class="form-group">
-                                                            <label for="program_id">Mesin</label>
-                                                            <select class="form-control select2" id="code_mesin" name="code_mesin" required>
-                                                                @foreach ($mesin as $m)
-                                                            <option value="{{$m->id}}">{{$m->code_mesin}} - {{$m->deskripsi}}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div> --}}
-                    
-                                                        {{-- <div class="form-group">
-                                                            <label for="program_id">Category</label>
-                                                            <select class="form-control select2" id="category_bagian" name="category_bagian" required>
-                                                                @foreach ($cbagian as $cb)
-                                                            <option value="{{$cb->id}}">{{$cb->nama_bagian}}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div> --}}
-                                                        {{-- <div class="form-group">
-                                                            <label for="company">Kategori Bagian</label>
-                                                            <input type="text" class="form-control" id="category_bagian_display" name="category_bagian_display" placeholder="">
-                                                            <input type="text" class="form-control" id="category_bagian" name="category_bagian" placeholder="">
-                                                        </div> --}}
                     
                                                         <div class="form-group">
                                                             <label for="url_instagram">Nama SIM</label>
@@ -220,38 +144,10 @@
                                                         <input type="text" readonly="true" class="form-control" id="total_perbulan_p" name="total_perbulan_p" placeholder="">
                                                 </div>
                                             </div>
-                    
-                                            {{-- <div class="row">
-                                                <div class="col-md-4">
-                                                    <span>%</span>
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <span> <input type="text" class="form-control" id="persenlistriks" name="persenlistriks" placeholder=""></span>
-                                                </div>
-                                            </div> --}}
-                    
-                                            {{-- <div class="row">
-                                                <div class="col-md-4">
-                                                    <span>Domisili</span>
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <span>KODEPOS:{{$donatur->kelurahan->kd_pos}}, Kel. {{$donatur->kelurahan->kelurahan}}, Kec. {{$donatur->kelurahan->kecamatan->kecamatan}}, Kota/Kab. {{$donatur->kelurahan->kecamatan->kabkot->kabupaten_kota}}, Prov. {{$donatur->kelurahan->kecamatan->kabkot->provinsi->provinsi}}
-                                                    </span>
-                                                </div>
-                                            </div> --}}
-                    
                                         </div>
-
-                                        {{-- <button type="submit" class="btn btn-primary pull-right save_peny">Hitung biaya penyusutan</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --}}
                                     </div>
-                                    </div>
-
                                 </div>
-                    
-                                {{-- <button type="submit" class="btn btn-primary pull-right save">
-                                    Add Donation
-                                </button> --}}
-                            {{-- </form> --}}
+                            </div>
                         </div>
                     </div>
                     {{-- form mtc --}}
@@ -273,15 +169,6 @@
                                                 </div>
                                                 <input type="text" class="form-control hidden" id="code_mesin_ids" name="code_mesin_ids" placeholder="">
             
-                                                {{-- <div class="form-group">
-                                                    <label for="program_id">Company</label>
-                                                    <select class="form-control select2" id="company_parent_id" name="company_parent_id" required>
-                                                        @foreach ($company as $c)
-                                                    <option value="{{$c->id}}">{{$c->company_name}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                         --}}
                                          <div class="form-group">
                                             <label for="company">kategori bagian group mesin</label>
                                             <input type="text" class="form-control" id="category_bagian_display_labor" name="category_bagian_display_labor" placeholder="">
@@ -293,45 +180,12 @@
                                             <input type="text" class="form-control" id="company_display_labor" name="company_display_labor" placeholder="">
                                             <input type="text" class="form-control" id="company_parent_id_labor" name="company_parent_id_labor" placeholder="">
                                         </div>
-                                                {{-- <div class="form-group">
-                                                    <label for="program_id">Mesin</label>
-                                                    <select class="form-control select2" id="code_mesin" name="code_mesin" required>
-                                                        @foreach ($mesin as $m)
-                                                    <option value="{{$m->id}}">{{$m->code_mesin}} - {{$m->deskripsi}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div> --}}
-            
-                                                {{-- <div class="form-group">
-                                                    <label for="program_id">Category</label>
-                                                    <select class="form-control select2" id="category_bagian" name="category_bagian" required>
-                                                        @foreach ($cbagian as $cb)
-                                                    <option value="{{$cb->id}}">{{$cb->nama_bagian}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div> --}}
-                                                {{-- <div class="form-group">
-                                                    <label for="company">Kategori Bagian</label> --}}
-                                                    {{-- <input type="text" class="form-control" id="category_bagian_display" name="category_bagian_display" placeholder=""> --}}
-                                                {{-- </div> --}}
-                                                {{-- <div class="form-group">
-                                                    <label for="program_id">Mesin</label>
-                                                    <select class="form-control select2" id="code_mesin" name="code_mesin" required>
-                                                        @foreach ($mesin as $m)
-                                                    <option value="{{$m->id}}">{{$m->code_mesin}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div> --}}
                                                 <div class="form-group"> 
                                                     <label for="company">Shift</label>
                                                     <input type="text" class="form-control" id="shift_display_labor" name="shift_display_labor" placeholder="">
                                                     <input type="text" class="form-control" id="shift_labor" name="shift_labor" placeholder="">
                                                 </div>
             
-                                                {{-- <div class="form-group">
-                                                    <label for="url_instagram">Mesin yang ditangani</label>
-                                                    <input type="text" class="form-control removeLater" id="jumlah_penangganan_mesin" name="jumlah_penangganan_mesin" placeholder="Jumlah mesin yang ditangani (Khusus Inputan SPV)">
-                                                </div> --}}
             
                                                 <div class="form-group mesinch">
                                                     <label for="msncheck">Jumlah mesin yang ditanggani</label>
@@ -339,14 +193,6 @@
                                                     {{-- <input type="text" class="form-control removeLater" id="jumlah_penangganan_mesin" name="jumlah_penangganan_mesin" placeholder="Jumlah mesin yang ditangani (Khusus Inputan SPV)"> --}}
                                                 </div>
             
-                                                {{-- <div class="form-group">
-                                                    <label for="program_id">Shift</label>
-                                                    <select class="form-control select2" id="shift" name="shift" required>
-                                                        @foreach ($listrikShift as $x)
-                                                        <option value="{{$x->shift}}">{{ $x->code_listrik}} - {{ $x->shift}} </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div> --}}
             
                                                 <div class="form-group">
                                                     <label for="url_instagram">Jumlah Karyawan SPV</label>
@@ -422,17 +268,6 @@
                                                 <input type="text" readonly="true" class="form-control" id="jumlah_mesin_yangditangani" name="jumlah_mesin_yangditangani" placeholder="">
                                         </div>
                                     </div>
-            
-                                    {{-- <div class="row">
-                                        <div class="col-md-4">
-                                            <span>Domisili</span>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <span>KODEPOS:{{$donatur->kelurahan->kd_pos}}, Kel. {{$donatur->kelurahan->kelurahan}}, Kec. {{$donatur->kelurahan->kecamatan->kecamatan}}, Kota/Kab. {{$donatur->kelurahan->kecamatan->kabkot->kabupaten_kota}}, Prov. {{$donatur->kelurahan->kecamatan->kabkot->provinsi->provinsi}}
-                                            </span>
-                                        </div>
-                                    </div> --}}
-            
                                 </div>
                             </div>
                             </div>
@@ -440,111 +275,83 @@
                         </div>
                     </div>
                     <div id="mtc_frm" class="tab-pane fade">
-                        <h3>MTC</h3>
+                    <h3>MTC</h3>
                         <div class="page-content container-fluid">
-
-
                             <div class="row">
                                 <div class="col-md-8">
                                     <div class="panel panel-bordered">
                                         <div class="panel-body">
                                             <div class="contanier">
-            
-                                                {{-- <div class="form-group">
-                                                    <label for="program_id">Company</label>
-                                                    <select class="form-control select2" id="company_parent_id" name="company_parent_id" required>
-                                                        @foreach ($company as $c)
-                                                    <option value="{{$c->id}}">{{$c->company_name}}</option>
-                                                        @endforeach
+
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <label for="oprd">Open periode perbaikan</label>
+                                                    <select class="form-control select2" id="oprd" name="oprd" required>
+                                                    {{-- <option value="1"> Periode 1</option>
+                                                    <option value="2"> Periode 2</option>
+                                                    <option value="3"> Periode 3</option> --}}
+                                                    <option value="4"> All Periode</option>
+                                                    <option value="1"> Open periode 1</option>
+                                                    <option value="6"> Open periode 1 / 2</option>
+                                                    {{-- <option value="5"> Open periode 1 / 3</option> --}}
+                                                    {{-- <option value="6"> Open periode 2 / 1</option> --}}
+                                                    {{-- <option value="7"> Open periode 3 / 2</option> --}}
                                                     </select>
-                                                </div> --}}
-                                                {{-- <div class="form-group">
-                                                    <label for="program_id">Mesin</label>
-                                                    <select class="form-control select2" id="code_mesin_mtc" name="code_mesin_mtc" required>
-                                                        @foreach ($mesin as $m)
-                                                    <option value="{{$m->id}}">{{$m->code_mesin}}</option>
-                                                        @endforeach
+                                                </div>
+            
+                                                <div class="form-group">
+                                                    <label for="url_instagram">Perbaikan tahun 1</label>
+                                                    <input type="text" class="form-control removeLater" id="perbaikan_tahun1" name="perbaikan_tahun1" placeholder="Biaya perbaikan tahun 1">
+                                                    <input type="date" class="form-control" id="start_date_perbaikan_tahun1" placeholder="Start Date"/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="url_instagram">Perbaikan tahun 2</label>
+                                                    <input type="text" class="form-control removeLater" id="perbaikan_tahun2" name="perbaikan_tahun2" placeholder="Biaya perbaikan tahun 2">
+                                                    <input type="date" class="form-control" id="start_date_perbaikan_tahun2" placeholder="Start Date"/>
+                                                </div>
+            
+                                                <div class="form-group">
+                                                    <label for="url_instagram">Perbaikan tahun 3</label>
+                                                    <input type="text" class="form-control removeLater" id="perbaikan_tahun3" name="perbaikan_tahun3" placeholder="Biaya perbaikan tahun 3">
+                                                    <input type="date" class="form-control" id="start_date_perbaikan_tahun3" placeholder="Start Date"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                            <div class="contanier">
+                                                <div class="row">
+                                                    <label for="oprd">Open periode sparepart</label>
+                                                    <select class="form-control select2" id="oprds" name="oprds" required>
+                                                    {{-- <option value="1"> Periode 1</option>
+                                                    <option value="2"> Periode 2</option>
+                                                    <option value="3"> Periode 3</option> --}}
+                                                    <option value="4"> All Periode</option>
+                                                    <option value="1"> Open periode 1</option>
+                                                    <option value="6"> Open periode 1 / 2</option>
+                                                    {{-- <option value="5"> Open periode 1 / 3</option> --}}
+                                                    {{-- <option value="6"> Open periode 2 / 1</option> --}}
+                                                    {{-- <option value="7"> Open periode 3 / 2</option> --}}
                                                     </select>
                                                 </div>
-                                                <input type="text" class="form-control" id="code_mesin_id_mtc" name="code_mesin_id_mtc" placeholder="">
-            
                                                 <div class="form-group">
-                                                    <label for="company">Company</label>
-                                                    <input type="text" class="form-control" id="company_display_mtc" name="company_display_mtc placeholder="">
-                                                    <input type="text" class="form-control" id="company_parent_id_mtc" name="company_parent_id_mtc placeholder="">
+                                                    <label for="url_instagram">Sparepart tahun 1</label>
+                                                    <input type="text" class="form-control removeLater" id="sparepart_tahun1" name="sparepart_tahun1" placeholder="Biaya perbaikan tahun 1">
+                                                    <input type="date" class="form-control" id="start_date_sparepart_tahun1" placeholder="Start Date"/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="url_instagram">Sparepart tahun 2</label>
+                                                    <input type="text" class="form-control removeLater" id="sparepart_tahun2" name="sparepart_tahun2" placeholder="Biaya perbaikan tahun 2">
+                                                    <input type="date" class="form-control" id="start_date_sparepart_tahun2" placeholder="Start Date"/>
                                                 </div>
             
                                                 <div class="form-group">
-                                                    <label for="company">Kategori Bagian</label>
-                                                    <input type="text" class="form-control" id="category_bagian_display_mtc" name="category_bagian_display_mtc" placeholder="">
-                                                    <input type="text" class="form-control" id="category_bagian_mtc" name="category_bagian_mtc" placeholder="">
+                                                    <label for="url_instagram">Sparepart tahun 3</label>
+                                                    <input type="text" class="form-control removeLater" id="sparepart_tahun3" name="sparepart_tahun3" placeholder="Biaya perbaikan tahun 3">
+                                                    <input type="date" class="form-control" id="start_date_sparepart_tahun3" placeholder="Start Date"/>
                                                 </div>
-                                         --}}
-                                                {{-- <div class="form-group">
-                                                    <label for="program_id">Mesin</label>
-                                                    <select class="form-control select2" id="code_mesin" name="code_mesin" required>
-                                                        @foreach ($mesin as $m)
-                                                    <option value="{{$m->id}}">{{$m->code_mesin}} - {{$m->deskripsi}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div> --}}
-            
-                                                {{-- <div class="form-group">
-                                                    <label for="program_id">Category</label>
-                                                    <select class="form-control select2" id="category_bagian" name="category_bagian" required>
-                                                        @foreach ($cbagian as $cb)
-                                                    <option value="{{$cb->id}}">{{$cb->nama_bagian}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div> --}}
-            {{-- 
-                                                <div class="form-group">
-                                                    <label for="program_id">Listrik Output Perjam</label>
-                                                    <select class="form-control select2" id="percent" name="percent" required>
-                                                        @foreach ($LsOutputPerjam as $ls)
-                                                    <option value="{{$ls->persen}}">{{$ls->persen}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div> --}}
-                                                {{-- <div class="form-group"> --}}
-                                                    {{-- <label for="company">Listrik /Jam</label> --}}
-                                                    {{-- <input type="text" class="form-control" id="perjam_display" name="perjam_display" placeholder=""> --}}
-                                                    {{-- <input type="text" class="form-control" id="perjam" name="perjam" placeholder=""> --}}
-                                                {{-- </div> --}}
-            
-                                                <div class="form-group">
-                                                    <label for="url_instagram">Perbaikan periode 1</label>
-                                                    <input type="text" class="form-control removeLater" id="perbaikan_tahun1" name="perbaikan_tahun1" placeholder="Biaya perbaikan periode 1">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="url_instagram">Perbaikan periode 2</label>
-                                                    <input type="text" class="form-control removeLater" id="perbaikan_tahun2" name="perbaikan_tahun2" placeholder="Biaya perbaikan periode 2">
-                                                </div>
-            
-                                                <div class="form-group">
-                                                    <label for="url_instagram">Perbaikan periode 3</label>
-                                                    <input type="text" class="form-control removeLater" id="perbaikan_tahun3" name="perbaikan_tahun3" placeholder="Biaya perbaikan periode 3">
-                                                </div>
-            
-                                                <div class="form-group">
-                                                    <label for="url_instagram">Sparepart periode 1</label>
-                                                    <input type="text" class="form-control removeLater" id="sparepart_tahun1" name="sparepart_tahun1" placeholder="Biaya perbaikan periode 1">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="url_instagram">Sparepart periode 2</label>
-                                                    <input type="text" class="form-control removeLater" id="sparepart_tahun2" name="sparepart_tahun2" placeholder="Biaya perbaikan periode 2">
-                                                </div>
-            
-                                                <div class="form-group">
-                                                    <label for="url_instagram">Sparepart periode 3</label>
-                                                    <input type="text" class="form-control removeLater" id="sparepart_tahun3" name="sparepart_tahun3" placeholder="Biaya perbaikan periode 3">
-                                                </div>
-            
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-            
                             <div class="col-md-4">
                                 <div class="panel panel-bordered">
                                 <div class="panel-body">
@@ -554,10 +361,8 @@
                                             <span>Total Biaya Sparepart dan Perbaikan di susutkan dalam 4 tahun :</span>
                                         </div>
                                         <div class="container">
-                                                {{-- <input type="text" class="form-control" id="total_perbulan_p" name="total_perbulan_p" placeholder=""> --}}
                                         </div>
                                     </div><br/>
-            
                                     <div class="row">
                                         <div class="col-md-4">
                                             <span>Rata rata perbaikan perbulan</span>
@@ -566,7 +371,6 @@
                                             <input type="text" readonly="true" class="form-control" id="rtrtperbaikanperbulan" name="rtrtperbaikanperbulan" placeholder="">
                                         </div>
                                     </div>
-            
                                     <div class="row">
                                         <div class="col-md-4">
                                             <span>Rata rata sparepart perbulan</span>
@@ -576,7 +380,6 @@
             
                                         </div>
                                     </div>
-            
                                     <div class="row">
                                         <div class="col-md-4">
                                             <span>Biaya Produksi lain</span>
@@ -586,28 +389,22 @@
             
                                         </div>
                                     </div>
-            
                                     <div class="row">
                                         <div class="col-md-4">
                                             <span>Total biaya perbulan</span>
                                         </div>
                                         <div class="col-md-8">
                                           <input type="text" readonly="true" class="form-control" id="total_biaya_perbulan" name="total_biaya_perbulan" placeholder="">
-            
+                                        </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            </div>
-                        </div>
-
-
-                            <button type="submit" class="btn btn-primary pull-right save_mach">Simpan & hitung</button>&nbsp;
-
-                            </form>
-                        </div>
-                    </div>
-                    {{-- end form mtc --}}
+                        <button type="submit" class="btn btn-primary pull-right save_mach">Simpan & hitung</button>&nbsp;
+                    </form>
+                </div>
+            </div>
         </div>
         
     </div>
@@ -642,6 +439,24 @@
     }
 
         $('document').ready(function () {
+
+            $("#perbaikan_tahun1").hide();
+            $("#perbaikan_tahun2").hide();
+            $("#perbaikan_tahun3").hide();
+            $("#perbaikan_tahun4").hide();
+            
+            $("#sparepart_tahun1").hide();
+            $("#sparepart_tahun2").hide();
+            $("#sparepart_tahun3").hide();
+
+
+            $("#start_date_perbaikan_tahun1").hide();
+            $("#start_date_perbaikan_tahun2").hide();
+            $("#start_date_perbaikan_tahun3").hide();
+
+            $("#start_date_sparepart_tahun1").hide();
+            $("#start_date_sparepart_tahun2").hide();
+            $("#start_date_sparepart_tahun3").hide();
 
             $('.toggleswitch').bootstrapToggle();
 
@@ -831,6 +646,14 @@
                     'sparepart_tahun1'    : $('input[name=sparepart_tahun1]').val(),
                     'sparepart_tahun2'    : $('input[name=sparepart_tahun2]').val(),
                     'sparepart_tahun3'    : $('input[name=sparepart_tahun3]').val(),
+
+                    'tahun_periode_vr1'      : $('input[id=start_date_perbaikan_tahun1]').val(),
+                    'tahun_periode_vr2'      : $('input[id=start_date_perbaikan_tahun2]').val(),
+                    'tahun_periode_vr3'      : $('input[id=start_date_perbaikan_tahun3]').val(),
+                    
+                    'tahun_periode_vrs1'      : $('input[id=start_date_sparepart_tahun1]').val(),
+                    'tahun_periode_vrs2'      : $('input[id=start_date_sparepart_tahun2]').val(),
+                    'tahun_periode_vrs3'      : $('input[id=start_date_sparepart_tahun3]').val(),
                 };
 
                 Swal.fire({
@@ -1114,5 +937,280 @@
 
                         event.preventDefault();
                     });
+
+            function open_periode1(){
+
+                $("#perbaikan_tahun1").show();
+                $("#perbaikan_tahun2").hide();
+                $("#perbaikan_tahun3").hide();
+
+                $("#perbaikan_tahun2").val('');
+                $("#perbaikan_tahun3").val('');
+
+                $("#start_date_perbaikan_tahun1").show();
+                $("#start_date_perbaikan_tahun2").hide();
+                $("#start_date_perbaikan_tahun3").hide();
+
+            }
+
+            function open_periodepart1(){
+
+                $("#sparepart_tahun1").show();
+                $("#sparepart_tahun2").hide();
+                $("#sparepart_tahun3").hide();
+
+                $("#sparepart_tahun2").val('');
+                $("#sparepart_tahun3").val('');
+
+                $("#start_date_sparepart_tahun1").show();
+                $("#start_date_sparepart_tahun2").hide();
+                $("#start_date_sparepart_tahun3").hide();
+
+            }
+
+            function open_periode4(){
+
+                $("#perbaikan_tahun3").show();
+                $("#perbaikan_tahun2").show();
+                $("#perbaikan_tahun1").show();
+
+                $("#start_date_perbaikan_tahun1").show();
+                $("#start_date_perbaikan_tahun2").show();
+                $("#start_date_perbaikan_tahun3").show();
+
+            }
+
+                function open_periodepart4(){
+
+                    $("#sparepart_tahun3").show();
+                    $("#sparepart_tahun2").show();
+                    $("#sparepart_tahun1").show();
+
+                    $("#start_date_sparepart_tahun1").show();
+                    $("#start_date_sparepart_tahun2").show();
+                    $("#start_date_sparepart_tahun3").show();
+
+                }
+
+            function close_periode4(){
+
+                $("#perbaikan_tahun3").hide();
+                $("#perbaikan_tahun2").hide();
+                $("#perbaikan_tahun1").hide();
+
+                $("#perbaikan_tahun1").val('');
+                $("#perbaikan_tahun2").val('');
+                $("#perbaikan_tahun3").val('');
+
+                $("#start_date_perbaikan_tahun3").hide();
+                $("#start_date_perbaikan_tahun2").hide();
+                $("#start_date_perbaikan_tahun1").hide();
+
+            }
+
+            function close_periodepart4(){
+
+                $("#sparepart_tahun3").hide();
+                $("#sparepart_tahun2").hide();
+                $("#sparepart_tahun1").hide();
+
+                $("#sparepart_tahun1").val('');
+                $("#sparepart_tahun2").val('');
+                $("#sparepart_tahun3").val('');
+
+                $("#start_date_sparepart_tahun3").hide();
+                $("#start_date_sparepart_tahun2").hide();
+                $("#start_date_sparepart_tahun1").hide();
+
+
+            }
+
+            function open_periode2(){
+
+                $("#perbaikan_tahun2").show();
+                $("#perbaikan_tahun3").hide();
+                $("#perbaikan_tahun1").hide();
+
+                $("#perbaikan_tahun3").val('');
+                $("#perbaikan_tahun1").val('');
+
+                $("#start_date_perbaikan_tahun1").hide();
+                $("#start_date_perbaikan_tahun3").hide();
+                $("#start_date_perbaikan_tahun2").show();
+
+            }
+
+            function open_periodepart2(){
+
+                $("#sparepart_tahun2").show();
+                $("#sparepart_tahun3").hide();
+                $("#sparepart_tahun1").hide();
+
+                $("#sparepart_tahun3").val('');
+                $("#sparepart_tahun1").val('');
+
+                $("#start_date_sparepart_tahun1").hide();
+                $("#start_date_sparepart_tahun3").hide();
+                $("#start_date_sparepart_tahun2").show();
+
+            }
+
+            function open_periode3(){
+
+                $("#perbaikan_tahun3").show();
+                $("#perbaikan_tahun2").hide();
+                $("#perbaikan_tahun1").hide();
+
+                $("#perbaikan_tahun2").val('');
+                $("#perbaikan_tahun1").val('');
+
+                $("#start_date_perbaikan_tahun1").hide();
+                $("#start_date_perbaikan_tahun3").show();
+                $("#start_date_perbaikan_tahun2").hide();
+
+            }
+
+            function open_periodepart3(){
+
+                $("#sparepart_tahun3").show();
+                $("#sparepart_tahun2").hide();
+                $("#sparepart_tahun1").hide();
+
+                $("#sparepart_tahun2").val('');
+                $("#sparepart_tahun1").val('');
+
+                $("#start_date_sparepart_tahun1").hide();
+                $("#start_date_sparepart_tahun3").show();
+                $("#start_date_sparepart_tahun2").hide();
+
+            }
+
+            function open_periode31(){
+
+            $("#perbaikan_tahun3").show();
+            $("#perbaikan_tahun2").hide();
+            $("#perbaikan_tahun1").show();
+
+            $("#perbaikan_tahun2").val('');
+
+            $("#start_date_perbaikan_tahun3").show();
+            $("#start_date_perbaikan_tahun1").show();
+            $("#start_date_perbaikan_tahun2").hide();
+
+            }
+
+            function open_periodepart31(){
+
+                $("#sparepart_tahun3").show();
+                $("#sparepart_tahun2").hide();
+                $("#sparepart_tahun1").show();
+
+                $("#sparepart_tahun2").val('');
+
+                $("#start_date_sparepart_tahun3").show();
+                $("#start_date_sparepart_tahun1").show();
+                $("#start_date_sparepart_tahun2").hide();
+
+            }
+
+            function open_periode21(){
+
+                $("#perbaikan_tahun3").hide();
+                $("#perbaikan_tahun2").show();
+                $("#perbaikan_tahun1").show();
+
+                $("#perbaikan_tahun3").val('');
+
+                $("#start_date_perbaikan_tahun3").hide();
+                $("#start_date_perbaikan_tahun2").show();
+                $("#start_date_perbaikan_tahun1").show();
+
+            }
+
+            function open_periodepart21(){
+
+                $("#sparepart_tahun3").hide();
+                $("#sparepart_tahun2").show();
+                $("#sparepart_tahun1").show();
+
+                $("#sparepart_tahun3").val('');
+
+                $("#start_date_sparepart_tahun3").hide();
+                $("#start_date_sparepart_tahun2").show();
+                $("#start_date_sparepart_tahun1").show();
+
+            }
+
+            function open_periode32(){
+
+            $("#perbaikan_tahun3").show();
+            $("#perbaikan_tahun2").show();
+            $("#perbaikan_tahun1").hide();
+
+            $("#perbaikan_tahun1").val('');
+
+            $("#start_date_perbaikan_tahun1").hide();
+            $("#start_date_perbaikan_tahun2").show();
+            $("#start_date_perbaikan_tahun3").show();
+
+
+            }
+
+            function open_periodepart32(){
+
+                $("#sparepart_tahun3").show();
+                $("#sparepart_tahun2").show();
+                $("#sparepart_tahun1").hide();
+
+                $("#sparepart_tahun1").val('');
+
+                $("#start_date_sparepart_tahun1").hide();
+                $("#start_date_sparepart_tahun2").show();
+                $("#start_date_sparepart_tahun3").show();
+
+
+            }
+
+        $('#oprd').on('change', function() {
+            if(this.value == 1){
+                open_periode1();
+            }else if(this.value == 2){
+                open_periode2();
+            }else if(this.value == 3){
+                open_periode3();
+            }else if(this.value == 4){
+                open_periode4();
+            }else if(this.value == 5){
+                open_periode31();
+            }else if(this.value == 6){
+                open_periode21();
+            }else if(this.value == 7){
+                open_periode32();
+            } else {
+                close_periode4();
+            }
+
+        });
+
+        $('#oprds').on('change', function() {
+            if(this.value == 1){
+                open_periodepart1();
+            }else if(this.value == 2){
+                open_periodepart2();
+            }else if(this.value == 3){
+                open_periodepart3();
+            }else if(this.value == 4){
+                open_periodepart4();
+            }else if(this.value == 5){
+                open_periodepart31();
+            }else if(this.value == 6){
+                open_periodepart21();
+            }else if(this.value == 7){
+                open_periodepart32();
+            } else {
+                close_periodepart4();
+            }
+
+        });
     </script>
 @stop
