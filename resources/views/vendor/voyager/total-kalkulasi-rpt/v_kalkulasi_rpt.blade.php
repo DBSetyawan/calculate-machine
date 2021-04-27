@@ -1757,7 +1757,7 @@ $(document).ready(function(){
                       dataTable.column([17]).visible(true);
 
                       // check for table recalcualte avg
-                      let dataTableSearchRange_vsble = $('#dataTableSearchRange').DataTable().draw();
+                      let dataTableSearchRange_vsble = $('#dataTableSearchRange').DataTable();
                       dataTableSearchRange_vsble.column([0]).visible(true);
                       dataTableSearchRange_vsble.column([1]).visible(true);
                       dataTableSearchRange_vsble.column([2]).visible(false);
@@ -1769,6 +1769,9 @@ $(document).ready(function(){
                       dataTableSearchRange_vsble.column([8]).visible(false);
                       dataTableSearchRange_vsble.column([9]).visible(false);
                       dataTableSearchRange_vsble.column([10]).visible(false);
+
+                      $('#dataTableSearchRange').DataTable().columns.adjust().draw();
+
 
                 });
 

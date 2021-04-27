@@ -324,7 +324,7 @@ class Stringable implements JsonSerializable
      * Convert GitHub flavored Markdown into HTML.
      *
      * @param  array  $options
-     * @return string
+     * @return static
      */
     public function markdown(array $options = [])
     {
@@ -335,7 +335,7 @@ class Stringable implements JsonSerializable
      * Get the string matching the given pattern.
      *
      * @param  string  $pattern
-     * @return static|null
+     * @return static
      */
     public function match($pattern)
     {
@@ -363,6 +363,17 @@ class Stringable implements JsonSerializable
         }
 
         return collect($matches[1] ?? $matches[0]);
+    }
+
+    /**
+     * Determine if the string matches the given pattern.
+     *
+     * @param  string  $pattern
+     * @return bool
+     */
+    public function test($pattern)
+    {
+        return $this->match($pattern)->isNotEmpty();
     }
 
     /**
@@ -415,7 +426,7 @@ class Stringable implements JsonSerializable
     /**
      * Call the given callback and return a new string.
      *
-     * @param callable $callback
+     * @param  callable  $callback
      * @return static
      */
     public function pipe(callable $callback)
@@ -454,6 +465,29 @@ class Stringable implements JsonSerializable
     public function prepend(...$values)
     {
         return new static(implode('', $values).$this->value);
+    }
+
+    /**
+     * Remove any occurrence of the given string in the subject.
+     *
+     * @param  string|array<string>  $search
+     * @param  bool  $caseSensitive
+     * @return static
+     */
+    public function remove($search, $caseSensitive = true)
+    {
+        return new static(Str::remove($search, $this->value, $caseSensitive));
+    }
+
+    /**
+     * Repeat the string.
+     *
+     * @param  int  $times
+     * @return static
+     */
+    public function repeat(int $times)
+    {
+        return new static(Str::repeat($this->value, $times));
     }
 
     /**
@@ -720,6 +754,16 @@ class Stringable implements JsonSerializable
     public function words($words = 100, $end = '...')
     {
         return new static(Str::words($this->value, $words, $end));
+    }
+
+    /**
+     * Get the number of words a string contains.
+     *
+     * @return int
+     */
+    public function wordCount()
+    {
+        return str_word_count($this->value);
     }
 
     /**

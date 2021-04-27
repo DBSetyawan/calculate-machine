@@ -39,8 +39,8 @@ class Middleware
      */
     public function handle($request, Closure $next)
     {
-        if (app()->bound('sentry')) {
-            $this->startTransaction($request, app('sentry'));
+        if (app()->bound(HubInterface::class)) {
+            $this->startTransaction($request, app(HubInterface::class));
         }
 
         return $next($request);
@@ -56,7 +56,7 @@ class Middleware
      */
     public function terminate($request, $response): void
     {
-        if ($this->transaction !== null && app()->bound('sentry')) {
+        if ($this->transaction !== null && app()->bound(HubInterface::class)) {
             if ($this->appSpan !== null) {
                 $this->appSpan->finish();
             }
@@ -79,7 +79,6 @@ class Middleware
 
     private function startTransaction(Request $request, HubInterface $sentry): void
     {
-        $path = '/' . ltrim($request->path(), '/');
         $fallbackTime = microtime(true);
         $sentryTraceHeader = $request->header('sentry-trace');
 
@@ -88,9 +87,8 @@ class Middleware
             : new TransactionContext;
 
         $context->setOp('http.server');
-        $context->setName($path);
         $context->setData([
-            'url' => $path,
+            'url' => '/' . ltrim($request->path(), '/'),
             'method' => strtoupper($request->method()),
         ]);
         $context->setStartTimestamp($request->server('REQUEST_TIME_FLOAT', $fallbackTime));
@@ -153,19 +151,37 @@ class Middleware
         $route = $request->route();
 
         if ($route instanceof Route) {
-            $routeName = Integration::extractNameForRoute($route) ?? '<unlabeled transaction>';
+            $this->updateTransactionNameIfDefault(Integration::extractNameForRoute($route));
 
-            $this->transaction->setName($routeName);
             $this->transaction->setData([
                 'name' => $route->getName(),
                 'action' => $route->getActionName(),
                 'method' => $request->getMethod(),
             ]);
         }
+
+        $this->updateTransactionNameIfDefault('/' . ltrim($request->path(), '/'));
     }
 
     private function hydrateResponseData(Response $response): void
     {
         $this->transaction->setHttpStatus($response->status());
+    }
+
+    private function updateTransactionNameIfDefault(?string $name): void
+    {
+        // Ignore empty names (and `null`) for caller convenience
+        if (empty($name)) {
+            return;
+        }
+
+        // If the transaction already has a name other than the default
+        // ignore the new name, this will most occur if the user has set a
+        // transaction name themself before the application reaches this point
+        if ($this->transaction->getName() !== TransactionContext::DEFAULT_NAME) {
+            return;
+        }
+
+        $this->transaction->setName($name);
     }
 }

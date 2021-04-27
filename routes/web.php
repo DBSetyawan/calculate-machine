@@ -129,6 +129,10 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('button-load-SendButtonexportCalcTanpaMTC','KOP\VoyagerTotalKalkulasiController@SendButtonexportCalcTanpaMTC')->name('voyager.SendButtonexportCalcTanpaMTC');
     Route::post('button-load-SendButtonexportCalcTanpaMTCnTanpaPenyusutan','KOP\VoyagerTotalKalkulasiController@SendButtonexportCalcTanpaMTCnTanpaPenyusutan')->name('voyager.SendButtonexportCalcTanpaMTCnTanpaPenyusutan');
 
+    Route::get('/debug-sentry', function () {
+        throw new Exception('My first Sentry error!');
+    });
+    
     Route::get('/clear', function() {
 
         Artisan::call('cache:clear');

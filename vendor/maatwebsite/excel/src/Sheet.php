@@ -423,6 +423,8 @@ class Sheet
         }
 
         $this->raise(new AfterSheet($this, $this->exportable));
+
+        $this->clearListeners();
     }
 
     /**
@@ -515,7 +517,7 @@ class Sheet
             $dimension = $this->worksheet->getColumnDimension($col);
 
             // Only auto-size columns that have not have an explicit width.
-            if ($dimension->getWidth() === -1) {
+            if ($dimension->getWidth() == -1) {
                 $dimension->setAutoSize(true);
             }
         }

@@ -5,6 +5,7 @@ namespace Mavinoo\Batch;
 use Mavinoo\Batch\Common\Common;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Support\Carbon;
 
 class Batch implements BatchInterface
 {
@@ -74,7 +75,7 @@ class Batch implements BatchInterface
                 $updatedAtColumn = $table->getUpdatedAtColumn();
 
                 if (!isset($val[$updatedAtColumn])) {
-                    $val[$updatedAtColumn] = now()->format($table->getDateFormat());
+                    $val[$updatedAtColumn] = Carbon::now()->format($table->getDateFormat());
                 }
             }
 
@@ -169,6 +170,8 @@ class Batch implements BatchInterface
     {
         $final = [];
         $ids = [];
+        $connection = config('database.default');
+        $driver = config("database.connections.{$connection}.driver");
 
         if (!count($values)) {
             return false;
@@ -183,19 +186,38 @@ class Batch implements BatchInterface
             $ids2[] = $val[$index2];
             foreach (array_keys($val) as $field) {
                 if ($field !== $index || $field !== $index2) {
-                    $finalField = $raw ? Common::mysql_escape($val[$field]) : '"' . Common::mysql_escape($val[$field]) . '"';
+                    $finalField = $raw ? Common::mysql_escape($val[$field]) : "'" . Common::mysql_escape($val[$field]) . "'";
                     $value = (is_null($val[$field]) ? 'NULL' : $finalField);
-                    $final[$field][] = 'WHEN (`' . $index . '` = "' . Common::mysql_escape($val[$index]) . '" AND `' . $index2 . '` = "' . $val[$index2] . '") THEN ' . $value . ' ';
+
+                    if ($driver == 'pgsql') {
+                        $final[$field][] = 'WHEN (' . $index . ' = \'' . Common::mysql_escape($val[$index]) . '\' AND ' . $index2 . ' = \'' . $val[$index2] . '\') THEN ' . $value . ' ';
+                    }
+                    else {
+                        $final[$field][] = 'WHEN (`' . $index . '` = "' . Common::mysql_escape($val[$index]) . '" AND `' . $index2 . '` = "' . $val[$index2] . '") THEN ' . $value . ' ';
+                    }
                 }
             }
         }
 
-        $cases = '';
-        foreach ($final as $k => $v) {
-            $cases .= '`' . $k . '` = (CASE ' . implode("\n", $v) . "\n"
-                . 'ELSE `' . $k . '` END), ';
+
+        if ($driver == 'pgsql') {
+            $cases = '';
+            foreach ($final as $k => $v) {
+                $cases .= '"' . $k . '" = (CASE ' . implode("\n", $v) . "\n"
+                    . 'ELSE "' . $k . '" END), ';
+            }
+
+            $query = "UPDATE \"" . $this->getFullTableName($table) . '" SET ' . substr($cases, 0, -2) . " WHERE \"$index\" IN('" . implode("','", $ids) . "') AND \"$index2\" IN('" . implode("','", $ids2) . "');";
+            //$query = "UPDATE \"" . $this->getFullTableName($table) . "\" SET " . substr($cases, 0, -2) . " WHERE \"$index\" IN(" . '"' . implode('","', $ids) . '")' . " AND \"$index2\" IN(" . '"' . implode('","', $ids2) . '"' . " );";
         }
-        $query = "UPDATE `" . $this->getFullTableName($table) . "` SET " . substr($cases, 0, -2) . " WHERE `$index` IN(" . '"' . implode('","', $ids) . '")' . " AND `$index2` IN(" . '"' . implode('","', $ids2) . '"' . " );";
+        else {
+            $cases = '';
+            foreach ($final as $k => $v) {
+                $cases .= '`' . $k . '` = (CASE ' . implode("\n", $v) . "\n"
+                    . 'ELSE `' . $k . '` END), ';
+            }
+            $query = "UPDATE `" . $this->getFullTableName($table) . "` SET " . substr($cases, 0, -2) . " WHERE `$index` IN(" . '"' . implode('","', $ids) . '")' . " AND `$index2` IN(" . '"' . implode('","', $ids2) . '"' . " );";
+        }
 
         return $this->db->connection($this->getConnectionName($table))->update($query);
     }
@@ -268,7 +290,7 @@ class Batch implements BatchInterface
         if ($table->usesTimestamps()) {
             $createdAtColumn = $table->getCreatedAtColumn();
             $updatedAtColumn = $table->getUpdatedAtColumn();
-            $now = now()->format($table->getDateFormat());
+            $now = Carbon::now()->format($table->getDateFormat());
 
             $addCreatedAtValue = false;
             $addUpdatedAtValue = false;

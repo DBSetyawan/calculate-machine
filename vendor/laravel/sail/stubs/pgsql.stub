@@ -1,5 +1,5 @@
     pgsql:
-        image: postgres:13
+        image: 'postgres:13'
         ports:
             - '${FORWARD_DB_PORT:-5432}:5432'
         environment:
@@ -8,7 +8,7 @@
             POSTGRES_USER: '${DB_USERNAME}'
             POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
         volumes:
-            - 'sailpostgresql:/var/lib/postgresql/data'
+            - 'sailpgsql:/var/lib/postgresql/data'
         networks:
             - sail
         healthcheck:

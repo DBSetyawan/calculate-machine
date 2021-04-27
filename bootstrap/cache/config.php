@@ -2,7 +2,7 @@
   'app' => 
   array (
     'name' => 'Laravel',
-    'env' => 'local',
+    'env' => 'production',
     'debug' => true,
     'url' => 'https://vpn.krisanthium.com:7070/kalkulasimesin2',
     'asset_url' => 'https://vpn.krisanthium.com:7070/kalkulasimesin2',
@@ -641,7 +641,7 @@
   ),
   'sentry' => 
   array (
-    'dsn' => 'https://5a6ab4d4352d47829aae54a6c4e09891@o344196.ingest.sentry.io/5655280',
+    'dsn' => 'https://43d9e4e8708f4245834134ebfa68151b@o344196.ingest.sentry.io/5737359',
     'environment' => NULL,
     'breadcrumbs' => 
     array (
@@ -971,8 +971,16 @@
       'grouping_type' => NULL,
       'report_logs' => true,
       'maximum_number_of_collected_logs' => 200,
+      'censor_request_body_fields' => 
+      array (
+        0 => 'password',
+      ),
     ),
     'send_logs_as_events' => true,
+    'censor_request_body_fields' => 
+    array (
+      0 => 'password',
+    ),
   ),
   'ignition' => 
   array (

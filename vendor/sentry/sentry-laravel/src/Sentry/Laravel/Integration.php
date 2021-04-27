@@ -38,7 +38,7 @@ class Integration implements IntegrationInterface
                 return $event;
             }
 
-            if (null === $event->getTransaction()) {
+            if (empty($event->getTransaction())) {
                 $event->setTransaction($self->getTransaction());
             }
 
@@ -135,7 +135,7 @@ class Integration implements IntegrationInterface
             // Laravel 7 route caching generates a route names if the user didn't specify one
             // theirselfs to optimize route matching. These route names are useless to the
             // developer so if we encounter a generated route name we discard the value
-            if (Str::startsWith($routeName, 'generated::')) {
+            if (Str::contains($routeName, 'generated::')) {
                 $routeName = null;
             }
 
@@ -155,7 +155,8 @@ class Integration implements IntegrationInterface
 
             // Strip away the base namespace from the action name
             if (!empty($baseNamespace)) {
-                $routeName = Str::after($routeName, $baseNamespace . '\\');
+                // @see: Str::after, but this is not available before Laravel 5.4 so we use a inlined version
+                $routeName = array_reverse(explode($baseNamespace . '\\', $routeName, 2))[0];
             }
         }
 
