@@ -47,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
         Voyager::addAction(\App\Actions\ActionSpecialLaborEdit::class);
         Voyager::addAction(\App\Actions\ActionMTC::class);
         Voyager::addAction(\App\Actions\grouMesinAction::class);
+        Voyager::addAction(\App\Actions\ActionLocationMachineEdit::class);
         Voyager::addAction(\App\Actions\ActionKategoriBagian::class);
         // Voyager::addAction(\App\Actions\SyncCalcPerMesin::class);
         Voyager::addAction(\App\Actions\ActionBagianPenjualan::class);
