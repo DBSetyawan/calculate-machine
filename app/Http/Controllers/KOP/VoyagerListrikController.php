@@ -11,6 +11,7 @@ use App\TotalCalc;
 use Carbon\Carbon;
 use App\LwbpMaster;
 use App\ListrikTotal;
+use App\SpecialLabor;
 use App\ListrikOutput;
 use App\AllRecalculate;
 use App\KategoriBagian;
@@ -133,7 +134,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
          * @store append field WBP perminggu.
          */
         $rumusWBPerminggu = $this->RumusPemakaianWBP($r->shift, $r->ampere, $r->voltase, $r->code_mesin, $r->wbp, $r->intervalnumeric);
-
+        
         /**
          * Hitung Total Biaya Listrik perminggu.
          * @store append field Total Biaya Listrik perminggu.
@@ -206,7 +207,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
             if(is_null($datacheckclosemachinesame)){
 
-                $simpanBiayaListrik = Listrik::UpdateOrCreate(['code_mesin' => (Int) $r->code_mesin], $Totalakumulasibiayalistrik);
+                $simpanBiayaListrik = Listrik::updateOrCreate(['code_mesin' => (Int) $r->code_mesin], $Totalakumulasibiayalistrik);
                 $this->resetFunc(null, $Totalakumulasibiayalistrik, $r->company_parent_id,  $r->category_bagian, $r->group_mesin, $r->code_mesin);
                 
                 return response()->json(
@@ -229,7 +230,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
 
                 if(!is_null($datacheckclosemachinesamechecked)){
 
-                    $simpanBiayaListrik = Listrik::UpdateOrCreate(['code_mesin' => (Int) $r->code_mesin], $Totalakumulasibiayalistrik);
+                    $simpanBiayaListrik = Listrik::updateOrCreate(['code_mesin' => (Int) $r->code_mesin], $Totalakumulasibiayalistrik);
                     $this->resetFunc(null, $Totalakumulasibiayalistrik, $r->company_parent_id,  $r->category_bagian, $r->group_mesin, $r->code_mesin);
                     
                     return response()->json(
@@ -1029,102 +1030,68 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             $view = "voyager::$slug.edit-add";
         }
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
+        $companies = Company::all();
+        $cbagian = KategoriBagian::all();
+        $lsoutput = ListrikOutput::all();
+        $specialabor = SpecialLabor::all();
+        $group_mesin = Lb8KategoriMesin::all();
+        $LwbpMaster = LwbpMaster::all();
+        $company = Company::all();
+        $mesin = Mesin::all();
+        $mesjklin = Mesin::where('id', $dataTypeContent->code_mesin)->where('on_off', '!=', 0)->with('KbagianTo','CompanyTo','GroupMesinTo','MesinListrikPerjamTo','AsumsiTo')->first();
+
+        // dd($dataTypeContent);
+        $cbagian = KategoriBagian::all();
+
+        return Voyager::view($view, compact('mesjklin','company','group_mesin','LwbpMaster','specialabor','mesin','lsoutput','cbagian','companies','dataType', 'dataTypeContent', 'isModelTranslatable'));
+
     }
 
     // POST BR(E)AD
-    public function update(Request $r, $id)
+    public function updateListriks(Request $r)
     {
 
         // dd($r->all());
-        $slug = $this->getSlug($r);
-
-        $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
-
-        // Compatibility with Model binding.
-        $id = $id instanceof \Illuminate\Database\Eloquent\Model ? $id->{$id->getKeyName()} : $id;
-
-        $model = app($dataType->model_name);
-        if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
-            $model = $model->{$dataType->scope}();
-        }
-        if ($model && in_array(SoftDeletes::class, class_uses_recursive($model))) {
-            $data = $model->withTrashed()->findOrFail($id);
-        } else {
-            $data = $model->findOrFail($id);
-            // DB::table('total_kalkulasi_tanpa_penyusutan')
-            // ->where('listrik', $data->ncost_bulan_plus_adm)
-            // ->update(array('listrik' => $r->ncost_bulan_plus_adm));  
-
-            // // $logs = \App\HistoryLogRecalculate::firstOrCreate([
-            // //     'changed_by' => Auth::user()->name,
-            // //     'coloumn_after' => $request->ncost_bulan_plus_adm,
-            // //     'coloumn_before' => $data->ncost_bulan_plus_adm,
-            // //     'recalculate_status' => "active"
-
-            // //     'changed_by' => NULL,
-            // //     'dibuat_oleh' => Auth::user()->name,
-            // //     'recalculate_status' => "active",
-            // //     'id_logs' => $data->id,
-            // //     'code_mesin' =>$data->code_mesin,
-            // //     'company' => $data->company_parent_id,
-            // //     'category_bagian' => $listrikFind->category_bagian,
-            // //   ]);
-
-        }
-
-       
-        // Check permission
-        $this->authorize('edit', $data);
-
-        // Validate fields with ajax
-        $val = $this->validateBread($r->all(), $dataType->editRows, $dataType->name, $id)->validate();
-        // $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
-
-        // event(new BreadDataUpdated($dataType, $data));
-        //ambil angka dari master listrik, kemudian recalculate ke history dan ditampilkan ke view kalkulasi.
-        // $s = TotalCalc::whereIn('listrik', [(float)$data->ncost_bulan_plus_adm])->first();
-        // dd($r->all());
-
+        $shift = LwbpMaster::where('id', $r->shift)->first();
         /**
          * Hitung LWBP perminggu
          * @store append field LWBP perminggu.
          */
-        if($r->shift == 3){
+        if($shift->shift == 3){
 
             $static_lwbshift = $r->sht_3lwbp;
-            $rumusLWBPerminggu = $this->RumusPemakaianLWBP_shift3($r->shift, $r->ampere, $r->voltase, $r->code_mesin, $r->assumptionshift_lwbp3, $r->assumption_itval_perminggu);
+            $rumusLWBPerminggu = $this->RumusPemakaianLWBP_shift3($shift->shift, $r->ampere, $r->voltase, $r->code_mesin, $r->sht_3lwbp, $r->intervalnumeric);
         }
 
-        if($r->shift == 2){
+        if($shift->shift == 2){
 
             $static_lwbshift = $r->sht_2lwbp;
-            $rumusLWBPerminggu = $this->RumusPemakaianLWBP_shift2($r->shift, $r->ampere, $r->voltase, $r->code_mesin, $r->assumptionshift_lwbp2, $r->assumption_itval_perminggu);
+            $rumusLWBPerminggu = $this->RumusPemakaianLWBP_shift2($shift->shift, $r->ampere, $r->voltase, $r->code_mesin, $r->sht_2lwbp, $r->intervalnumeric);
         }
 
-        if($r->shift == 1){
+        if($shift->shift == 1){
             
             $static_lwbshift = $r->sht_1lwbp;
-            $rumusLWBPerminggu = $this->RumusPemakaianLWBP_shift1($r->shift, $r->ampere, $r->voltase, $r->code_mesin, $r->assumptionshift_lwbp1, $r->assumption_itval_perminggu);
+            $rumusLWBPerminggu = $this->RumusPemakaianLWBP_shift1($shift->shift, $r->ampere, $r->voltase, $r->code_mesin, $r->sht_1lwbp, $r->intervalnumeric);
         }
 
-        if($r->shift == 0){
+        if($shift->shift == 0){
 
             $static_lwbshift = 0;
-            $rumusLWBPerminggu = $this->RumusPemakaianLWBP_shift0($r->shift, $r->ampere, $r->voltase, $r->code_mesin, 0, $r->assumption_itval_perminggu);
+            $rumusLWBPerminggu = $this->RumusPemakaianLWBP_shift0($shift->shift, $r->ampere, $r->voltase, $r->code_mesin, 0, $r->intervalnumeric);
         }
 
         /**
          * Hitung WBP perminggu
          * @store append field WBP perminggu.
          */
-        $rumusWBPerminggu = $this->RumusPemakaianWBP($r->shift, $r->ampere, $r->voltase, $r->code_mesin, $r->assumption_wbp, $r->assumption_itval_perminggu);
+        $rumusWBPerminggu = $this->RumusPemakaianWBP($shift->shift, $r->ampere, $r->voltase, $r->code_mesin, $r->wbp, $r->intervalnumeric);
 
         /**
          * Hitung Total Biaya Listrik perminggu.
          * @store append field Total Biaya Listrik perminggu.
          */
-        $totalbiayaListrikperminggu = $this->RumusTotalBiayaListrik($r->shift, $rumusLWBPerminggu, $rumusWBPerminggu, $r->LWBP_faktorkali, $r->WBP_faktorkali, $r->code_mesin);
+        $totalbiayaListrikperminggu = $this->RumusTotalBiayaListrik($shift->shift, $rumusLWBPerminggu, $rumusWBPerminggu, $r->faktor_kali_lwbp, $r->faktor_kali_wbp, $r->code_mesin);
 
         /**
          * Hitung Biaya Cost Perbulan.
@@ -1157,9 +1124,10 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
          */
         $costADM = $this->RumusBiayaCostADM($PPJ, $totalprosentasecostlistrik);
 
+
         $automatedTotalakumulasibiayalistrik = [
             'shift' => $r->shift,
-            'listrikperjam' => $r->listrikperjam,
+            // 'listrikperjam' => $r->listrikperjam,
             'ampere' => $r->ampere,
             'voltase' =>  $r->voltase,
             // 'company_parent_id' => $r->company_parent_id,
@@ -1170,54 +1138,102 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             'group_mesin' => $r->group_mesin,
             'nilai_cost_bulan' => (float) $totalbiayacostperbulan,
             'category_bagian' => $r->category_bagian,
-            'LWBP_faktorkali' => $r->LWBP_faktorkali,
-            'WBP_faktorkali' => $r->WBP_faktorkali,
+            'LWBP_faktorkali' => $r->faktor_kali_lwbp,
+            'WBP_faktorkali' => $r->faktor_kali_wbp,
             'total_biaya_listrik' => $totalbiayaListrikperminggu,
-            'assumptionshift_lwbp1' => $r->assumptionshift_lwbp1,
-            'assumptionshift_lwbp2' => $r->assumptionshift_lwbp2,
-            'assumptionshift_lwbp3' => $r->assumptionshift_lwbp3,
-            'assumption_itval_perminggu' => $r->assumption_itval_perminggu,
-            'assumption_wbp' => $r->assumption_wbp,
+            'assumptionshift_lwbp1' => $r->sht_1lwbp,
+            'assumptionshift_lwbp2' => $r->sht_2lwbp,
+            'assumptionshift_lwbp3' => $r->sht_3lwbp,
+            'assumption_itval_perminggu' => $r->intervalnumeric,
+            'assumption_wbp' => $r->wbp,
             'persen_cost_perbulan' => NULL, /**khusus listrik*/// update atau re-akumulasi persen ditombol yang sudah tersedia per dokumen.
             'ncost_bulan_plus_adm' => NULL, /**khusus listrik*/// update atau re-akumulasi persen ditombol yang sudah tersedia per dokumen.
         ];
 
-        Listrik::UpdateOrCreate(['id' => $id], $automatedTotalakumulasibiayalistrik);
+        $datafg = Listrik::findOrFail($r->id);
         
-        $this->resetFunc($data, $automatedTotalakumulasibiayalistrik, $r->company_parent_id,  $r->category_bagian, $r->group_mesin, $r->code_mesin);
+        $data = [
+            'shift' => $datafg->shift,
+            'ampere' => $datafg->ampere,
+            'voltase' =>  $datafg->voltase,
+            'code_mesin' => $datafg->code_mesin,
+            'LWBP_perminggu' => $datafg->LWBP_perminggu,
+            'WBP_perminggu' => $datafg->WBP_perminggu,
+            'group_mesin' => $datafg->group_mesin,
+            'nilai_cost_bulan' => (float) $datafg->nilai_cost_bulan,
+            'category_bagian' => $datafg->category_bagian,
+            'LWBP_faktorkali' => $datafg->LWBP_faktorkali,
+            'WBP_faktorkali' => $datafg->WBP_faktorkali,
+            'total_biaya_listrik' => $datafg->total_biaya_listrik,
+            'assumptionshift_lwbp1' => $datafg->assumptionshift_lwbp1,
+            'assumptionshift_lwbp2' => $datafg->assumptionshift_lwbp2,
+            'assumptionshift_lwbp3' => $datafg->assumptionshift_lwbp3,
+            'assumption_itval_perminggu' => $datafg->assumption_itval_perminggu,
+            'assumption_wbp' => $datafg->assumption_wbp,
+            'persen_cost_perbulan' => $datafg->persen_cost_perbulan, /**khusus listrik*/// update atau re-akumulasi persen ditombol yang sudah tersedia per dokumen.
+            'ncost_bulan_plus_adm' => $datafg->ncost_bulan_plus_adm, /**khusus listrik*/// update atau re-akumulasi persen ditombol yang sudah tersedia per dokumen.
+        ];
+
+        Listrik::updateOrCreate(['id' => $r->id], $automatedTotalakumulasibiayalistrik);
 
         $tb = app(Listrik::class)->getTable();
 
         $md = ModulTrackingDataHelpers::ModuleTrackingTransactionData($tb, $data, $automatedTotalakumulasibiayalistrik);
         
-        foreach ($md as $key => $val) {
+        $this->resetFunc($data, $automatedTotalakumulasibiayalistrik, $r->company_parent_id,  $r->category_bagian, $r->group_mesin, $r->code_mesin);
 
-                $pf[] = [
-                    'updated_at' => Carbon::now(),
-                    'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
-                    'company_id' => $r->company_parent_id,
-                    'category_id' => $r->category_bagian,
-                    'group_mesin' => $r->group_mesin,
-                    'code_mesin' => $r->code_mesin,
-                    'table_column' => $val['tabel_kolom'],
-                    'history_latest' => ceil($val['history']),
-                    'before' => ceil($val['dari']),
-                ];
-                
-            }
-        
-        $d = HistoryLogRecalculate::insert($pf);
+        if($md == []){
 
-        if (auth()->user()->can('browse', app($dataType->model_name))) {
-            $redirect = redirect()->route("voyager.{$dataType->slug}.index");
-        } else {
-            $redirect = redirect()->back();
+            return response()->json(
+                [
+                    'isConfirmed' => $r->setTo["isConfirmed"],
+                    'sts' => false,
+                    'lwbp_perminggu' => $rumusLWBPerminggu,
+                    'wbp_perminggu' => ceil($rumusWBPerminggu),
+                    'total_biaya_listrik_perminggu' => $totalbiayaListrikperminggu,
+                    'totalbiaya_cost_perbulan' => $totalbiayacostperbulan,
+                    'persen_cost_perbulan' => 0,
+                    'ncost_bulan_plus_adm' => 0
+                ]
+            );
         }
+            else {
+
+
+                foreach ($md as $key => $val) {
+
+                        $pf[] = [
+                            'updated_at' => Carbon::now(),
+                            'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
+                            'company_id' => $r->company_parent_id,
+                            'category_id' => $r->category_bagian,
+                            'group_mesin' => $r->group_mesin,
+                            'code_mesin' => $r->code_mesin,
+                            'table_column' => $val['tabel_kolom'],
+                            'history_latest' => ceil($val['history']),
+                            'before' => ceil($val['dari']),
+                        ];
+                        
+                    }
+                
+                $d = HistoryLogRecalculate::insert($pf);
+
         
-        return $redirect->with([
-            'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}"."Silahkan mengakumulasi ulang biaya persen cost perbulan pada dokumen $data->code_listrik.",
-            'alert-type' => 'success',
-        ]);
+                return response()->json(
+                    [
+                        'isConfirmed' => $r->setTo["isConfirmed"],
+                        'lwbp_perminggu' => $rumusLWBPerminggu,
+                        'sts' => true,
+                        'wbp_perminggu' => ceil($rumusWBPerminggu),
+                        'total_biaya_listrik_perminggu' => $totalbiayaListrikperminggu,
+                        'totalbiaya_cost_perbulan' => $totalbiayacostperbulan,
+                        'persen_cost_perbulan' => 0,
+                        'ncost_bulan_plus_adm' => 0
+                    ]
+                );
+
+            }
+      
     }
 
     //***************************************

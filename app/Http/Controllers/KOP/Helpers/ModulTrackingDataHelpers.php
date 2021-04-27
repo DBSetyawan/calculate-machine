@@ -193,7 +193,7 @@ class ModulTrackingDataHelpers Extends BaseVoyagerBaseController Implements Trac
 		if($table == "listrik"){
 
 			$attrField = array(
-				'listrikperjam' => 'listri perjam',
+				'shift' => 'shift n',
 				'ampere' => 'amperes',
 				'voltase' =>  'voltases',
 				// 'company_parent_id' => $r->company_parent_id,
@@ -202,7 +202,7 @@ class ModulTrackingDataHelpers Extends BaseVoyagerBaseController Implements Trac
 				'LWBP_perminggu' => 'lwbp_perminggu',
 				'WBP_perminggu' => 'wbp_perminggu',
 				'nilai_cost_bulan' => 'nilai cost perbulan',
-				// 'category_bagian' => $r->category_bagian,
+				'category_bagian' => 'kategori bagian',
 				'LWBP_faktorkali' => 'lwbp_faktorkali',
 				'WBP_faktorkali' => 'wbp_faktorkali',
 				'total_biaya_listrik' => 'total biaya listrik',
