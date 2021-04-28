@@ -117,6 +117,8 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
             'total_biaya_perbulan' => $TotalBiayaPenyusutanMaintenance,
         ];
 
+        // dd($data_response_rptmtc);
+
     if($r->setTo["isConfirmed"] == "true"){
 
         /**
@@ -127,7 +129,7 @@ class VoyagerRptMTController extends BaseVoyagerBaseController Implements RptMTc
 
         if(is_null($datacheckclosemachinesame)){
 
-            $simpanDataRpTMTC = RptMtc::UpdateOrCreate(['code_mesin' => (Int) $r->code_mesin], $data_response_rptmtc);
+            $simpanDataRpTMTC = RptMtc::updateOrCreate(['code_mesin' => (Int) $r->code_mesin], $data_response_rptmtc);
             
             return response()->json(
                 [

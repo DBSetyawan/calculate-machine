@@ -41,40 +41,51 @@ class RumusLaporanBiayaAdministrasiUmum {
 
     protected static function callbackperhitunganperperiode($tahun1, $tahun2, $tahun3){
 
-            if(is_null($tahun1) ){
-                
-                $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun2 + $tahun3 ) / (24 * static::TAHUN_AVAILABLE) ); // 3/2
-            }
-                else if(is_null($tahun2) ){
-                
-                    $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun1 + $tahun3 ) / (24 * static::TAHUN_AVAILABLE) ); // 1/3
-            }
-                else if(is_null($tahun3) ){
-                
-                    $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun2 + $tahun1 ) / (24 * static::TAHUN_AVAILABLE) ); // 2/1
+        if(! is_null($tahun1) && ! is_null($tahun2) && ! is_null($tahun3)) {
+
+            $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun2 + $tahun1 + $tahun3) / 36); // on
+
+        } else {
+
+
+            if(! is_null($tahun3) && ! is_null($tahun2)){
+
+                $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun3 + $tahun2) / 24);
+    
+            } else {
+
+                if($tahun1){
+
+                    $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun1 ) / 12);
+                }
 
             }
-                else if(is_null($tahun3) && is_null($tahun2) ){ // 3 /2 on
-                
-                    $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun1 ) / (12 * static::TAHUN_AVAILABLE));
-            }
-                else if(is_null($tahun3) && is_null($tahun1)){ // 3 /1 on
-                
-                    $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun2 ) / (12 * static::TAHUN_AVAILABLE));
-            }
-                else if(is_null($tahun1) && is_null($tahun2)){ // 1 /2
-                
-                    $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun3 ) / (12 * static::TAHUN_AVAILABLE));
+
+            if(! is_null($tahun3) && ! is_null($tahun1)){
+
+                $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun1 + $tahun3) / 24);
+    
+            } else {
+
+                if($tahun2){
+
+                    $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun2 ) / 12);
+                }
 
             }
-                else if(is_null($tahun1) && is_null($tahun2) && is_null($tahun3)){
-                
-                    $grand_total_laporan_biaya_bulanan_periode = 0;
-            } 
-                else {
 
-                $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun2 + $tahun1 + $tahun3) / static::TAHUN_TIGA_TAHUN); // on
-            
+            if(! is_null($tahun2) && ! is_null($tahun1)){
+
+                    $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun2 + $tahun1 ) / 24);
+        
+                } else {
+
+                    if($tahun3){
+
+                        $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun3 ) / 12);
+                    }
+                }
+
             }
 
         return $grand_total_laporan_biaya_bulanan_periode;

@@ -33,9 +33,10 @@
                     Login sebagai -> <label for=""><span class="badge badge-success">{{ auth()->user()->role->name }}</span> , time login: {{ Carbon\Carbon::now() }}</label>
                 </div>
             </p>
+            {{-- index display chart --}}
             <p class="container">
                 <div class="span1">
-                    <div id="chart"></div>
+                    {{-- <div id="chart"></div> --}}
                 </div>
             </p>
                 {{-- <p style="border-radius:4px; padding:20px; background:#fff; margin:0; color:#999; text-align:center;">

@@ -14,14 +14,16 @@ class RumusRptMaintenance {
 
     public static function HitungRataRataPerbaikanPerbulan($perbaikan_, $perbaikan__, $perbaikan___) {
 
-        return (float) ( ($perbaikan_ + $perbaikan__ + $perbaikan___) / ( static::SELAMA_EMPAT_TAHUN_DALAM_BULAN * static::EMPAT_TAHUN ) );
+        // return (float) ( ($perbaikan_ + $perbaikan__ + $perbaikan___) / ( static::SELAMA_EMPAT_TAHUN_DALAM_BULAN * static::EMPAT_TAHUN ) );
+            return self::callbackperhitunganperperiode($perbaikan_, $perbaikan__, $perbaikan___);
 
     }
 
     public static function HitungRataRataSparePartPerbulan($sparepart_, $sparepart__, $sparepart___) {
 
-        return (float) ( ($sparepart_ + $sparepart__ + $sparepart___) / ( static::SELAMA_EMPAT_TAHUN_DALAM_BULAN * static::EMPAT_TAHUN ) );
+        // return (float) ( ($sparepart_ + $sparepart__ + $sparepart___) / ( static::SELAMA_EMPAT_TAHUN_DALAM_BULAN * static::EMPAT_TAHUN ) );
 
+        return self::callbackperhitunganperperiode($sparepart_, $sparepart__, $sparepart___);
     }
 
     public static function HitungTotalBiayaProduksi($total_account_RPTMTC, $listrikoutputperjam, $category_bagian) {
@@ -51,6 +53,60 @@ class RumusRptMaintenance {
     public static function HitungTotalPenyusutanPerbulan($ratart_perbaikanperbulan, $ratart_sparepartperbulan) {
 
         return ( $ratart_perbaikanperbulan + $ratart_sparepartperbulan );
+
+    }
+
+    
+        protected static function callbackperhitunganperperiode($tahun1, $tahun2, $tahun3){
+
+            if(! is_null($tahun1) && ! is_null($tahun2) && ! is_null($tahun3)) {
+
+                $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun2 + $tahun1 + $tahun3) / 36); // on
+
+            } else {
+
+
+                if(! is_null($tahun3) && ! is_null($tahun2)){
+
+                    $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun3 + $tahun2) / 24);
+        
+                } else {
+
+                    if($tahun1){
+
+                        $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun1 ) / 12);
+                    }
+
+                }
+
+                if(! is_null($tahun3) && ! is_null($tahun1)){
+
+                    $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun1 + $tahun3) / 24);
+        
+                } else {
+
+                    if($tahun2){
+
+                        $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun2 ) / 12);
+                    }
+
+                }
+
+                if(! is_null($tahun2) && ! is_null($tahun1)){
+
+                    $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun2 + $tahun1 ) / 24);
+        
+                } else {
+
+                    if($tahun3){
+
+                        $grand_total_laporan_biaya_bulanan_periode = ( ( $tahun3 ) / 12);
+                    }
+                }
+
+            }
+
+        return $grand_total_laporan_biaya_bulanan_periode;
 
     }
 

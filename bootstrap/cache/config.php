@@ -775,7 +775,7 @@
       ),
       'data_tables' => 
       array (
-        'pageLength' => 100,
+        'pageLength' => 50,
       ),
       'widgets' => 
       array (
@@ -810,7 +810,7 @@
     array (
       'cache' => false,
     ),
-    'compass_in_production' => false,
+    'compass_in_production' => true,
     'media' => 
     array (
       'allowed_mimetypes' => '*',

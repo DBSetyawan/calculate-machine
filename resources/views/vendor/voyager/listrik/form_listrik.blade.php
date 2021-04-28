@@ -123,25 +123,25 @@
                                             const IntvalMinggu = 6;
                                         --}}
 
-                                    <div class="form-group">
+                                    <div class="form-group hidden">
                                         <label for="url_instagram">LWBP (shift1)</label>
                                         {{-- <input type="text" class="form-control" id="sht_1lwbp" value="{{ $LwbpMaster[2]->lwbp }}" name="sht_1lwbp" placeholder=""> --}}
                                         <input type="text" class="form-control" id="sht_1lwbp" name="sht_1lwbp" placeholder="">
                                     </div>
 
-                                    <div class="form-group">
+                                    <div class="form-group hidden">
                                         <label for="url_instagram">WBP (shift 1,2,3)</label>
                                         <input type="text" class="form-control" id="wbp" name="wbp" placeholder="">
                                         {{-- <input type="text" class="form-control" id="wbp" value="{{ $LwbpMaster[0]->wbp }}" name="wbp" placeholder=""> --}}
                                     </div>
 
-                                    <div class="form-group">
+                                    <div class="form-group hidden">
                                         <label for="shift2">LWBP (shift 2)</label>
                                         {{-- <input type="text"  class="form-control" id="sht_2lwbp" value="{{ $LwbpMaster[1]->lwbp }}" name="sht_2lwbp" placeholder=""> --}}
                                         <input type="text"  class="form-control" id="sht_2lwbp" name="sht_2lwbp" placeholder="">
                                     </div>
 
-                                    <div class="form-group">
+                                    <div class="form-group hidden">
                                         <label for="shift3">LWBP (shift 3)</label>
                                         <input type="text" class="form-control" id="sht_3lwbp" name="sht_3lwbp" placeholder="">
                                     </div>

@@ -42,10 +42,9 @@
             @show
         </div>
         {{-- <div class="countdown"> --}}
-            <div class="text-right col-md-8">
+            {{-- <div class="text-right col-md-8">
               <i class="voyager-alarm-clock"></i> Penutupan transaksi tahunan : <span id="clock"></span>
-            </div>
-            
+            </div> --}}
           {{-- </div> --}}
         <ul class="nav navbar-nav @if (__('voyager::generic.is_rtl') == 'true') navbar-left @else navbar-right @endif">
             <li class="dropdown profile">

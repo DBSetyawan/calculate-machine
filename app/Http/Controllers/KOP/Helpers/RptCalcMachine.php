@@ -66,9 +66,7 @@ class RptCalcMachine {
 
         return LaporanGajiLain::whereIn('category_bagian', [11])->sum('total_biaya_laporan_periode');
 
-
     }
-
 
     public static function InstanceOfLaborUMUM() {
 
