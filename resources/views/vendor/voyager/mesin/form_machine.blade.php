@@ -27,9 +27,17 @@
                         <div class="panel panel-bordered">
                             <div class="panel-body">
                                 <div class="contanier">
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label for="url_instagram">Nama mesin</label>
                                         <input type="text" class="form-control" data-validate-length-range="2" data-validate-words="2" id="code_mesin" name="code_mesin" placeholder="Nama mesin" required="required" >
+                                    </div> --}}
+                                    <div class="form-group">
+                                        <label for="program_id">Mesin</label>
+                                        <select class="form-control select2" id="code_mesin" name="code_mesin" required>
+                                            @foreach ($KOP as $c)
+                                        <option value="{{$c->id_mesin}}">{{$c->name_mesin}}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="program_id">Company</label>
@@ -499,9 +507,9 @@
                 });
             });
 
-        $('#code_mesin').on('change', function() {
-            $("#code_mesin_ids").val($(this).val());
-        });
+        // $('#code_mesin').on('change', function() {
+        //     $("#code_mesin_ids").val($(this).val());
+        // });
 
         $("#company_parent_id_labor").hide();
         $("#category_bagian_id_labor").hide();
@@ -598,31 +606,31 @@
 
         $(document).ready(function() {
 
-            $( "#code_mesin" ).autocomplete({
-                source: function( request, response ) {
-                    $.ajax({
-                        url:"{{route('mesin.MachineKALC')}}",
-                        type: 'post',
-                        dataType: "json",
-                        data: {
-                            _token: $('meta[name="csrf-token"]').attr('content'),
-                            search: request.term
-                        },
-                        success: function( data ) {
-                            console.log(data)
-                            response( data );
-                        }
-                    });
-                },
-                select: function (event, ui) {
-                    $('#code_mesin').val(ui.item.label); // display the selected text
-                    // $('#code_mesin').val(ui.item.value); // save selected id to input
+            // $( "#code_mesin" ).autocomplete({
+            //     source: function( request, response ) {
+            //         $.ajax({
+            //             url:"{{route('mesin.MachineKALC')}}",
+            //             type: 'post',
+            //             dataType: "json",
+            //             data: {
+            //                 _token: $('meta[name="csrf-token"]').attr('content'),
+            //                 search: request.term
+            //             },
+            //             success: function( data ) {
+            //                 console.log(data)
+            //                 response( data );
+            //             }
+            //         });
+            //     },
+            //     select: function (event, ui) {
+            //         $('#code_mesin').val(ui.item.label); // display the selected text
+            //         // $('#code_mesin').val(ui.item.value); // save selected id to input
 
-                    // $('#machines').prop("disabled", true);
+            //         // $('#machines').prop("disabled", true);
 
-                    return false;
-                }
-            });
+            //         return false;
+            //     }
+            // });
 
             $('.save_mach').click(function(event) {
             
@@ -639,7 +647,8 @@
                     'faktor_kali_wbp'             : $('input[name=faktor_kali_wbp]').val(),
                     'faktor_kali_lwbp'             : $('input[name=faktor_kali_lwbp]').val(),
                     'voltase'            : $('input[name=voltase]').val(),
-                    'code_mesin'    : $('input[name=code_mesin]').val(),
+                    'code_mesin'    : $('select[name=code_mesin]').val(),
+                    // 'code_mesin'    : $('input[name=code_mesin]').val(),
                     'group_mesin_id'   : $('select[name=group_mesin_id]').val(),
                     'location_mch_id'   : $('select[name=location_mch_id]').val(),
                     'category_bagian_id'     : $('select[name=category_bagian_id]').val(),

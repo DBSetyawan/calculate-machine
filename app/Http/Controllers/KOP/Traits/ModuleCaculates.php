@@ -263,6 +263,7 @@ trait ModuleCaculates {
                     };
                      
                     $fetchD[] = $kopmesin->mesin->code_mesin;
+                    $kalkulasi_machine_id[] = $kopmesin->mesin->kalkulasi_machine_id;
                     $count_group_machine[] = $kopmesin->GroupMesin->id;
 
                     $ctes[] = Mesin::whereIn('group_mesin_id', $count_group_machine)->groupBy('group_mesin_id')->orderBy('group_mesin_id','DESC')->get()->toArray()[0]['group_mesin_id'];
@@ -283,9 +284,13 @@ trait ModuleCaculates {
 
                 $KOP->setConnection('KOP_kalkulasi');
 
+                /**
+                 * @Test mencocokkan idpada mesin kalkulasi server live.
+                 */
+
                 for($i = 0; $i < count($fetchD); $i++){
 
-                    $t = $KOP->whereIn('name_mesin', [$fetchD[$i]])
+                    $t = $KOP->whereIn('id_mesin', [$kalkulasi_machine_id[$i]])
                         ->update(['harga_p_jam' => $harga_akhir_perjam[$i]]);
 
                 }
@@ -339,6 +344,7 @@ trait ModuleCaculates {
                         return $value;
                     };
                      
+                    $kalkulasi_machine_id[] = $kopmesin->mesin->kalkulasi_machine_id;
                     $fetchD[] = $kopmesin->mesin->code_mesin;
                     $count_group_machine[] = $kopmesin->GroupMesin->id;
 
@@ -364,7 +370,7 @@ trait ModuleCaculates {
 
                 for($i = 0; $i < count($fetchD); $i++){
 
-                    $t = $KOP->whereIn('name_mesin', [$fetchD[$i]])
+                    $t = $KOP->whereIn('id_mesin', [$kalkulasi_machine_id[$i]])
                         ->update(['harga_p_jam' => $harga_akhir_perjam[$i]]);
 
                 }
@@ -423,6 +429,7 @@ trait ModuleCaculates {
                         return $value;
                     };
                      
+                    $kalkulasi_machine_id[] = $kopmesin->mesin->kalkulasi_machine_id;
                     $fetchD[] = $kopmesin->mesin->code_mesin;
                     $count_group_machine[] = $kopmesin->GroupMesin->id;
 
@@ -446,7 +453,7 @@ trait ModuleCaculates {
 
                 for($i = 0; $i < count($fetchD); $i++){
 
-                    $t = $KOP->whereIn('name_mesin', [$fetchD[$i]])
+                    $t = $KOP->whereIn('id_mesin', [$kalkulasi_machine_id[$i]])
                         ->update(['harga_p_jam' => $harga_akhir_perjam[$i]]);
 
                 }
@@ -502,6 +509,7 @@ trait ModuleCaculates {
                     };
                      
                     $fetchD[] = $kopmesin->mesin->code_mesin;
+                    $kalkulasi_machine_id[] = $kopmesin->mesin->kalkulasi_machine_id;
                     $count_group_machine[] = $kopmesin->GroupMesin->id;
 
                     $ctes[] = Mesin::whereIn('group_mesin_id', $count_group_machine)->groupBy('group_mesin_id')->orderBy('group_mesin_id','DESC')->get()->toArray()[0]['group_mesin_id'];
@@ -524,7 +532,7 @@ trait ModuleCaculates {
 
                 for($i = 0; $i < count($fetchD); $i++){
 
-                    $t = $KOP->whereIn('name_mesin', [$fetchD[$i]])
+                    $t = $KOP->whereIn('id_mesin', [$kalkulasi_machine_id[$i]])
                         ->update(['harga_p_jam' => $harga_akhir_perjam[$i]]);
 
                 }

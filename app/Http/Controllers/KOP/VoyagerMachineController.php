@@ -20,6 +20,7 @@ use App\SpecialLabor;
 use App\ListrikOutput;
 use App\KategoriBagian;
 use App\LocationMachine;
+use App\Models\tb_mesin;
 use App\PenyusutanTotal;
 use App\Lb8KategoriMesin;
 use Illuminate\Http\Request;
@@ -313,7 +314,10 @@ class VoyagerMachineController extends BaseVoyagerBaseController
     }
 
     public function storePlaceEv(Request $r){
-        
+
+        $KOP = new tb_mesin;
+        $findmachine = $KOP->where('id_mesin', $r->code_mesin)->first();
+
         $datamesin = [
             'ampere' => $r->ampere,
             'faktor_kali_lwbp' =>  $r->faktor_kali_lwbp,
@@ -321,7 +325,8 @@ class VoyagerMachineController extends BaseVoyagerBaseController
             'voltase' =>  $r->voltase,
             'deskripsi' =>  $r->deskripsi,
             'location_mch_id' => $r->location_mch_id,
-            'code_mesin' => $r->code_mesin,
+            'kalkulasi_machine_id' => $findmachine->id,
+            'code_mesin' => $findmachine->name_mesin,
             'asumsi_id' => $r->asumsi_id,
             'on_off' => 1,
             'company_id' => $r->company_id,
@@ -686,9 +691,10 @@ class VoyagerMachineController extends BaseVoyagerBaseController
         $cbagian = KategoriBagian::all();
         $LsOutputPerjam = ListrikOutput::all();
         $LwbpMaster = LwbpMaster::all();
+        $KOP = tb_mesin::all();
         $LocationMachine = LocationMachine::all();
 
-        return view('vendor.voyager.mesin.form_machine', compact('LocationMachine','LwbpMaster','mesin','LsOutputPerjam','group_mesin','company','cbagian'));
+        return view('vendor.voyager.mesin.form_machine', compact('KOP','LocationMachine','LwbpMaster','mesin','LsOutputPerjam','group_mesin','company','cbagian'));
     }
 
     public function show(Request $request, $id)
