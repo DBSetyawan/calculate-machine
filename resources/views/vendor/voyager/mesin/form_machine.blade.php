@@ -598,6 +598,32 @@
 
         $(document).ready(function() {
 
+            $( "#code_mesin" ).autocomplete({
+                source: function( request, response ) {
+                    $.ajax({
+                        url:"{{route('mesin.MachineKALC')}}",
+                        type: 'post',
+                        dataType: "json",
+                        data: {
+                            _token: $('meta[name="csrf-token"]').attr('content'),
+                            search: request.term
+                        },
+                        success: function( data ) {
+                            console.log(data)
+                            response( data );
+                        }
+                    });
+                },
+                select: function (event, ui) {
+                    $('#code_mesin').val(ui.item.label); // display the selected text
+                    // $('#code_mesin').val(ui.item.value); // save selected id to input
+
+                    // $('#machines').prop("disabled", true);
+
+                    return false;
+                }
+            });
+
             $('.save_mach').click(function(event) {
             
                 event.preventDefault();

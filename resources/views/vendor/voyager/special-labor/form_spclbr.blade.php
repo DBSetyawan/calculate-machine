@@ -147,7 +147,7 @@ $(document).ready(function(){
             }
                 else {
 
-                    i++; 
+                i++; 
 
             $('#dynamic_field').append('<tr id="row'+i+'">'+
             '<td><input type="number" name="no[]" placeholder="No" value='+i+' class="form-control" disabled=""></td>'+
@@ -171,20 +171,19 @@ $(document).ready(function(){
                                 }
                             });
                         },
-                        select: function (event, ui) {
-                            // Set selection
-                            $('.gms'+i+'').val(ui.item.value); // display the selected text
-                            $('.whgl'+i+'').val(ui.item.label); // save selected id to input
+                            select: function (event, ui) {
+                                // Set selection
+                                $('.gms'+i+'').val(ui.item.value); // display the selected text
+                                $('.whgl'+i+'').val(ui.item.label); // save selected id to input
 
-                            $('.whgl'+i+'').prop("disabled", true);
+                                $('.whgl'+i+'').prop("disabled", true);
 
-                            return false;
+                                return false;
+                            }
                         }
-                    }
-                );
+                    );
+                }
             }
-        }
-
       });  
 
       $(document).on('click', '.btn_remove', function(){  
@@ -192,12 +191,10 @@ $(document).ready(function(){
            $('#row'+button_id+'').remove(); 
 		   i--;
       });   
-
 	  
  });  
 
  $('.svd').click(function(e){  
-
         const vb = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -244,8 +241,7 @@ $(document).ready(function(){
                     }  
                 });
 			}
-            });
- 
+        });
 
     </script>
 @stop

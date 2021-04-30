@@ -110,6 +110,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('mesins/form-machine','KOP\VoyagerMachineController@formMachineAction')->name('mesin.form.master');
     Route::get('mesins/form-formSpecialLabor','KOP\VoyagerSpecialLaborController@formSpecialLabor')->name('mesin.form.formSpecialLabor');
     Route::post('mesins/mesin-getGroupMachine','KOP\VoyagerSpecialLaborController@getGroupMachine')->name('mesin.getGroupMachine');
+    Route::post('mesins/master-machine-getGroupMachine','KOP\VoyagerSpecialLaborController@MachineKALC')->name('mesin.MachineKALC');
     Route::post('mesins/mesin-getGroupLabors','KOP\VoyagerSpecialLaborController@getGroupLabors')->name('mesin.getGroupLabors');
     Route::post('mesins/mesin-machinelabor','KOP\VoyagerSpecialLaborController@machinelabor')->name('mesin.machinelabor');
     Route::post('lbrs/VoyagerLaborController','KOP\VoyagerLaborController@reakumulasilabor')->name('labors.reakumulasilabor');

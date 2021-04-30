@@ -7,6 +7,7 @@ use Exception;
 use App\Company;
 use App\SpecialLabor;
 use App\KategoriBagian;
+use App\Models\tb_mesin;
 use Mavinoo\Batch\Batch;
 use App\Lb8KategoriMesin;
 use Illuminate\Support\Arr;
@@ -53,6 +54,29 @@ class VoyagerSpecialLaborController extends BaseVoyagerBaseController
         }
   
         return response()->json($response);
+     }
+
+     public function MachineKALC(Request $request){
+
+        $search = $request->search;
+        $KOP = new tb_mesin;
+
+        if($search == ''){
+
+            $name = $KOP->orderby('name_mesin','asc')->where('name_mesin', 'like', '%' .$search. '%')->limit('5')->get();
+
+        } else {
+
+            $name = $KOP->orderby('name_mesin','asc')->where('name_mesin', 'like', '%' .$search. '%')->limit('5')->get();
+
+        }
+
+        foreach($name as $machine){
+            $response[] = array("value"=>$machine->name_mesin);
+        }
+
+        return response()->json($response);
+           
      }
 
      public function getGroupLabors(Request $request){
