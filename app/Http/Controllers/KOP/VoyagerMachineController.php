@@ -325,7 +325,7 @@ class VoyagerMachineController extends BaseVoyagerBaseController
             'voltase' =>  $r->voltase,
             'deskripsi' =>  $r->deskripsi,
             'location_mch_id' => $r->location_mch_id,
-            'kalkulasi_machine_id' => $findmachine->id,
+            'kalkulasi_machine_id' => $findmachine->id_mesin,
             'code_mesin' => $findmachine->name_mesin,
             'asumsi_id' => $r->asumsi_id,
             'on_off' => 1,
@@ -1128,7 +1128,32 @@ class VoyagerMachineController extends BaseVoyagerBaseController
 
         $checklistrik = Listrik::all();
 
-        foreach($checklistrik as $value){
+        if($checklistrik->isEmpty()){
+
+            $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
+                                        
+            $res = $data->destroy($ids);
+            $data = $res
+                ? [
+                    'message'    => __('voyager::generic.successfully_deleted')." {$displayName}",
+                    'alert-type' => 'success',
+                ]
+                : [
+                    'message'    => __('voyager::generic.error_deleting')." {$displayName}",
+                    'alert-type' => 'error',
+                ];
+    
+            if ($res) {
+                event(new BreadDataDeleted($dataType, $data));
+            }
+    
+            return redirect()->route("voyager.{$dataType->slug}.index")->with($data);
+
+        }
+
+        else {
+
+            foreach($checklistrik as $value){
 
             $mesin[] = $value->code_mesin;
             
@@ -1237,10 +1262,35 @@ class VoyagerMachineController extends BaseVoyagerBaseController
                             
                                     } else if($key_searchRpt_Mtc == true) {
 
-                                            /**
-                                             * @Labors
-                                             */
-                                            $checkLabor = Labor::all();
+                                        /**
+                                         * @Labors
+                                         */
+                                        $checkLabor = Labor::all();
+
+                                            if ($checkLabor->isEmpty()) {
+
+                                                $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
+                                        
+                                                $res = $data->destroy($ids);
+                                                $data = $res
+                                                    ? [
+                                                        'message'    => __('voyager::generic.successfully_deleted')." {$displayName}",
+                                                        'alert-type' => 'success',
+                                                    ]
+                                                    : [
+                                                        'message'    => __('voyager::generic.error_deleting')." {$displayName}",
+                                                        'alert-type' => 'error',
+                                                    ];
+                                        
+                                                if ($res) {
+                                                    event(new BreadDataDeleted($dataType, $data));
+                                                }
+                                        
+                                                return redirect()->route("voyager.{$dataType->slug}.index")->with($data);
+
+                                                // event(new BreadDataDeleted($dataType, $data));
+                                            } 
+                                                else {
 
                                             foreach($checkLabor as $vals_insteadofLabor){
 
@@ -1262,9 +1312,6 @@ class VoyagerMachineController extends BaseVoyagerBaseController
                                                 return isset($rstLabors) ? $rstLabors : $rstLabor;
                                             });
 
-                                            // dd($merge_insteadof_Labor);
-
-                                            
                                             foreach($merge_insteadof_Labor as $s => $Keys_searchLabors){
                                                 
                                                 if($Keys_searchLabors == false){
@@ -1278,7 +1325,6 @@ class VoyagerMachineController extends BaseVoyagerBaseController
                                                     
                                                 } else if($Keys_searchLabors == true) {
 
-                                                    // app(VoyagerLaborController::class)->destroy($request, $ids);
                                                     $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
 
                                                     $resLabors = $dataLabors->destroy($ids);
@@ -1293,14 +1339,15 @@ class VoyagerMachineController extends BaseVoyagerBaseController
                                                             'alert-type' => 'error',
                                                         ];
 
-                                                    if ($resLabors) {
+                                                    if ($resLabors || ! isset($mesin_insteadof_Labors)) {
                                                         event(new BreadDataDeleted($dataType, $dataLabors));
                                                     }
 
                                                 }
 
-                                            return redirect()->route("voyager.{$dataType->slug}.index")->with($dataLabors);
+                                                return redirect()->route("voyager.{$dataType->slug}.index")->with($dataLabors);
 
+                                            }
                                         }
 
                                     }
@@ -1309,16 +1356,17 @@ class VoyagerMachineController extends BaseVoyagerBaseController
 
                             }
 
-                        }
+                            }
 
-                    return redirect()->route("voyager.{$dataType->slug}.index")->with($dataPenyusutan);
+                        return redirect()->route("voyager.{$dataType->slug}.index")->with($dataPenyusutan);
+
+                    }
 
                 }
 
+                return redirect()->route("voyager.{$dataType->slug}.index")->with($dataListrik);
+
             }
-
-            return redirect()->route("voyager.{$dataType->slug}.index")->with($dataListrik);
-
         }
 
     }

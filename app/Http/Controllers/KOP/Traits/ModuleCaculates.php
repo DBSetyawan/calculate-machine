@@ -362,8 +362,6 @@ trait ModuleCaculates {
                     
                 }
 
-                // dd($harga_akhir_perjam);
-             
                 $KOP = new tb_mesin;
 
                 $KOP->setConnection('KOP_kalkulasi');

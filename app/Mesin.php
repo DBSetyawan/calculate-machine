@@ -25,6 +25,7 @@ class Mesin extends Model
         'asumsi_id',
         'on_off',
         'display_on_off_machine',
+        'kalkulasi_machine_id',
         'capacity_mch',
         'faktor_kali_lwbp',
         'faktor_kali_wbp',
