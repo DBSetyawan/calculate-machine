@@ -184,12 +184,12 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             'code_mesin' => (Int) $r->code_mesin,
             'group_mesin' => $r->group_mesin,
             'code_listrik' => RumusListrik::generateIDListrik(), //not 
-            'LWBP_perminggu' => $rumusLWBPerminggu,
-            'WBP_perminggu' => $rumusWBPerminggu,
+            'LWBP_perminggu' => ($rumusLWBPerminggu === null ) ? 1 : $rumusLWBPerminggu,
+            'WBP_perminggu' => ($rumusWBPerminggu === null ) ? 1 : $rumusWBPerminggu,
             'nilai_cost_bulan' => (float) $totalbiayacostperbulan,
             'category_bagian' => $r->category_bagian,
-            'LWBP_faktorkali' => $r->faktor_kali_lwbp,
-            'WBP_faktorkali' => $r->faktor_kali_wbp,
+            'LWBP_faktorkali' =>  ($r->faktor_kali_lwbp === null ) ? 1 : $r->faktor_kali_lwbp,
+            'WBP_faktorkali' => ($r->faktor_kali_wbp === null ) ? 1 : $r->faktor_kali_lwbp,
             'total_biaya_listrik' => $totalbiayaListrikperminggu,
             'assumptionshift_lwbp1' => $r->sht_1lwbp,
             'assumptionshift_lwbp2' => $r->sht_2lwbp,
@@ -258,8 +258,8 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                         'WBP_perminggu' => $rumusWBPerminggu,
                         'nilai_cost_bulan' => (float) $totalbiayacostperbulan,
                         'category_bagian' => $r->category_bagian,
-                        'LWBP_faktorkali' => $r->faktor_kali_lwbp,
-                        'WBP_faktorkali' => $r->faktor_kali_wbp,
+                        'LWBP_faktorkali' =>  ($r->faktor_kali_lwbp === null ) ? 1 : $r->faktor_kali_lwbp,
+                        'WBP_faktorkali' => ($r->faktor_kali_wbp === null ) ? 1 : $r->faktor_kali_lwbp,
                         'total_biaya_listrik' => $totalbiayaListrikperminggu,
                         'assumptionshift_lwbp1' => $r->sht_1lwbp,
                         'assumptionshift_lwbp2' => $r->sht_2lwbp,
@@ -789,7 +789,7 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                             
                             foreach ($md as $key => $val) {
 
-                                    $pf = [
+                                    $pf[] = [
                                         'updated_at' => Carbon::now(),
                                         'changed_by' => isset(Auth::user()->name) ? Auth::user()->name : "User ini belum me set name.",
                                         'company_id' => $tmp->company_parent_id,
@@ -801,11 +801,10 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                                         'before' => ceil($val['dari']),
                                     ];
                                     
-                                }
-                        // dd($pf);
-                            
-                            $d = HistoryLogRecalculate::insert($pf);
-
+                                HistoryLogRecalculate::insert($pf);
+                            }
+                                
+                        
                         $data[] = [
                             'id' => $tmp->id,
                             'persen_cost_perbulan' => $persen_costperbulan,
@@ -1140,8 +1139,8 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             'group_mesin' => $r->group_mesin,
             'nilai_cost_bulan' => (float) $totalbiayacostperbulan,
             'category_bagian' => $r->category_bagian,
-            'LWBP_faktorkali' => $r->faktor_kali_lwbp,
-            'WBP_faktorkali' => $r->faktor_kali_wbp,
+            'LWBP_faktorkali' =>  ($r->faktor_kali_lwbp === null ) ? 1 : $r->faktor_kali_lwbp,
+            'WBP_faktorkali' => ($r->faktor_kali_wbp === null ) ? 1 : $r->faktor_kali_lwbp,
             'total_biaya_listrik' => $totalbiayaListrikperminggu,
             'assumptionshift_lwbp1' => $r->sht_1lwbp,
             'assumptionshift_lwbp2' => $r->sht_2lwbp,
@@ -1164,8 +1163,8 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
             'group_mesin' => $datafg->group_mesin,
             'nilai_cost_bulan' => (float) $datafg->nilai_cost_bulan,
             'category_bagian' => $datafg->category_bagian,
-            'LWBP_faktorkali' => $datafg->LWBP_faktorkali,
-            'WBP_faktorkali' => $datafg->WBP_faktorkali,
+            'LWBP_faktorkali' =>  ($r->faktor_kali_lwbp === null ) ? 1 : $r->faktor_kali_lwbp,
+            'WBP_faktorkali' => ($r->faktor_kali_wbp === null ) ? 1 : $r->faktor_kali_lwbp,
             'total_biaya_listrik' => $datafg->total_biaya_listrik,
             'assumptionshift_lwbp1' => $datafg->assumptionshift_lwbp1,
             'assumptionshift_lwbp2' => $datafg->assumptionshift_lwbp2,
@@ -1216,10 +1215,8 @@ class VoyagerListrikController extends BaseVoyagerBaseController implements List
                             'before' => ceil($val['dari']),
                         ];
                         
+                        HistoryLogRecalculate::insert($pf);
                     }
-                
-                $d = HistoryLogRecalculate::insert($pf);
-
         
                 return response()->json(
                     [

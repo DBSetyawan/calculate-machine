@@ -21,40 +21,31 @@
         @php
                         
         $total_listrik = $listrik->whereIn('company_parent_id', [3])->whereNull('ended_at')->get();
-
             $persen = collect([$total_listrik])->sum(function ($prsttl){
-
                 $ttlpr = $prsttl->sum('persen_cost_perbulan');
-                    if(is_null($ttlpr)){
-                        $x = 0.0001;
-                    } else {
-                        $x = $ttlpr;
-                    }
-                        if ($x == 0) return 0;
-
-                        $rounded = round($x, 2);
-                        $minValue = 0.0001;
-
-                        if ($rounded < $minValue) {
-                            $prs = number_format($minValue, 0);
-                        } else {
-                            $prs = number_format($rounded * 100, 0);
-                        }
-                        return $prs;
+                    // if(is_null($ttlpr)){
+                    //     $x = 0.0001;
+                    // } else {
+                    //     $x = $ttlpr;
+                    // }
+                    //     if ($x == 0) return 0;
+                        $rounded = round($ttlpr, 2);
+                    //     $minValue = 0.0001;
+                    //     if ($rounded < $minValue) {
+                    //         $prs = number_format($minValue, 0);
+                    //     } else {
+                    //         $prs = number_format($rounded * 100, 0);
+                    //     }
+                        return number_format($rounded * 100, 0);
                 });
-
             $cost_lstrkperbulan = collect([$total_listrik])->sum(function ($region){
                     return sprintf("%.5f", $region->sum('nilai_cost_bulan'));
                 });
-
                 $chckt = $total_listrik->map(function ($region){
                     return $region->ncost_bulan_plus_adm;
                 });
-
                 $fetchdata = isset($chckt) ? $chckt : [];
-
             $totalPPJ = ( ($cost_lstrkperbulan) + ($cost_lstrkperbulan*0.03) + 6000 );
-
             $totalcostadm = collect([$total_listrik])->sum(function ($region){
                     return sprintf("%.5f", $region->sum('ncost_bulan_plus_adm'));
                 });
@@ -373,22 +364,23 @@
                                                     // dd($data->persen_cost_perbulan);
 
                                                     
-                                                    if(is_null($data->persen_cost_perbulan)){
-                                                        $x = 0.0001;
-                                                    } else {
-                                                        $x = $data->persen_cost_perbulan;
-                                                    }
-                                                     if ($x == 0) return 0;
+                                                    // if(is_null($data->persen_cost_perbulan)){
+                                                    //     $x = 0.0001;
+                                                    // } else {
+                                                    //     $x = $data->persen_cost_perbulan;
+                                                    // }
+                                                    //  if ($x == 0) return 0;
 
-                                                        $rounded = round($x, 2);
-                                                        $minValue = 0.0001;
-
+                                                        $rounded = round($data->persen_cost_perbulan, 2);
+                                                    //     $minValue = 0.0001;
+// 
                                                         
-                                                        if ($rounded < $minValue) {
-                                                            $dd=  number_format($minValue, 0);
-                                                        } else {
-                                                            $dd = number_format($rounded * 100, 0);
-                                                        }
+                                                    //     if ($rounded < $minValue) {
+                                                    //         $dd=  number_format($minValue, 0);
+                                                    //     } else {
+                                                    //         $dd = number_format($rounded * 100, 0);
+                                                    //     }
+                                                        $dd = number_format($rounded * 100, 0);
                                                         
                                                     @endphp
                                                     @if ($row->display_name == '%')

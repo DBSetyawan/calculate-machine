@@ -1,0 +1,60 @@
+CREATE DATABASE  IF NOT EXISTS `db_kalkulasi_mesin` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
+USE `db_kalkulasi_mesin`;
+-- MySQL dump 10.13  Distrib 5.5.16, for Win32 (x86)
+--
+-- Host: 192.168.88.99    Database: db_kalkulasi_mesin
+-- ------------------------------------------------------
+-- Server version	5.5.32
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `location_machine`
+--
+
+DROP TABLE IF EXISTS `location_machine`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `location_machine` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `faktor_lwbp` float DEFAULT NULL,
+  `faktor_wbp` float DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `status_periode` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `begin_at` timestamp NULL DEFAULT NULL,
+  `ended_at` timestamp NULL DEFAULT NULL,
+  `company_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `location_machine`
+--
+
+LOCK TABLES `location_machine` WRITE;
+/*!40000 ALTER TABLE `location_machine` DISABLE KEYS */;
+INSERT INTO `location_machine` VALUES (1,1200,1235,'2021-04-12 08:07:09','2021-04-12 08:07:09',NULL,'2021-04-12 08:03:00',NULL,'KOP 19'),(2,1500,1600,'2021-04-12 08:10:16','2021-04-12 08:10:16',NULL,NULL,NULL,'KOP 23'),(3,1250,950,'2021-04-12 08:10:55','2021-04-12 08:10:55',NULL,NULL,NULL,'GEMILANG'),(4,1500,4560,'2021-04-12 08:11:16','2021-04-12 08:11:16',NULL,NULL,NULL,'IMPERIAL'),(5,2310,1000,'2021-04-20 02:49:11','2021-04-27 09:08:48',NULL,NULL,NULL,'IMPERIAL 21'),(6,7800,2888,'2021-04-28 03:02:59','2021-04-28 03:02:59',NULL,NULL,NULL,'berbek 23'),(7,1500,1100,'2021-04-28 07:42:14','2021-04-28 07:42:14',NULL,NULL,NULL,'KOP 21');
+/*!40000 ALTER TABLE `location_machine` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2021-12-30 11:54:06

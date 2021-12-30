@@ -9,6 +9,9 @@ class ModulTrackingDataHelpers Extends BaseVoyagerBaseController Implements Trac
 	
 	public static function ModuleTrackingTransactionDataREST($table, $old, $new){
 
+		/**
+		 * @untuk listrik nilainya tidak boleh ada yang 0 atau NULL.
+		 */
 		if($table == "listrik"){
 
 			$attrField = array(
